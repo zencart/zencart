@@ -728,5 +728,5 @@ function zen_config(string $key): mixed
 {
     global $configurationRepository, $productTypeLayoutRepository;
 
-    return $configurationRepository->get($key) ?? $productTypeLayoutRepository->get($key) ?? null;
+    return $configurationRepository->get($key) ?? $productTypeLayoutRepository->get($key);
 }
