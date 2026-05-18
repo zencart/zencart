@@ -56,7 +56,7 @@ class ConfigurationRepository
     /**
      * @since ZC v2.2.0
      */
-    public function getByKey(string $configurationKey): ?array
+    public function getByKey(string $configurationKey, bool $valueOnly = false): ?array
     {
         $configurationKey = $this->db->prepare_input($configurationKey);
         $result = $this->db->Execute(
@@ -68,7 +68,7 @@ class ConfigurationRepository
             return null;
         }
 
-        return $result->fields;
+        return ($valueOnly === true) ? $result->fields['configuration_value'] : $result->fields;
     }
 
     /**
@@ -97,6 +97,6 @@ class ConfigurationRepository
             return constant($configurationKey);
         }
 
-        return $this->getByKey($configurationKey);
+        return $this->getByKey(configurationKey: $configurationKey, valueOnly: true);
     }
 }
