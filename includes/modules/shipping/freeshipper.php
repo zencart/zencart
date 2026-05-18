@@ -15,17 +15,18 @@ class freeshipper extends ZenShipping
         $this->code = 'freeshipper';
         $this->title = MODULE_SHIPPING_FREESHIPPER_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_FREESHIPPER_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_FREESHIPPER_SORT_ORDER') ? (int)MODULE_SHIPPING_FREESHIPPER_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_SHIPPING_FREESHIPPER_SORT_ORDER');
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
+        $this->sort_order = (int)$this->sort_order;
         $this->icon = '';
-        $this->tax_class = MODULE_SHIPPING_FREESHIPPER_TAX_CLASS;
+        $this->tax_class = zen_config('MODULE_SHIPPING_FREESHIPPER_TAX_CLASS');
 
         // enable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = (MODULE_SHIPPING_FREESHIPPER_STATUS === 'True');
+            $this->enabled = (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') === 'True');
         } else {
             $this->enabled = false;
         }
@@ -43,7 +44,7 @@ class freeshipper extends ZenShipping
             return;
         }
 
-        $this->checkEnabledForZone(MODULE_SHIPPING_FREESHIPPER_ZONE);
+        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_FREESHIPPER_ZONE'));
 
         if ($this->enabled) {
             // -----
@@ -67,7 +68,7 @@ class freeshipper extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_FREESHIPPER_TEXT_WAY,
-                    'cost' => MODULE_SHIPPING_FREESHIPPER_COST + MODULE_SHIPPING_FREESHIPPER_HANDLING,
+                    'cost' => zen_config('MODULE_SHIPPING_FREESHIPPER_COST') + zen_config('MODULE_SHIPPING_FREESHIPPER_HANDLING'),
                 ],
             ],
         ];
@@ -88,10 +89,8 @@ class freeshipper extends ZenShipping
      */
     function check()
     {
-        global $db;
         if (!isset($this->_check)) {
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_FREESHIPPER_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)(zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== null);
         }
         return $this->_check;
     }
