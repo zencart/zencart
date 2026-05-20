@@ -104,7 +104,7 @@ if (!function_exists('zc_cli_get_db_context')) {
         }
 
         if (!defined('DB_TYPE') || !defined('DB_SERVER') || !defined('DB_SERVER_USERNAME') || !defined('DB_SERVER_PASSWORD') || !defined('DB_DATABASE')) {
-            $warnings[] = 'Plugin command discovery disabled: store database configuration is unavailable.';
+            $warnings[] = 'Command disabled: store database configuration is unavailable.';
             return ['db' => null, 'warnings' => $warnings];
         }
 
@@ -113,12 +113,8 @@ if (!function_exists('zc_cli_get_db_context')) {
         require_once DIR_FS_INCLUDES . 'classes/db/' . DB_TYPE . '/query_factory.php';
 
         $db = new \queryFactory();
-        if (!defined('USE_PCONNECT')) {
-            define('USE_PCONNECT', 'false');
-        }
-
-        if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
-            $warnings[] = 'Plugin command discovery disabled: unable to connect to the store database.';
+        if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'unused', false)) {
+            $warnings[] = 'Command disabled: unable to connect to the store database.';
             return ['db' => null, 'warnings' => $warnings];
         }
 
