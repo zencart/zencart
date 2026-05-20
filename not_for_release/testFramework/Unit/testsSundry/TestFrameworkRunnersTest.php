@@ -1215,7 +1215,7 @@ BASH
         $this->assertSame(0, $exitCode, $joinedOutput);
         $this->assertContains('Available commands:', $output);
         $this->assertStringContainsString(
-            'Warning: Plugin command discovery disabled: the MySQL connector for PHP is unavailable.',
+            'Warning: Command disabled: the MySQL connector for PHP is unavailable.',
             $joinedOutput
         );
         $this->assertStringContainsString('help', $joinedOutput);
@@ -1248,7 +1248,7 @@ BASH
         $this->assertSame(0, $exitCode, $joinedOutput);
         $this->assertContains('Available commands:', $output);
         $this->assertStringContainsString(
-            'Warning: Plugin command discovery disabled: store database configuration is unavailable.',
+            'Warning: Command disabled: store database configuration is unavailable.',
             $joinedOutput
         );
     }
@@ -1278,7 +1278,7 @@ PHP
         $this->assertSame(0, $exitCode, $joinedOutput);
         $this->assertContains('Available commands:', $output);
         $this->assertStringContainsString(
-            'Warning: Plugin command discovery disabled: unable to connect to the store database.',
+            'Warning: Command disabled: unable to connect to the store database.',
             $joinedOutput
         );
     }
