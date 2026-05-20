@@ -121,6 +121,14 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
         global $zco_notifier;
         $zco_notifier = new notifier;
 
+        // Check whether defined exchange rate server functions are available.
+        // @TODO: might need to scan zc_plugins for additional servers; Legacy mode would have them in the /admin/includes/functions/extra_functions directory, which also isn't processed here yet.
+        $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
+        if (!function_exists($quote_function)) {
+            $output->errorln(sprintf('Unable to find exchange rate function %s() for primary server %s.', $quote_function, CURRENCY_SERVER_PRIMARY));
+            return 1;
+        }
+
         if ($input->isVerboseRequested()) {
             $output->writeln('Starting currency rates update...');
         }
