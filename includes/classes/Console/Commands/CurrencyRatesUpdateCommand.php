@@ -4,6 +4,8 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
+declare(strict_types=1);
+
 namespace Zencart\Console\Commands;
 
 use notifier;
@@ -63,8 +65,13 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
             $output->errorln('Unable to find zen_update_currencies() function.');
             return 1;
         }
+        if ($this->configurationProvider === null) {
+            $output->errorln('Configuration lookup unavailable in the current CLI runtime.');
+            return 1;
+        }
 
         // Instantiate $db connection
+
         require_once \DIR_FS_CATALOG . 'includes/classes/db/' .DB_TYPE . '/query_factory.php';
         global $db;
         $db = new queryFactory();
@@ -78,24 +85,36 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
             $row = ($this->configurationProvider)('DEFAULT_CURRENCY');
             if ($row !== null) {
                 define('DEFAULT_CURRENCY', $row['configuration_value']);
+            } else {
+                $output->errorln('Unable to determine configuration settings.');
+                return 1;
             }
         }
         if (!defined('CURRENCY_SERVER_PRIMARY')) {
             $row = ($this->configurationProvider)('CURRENCY_SERVER_PRIMARY');
             if ($row !== null) {
                 define('CURRENCY_SERVER_PRIMARY', $row['configuration_value']);
+            } else {
+                $output->errorln('Unable to determine configuration settings.');
+                return 1;
             }
         }
         if (!defined('CURRENCY_SERVER_BACKUP')) {
             $row = ($this->configurationProvider)('CURRENCY_SERVER_BACKUP');
             if ($row !== null) {
                 define('CURRENCY_SERVER_BACKUP', $row['configuration_value']);
+            } else {
+                $output->errorln('Unable to determine configuration settings.');
+                return 1;
             }
         }
         if (!defined('CURRENCY_UPLIFT_RATIO')) {
             $row = ($this->configurationProvider)('CURRENCY_UPLIFT_RATIO');
             if ($row !== null) {
                 define('CURRENCY_UPLIFT_RATIO', $row['configuration_value']);
+            } else {
+                $output->errorln('Unable to determine configuration settings.');
+                return 1;
             }
         }
 
@@ -109,6 +128,7 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
 
         defined('TEXT_INFO_CURRENCY_UPDATED') || define('TEXT_INFO_CURRENCY_UPDATED', 'The exchange rate for %1$s (%2$s) was updated successfully to %3$s via %4$s.');
         defined('ERROR_CURRENCY_INVALID') || define('ERROR_CURRENCY_INVALID', 'Error: The exchange rate for %1$s (%2$s) was not updated via %3$s. Is it a valid currency code?');
+        defined('WARNING_PRIMARY_SERVER_FAILED') || define('WARNING_PRIMARY_SERVER_FAILED', 'Warning: Primary exchange-rate server %1$s failed for %2$s (%3$s).');
 
         zen_update_currencies($input->isVerboseRequested());
 
