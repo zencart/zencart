@@ -254,4 +254,6 @@ ppr_webhook.php
 .phpunit.result.cache
 
 
+# local per-dev control
+CLAUDE.local.md
 
