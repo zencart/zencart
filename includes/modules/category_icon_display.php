@@ -37,16 +37,16 @@ $category_icon_display_image = zen_get_categories_image((int)$current_category_i
 
 switch(true) {
   // name only
-  case (PRODUCT_INFO_CATEGORIES_IMAGE_STATUS == 1):
+  case (zen_config('PRODUCT_INFO_CATEGORIES_IMAGE_STATUS') === 1):
     $category_icon_display_image = '';
     break;
   // name and image but name only when blank
-  case (PRODUCT_INFO_CATEGORIES_IMAGE_STATUS == 2 && $category_icon_display_image == ''):
+  case (zen_config('PRODUCT_INFO_CATEGORIES_IMAGE_STATUS') === 2 && $category_icon_display_image === ''):
     $category_icon_display_image = '';
     break;
   default:
     // name and image always display image regardless
-    $category_icon_display_image = zen_image(DIR_WS_IMAGES . $category_icon_display_image, $category_icon_display_name, CATEGORY_ICON_IMAGE_WIDTH, CATEGORY_ICON_IMAGE_HEIGHT) . '<br>';
+    $category_icon_display_image = zen_image(DIR_WS_IMAGES . $category_icon_display_image, $category_icon_display_name, zen_config('CATEGORY_ICON_IMAGE_WIDTH'), zen_config('CATEGORY_ICON_IMAGE_HEIGHT')) . '<br>';
     break;
 }
 //    }

@@ -12,9 +12,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 if (IS_ADMIN_FLAG === true) {
-    $SESS_LIFE = (int)SESSION_TIMEOUT_ADMIN;
+    $SESS_LIFE = (int)zen_config('SESSION_TIMEOUT_ADMIN');
     // if strict is enabled, must be a max of 900
-    if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED != 0 && $SESS_LIFE > 900) {
+    if (zen_config('PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED') !== 0 && $SESS_LIFE > 900) {
         $SESS_LIFE = 900;
     }
 } else {
