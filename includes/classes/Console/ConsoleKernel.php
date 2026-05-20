@@ -6,6 +6,7 @@
 
 namespace Zencart\Console;
 
+use Zencart\Console\Commands\CurrencyRatesUpdateCommand;
 use Zencart\Console\Commands\HelpCommand;
 use Zencart\Console\Commands\ListCommand;
 use Zencart\Console\Commands\ConfigGetCommand;
@@ -109,6 +110,7 @@ class ConsoleKernel
         $this->registry->register(new PluginListCommand($this->pluginListProvider));
         $this->registry->register(new VersionShowCommand($this->versionProvider));
         $this->registry->register(new ConfigGetCommand($this->configurationProvider));
+        $this->registry->register(new CurrencyRatesUpdateCommand($this->configurationProvider));
     }
 
     /**
