@@ -70,15 +70,14 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
             return 1;
         }
 
-        // Instantiate $db connection
-
-        require_once \DIR_FS_CATALOG . 'includes/classes/db/' .DB_TYPE . '/query_factory.php';
-        global $db;
-        $db = new queryFactory();
-        if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'unused', true)) {
-            $output->errorln('Unable to connect to database. Please check your database configuration and try again.');
+        $context = zc_cli_get_db_context();
+        if (empty($context['db'])) {
+            $output->errorln('Database connection unavailable in the current CLI runtime.');
             return 1;
         }
+        // make $db available globally since the currency update functions depend on it.
+        global $db;
+        $db = $context['db'];
 
         // Define dependent configuration constants if not already defined
         if (!defined('DEFAULT_CURRENCY')) {
