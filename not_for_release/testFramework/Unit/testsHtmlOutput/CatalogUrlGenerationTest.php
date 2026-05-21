@@ -21,21 +21,15 @@ class CatalogUrlGenerationTest extends zcUnitTestCase
         require_once TESTCWD . 'Support/zcURLTestObserver.php';
         $GLOBALS['zcURLTestObserver'] = new zcURLTestObserver();
         require_once DIR_FS_CATALOG . 'includes/functions/functions_general.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_general_shared.php';
         require_once DIR_FS_CATALOG . 'includes/functions/functions_urls.php';
         require_once DIR_FS_CATALOG . 'includes/functions/functions_strings.php';
         require_once DIR_FS_CATALOG . 'includes/functions/html_output.php';
-        if (!array_key_exists('https_domain', $GLOBALS)) {
-            $GLOBALS['https_domain'] = zen_get_top_level_domain(HTTPS_SERVER);
-        }
-        if (!array_key_exists('request_type', $GLOBALS)) {
-            $GLOBALS['request_type'] = 'SSL';
-        }
-        if (!array_key_exists('session_started', $GLOBALS)) {
-            $GLOBALS['session_started'] = false;
-        }
-        if (!array_key_exists('http_domain', $GLOBALS)) {
-            $GLOBALS['http_domain'] = zen_get_top_level_domain(HTTP_SERVER);
-        }
+        $this->initializeConfigRepositories();
+        $GLOBALS['https_domain'] = zen_get_top_level_domain(HTTPS_SERVER);
+        $GLOBALS['request_type'] = 'SSL';
+        $GLOBALS['session_started'] = false;
+        $GLOBALS['http_domain'] = zen_get_top_level_domain(HTTP_SERVER);
 
         if (!defined('ENABLE_SSL')) {
             define('ENABLE_SSL', 'true');
@@ -51,6 +45,27 @@ class CatalogUrlGenerationTest extends zcUnitTestCase
         }
 
         parent::setUp();
+    }
+
+    private function initializeConfigRepositories(): void
+    {
+        if (!array_key_exists('configurationRepository', $GLOBALS)) {
+            $GLOBALS['configurationRepository'] = new class {
+                public function get(string $key): mixed
+                {
+                    return defined($key) ? constant($key) : null;
+                }
+            };
+        }
+
+        if (!array_key_exists('productTypeLayoutRepository', $GLOBALS)) {
+            $GLOBALS['productTypeLayoutRepository'] = new class {
+                public function get(string $key): mixed
+                {
+                    return defined($key) ? constant($key) : null;
+                }
+            };
+        }
     }
 
     public function testUrlFunctionsExist()
