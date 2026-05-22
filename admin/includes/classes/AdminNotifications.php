@@ -149,7 +149,7 @@ class AdminNotifications
     {
         global $db;
 
-        $sql = "SELECT countries_iso_code_3 from " . TABLE_COUNTRIES . " WHERE countries_id = " . STORE_COUNTRY;
+        $sql = "SELECT countries_iso_code_3 from " . TABLE_COUNTRIES . " WHERE countries_id = " . zen_config('STORE_COUNTRY');
         $r = $db->Execute($sql);
         $iso3 = $r->fields['countries_iso_code_3'];
         return $iso3;

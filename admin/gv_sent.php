@@ -43,7 +43,7 @@ $currencies = new currencies();
                                  WHERE c.coupon_id = et.coupon_id
                                  AND c.coupon_type = 'G'
                                  ORDER BY date_sent desc";
-                $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
+                $gv_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $gv_query_raw, $gv_query_numrows);
                 $gv_lists = $db->Execute($gv_query_raw);
                 foreach ($gv_lists as $gv_list) {
                   if ((empty($_GET['gid']) || (@$_GET['gid'] == $gv_list['coupon_id'])) && !isset($gInfo)) {
@@ -75,8 +75,8 @@ $currencies = new currencies();
             </table>
             <table class="table">
               <tr>
-                <td><?php echo $gv_split->display_count($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
-                <td class="text-right"><?php echo $gv_split->display_links($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                <td><?php echo $gv_split->display_count($gv_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
+                <td class="text-right"><?php echo $gv_split->display_links($gv_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
               </tr>
             </table>
           </div>
