@@ -1,4 +1,8 @@
-Purpose
+## Related files
+- `CONVENTIONS.md` — coding standards, PSR-12 rules, naming conventions, legacy exceptions
+- `CLAUDE.md` — Claude-specific behavioral layer (references this file)
+
+# Purpose
 -------
 Concise guidance for automated AI coding agents (and humans) to become productive in this Zen Cart v3.0 PHP codebase. Focus is on immediately actionable facts: where to look, how the app boots, test & dev commands, conventions, and integration points.
 

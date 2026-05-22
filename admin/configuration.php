@@ -142,7 +142,7 @@ if ($gID === 7) {
     if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
         $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
     }
-    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS !== 'True')) {
+    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
         $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
     }
     if ($shipping_errors !== '') {
@@ -172,10 +172,10 @@ if ($gID === 7) {
             bottom: 15px;
             right: 15px;
         }
-    	.form-horizontal hr {
-			margin: 0;
-			border: 0;
-			border-top: 1px solid #949494;
+        .form-horizontal hr {
+            margin: 0;
+            border: 0;
+            border-top: 1px solid #949494;
 }
 @media (max-width: 767px) {
         .form-control {
@@ -220,6 +220,9 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 <?php
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
+    if (isset($_GET['cID']) && $_GET['cID'] === $item['configuration_id']) {
+        $focusField = $fieldName;
+    }
     $cfgValue = htmlspecialchars($item['configuration_value'], ENT_COMPAT, CHARSET, true);
 
     if (defined('CFGTITLE_' . $item['configuration_key'])) {
@@ -234,7 +237,7 @@ foreach ($configuration as $item) {
         <div class="col-md-3">
             <?php
             echo '<strong>' . $item['configuration_title'] . '</strong>';
-            if (ADMIN_CONFIGURATION_KEY_ON == 1) {
+            if (zen_config('ADMIN_CONFIGURATION_KEY_ON') == 1) {
                 echo '<br>Key: ' . $item['configuration_key'];
             }
             ?>
@@ -274,7 +277,17 @@ foreach ($configuration as $item) {
     </div>
     <?= '</form>' ?>
 </div>
-
+<?php
+if (isset($focusField)) {
+?>
+<script id="config-focus">
+$(window).on('load', function() {
+    $('input[name="<?= $focusField ?>"], input[name="configuration[<?= $focusField ?>]"]:checked, select[name="configuration[<?= $focusField ?>]"]').focus();
+});
+</script>
+<?php
+}
+?>
 <!-- body_eof //-->
 
 <!-- footer //-->

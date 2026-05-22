@@ -298,7 +298,7 @@ switch ($action) {
         $directory = zen_db_prepare_input($_POST['directory']);
         $sort_order = (int)$_POST['sort_order'];
 
-        // check if the spelling of the name for the default language has just been changed (thus 
+        // check if the spelling of the name for the default language has just been changed (thus
         // meaning we need to change the spelling of DEFAULT_LANGUAGE to match it)
         // get "code" for the language we just updated
         $result = $db->Execute(

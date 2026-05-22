@@ -10,8 +10,8 @@
  */
 require('includes/application_top.php');
 
-$max_records_per_page = 75; // MAX_DISPLAY_SEARCH_RESULTS;
-$max_display_page_links = MAX_DISPLAY_PAGE_LINKS;
+$max_records_per_page = 75; // MAX_DISPLAY_SEARCH_RESULTS
+$max_display_page_links = zen_config('MAX_DISPLAY_PAGE_LINKS');
 
 $action = $_GET['action'] ?? '';
 

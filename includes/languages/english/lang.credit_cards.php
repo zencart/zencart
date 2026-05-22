@@ -2,7 +2,7 @@
 if (!defined('SHOW_ACCEPTED_CREDIT_CARDS')) {
     return;
 }
-global $template, $current_page_base; 
+global $template, $current_page_base;
 $define = [
     'TEXT_ACCEPTED_CREDIT_CARDS' => '<strong>We accept:</strong> ',
     'TEXT_CC_ENABLED_VISA' => 'Visa',

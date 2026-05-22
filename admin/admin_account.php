@@ -70,7 +70,7 @@ switch ($action) {
 $userList = zen_get_users($_SESSION['admin_id']);
 $userDetails = $userList[0];
 
-$mfa_status_of_store = MFA_ENABLED === 'True';
+$mfa_status_of_store = zen_config('MFA_ENABLED') === 'True';
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>

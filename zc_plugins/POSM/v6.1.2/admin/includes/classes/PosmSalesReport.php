@@ -62,7 +62,7 @@ class PosmSalesReport
             $opa_list = $db->Execute(
                 "SELECT products_options as options_name, products_options_values as options_values_name, products_options_id as options_id, products_options_values_id as options_values_id
                    FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                  WHERE orders_products_id = $opID 
+                  WHERE orders_products_id = $opID
                ORDER BY orders_products_attributes_id ASC"
             );
             $options = '';

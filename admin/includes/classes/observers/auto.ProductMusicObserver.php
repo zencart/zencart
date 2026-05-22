@@ -30,14 +30,14 @@ class zcObserverProductMusicObserver extends base
                 'NOTIFIER_ADMIN_ZEN_REMOVE_PRODUCT',
 
                 /* Issued by /admin/includes/modules/copy_product.php */
-                'NOTIFY_ADMIN_PRODUCT_COPY_TO_ATTRIBUTES', 
+                'NOTIFY_ADMIN_PRODUCT_COPY_TO_ATTRIBUTES',
 
                 /* Issued by /admin/includes/modules/copy_product_confirm.php */
                 'NOTIFY_MODULES_COPY_TO_CONFIRM_DUPLICATE',
 
                 /* Issued by .admin/includes/modules/update_product.php */
-                'NOTIFY_MODULES_UPDATE_PRODUCT_START', 
-                'NOTIFY_MODULES_UPDATE_PRODUCT_END', 
+                'NOTIFY_MODULES_UPDATE_PRODUCT_START',
+                'NOTIFY_MODULES_UPDATE_PRODUCT_END',
             ]
         );
     }
@@ -135,7 +135,7 @@ class zcObserverProductMusicObserver extends base
                         "INSERT INTO " . TABLE_PRODUCT_MUSIC_EXTRA . "
                             (products_id, artists_id, record_company_id, music_genre_id)
                          VALUES
-                            (" . 
+                            (" .
                                 $dup_products_id . ', ' .
                                 $music_extra->fields['artists_id'] . ', ' .
                                 $music_extra->fields['record_company_id'] . ', ' .

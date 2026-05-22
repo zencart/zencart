@@ -12,13 +12,14 @@ source_test_framework_env_file() {
 apply_profile_db_defaults() {
     local root_dir="$1"
     local resolver="$root_dir/not_for_release/testFramework/resolve-profile-db-config.php"
-    local -a resolved=()
+    local resolved
+    resolved=()
 
     if [ ! -f "$resolver" ] || ! command -v php >/dev/null 2>&1; then
         return 0
     fi
 
-    mapfile -t resolved < <(php "$resolver" "$root_dir")
+    while IFS= read -r line; do resolved+=("$line"); done < <(php "$resolver" "$root_dir")
     if [ "${#resolved[@]}" -lt 5 ]; then
         return 0
     fi
@@ -47,7 +48,8 @@ apply_profile_db_defaults() {
 load_test_framework_env() {
     local root_dir="$1"
     local env_file="${ZC_TEST_ENV_FILE:-}"
-    local -a preserved_assignments=()
+    local preserved_assignments
+    preserved_assignments=()
     local variable_name=""
     local variable_value=""
 

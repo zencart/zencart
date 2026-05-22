@@ -42,7 +42,7 @@ class order_total
     {
         global $messageStack, $languageLoader, $installedPlugins;
 
-        if (defined('MODULE_ORDER_TOTAL_INSTALLED') && MODULE_ORDER_TOTAL_INSTALLED !== '') {
+        if (zen_config('MODULE_ORDER_TOTAL_INSTALLED') !== '') {
             // -----
             // Locate all order_total modules, looking in both /includes/modules/order_total
             // and for those provided by zc_plugins.  Note that any module provided by a
@@ -51,7 +51,7 @@ class order_total
             $moduleFinder = new ModuleFinder('order_total', new FileSystem());
             $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
-            $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+            $module_list = explode(';', zen_config('MODULE_ORDER_TOTAL_INSTALLED'));
 
             foreach ($module_list as $value) {
                 if (!$languageLoader->loadModuleLanguageFile($value, 'order_total')) {

@@ -5,6 +5,11 @@
 /phpunit.xml      export-ignore
 /phpunit.xml.dist export-ignore
 /crowdin.yml      export-ignore
+/AGENTS.md        export-ignore
+/CLAUDE.md        export-ignore
+/CLAUDE.local.md  export-ignore
+/CLAUDE.local.md.example export-ignore
+/CONVENTIONS.md   export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto

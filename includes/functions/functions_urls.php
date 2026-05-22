@@ -110,7 +110,7 @@ function zen_get_site_url_for_request($url)
 /**
  * @since ZC v1.0.3
  */
-function zen_get_top_level_domain(string $url) 
+function zen_get_top_level_domain(string $url)
 {
     if (strpos($url, '://')) {
         $url = parse_url($url);
@@ -119,7 +119,7 @@ function zen_get_top_level_domain(string $url)
     $domain_array = explode('.', $url);
     $domain_size = count($domain_array);
     if ($domain_size > 1) {
-        if (SESSION_USE_FQDN == 'True') return $url;
+        if (zen_config('SESSION_USE_FQDN') === 'True') return $url;
         if (is_numeric($domain_array[$domain_size-2]) && is_numeric($domain_array[$domain_size-1])) {
             return false;
         }

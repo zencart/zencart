@@ -33,7 +33,7 @@ if ($show_product_notifications === true) {
     if (isset($_GET['products_id'])) {
         $notification_exists = false;
         if (zen_is_logged_in() && !zen_in_guest_checkout()) {
-           $check_query = 
+           $check_query =
                 "SELECT customers_id
                    FROM " . TABLE_PRODUCTS_NOTIFICATIONS . "
                   WHERE products_id = " . (int)$_GET['products_id'] . "

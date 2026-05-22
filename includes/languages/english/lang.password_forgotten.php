@@ -2,7 +2,7 @@
 
 // change this to match your store's theme colour
 // You can define this in your /includes/extra_datafiles/site_specific_overrides.php file to avoid editing this file directly.
-$password_reset_email_button_colour ??= '#00BCE4'; 
+$password_reset_email_button_colour ??= '#00BCE4';
 
 // Simple sanitization
 $password_reset_email_button_colour = htmlspecialchars(substr($password_reset_email_button_colour, 0, 32), ENT_QUOTES);

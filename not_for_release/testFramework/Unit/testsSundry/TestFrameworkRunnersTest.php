@@ -14,6 +14,7 @@ use Tests\Services\TestFrameworkRunnerException;
 class TestFrameworkRunnersTest extends TestCase
 {
     private string $rootPath;
+    private array $tempPaths = [];
 
     protected function setUp(): void
     {
@@ -23,6 +24,17 @@ class TestFrameworkRunnersTest extends TestCase
         require_once __DIR__ . '/../fixtures/Services/InvalidTestSeeder.php';
 
         $this->rootPath = realpath(dirname(__DIR__, 4)) ?: dirname(__DIR__, 4);
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->tempPaths as $path) {
+            $this->removeDirectory($path);
+        }
+
+        $this->tempPaths = [];
+
+        parent::tearDown();
     }
 
     public function testSeederRunnerPassesParametersToValidSeeder(): void
@@ -693,6 +705,7 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('SKIP  [store] no matching storefront parallel-candidate files', $output);
         $this->assertContains('SKIP  [admin] no matching admin parallel-candidate files', $output);
+        $this->assertContains('SKIP  [admin-serial] no matching admin serial files', $output);
         $this->assertContains('RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/PluginTests/BasicPluginInstallTest.php', $output);
     }
@@ -707,6 +720,9 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('RUN   [store] run-parallel-storefront-feature-tests.sh', $output);
         $this->assertContains('RUN   [admin] run-parallel-admin-feature-tests.sh', $output);
+        $this->assertContains('RUN   [admin-serial] phpunit serial bucket (dry run)', $output);
+        $this->assertContains('DRY   [admin-serial] not_for_release/testFramework/FeatureAdmin/PluginTests/ConfigGetCommandTest.php', $output);
+        $this->assertContains('DRY   [admin-serial] not_for_release/testFramework/FeatureAdmin/PluginTests/VersionShowCommandTest.php', $output);
         $this->assertContains('RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/PluginTests/BasicPluginInstallTest.php', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/Security/PluginsLFITest.php', $output);
@@ -813,9 +829,33 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertContains('Database: db', $output);
         $this->assertContains('Dry run for 2 planned test database(s) on 127.0.0.1:3306 for user root.', $output);
         $this->assertContains('SKIP  [admin] no matching admin parallel-candidate files', $output);
+        $this->assertContains('SKIP  [admin-serial] no matching admin serial files', $output);
         $this->assertContains('RUN   [admin-plugin] tests-feature-admin-plugin-filesystem (dry run)', $output);
         $this->assertContains('DRY   [admin-plugin] not_for_release/testFramework/FeatureAdmin/PluginTests/BasicPluginInstallTest.php', $output);
         $this->assertStringNotContainsString('PluginsLFITest.php', implode(PHP_EOL, $output));
+    }
+
+    public function testAdminFeatureTestsCiRunnerDryRunIncludesSerialBucketForSerialOnlyFilter(): void
+    {
+        $script = $this->rootPath . '/not_for_release/testFramework/run-admin-feature-tests-ci.sh';
+        $command = sprintf(
+            'USER=%s IS_DDEV_PROJECT= ZC_TEST_ENV_FILE=%s ZC_TEST_DB_BASE_NAME=%s ZC_TEST_DB_WORKERS=%s ZC_TEST_DB_INCLUDE_BASE=%s bash %s --dry-run --filter %s',
+            escapeshellarg('runner'),
+            escapeshellarg('/dev/null'),
+            escapeshellarg('db'),
+            escapeshellarg('2'),
+            escapeshellarg('0'),
+            escapeshellarg($script),
+            escapeshellarg('ConfigGetCommandTest')
+        );
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
+        $this->assertContains('SKIP  [admin] no matching admin parallel-candidate files', $output);
+        $this->assertContains('RUN   [admin-serial] phpunit serial bucket (dry run)', $output);
+        $this->assertContains('DRY   [admin-serial] not_for_release/testFramework/FeatureAdmin/PluginTests/ConfigGetCommandTest.php', $output);
+        $this->assertContains('SKIP  [admin-plugin] no matching admin plugin-filesystem files', $output);
     }
 
     public function testPrepareWorkerDatabasesAllowsExplicitBlankPassword(): void
@@ -1150,6 +1190,99 @@ BASH
         $this->assertContains('Plugin directory: /tmp/zc-runtime/zc_plugins/2/WorkerPlugin', $output);
     }
 
+    public function testZcCliListRunsAsExternalProcess(): void
+    {
+        $script = $this->rootPath . '/zc_cli.php';
+        $command = sprintf('%s %s list', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $joinedOutput = implode(PHP_EOL, $output);
+        $this->assertSame(0, $exitCode, $joinedOutput);
+        $this->assertContains('Available commands:', $output);
+        $this->assertStringContainsString('help', $joinedOutput);
+        $this->assertStringContainsString('list', $joinedOutput);
+    }
+
+    public function testZcCliListFailsClosedWhenPhpRunsWithoutMySqlExtension(): void
+    {
+        $script = $this->rootPath . '/zc_cli.php';
+        $command = sprintf('%s -n %s list', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $joinedOutput = implode(PHP_EOL, $output);
+        $this->assertSame(0, $exitCode, $joinedOutput);
+        $this->assertContains('Available commands:', $output);
+        $this->assertStringContainsString(
+            'Warning: Command disabled: the MySQL connector for PHP is unavailable.',
+            $joinedOutput
+        );
+        $this->assertStringContainsString('help', $joinedOutput);
+        $this->assertStringContainsString('list', $joinedOutput);
+    }
+
+    public function testBinZencartWrapperRunsAsExternalProcess(): void
+    {
+        $script = $this->rootPath . '/bin/zencart';
+        $command = sprintf('%s %s list', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $joinedOutput = implode(PHP_EOL, $output);
+        $this->assertSame(0, $exitCode, $joinedOutput);
+        $this->assertContains('Available commands:', $output);
+        $this->assertStringContainsString('help', $joinedOutput);
+        $this->assertStringContainsString('list', $joinedOutput);
+    }
+
+    public function testZcCliListWarnsWhenDatabaseConfigIsMissing(): void
+    {
+        $tempRoot = $this->createMinimalCliRoot();
+        $script = $tempRoot . '/zc_cli.php';
+        $command = sprintf('%s %s list', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $joinedOutput = implode(PHP_EOL, $output);
+        $this->assertSame(0, $exitCode, $joinedOutput);
+        $this->assertContains('Available commands:', $output);
+        $this->assertStringContainsString(
+            'Warning: Command disabled: store database configuration is unavailable.',
+            $joinedOutput
+        );
+    }
+
+    public function testZcCliListWarnsWhenDatabaseConnectionFails(): void
+    {
+        if (!function_exists('mysqli_connect')) {
+            $this->markTestSkipped('The DB connection failure path requires the MySQL connector for PHP.');
+        }
+
+        $tempRoot = $this->createMinimalCliRoot(
+            <<<'PHP'
+<?php
+define('DB_TYPE', 'mysql');
+define('DB_SERVER', 'invalid-host-for-cli-tests');
+define('DB_SERVER_USERNAME', 'root');
+define('DB_SERVER_PASSWORD', 'root');
+define('DB_DATABASE', 'db');
+PHP
+        );
+        $script = $tempRoot . '/zc_cli.php';
+        $command = sprintf('%s %s list', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $joinedOutput = implode(PHP_EOL, $output);
+        $this->assertSame(0, $exitCode, $joinedOutput);
+        $this->assertContains('Available commands:', $output);
+        $this->assertStringContainsString(
+            'Warning: Command disabled: unable to connect to the store database.',
+            $joinedOutput
+        );
+    }
+
     public function testDescribeWorkerRuntimeUsesTestDatabaseBaseEnvironmentFallback(): void
     {
         $script = $this->rootPath . '/not_for_release/testFramework/describe-worker-runtime.php';
@@ -1164,5 +1297,95 @@ BASH
 
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('Database: db_local', $output);
+    }
+
+    private function createMinimalCliRoot(?string $configureContents = null): string
+    {
+        $root = sys_get_temp_dir() . '/zc-cli-root-' . uniqid('', true);
+        $this->tempPaths[] = $root;
+
+        mkdir($root, 0777, true);
+        mkdir($root . '/bin', 0777, true);
+        mkdir($root . '/includes/functions', 0777, true);
+        mkdir($root . '/includes/classes/traits', 0777, true);
+        mkdir($root . '/includes/classes/vendors/AuraAutoload/src', 0777, true);
+        mkdir($root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata', 0777, true);
+        mkdir($root . '/includes/classes/Console/Commands', 0777, true);
+        mkdir($root . '/includes/classes/db/mysql', 0777, true);
+
+        copy($this->rootPath . '/zc_cli.php', $root . '/zc_cli.php');
+        copy($this->rootPath . '/bin/zencart', $root . '/bin/zencart');
+        copy($this->rootPath . '/includes/application_cli_bootstrap.php', $root . '/includes/application_cli_bootstrap.php');
+        copy($this->rootPath . '/includes/defined_paths.php', $root . '/includes/defined_paths.php');
+        copy($this->rootPath . '/includes/psr4Autoload.php', $root . '/includes/psr4Autoload.php');
+        copy($this->rootPath . '/includes/database_tables.php', $root . '/includes/database_tables.php');
+        copy($this->rootPath . '/includes/functions/php_polyfills.php', $root . '/includes/functions/php_polyfills.php');
+        copy($this->rootPath . '/includes/functions/zen_define_default.php', $root . '/includes/functions/zen_define_default.php');
+        copy($this->rootPath . '/includes/classes/class.base.php', $root . '/includes/classes/class.base.php');
+        copy($this->rootPath . '/includes/classes/EventDto.php', $root . '/includes/classes/EventDto.php');
+        copy($this->rootPath . '/includes/classes/traits/NotifierManager.php', $root . '/includes/classes/traits/NotifierManager.php');
+        copy($this->rootPath . '/includes/classes/traits/ObserverManager.php', $root . '/includes/classes/traits/ObserverManager.php');
+        copy($this->rootPath . '/includes/classes/vendors/AuraAutoload/src/Loader.php', $root . '/includes/classes/vendors/AuraAutoload/src/Loader.php');
+        copy($this->rootPath . '/includes/classes/vendors/polyfill-mbstring/Mbstring.php', $root . '/includes/classes/vendors/polyfill-mbstring/Mbstring.php');
+        copy($this->rootPath . '/includes/classes/vendors/polyfill-mbstring/bootstrap80.php', $root . '/includes/classes/vendors/polyfill-mbstring/bootstrap80.php');
+        copy($this->rootPath . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/caseFolding.php', $root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/caseFolding.php');
+        copy($this->rootPath . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/lowerCase.php', $root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/lowerCase.php');
+        copy($this->rootPath . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/titleCaseRegexp.php', $root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/titleCaseRegexp.php');
+        copy($this->rootPath . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/upperCase.php', $root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata/upperCase.php');
+        copy($this->rootPath . '/includes/classes/db/mysql/query_factory.php', $root . '/includes/classes/db/mysql/query_factory.php');
+
+        foreach ([
+            'CommandRegistry.php',
+            'CommandResolver.php',
+            'ConsoleCommand.php',
+            'ConsoleInput.php',
+            'ConsoleKernel.php',
+            'ConsoleOutput.php',
+            'PluginCommandDiscovery.php',
+            'TrustedPluginVersionResolver.php',
+        ] as $file) {
+            copy($this->rootPath . '/includes/classes/Console/' . $file, $root . '/includes/classes/Console/' . $file);
+        }
+
+        foreach (['ConfigGetCommand.php', 'HelpCommand.php', 'ListCommand.php', 'PluginListCommand.php', 'VersionShowCommand.php'] as $file) {
+            copy(
+                $this->rootPath . '/includes/classes/Console/Commands/' . $file,
+                $root . '/includes/classes/Console/Commands/' . $file
+            );
+        }
+
+        if ($configureContents !== null) {
+            file_put_contents($root . '/includes/configure.php', $configureContents . PHP_EOL);
+        }
+
+        return $root;
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        if (!is_dir($path)) {
+            return;
+        }
+
+        $items = scandir($path);
+        if ($items === false) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $currentPath = $path . '/' . $item;
+            if (is_dir($currentPath)) {
+                $this->removeDirectory($currentPath);
+                continue;
+            }
+
+            unlink($currentPath);
+        }
+
+        rmdir($path);
     }
 }

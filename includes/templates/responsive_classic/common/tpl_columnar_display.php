@@ -37,7 +37,7 @@ if (is_array($list_box_contents)) {
             continue; // a $cols index named 'params' is only display-instructions ($r_params above) for the row, no data, so skip this iteration
         }
 
-        if (!empty($col['wrap_with_classes'])) { 
+        if (!empty($col['wrap_with_classes'])) {
             echo '<div class="' . $col['wrap_with_classes'] . '">';
         }
 
@@ -47,7 +47,7 @@ if (is_array($list_box_contents)) {
             echo '<div' . $c_params . '>' . $col['text'] .  '</div>';
         }
 
-        if (!empty($col['wrap_with_classes'])) { 
+        if (!empty($col['wrap_with_classes'])) {
             echo '</div>';
         }
         echo PHP_EOL;

@@ -10,7 +10,7 @@
  */
 
 
-.headerBar, .header-area, .footer-area, .noprint, 
+.headerBar, .header-area, .footer-area, .noprint,
 .report-button { display: none;}
 
 .table>tbody>tr>td {

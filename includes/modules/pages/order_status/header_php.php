@@ -45,6 +45,11 @@ $query_email_address = '';
 //
 $spam_input_name = hash('md5', STORE_NAME);
 
+// Normalize the posted order-id in place so downstream templates don't see raw input.
+if (isset($_POST['order_id'])) {
+    $_POST['order_id'] = (int) $_POST['order_id'];
+}
+
 if (isset($_GET['action']) && $_GET['action'] === 'status') {
     $error = false;
     unset($_SESSION['email_address'], $_SESSION['email_is_os']);

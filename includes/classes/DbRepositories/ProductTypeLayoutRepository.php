@@ -35,4 +35,51 @@ class ProductTypeLayoutRepository
             }
         }
     }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getByKey(string $configurationKey): ?string
+    {
+        $configurationKey = $this->db->prepare_input($configurationKey);
+        $result = $this->db->Execute(
+            "SELECT configuration_value FROM " . TABLE_PRODUCT_TYPE_LAYOUT .
+            " WHERE configuration_key = '" . $configurationKey . "' LIMIT 1"
+        );
+
+        if ($result->EOF) {
+            return null;
+        }
+        return $result->fields['configuration_value'];
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function updateValueByKey(string $configurationKey, string $configurationValue): int
+    {
+        $configurationKey = $this->db->prepare_input($configurationKey);
+        $configurationValue = $this->db->prepare_input($configurationValue);
+
+        $this->db->Execute(
+            "UPDATE " . TABLE_PRODUCT_TYPE_LAYOUT . "
+                SET configuration_value = '" . $configurationValue . "',
+                    last_modified = NOW()
+              WHERE configuration_key = '" . $configurationKey . "' LIMIT 1"
+        );
+
+        return $this->db->affectedRows();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function get(string $configurationKey): mixed
+    {
+        if (defined($configurationKey)) {
+            return constant($configurationKey);
+        }
+
+        return $this->getByKey($configurationKey);
+    }
 }

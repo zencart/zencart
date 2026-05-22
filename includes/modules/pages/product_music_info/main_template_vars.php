@@ -131,13 +131,13 @@ if ($product_not_found) {
     $flag_show_product_info_additional_images = zen_get_show_product_switch($products_id_current, 'additional_images');
     $flag_show_product_info_free_shipping = zen_get_show_product_switch($products_id_current, 'always_free_shipping_image_switch');
     $flag_show_ask_a_question = !empty(zen_get_show_product_switch($products_id_current, 'ask_a_question'));
-  
+
     $flag_show_product_music_info_artist = zen_get_show_product_switch($products_id_current, 'artist');
     $flag_show_product_music_info_genre = zen_get_show_product_switch($products_id_current, 'genre');
     $flag_show_product_music_info_record_company = zen_get_show_product_switch($products_id_current, 'record_company');
 
     require DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS);
-  
+
     $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_MUSIC_INFO');
 }
 

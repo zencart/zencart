@@ -61,7 +61,7 @@
       $radio_buttons = 0;
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
       // bof: field set
-      if (!empty($quotes[$i]['module'])) { 
+      if (!empty($quotes[$i]['module'])) {
 ?>
 <fieldset>
 <legend><?php echo $quotes[$i]['module']; ?>&nbsp;<?php if (isset($quotes[$i]['icon']) && !empty($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></legend>
