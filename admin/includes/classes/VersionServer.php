@@ -182,9 +182,9 @@ class VersionServer
     protected function getModuleinfo(): array
     {
         $modules = [
-            'MODULE_PAYMENT_INSTALLED' => MODULE_PAYMENT_INSTALLED,
-            'MODULE_SHIPPING_INSTALLED' => MODULE_SHIPPING_INSTALLED,
-            'MODULE_ORDER_TOTAL_INSTALLED' => MODULE_ORDER_TOTAL_INSTALLED,
+            'MODULE_PAYMENT_INSTALLED' => zen_config('MODULE_PAYMENT_INSTALLED'),
+            'MODULE_SHIPPING_INSTALLED' => zen_config('MODULE_SHIPPING_INSTALLED'),
+            'MODULE_ORDER_TOTAL_INSTALLED' => zen_config('MODULE_ORDER_TOTAL_INSTALLED'),
         ];
 
         return $modules;
@@ -196,7 +196,7 @@ class VersionServer
     protected function getCountryIso()
     {
         global $db;
-        $result = $db->Execute('SELECT countries_iso_code_3 FROM ' . TABLE_COUNTRIES . ' WHERE countries_id = ' . (int)STORE_COUNTRY);
+        $result = $db->Execute('SELECT countries_iso_code_3 FROM ' . TABLE_COUNTRIES . ' WHERE countries_id = ' . (int)zen_config('STORE_COUNTRY'));
         if ($result->RecordCount()) {
             return $result->fields['countries_iso_code_3'] ?? '';
         }

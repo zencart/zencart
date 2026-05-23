@@ -83,7 +83,7 @@ if (!empty($action)) {
             $currency = $db->Execute(
                 "SELECT currencies_id
                  FROM " . TABLE_CURRENCIES . "
-                 WHERE code = '" . zen_db_input(DEFAULT_CURRENCY) . "'", 1
+                 WHERE code = '" . zen_db_input(zen_config('DEFAULT_CURRENCY')) . "'", 1
             );
             if ((int)$currency->fields['currencies_id'] === (int)$currencies_id) {
                 $db->Execute(
@@ -113,7 +113,7 @@ if (!empty($action)) {
             );
 
             $remove_currency = true;
-            if ((string)$currency->fields['code'] === (string)DEFAULT_CURRENCY) {
+            if ((string)$currency->fields['code'] === (string)zen_config('DEFAULT_CURRENCY')) {
                 $remove_currency = false;
                 $messageStack->add(ERROR_REMOVE_DEFAULT_CURRENCY, 'error');
             }
@@ -157,7 +157,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                                          FROM " . TABLE_CURRENCIES . "
                                          ORDER BY title";
                 $currency_query_numrows = $currency_query_numrows ?? 0;
-                $currency_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $currencies_query_raw, $currency_query_numrows);
+                $currency_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currencies_query_raw, $currency_query_numrows);
                 $currencies_all = $db->Execute($currencies_query_raw);
                 foreach ($currencies_all as $currency) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && $_GET['cID'] == $currency['currencies_id'])) && !isset($cInfo) && (!str_starts_with($action, 'new'))) {
@@ -174,7 +174,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             '\'" role="option" aria-selected="false">' . "\n";
                     }
 
-                    if ((string)DEFAULT_CURRENCY === (string)$currency['code']) {
+                    if ((string)zen_config('DEFAULT_CURRENCY') === (string)$currency['code']) {
                         echo '                <td class="dataTableContent"><b>' . $currency['title'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
                     } else {
                         echo '                <td class="dataTableContent">' . $currency['title'] . '</td>' . "\n";
@@ -239,7 +239,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_THOUSANDS_POINT, 'thousands_point', 'class="control-label"') . zen_draw_input_field('thousands_point', htmlspecialchars($cInfo->thousands_point, ENT_COMPAT, CHARSET, true), zen_set_field_length(TABLE_CURRENCIES, 'thousands_point', '1') . ' class="form-control"')];
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_DECIMAL_PLACES, 'decimal_places', 'class="control-label"') . zen_draw_input_field('decimal_places', $cInfo->decimal_places, zen_set_field_length(TABLE_CURRENCIES, 'decimal_places', '1') . ' class="form-control"')];
                     $contents[] = ['text' => '<br>' . zen_draw_label(TEXT_INFO_CURRENCY_VALUE, 'value', 'class="control-label"') . zen_draw_input_field('value', $cInfo->value, 'size="15" maxlength="14" class="form-control"')];
-                    if (DEFAULT_CURRENCY != $cInfo->code) {
+                    if (zen_config('DEFAULT_CURRENCY') != $cInfo->code) {
                         $contents[] = ['text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT];
                     }
                     $contents[] = [
@@ -272,7 +272,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ': ' . zen_datetime_short($cInfo->last_updated)];
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format((float)$cInfo->value, 8)];
-                        $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code)];
+                        $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, zen_config('DEFAULT_CURRENCY')) . ' = ' . $currencies->format('30', true, $cInfo->code)];
                     }
                     break;
             }
@@ -287,15 +287,15 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
     <div class="row">
         <table class="table">
             <tr>
-                <td><?php echo $currency_split->display_count($currency_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></td>
-                <td class="text-right"><?php echo $currency_split->display_links($currency_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                <td><?php echo $currency_split->display_count($currency_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></td>
+                <td class="text-right"><?php echo $currency_split->display_links($currency_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
             </tr>
             <?php
             if (empty($action)) {
                 ?>
                 <tr>
                     <td><?php
-                        if (CURRENCY_SERVER_PRIMARY) {
+                        if (zen_config('CURRENCY_SERVER_PRIMARY')) {
                             echo '<a href="' . zen_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update_currencies') . '" class="btn btn-primary" role="button">' . IMAGE_UPDATE_CURRENCIES . '</a>';
                         }
                         ?>

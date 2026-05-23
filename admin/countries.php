@@ -155,7 +155,7 @@ if (!empty($action)) {
                                       FROM " . TABLE_COUNTRIES . "
                                       ORDER BY countries_name";
               $countries_query_numrows = $countries_query_numrows ?? 0;
-              $countries_split = new splitPageResults($currentPage, MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
+              $countries_split = new splitPageResults($currentPage, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
               $countries = $db->Execute($countries_query_raw);
               foreach ($countries as $country) {
                 if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $country['countries_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -260,8 +260,8 @@ if (!empty($action)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $countries_split->display_count($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $currentPage, TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
-            <td class="text-right"><?php echo $countries_split->display_links($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $currentPage); ?></td>
+            <td><?php echo $countries_split->display_count($countries_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currentPage, TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
+            <td class="text-right"><?php echo $countries_split->display_links($countries_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $currentPage); ?></td>
           </tr>
           <?php if (empty($action)) { ?>
             <tr>
