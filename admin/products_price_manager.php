@@ -86,7 +86,7 @@ if (!empty($action)) {
                                     ORDER BY discount_id DESC LIMIT 1");
       $add_cnt = 1;
       $add_id = ($add_id_query->EOF) ? 0 : (int)$add_id_query->fields['discount_id'];
-      while ($add_cnt <= DISCOUNT_QTY_ADD) {
+      while ($add_cnt <= zen_config('DISCOUNT_QTY_ADD')) {
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_DISCOUNT_QUANTITY . " (discount_id, products_id)
                       VALUES (" . ($add_id + $add_cnt) . ", " . (int)$products_filter . ")");
         $add_cnt++;
@@ -820,7 +820,7 @@ if (!empty($action)) {
                     if (empty($pInfo->products_model)) {
                         $pInfo->products_model = '';
                     }
-                    if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (defined('MODULE_ORDER_TOTAL_GV_SPECIAL') && MODULE_ORDER_TOTAL_GV_SPECIAL == 'true'))) {
+                    if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL') == 'true'))) {
                       ?>
                       <a href="<?php echo zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . (isset($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . '&go_back=ON' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa-solid fa-plus"></i> <?php echo IMAGE_INSTALL_SPECIAL; ?></a>
                     <?php } else { ?>
@@ -946,7 +946,7 @@ if (!empty($action)) {
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_QTY; ?></th>
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE; ?></th>
 <?php
-                        if (WHOLESALE_PRICING_CONFIG !== 'false') {
+                        if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
 ?>
                         <th class="main">
                             <?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_W; ?>
@@ -958,7 +958,7 @@ if (!empty($action)) {
                         }
 ?>
                         <?php
-                        if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+                        if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') == 'true') {
                           ?>
                           <th class="main text-right"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_EACH_TAX; ?></th>
                           <th class="main text-right"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_EXTENDED_TAX; ?></th>
@@ -1022,14 +1022,14 @@ if (!empty($action)) {
                           <td class="main"><?php echo zen_draw_input_field('discount_qty[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_qty'], 'class="form-control"' . $readonly); ?></td>
                           <td class="main"><?php echo zen_draw_input_field('discount_price[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price'], 'class="form-control"' . $readonly); ?></td>
 <?php
-                        if (WHOLESALE_PRICING_CONFIG !== 'false') {
+                        if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
 ?>
                           <td class="main"><?php echo zen_draw_input_field('discount_price_w[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price_w'], 'class="form-control"' . $readonly); ?></td>
 <?php
                         }
 ?>
                           <?php
-                          if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+                          if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') == 'true') {
                             ?>
                             <td class="main text-right"><?php echo $currencies->display_price($discounted_price, '', 1) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), 1); ?></td>
                             <td class="main text-right"><?php echo ' x ' . number_format($discount_name[$i]['discount_qty']) . ' = ' . $currencies->display_price($discounted_price, '', $discount_name[$i]['discount_qty']) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), $discount_name[$i]['discount_qty']); ?></td>

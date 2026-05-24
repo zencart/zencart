@@ -158,7 +158,7 @@ function zen_delete_user($id): void
         zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname), 'warning');
         $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_DELETED, $delname, $admname);
         $block = ['EMAIL_MESSAGE_HTML' => $email_text];
-        zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+        zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_ADMIN_USER_DELETED, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $block, 'admin_settings_changed');
     }
 }
 
@@ -186,8 +186,8 @@ function zen_insert_user($name, $email, $password, $confirm, $profile): array
         $errors[] = ERROR_ADMIN_INVALID_CHARS_IN_USERNAME;
     }
     $name = zen_db_prepare_input($name);
-    if (mb_strlen($name) < ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
-        $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH));
+    if (mb_strlen($name) < ((int)zen_config('ADMIN_NAME_MINIMUM_LENGTH') < 4 ? 4 : (int)zen_config('ADMIN_NAME_MINIMUM_LENGTH'))) {
+        $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)zen_config('ADMIN_NAME_MINIMUM_LENGTH') < 4 ? 4 : (int)zen_config('ADMIN_NAME_MINIMUM_LENGTH')));
     }
     $existingCheck = zen_read_user($name);
     if ($existingCheck !== false) {
@@ -228,7 +228,7 @@ function zen_insert_user($name, $email, $password, $confirm, $profile): array
         zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname), 'warning');
         $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_USER_ADDED, $newname, $admname);
         $block = ['EMAIL_MESSAGE_HTML' => $email_text];
-        zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+        zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_ADMIN_USER_ADDED, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $block, 'admin_settings_changed');
     }
     return $errors;
 }
@@ -241,10 +241,10 @@ function zen_update_user($name, $email, $id, $profile): array
     global $db;
     $errors = [];
     if ($name !== false) {
-        if (mb_strlen($name) >= ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH)) {
+        if (mb_strlen($name) >= ((int)zen_config('ADMIN_NAME_MINIMUM_LENGTH') < 4 ? 4 : (int)zen_config('ADMIN_NAME_MINIMUM_LENGTH'))) {
             $name = zen_db_prepare_input($name);
         } else {
-            $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)ADMIN_NAME_MINIMUM_LENGTH < 4 ? 4 : (int)ADMIN_NAME_MINIMUM_LENGTH));
+            $errors[] = sprintf(ERROR_ADMIN_NAME_TOO_SHORT, ((int)zen_config('ADMIN_NAME_MINIMUM_LENGTH') < 4 ? 4 : (int)zen_config('ADMIN_NAME_MINIMUM_LENGTH')));
         }
         if (zen_check_for_invalid_admin_chars($name) === false) {
             $errors[] = ERROR_ADMIN_INVALID_CHARS_IN_USERNAME;
@@ -302,10 +302,10 @@ function zen_update_user($name, $email, $id, $profile): array
             $alertText .= sprintf(TEXT_EMAIL_ALERT_ADM_PROFILE_CHANGED, $oldData['admin_name'], $changes['profile']['old'], $changes['profile']['new'], $admname) . "\n";
         }
         if ($alertText !== '') {
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '], 'admin_settings_changed');
+            zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), ['EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '], 'admin_settings_changed');
         }
         if ($alertText !== '') {
-            zen_mail(STORE_NAME, $oldData['admin_email'], TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, STORE_NAME, EMAIL_FROM, ['EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '], 'admin_settings_changed');
+            zen_mail(zen_config('STORE_NAME'), $oldData['admin_email'], TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED, $alertText, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), ['EMAIL_MESSAGE_HTML' => $alertText, 'EMAIL_SPAM_DISCLAIMER' => ' ', 'EMAIL_DISCLAIMER' => ' '], 'admin_settings_changed');
         }
         if ($alertText !== '') {
             zen_record_admin_activity(TEXT_EMAIL_SUBJECT_ADMIN_USER_CHANGED . ' ' . $alertText, 'warning');
@@ -427,7 +427,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
             $html_msg['EMAIL_CUSTOMERS_NAME'] = $result['admin_name'];
             $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']);
             zen_record_admin_activity(sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), 'warning');
-            zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
+            zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'no_archive');
         }
         if ($expired_token < 10000) {
             if ($_SESSION['login_attempt'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT || (!empty($result) && $result['failed_logins'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT)) {
@@ -445,13 +445,13 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         }
     } // END LOGIN SLAM PREVENTION
     // deal with expireds for SSL change
-    if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error === false && $result['pwd_last_change_date'] === '1990-01-01 14:02:22') {
+    if (zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 1 && $error === false && $result['pwd_last_change_date'] === '1990-01-01 14:02:22') {
         $expired = true;
         $error = true;
         $message = ($message === '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
     }
     // deal with expireds for PA-DSS
-    if ($error === false && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
+    if ($error === false && zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
         $expired = true;
         $error = true;
     }
@@ -476,7 +476,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
         $db->Execute($sql);
         $_SESSION['admin_id'] = $result['admin_id'];
-        if (SESSION_RECREATE === 'True') {
+        if (zen_config('SESSION_RECREATE') === 'True') {
             zen_session_recreate();
         }
         $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
@@ -513,7 +513,7 @@ function zen_check_for_password_problems(string $password, $adminID = 0): bool
         return $error;
     }
     // passwords cannot be same as last 4
-    if ((int)PADSS_PWD_EXPIRY_ENFORCED === 0) {
+    if ((int)zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 0) {
         return $error;
     } // skip the check if flag disabled
     $sql = "SELECT admin_pass, prev_pass1, prev_pass2, prev_pass3 FROM " . TABLE_ADMIN . "
@@ -539,7 +539,7 @@ function zen_check_for_password_problems(string $password, $adminID = 0): bool
  */
 function zen_check_for_expired_pwd($adminID): bool
 {
-    if ((int)PADSS_PWD_EXPIRY_ENFORCED === 0) {
+    if ((int)zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 0) {
         return false;
     }
     global $db;
@@ -765,18 +765,18 @@ function zen_get_admin_pages(bool $menu_only): array
  * @since ZC v1.5.0
      */
     // Include PayPal Standard menu only if that payment mod is enabled
-    if (!(defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS === 'True') &&
-        !(defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS === 'True') &&
-        !(defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS === 'True')) {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_STATUS') === 'True' &&
+        zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' &&
+        zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True') {
         unset ($retVal['customers']['paypal']);
     }
 
     // don't show Coupon Admin unless installed
-    if (!defined('MODULE_ORDER_TOTAL_COUPON_STATUS') || MODULE_ORDER_TOTAL_COUPON_STATUS !== 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') !== 'true') {
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
-    if (!defined('MODULE_ORDER_TOTAL_GV_STATUS') || MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') !== 'true') {
         unset($retVal['gv']['gvQueue'], $retVal['gv']['gvMail'], $retVal['gv']['gvSent']);
     }
     // if Coupons and Gift Vouchers are off display msg
@@ -1027,8 +1027,8 @@ function zen_admin_authorized_to_place_order(): bool
 {
     global $db;
     $admin_in_profile = false;
-    if (!empty(EMP_LOGIN_ADMIN_PROFILE_ID)) {
-        $admin_profiles = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+    if (!empty(zen_config('EMP_LOGIN_ADMIN_PROFILE_ID'))) {
+        $admin_profiles = explode(',', str_replace(' ', '', zen_config('EMP_LOGIN_ADMIN_PROFILE_ID')));
         $profile_list = [];
         foreach ($admin_profiles as $current_profile) {
             if (((int)$current_profile) !== 0) {
@@ -1047,7 +1047,7 @@ function zen_admin_authorized_to_place_order(): bool
             $admin_in_profile = !$emp_result->EOF;
         }
     }
-    return ((int)$_SESSION['admin_id'] === (int)EMP_LOGIN_ADMIN_ID || $admin_in_profile);
+    return ((int)$_SESSION['admin_id'] === (int)zen_config('EMP_LOGIN_ADMIN_ID') || $admin_in_profile);
 }
 
 /**

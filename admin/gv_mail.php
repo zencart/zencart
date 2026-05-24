@@ -93,14 +93,14 @@ if ($action != '') {
         $html_msg['EMAIL_LAST_NAME'] = $row['customers_lastname'];
 
         $message .= zen_db_prepare_input($_POST['message']);
-        if (EMAIL_USE_HTML == 'true') {
+        if (zen_config('EMAIL_USE_HTML') === 'true') {
           $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
         } else {
           $html_msg['EMAIL_MESSAGE_HTML'] = '';
         }
 
         $gv_value = $currencies->format($_POST['amount']);
-        if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
+        if (zen_config('SEARCH_ENGINE_FRIENDLY_URLS') === 'true') {
           $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/';
         } else {
           $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=';
@@ -113,14 +113,14 @@ if ($action != '') {
         $html_msg['GV_REDEEM'] = sprintf(TEXT_GV_TO_REDEEM_HTML, $url, $id1);
 
         // disclaimer
-        $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
+        $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, zen_config('STORE_OWNER_EMAIL_ADDRESS')) . "\n\n";
 
         zen_mail($row['customers_firstname'] . ' ' . $row['customers_lastname'], $row['customers_email_address'], $subject, $message, $from_name, $from_email_address, $html_msg, 'gv_mail');
         zen_record_admin_activity('GV mail sent to ' . $row['customers_email_address'] . ' for ' . $currencies->format($_POST['amount']), 'info');
         $recip_count++;
 
-        if (SEND_EXTRA_GV_ADMIN_EMAILS_TO_STATUS == '1' and SEND_EXTRA_GV_ADMIN_EMAILS_TO != '') {
-          zen_mail('', SEND_EXTRA_GV_ADMIN_EMAILS_TO, SEND_EXTRA_GV_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, $from_name, $from_email_address, $html_msg, 'gv_mail_extra');
+        if (zen_config('SEND_EXTRA_GV_ADMIN_EMAILS_TO_STATUS') === '1' and zen_config('SEND_EXTRA_GV_ADMIN_EMAILS_TO') !== '') {
+          zen_mail('', zen_config('SEND_EXTRA_GV_ADMIN_EMAILS_TO'), SEND_EXTRA_GV_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, $from_name, $from_email_address, $html_msg, 'gv_mail_extra');
         }
       }
 
@@ -219,7 +219,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
               <td><?php echo $currencies->format(nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, true))) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : ''); ?>
               </td>
             </tr>
-            <?php if (EMAIL_USE_HTML == 'true') { ?>
+            <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
               <tr>
                 <td class="text-right"><b><?php echo TEXT_HTML_MESSAGE; ?></b></td>
                 <td><?php echo stripslashes($_POST['message_html']); ?></td>
@@ -267,7 +267,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_input_field('from', htmlspecialchars(EMAIL_FROM, ENT_COMPAT, CHARSET, true), 'size="50" class="form-control" id="from"'); ?>
+              <?php echo zen_draw_input_field('from', htmlspecialchars(zen_config('EMAIL_FROM'), ENT_COMPAT, CHARSET, true), 'size="50" class="form-control" id="from"'); ?>
             </div>
           </div>
           <hr>
@@ -310,7 +310,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           <div class="form-group">
             <div class="col-sm-12"><?php echo TEXT_MESSAGE_INFO; ?></div>
           </div>
-          <?php if (EMAIL_USE_HTML == 'true') { ?>
+          <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
             <div class="form-group">
               <?php echo zen_draw_label(TEXT_HTML_MESSAGE, 'message_html', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">

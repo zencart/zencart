@@ -28,7 +28,7 @@ switch ($set) {
         if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
             $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
         }
-        if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS !== 'True')) {
+        if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
             $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
         }
         if ($shipping_errors !== '') {
@@ -91,12 +91,12 @@ if (!empty($action)) {
             );
             zen_record_admin_activity($msg, 'warning');
             zen_mail(
-                STORE_NAME,
-                STORE_OWNER_EMAIL_ADDRESS,
+                zen_config('STORE_NAME'),
+                zen_config('STORE_OWNER_EMAIL_ADDRESS'),
                 TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED,
                 $msg,
-                STORE_NAME,
-                EMAIL_FROM,
+                zen_config('STORE_NAME'),
+                zen_config('EMAIL_FROM'),
                 ['EMAIL_MESSAGE_HTML' => nl2br($msg, false)],
                 'admin_settings_changed'
             );
@@ -119,12 +119,12 @@ if (!empty($action)) {
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_INSTALLED, preg_replace('/\W/', '*', $_POST['module']), $admname);
                     zen_record_admin_activity($msg, 'warning');
                     zen_mail(
-                        STORE_NAME,
-                        STORE_OWNER_EMAIL_ADDRESS,
+                        zen_config('STORE_NAME'),
+                        zen_config('STORE_OWNER_EMAIL_ADDRESS'),
                         TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED,
                         $msg,
-                        STORE_NAME,
-                        EMAIL_FROM,
+                        zen_config('STORE_NAME'),
+                        zen_config('EMAIL_FROM'),
                         ['EMAIL_MESSAGE_HTML' => nl2br($msg, false)],
                         'admin_settings_changed'
                     );
@@ -150,12 +150,12 @@ if (!empty($action)) {
                     $msg = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MODULE_REMOVED, preg_replace('/\W/', '*', $_POST['module']), $admname);
                     zen_record_admin_activity($msg, 'warning');
                     zen_mail(
-                        STORE_NAME,
-                        STORE_OWNER_EMAIL_ADDRESS,
+                        zen_config('STORE_NAME'),
+                        zen_config('STORE_OWNER_EMAIL_ADDRESS'),
                         TEXT_EMAIL_SUBJECT_ADMIN_SETTINGS_CHANGED,
                         $msg,
-                        STORE_NAME,
-                        EMAIL_FROM,
+                        zen_config('STORE_NAME'),
+                        zen_config('EMAIL_FROM'),
                         ['EMAIL_MESSAGE_HTML' => nl2br($msg, false)],
                         'admin_settings_changed'
                     );
@@ -405,7 +405,7 @@ switch ($action) {
         $keys = '';
         foreach ($mInfo->keys as $key => $value) {
             $displayKey = '';
-            if (ADMIN_CONFIGURATION_KEY_ON === '1') {
+            if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
                 $displayKey = 'Key: ' . $key . '<br>';
             }
             $keys .= '<b>' . $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>' . zen_lookup_admin_menu_language_override('configuration_key_description', $key, $value['description']) . '<br>';
@@ -421,7 +421,7 @@ switch ($action) {
         $contents = [
             'form' => zen_draw_form('modules', FILENAME_MODULES, 'set=' . $set . ($_GET['module'] !== '' ? '&module=' . $_GET['module'] : '') . '&action=save', 'post', 'class="form-horizontal"', true)
         ];
-        if (ADMIN_CONFIGURATION_KEY_ON === '1') {
+        if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
             $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
         }
         $contents[] = ['text' => $keys];
@@ -463,7 +463,7 @@ switch ($action) {
             $keys = '';
             foreach ($mInfo->keys as $key => $value) {
                 $displayKey = '';
-                if (ADMIN_CONFIGURATION_KEY_ON === '1') {
+                if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
                     $displayKey = 'Key: ' . $key . '<br>';
                 }
                 $keys .= '<b>'. $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>';
@@ -487,7 +487,7 @@ switch ($action) {
                 $keys .= '<br><br>';
             }
 
-            if (ADMIN_CONFIGURATION_KEY_ON === '1') {
+            if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
                 $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
             }
             $keys = substr($keys, 0, strrpos($keys, '<br><br>') ?? 0);

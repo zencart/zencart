@@ -14,7 +14,7 @@ if (!defined('DEFAULT_CURRENCY')) {
 }
 
 // check if a default language is set
-if (!defined('DEFAULT_LANGUAGE') || empty(DEFAULT_LANGUAGE)) {
+if (empty(zen_config('DEFAULT_LANGUAGE'))) {
     // Note: Can't use a language constant here, because that would require one to be defined :)
     $messageStack->add('ERROR: No default language defined.', 'error');
 }
@@ -24,7 +24,7 @@ if (function_exists('ini_get') && ((bool)ini_get('file_uploads') === false)) {
 }
 
 // check if email subsystem has been disabled
-if (SEND_EMAILS !== 'true') {
+if (zen_config('SEND_EMAILS') !== 'true') {
     $messageStack->add(WARNING_EMAIL_SYSTEM_DISABLED, 'error');
 }
 
@@ -33,11 +33,11 @@ if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATU
     $messageStack->add(WARNING_EMAIL_SYSTEM_DEVELOPER_OVERRIDE, 'info');
 // check if email destinations have been diverted by developer switch
 } elseif (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
-    $messageStack->add(sprintf(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL, zen_output_string_protected(DEVELOPER_OVERRIDE_EMAIL_ADDRESS), EMAIL_TRANSPORT), 'info');
+    $messageStack->add(sprintf(WARNING_EMAIL_SYSTEM_DEVELOPER_EMAIL, zen_output_string_protected(DEVELOPER_OVERRIDE_EMAIL_ADDRESS), zen_config('EMAIL_TRANSPORT')), 'info');
 }
 
 // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
-  if (DOWN_FOR_MAINTENANCE === 'true') {
+  if (zen_config('DOWN_FOR_MAINTENANCE') === 'true') {
     $messageStack->add(WARNING_ADMIN_DOWN_FOR_MAINTENANCE, 'caution');
 }
 
@@ -102,7 +102,7 @@ if (function_exists('ini_get') && WARN_SESSION_AUTO_START === 'true') {
 }
 
 // to warn if the "downloads" folder is not readable (ie: not found, etc)
-if (WARN_DOWNLOAD_DIRECTORY_NOT_READABLE === 'true' && DOWNLOAD_ENABLED === 'true') {
+if (WARN_DOWNLOAD_DIRECTORY_NOT_READABLE === 'true' && zen_config('DOWNLOAD_ENABLED') === 'true') {
     if (!is_dir(DIR_FS_DOWNLOAD)) {
         $messageStack->add(WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT, 'warning');
     }
@@ -158,12 +158,12 @@ if (zen_get_configuration_key_value('MODULE_SHIPPING_INSTALLED') === '') {
 }
 
 // if welcome email coupon is set and <= 21 days warn shop owner
-if ((int)NEW_SIGNUP_DISCOUNT_COUPON > 0) {
-    $zc_welcome_check = $db->Execute("SELECT coupon_expire_date FROM " . TABLE_COUPONS . " WHERE coupon_id = " . (int)NEW_SIGNUP_DISCOUNT_COUPON . " LIMIT 1");
+if ((int)zen_config('NEW_SIGNUP_DISCOUNT_COUPON') > 0) {
+    $zc_welcome_check = $db->Execute("SELECT coupon_expire_date FROM " . TABLE_COUPONS . " WHERE coupon_id = " . (int)zen_config('NEW_SIGNUP_DISCOUNT_COUPON') . " LIMIT 1");
     if ($zc_welcome_check->EOF) {
         if (!isset($_SESSION['nsdc_missing'])) {
             $_SESSION['nsdc_missing'] = 'logged';
-            trigger_error('New Signup Discount Coupon ID#' . (int)NEW_SIGNUP_DISCOUNT_COUPON . ' does not exist. You can change that using the GV Coupons configuration settings.', E_USER_NOTICE);
+            trigger_error('New Signup Discount Coupon ID#' . (int)zen_config('NEW_SIGNUP_DISCOUNT_COUPON') . ' does not exist. You can change that using the GV Coupons configuration settings.', E_USER_NOTICE);
         }
     } else {
         $zc_current_date = date('Y-m-d');
@@ -176,18 +176,18 @@ if ((int)NEW_SIGNUP_DISCOUNT_COUPON > 0) {
 }
 
 // Alerts for EZ-Pages
-if (EZPAGES_STATUS_HEADER === '2' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('EZPAGES_STATUS_HEADER') === '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_HEADER_ADMIN, 'caution');
 }
-if (EZPAGES_STATUS_FOOTER === '2' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('EZPAGES_STATUS_FOOTER') === '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_FOOTER_ADMIN, 'caution');
 }
-if (EZPAGES_STATUS_SIDEBOX === '2' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('EZPAGES_STATUS_SIDEBOX') === '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_SIDEBOX_ADMIN, 'caution');
 }
 
 // Editor alerts
-if (HTML_EDITOR_PREFERENCE !== 'NONE' && !is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS)) {
+if (zen_config('HTML_EDITOR_PREFERENCE') !== 'NONE' && !is_dir(DIR_FS_CATALOG . DIR_WS_EDITORS)) {
     $messageStack->add(ERROR_EDITORS_FOLDER_NOT_FOUND, 'caution');
 }
 

@@ -52,8 +52,8 @@ $whos_online = $wo->retrieve($selectedView, (empty($_GET['inspect']) ? '' : $_GE
 
 if (!defined('WHOIS_SHOW_HOST')) define('WHOIS_SHOW_HOST', '1');
 
-$optURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['t', 'na', 'ns'])) . '&';
-$listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', 't', 'na', 'ns'])) . '&';
+$optURL = zen_href_link(zen_config('FILENAME_WHOS_ONLINE'), zen_get_all_get_params(['t', 'na', 'ns'])) . '&';
+$listingURL = zen_href_link(zen_config('FILENAME_WHOS_ONLINE'), zen_get_all_get_params(['q', 't', 'na', 'ns'])) . '&';
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -87,7 +87,7 @@ $listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', '
         <div class="col-sm-6" id="wo-legend">
             <?php
             echo
-            '<a href="' . zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params()) . '" class="menuBoxContentLink">' . '<strong><u>' . WHOS_ONLINE_REFRESH_LIST_TEXT . '</u></strong>' . '</a>' .
+            '<a href="' . zen_href_link(zen_config('FILENAME_WHOS_ONLINE'), zen_get_all_get_params()) . '" class="menuBoxContentLink">' . '<strong><u>' . WHOS_ONLINE_REFRESH_LIST_TEXT . '</u></strong>' . '</a>' .
             '<br>' . "\n" . WHOS_ONLINE_LEGEND_TEXT . '&nbsp;' .
             zen_icon('status-green') . '&nbsp;' . WHOS_ONLINE_ACTIVE_TEXT . '&nbsp;&nbsp;' .
             zen_icon('status-yellow') . '&nbsp;' . WHOS_ONLINE_INACTIVE_TEXT . '&nbsp;&nbsp;' .
@@ -356,7 +356,7 @@ $listingURL = zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(['q', '
     <!--  enable on-page script tools -->
     <script>
         <?php
-        $inspectLink = str_replace('&amp;', '&', zen_href_link(FILENAME_WHOS_ONLINE, zen_get_all_get_params(array('inspect', 'action')) . "inspect=[*]"));
+        $inspectLink = str_replace('&amp;', '&', zen_href_link(zen_config('FILENAME_WHOS_ONLINE'), zen_get_all_get_params(array('inspect', 'action')) . "inspect=[*]"));
         ?>
         jQuery(function () {
             const inspectLink = '<?php echo $inspectLink; ?>';

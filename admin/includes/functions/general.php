@@ -165,7 +165,7 @@ function zen_cfg_pull_down_zone_list(string $zone_id, string $key = ''): string
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     $none = [['id' => 0, 'text' => TEXT_NONE]];
-    $zones = zen_get_country_zones(STORE_COUNTRY);
+    $zones = zen_get_country_zones(zen_config('STORE_COUNTRY'));
     return zen_draw_pull_down_menu($name, array_merge($none, $zones), $zone_id, 'class="form-control"');
 }
 
@@ -374,7 +374,7 @@ function zen_get_system_information(bool $privacy = false): array
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
-    $uptime = (DISPLAY_SERVER_UPTIME === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
+    $uptime = (zen_config('DISPLAY_SERVER_UPTIME') === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
     $exec_disabled = false;
@@ -391,7 +391,7 @@ function zen_get_system_information(bool $privacy = false): array
             [$system, $host, $kernel] = preg_split('/[\s,]+/', $output[0], 5);
         }
         $output = '';
-        if (DISPLAY_SERVER_UPTIME === 'true') {
+        if (zen_config('DISPLAY_SERVER_UPTIME') === 'true') {
             @exec('uptime 2>&1', $output, $errnum);
             if ($errnum == 0 && isset($output[0])) {
                 $uptime = $output[0];
@@ -785,7 +785,7 @@ function zen_set_ezpage_status(int $pages_id, int $status, string $status_field)
     global $db, $sniffer;
     
     // Use the $sniffer class to check if the field exists in the table
-    if (!$sniffer->field_exists(TABLE_EZPAGES, $status_field)) {
+    if (!$sniffer->field_exists($status_field, TABLE_EZPAGES)) {
         return; // invalid field, do not proceed
     }
 

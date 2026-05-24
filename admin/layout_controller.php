@@ -433,7 +433,7 @@ $show_single_column = $include_single_column_settings && ($uses_mobile_sidebox_s
                                 <div class="panel panel-success">
                                     <div class="panel-heading text-center">
 <?php
-if (COLUMN_LEFT_STATUS === '0') {
+if (zen_config('COLUMN_LEFT_STATUS') === '0') {
 ?>
                                         <a href="javascript:void(0);" data-toggle="popover" title="<?= TEXT_COLUMN_DISABLED ?>" data-content="<?= TEXT_DISABLED_MESSAGE ?>" data-trigger="focus">
                                             <i class="fa-solid fa-2x fa-circle-exclamation text-danger"></i>
@@ -474,7 +474,7 @@ foreach ($left_active as $next_box => $next_box_id) {
                                 <div class="panel panel-success">
                                     <div class="panel-heading text-center">
 <?php
-if (COLUMN_RIGHT_STATUS === '0') {
+if (zen_config('COLUMN_RIGHT_STATUS') === '0') {
 ?>
                                         <a href="javascript:void(0);" data-toggle="popover" title="<?= TEXT_COLUMN_DISABLED ?>" data-content="<?= TEXT_DISABLED_MESSAGE ?>" data-trigger="focus">
                                             <i class="fa-solid fa-2x fa-circle-exclamation text-danger"></i>

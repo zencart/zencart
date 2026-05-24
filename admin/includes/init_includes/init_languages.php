@@ -23,7 +23,7 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
         $lng->get_browser_language();
 
         //@TODO: This next line was added in v1.2.0. It's an aggressive override. Do we still need this?
-        $lng->set_language(DEFAULT_LANGUAGE);
+        $lng->set_language(zen_config('DEFAULT_LANGUAGE'));
     }
 
     if (!is_file(DIR_WS_LANGUAGES . 'lang.' . $lng->language['directory'] . '.php')) {

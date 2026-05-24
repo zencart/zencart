@@ -63,7 +63,7 @@ if (!empty($action)) {
 
 $query = $db->Execute("SELECT COUNT(*) AS count
                        FROM " . TABLE_GROUP_PRICING);
-if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS') || MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS != 'true')) {
+if ($query->fields['count'] > 0 && (zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS') != 'true')) {
   $messageStack->add(ERROR_MODULE_NOT_CONFIGURED, 'error');
 }
 ?>
@@ -101,21 +101,21 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['gID'])) {
                   $check_page = $db->Execute($groups_query_raw);
                   $check_count = 0;
-                  if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                  if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
                     foreach ($check_page as $item) {
                       if ($item['group_id'] == $_GET['gID']) {
                         break;
                       }
                       $check_count++;
                     }
-                    $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                    $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
 //    zen_redirect(zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $_GET['cID'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'NONSSL'));
                   } else {
                     $_GET['page'] = 1;
                   }
                 }
 
-                $groups_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $groups_query_raw, $groups_query_numrows);
+                $groups_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $groups_query_raw, $groups_query_numrows);
                 $groups = $db->Execute($groups_query_raw);
                 foreach ($groups as $group) {
                   if ((!isset($_GET['gID']) || (isset($_GET['gID']) && ($_GET['gID'] == $group['group_id']))) && !isset($gInfo) && (substr($action, 0, 3) != 'new')) {
@@ -221,8 +221,8 @@ if ($query->fields['count'] > 0 && (!defined('MODULE_ORDER_TOTAL_GROUP_PRICING_S
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $groups_split->display_count($groups_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRICING_GROUPS); ?></td>
-            <td class="text-right"><?php echo $groups_split->display_links($groups_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $groups_split->display_count($groups_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRICING_GROUPS); ?></td>
+            <td class="text-right"><?php echo $groups_split->display_links($groups_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
         </table>
       </div>

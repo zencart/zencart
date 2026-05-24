@@ -152,7 +152,7 @@ if ($action === 'edit') {
         <div class="row">
             <?= zen_draw_form('update', FILENAME_REVIEWS, $page_param . $status_param . 'rID=' . $_GET['rID'] . '&action=update', 'post', 'class="form-horizontal"') ?>
             <div class="form-group">
-                <?= zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) ?>
+                <?= zen_info_image($rInfo->products_image, $rInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT')) ?>
             </div>
             <div class="form-group">
                 <div class="col-sm-3">
@@ -220,7 +220,7 @@ if ($action === 'edit') {
         <div class="row">
             <div class="form-horizontal">
                 <div class="form-group">
-                    <?= zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) ?>
+                    <?= zen_info_image($rInfo->products_image, $rInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT')) ?>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-3">
@@ -375,7 +375,7 @@ if ($action === 'edit') {
     // reset page when page is unknown
     if ($currentPage === 1 && !empty($_GET['rID'])) {
         $check_page = $db->Execute($reviews_query_raw);
-        if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+        if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
             $check_count = 0;
             foreach ($check_page as $item) {
                 $check_count++;
@@ -383,12 +383,12 @@ if ($action === 'edit') {
                     break;
                 }
             }
-            $currentPage = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+            $currentPage = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
             $page_param = $currentPage > 1 ? 'page=' . (int)$currentPage . '&' : '';
         }
     }
 
-    $reviews_split = new splitPageResults($currentPage, MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
+    $reviews_split = new splitPageResults($currentPage, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $reviews_query_raw, $reviews_query_numrows);
     $reviews = $db->Execute($reviews_query_raw);
     foreach ($reviews as $review) {
         if ((!isset($_GET['rID']) || (int)$_GET['rID'] === (int)$review['reviews_id']) && !isset($rInfo)) {
@@ -503,7 +503,7 @@ if ($action === 'edit') {
             if (!empty($rInfo->last_modified)) {
                 $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($rInfo->last_modified)];
             }
-            $contents[] = ['text' => zen_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+            $contents[] = ['text' => zen_info_image($rInfo->products_image, $rInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'))];
             $contents[] = ['text' => ENTRY_REVIEW_TITLE . '<br>' . zen_output_string_protected($rInfo->reviews_title)];
             $contents[] = ['text' => ENTRY_REVIEW . '<br>' . zen_output_string_protected($rInfo->reviews_text)];
             $contents[] = ['text' => TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name];
@@ -531,10 +531,10 @@ if ($action === 'edit') {
             <table class="table">
                 <tr>
                     <td>
-                        <?= $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $currentPage, TEXT_DISPLAY_NUMBER_OF_REVIEWS) ?>
+                        <?= $reviews_split->display_count($reviews_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currentPage, TEXT_DISPLAY_NUMBER_OF_REVIEWS) ?>
                     </td>
                     <td class="text-right">
-                        <?= $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $currentPage, zen_get_all_get_params(['page', 'rID'])) ?>
+                        <?= $reviews_split->display_links($reviews_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $currentPage, zen_get_all_get_params(['page', 'rID'])) ?>
                     </td>
                 </tr>
             </table>

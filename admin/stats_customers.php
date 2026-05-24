@@ -42,7 +42,7 @@ $currencies = new currencies();
                                     AND o.orders_id = op.orders_id
                                     GROUP BY c.customers_id, c.customers_firstname, c.customers_lastname
                                     ORDER BY ordersum DESC";
-            $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $customers_query_raw, $customers_query_numrows);
+            $customers_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $customers_query_raw, $customers_query_numrows);
 // fix counted customers
             $customers_query_m = $db->Execute("SELECT customers_id
                                                FROM " . TABLE_ORDERS . "
@@ -60,8 +60,8 @@ $currencies = new currencies();
       </table>
       <table class="table">
         <tr>
-          <td><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
-          <td class="text-right"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+          <td><?php echo $customers_split->display_count($customers_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
+          <td class="text-right"><?php echo $customers_split->display_links($customers_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
         </tr>
       </table>
       <!-- body_text_eof //-->

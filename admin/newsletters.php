@@ -344,7 +344,7 @@ if (!empty($action)) {
                                                    length(content_html) AS content_html_length, module, date_added, date_sent, status
                                             FROM " . TABLE_NEWSLETTERS . "
                                             ORDER BY date_added desc";
-                  $newsletters_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $newsletters_query_raw, $newsletters_query_numrows);
+                  $newsletters_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $newsletters_query_raw, $newsletters_query_numrows);
                   $newsletters = $db->Execute($newsletters_query_raw);
                   foreach ($newsletters as $newsletter) {
                     if ((!isset($_GET['nID']) || (isset($_GET['nID']) && ($_GET['nID'] == $newsletter['newsletters_id']))) && !isset($nInfo) && (substr($action, 0, 3) != 'new')) {
@@ -418,8 +418,8 @@ if (!empty($action)) {
         <div class="row">
           <table class="table">
             <tr>
-              <td><?php echo $newsletters_split->display_count($newsletters_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS); ?></td>
-              <td class="text-right"><?php echo $newsletters_split->display_links($newsletters_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+              <td><?php echo $newsletters_split->display_count($newsletters_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS); ?></td>
+              <td class="text-right"><?php echo $newsletters_split->display_links($newsletters_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
             </tr>
             <tr>
               <td class="text-right" colspan="2"><a href="<?php echo zen_href_link(FILENAME_NEWSLETTERS, 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_NEW_NEWSLETTER; ?></a></td>

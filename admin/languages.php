@@ -307,9 +307,9 @@ switch ($action) {
               WHERE languages_id = " . (int)$lID
         );
         // compare "code" vs DEFAULT_LANGUAGE
-        $changing_default_lang = (DEFAULT_LANGUAGE === ($result->fields['code'] ?? ''));
+        $changing_default_lang = (zen_config('DEFAULT_LANGUAGE') === ($result->fields['code'] ?? ''));
         // compare whether "code" matches $code (which was just submitted in the edit form
-        $default_needs_an_update = (DEFAULT_LANGUAGE !== $code);
+        $default_needs_an_update = (zen_config('DEFAULT_LANGUAGE') !== $code);
         // if we just edited the default language id's name, then we need to update the database with the new name for default
         $default_lang_change_flag = ($default_needs_an_update && $changing_default_lang);
 
@@ -343,7 +343,7 @@ switch ($action) {
             zen_redirect(zen_href_link(FILENAME_LANGUAGES));
         }
 
-        if ($result->fields['code'] === DEFAULT_LANGUAGE) {
+        if ($result->fields['code'] === zen_config('DEFAULT_LANGUAGE')) {
             $messageStack->add_session(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
             zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . (int)$lID));
         }
@@ -367,7 +367,7 @@ switch ($action) {
         // if we just deleted our currently-selected language, need to switch to default lang:
         $getlang = '';
         if ((int)$_SESSION['languages_id'] === (int)$lID) {
-            $getlang = '&language=' . DEFAULT_LANGUAGE;
+            $getlang = '&language=' . zen_config('DEFAULT_LANGUAGE');
         }
 
         $zco_notifier->notify('NOTIFY_ADMIN_LANGUAGE_DELETE', (int)$lID);
@@ -378,7 +378,7 @@ switch ($action) {
     case 'delete':
         $lID = (int)$_GET['lID'];
         $result = $db->Execute("SELECT code FROM " . TABLE_LANGUAGES . " WHERE languages_id = " . (int)$lID);
-        if (($result->fields['code'] ?? '') === DEFAULT_LANGUAGE) {
+        if (($result->fields['code'] ?? '') === zen_config('DEFAULT_LANGUAGE')) {
             $messageStack->add_session(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
             zen_redirect(zen_href_link(FILENAME_LANGUAGES, 'lID=' . $lID));
         }
@@ -433,7 +433,7 @@ foreach ($languages as $language) {
              <tr class="dataTableRow" onclick="document.location.href='<?= zen_href_link(FILENAME_LANGUAGES, 'lID=' . $languages_id) ?>'" role="option" aria-selected="false">
 <?php
     }
-    if (DEFAULT_LANGUAGE === $language['code']) {
+    if (zen_config('DEFAULT_LANGUAGE') === $language['code']) {
 ?>
               <td class="dataTableContent"><strong><?= $language['name'] . ' (' . TEXT_DEFAULT . ')' ?></strong></td>
 <?php
@@ -514,7 +514,7 @@ switch ($action) {
             zen_draw_label(TEXT_INFO_LANGUAGE_SORT_ORDER, 'sort_order', 'class="control-label"') .
             zen_draw_input_field('sort_order', $lInfo?->sort_order ?? $sort_order ?? '0', 'id="sort_order" class="form-control"', false, 'number')
         ];
-        if (DEFAULT_LANGUAGE !== ($lInfo?->code ?? '')) {
+        if (zen_config('DEFAULT_LANGUAGE') !== ($lInfo?->code ?? '')) {
             $contents[] = ['text' => '<div class="checkbox-inline"><label>' . zen_draw_checkbox_field('default') . TEXT_SET_DEFAULT . '</label></div>'];
         }
         $contents[] = [
@@ -551,7 +551,7 @@ switch ($action) {
         $heading[] = ['text' => '<h4>' . zen_output_string_protected($lInfo->name) . '</h4>'];
 
         $delete_button = '';
-        if ($lInfo->code !== DEFAULT_LANGUAGE) {
+        if ($lInfo->code !== zen_config('DEFAULT_LANGUAGE')) {
             $delete_button =
                 '<a href="' . zen_href_link(FILENAME_LANGUAGES, 'lID=' . $lInfo->languages_id . '&action=delete') . '" class="btn btn-warning" role="button">' .
                     IMAGE_DELETE .

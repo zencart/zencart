@@ -141,7 +141,7 @@
         <td class="col-sm-12"><table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE_MEDIA_MANAGER; ?></td>
-            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -155,7 +155,7 @@
               </tr>
 <?php
   $media_query_raw = "SELECT * FROM " . TABLE_MEDIA_MANAGER . " ORDER BY media_name";
-  $media_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $media_query_raw, $media_query_numrows);
+  $media_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $media_query_raw, $media_query_numrows);
   $media = $db->Execute($media_query_raw);
   $mManager_parameter = '';
   while (!$media->EOF) {
@@ -191,8 +191,8 @@
               <tr>
                 <td colspan="2"><table class="col-sm-12" border="0" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText align-top"><?php echo $media_split->display_count($media_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA); ?></td>
-                    <td class="smallText text-right"><?php echo $media_split->display_links($media_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText align-top"><?php echo $media_split->display_count($media_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA); ?></td>
+                    <td class="smallText text-right"><?php echo $media_split->display_links($media_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
                   </tr>
                 </table></td>
               </tr>
