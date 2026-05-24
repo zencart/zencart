@@ -785,7 +785,7 @@ function zen_set_ezpage_status(int $pages_id, int $status, string $status_field)
     global $db, $sniffer;
     
     // Use the $sniffer class to check if the field exists in the table
-    if (!$sniffer->field_exists($status_field, TABLE_EZPAGES)) {
+    if (!$sniffer->field_exists(TABLE_EZPAGES, $status_field)) {
         return; // invalid field, do not proceed
     }
 
