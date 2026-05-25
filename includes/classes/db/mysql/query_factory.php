@@ -849,6 +849,13 @@ class queryFactory extends base
 }
 
 /**
+ * Class representing the result of a query executed by queryFactory, which can be iterated over to access rows of data,
+ * and which also contains metadata about the query result and methods for accessing that metadata.
+ *
+ * All queryFactory result responses use this class.
+ *
+ * All queryFactoryResult objects are iterable, and the current row of data can be accessed via the $fields property, which is an array of field => value pairs for the current row.
+ *
  * @since ZC v1.2.0d
  */
 class queryFactoryResult implements Countable, Iterator
@@ -897,10 +904,7 @@ class queryFactoryResult implements Countable, Iterator
 
     public string $sql_query = '';
 
-    /**
-     * @param mysqli $link
-     */
-    public function __construct(public mysqli $link)
+    public function __construct(public ?mysqli $link)
     {
     }
 
