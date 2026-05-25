@@ -174,8 +174,12 @@ if (!function_exists('fpow')) {
 }
 
 if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
-    function mb_ucfirst(string $string, ?string $encoding = null): string
+    function mb_ucfirst(?string $string, ?string $encoding = null): string
     {
+        if (null === $string) {
+            return '';
+        }
+
         if (null === $encoding) {
             $encoding = mb_internal_encoding();
         }
@@ -194,8 +198,12 @@ if (!function_exists('mb_ucfirst') && function_exists('mb_substr')) {
 }
 
 if (!function_exists('mb_lcfirst') && function_exists('mb_substr')) {
-    function mb_lcfirst(string $string, ?string $encoding = null): string
+    function mb_lcfirst(?string $string, ?string $encoding = null): string
     {
+        if (null === $string) {
+            return '';
+        }
+
         if (null === $encoding) {
             $encoding = mb_internal_encoding();
         }
@@ -217,6 +225,10 @@ if (!function_exists('mb_internal_trim') && !function_exists('mb_trim') && funct
     /** Polyfill helper function, not to be called directly */
     function mb_internal_trim(string $regex, string $string, ?string $characters, ?string $encoding, string $function): string
     {
+        if ('' === $string) {
+            return '';
+        }
+
         if (null === $encoding) {
             $encoding = mb_internal_encoding();
         }
@@ -258,23 +270,23 @@ if (!function_exists('mb_internal_trim') && !function_exists('mb_trim') && funct
 }
 
 if (!function_exists('mb_trim')) {
-    function mb_trim(string $string, ?string $characters = null, ?string $encoding = null): string
+    function mb_trim(?string $string, ?string $characters = null, ?string $encoding = null): string
     {
-        return mb_internal_trim('{^[%s]+|[%1$s]+$}Du', $string, $characters, $encoding, __FUNCTION__);
+        return mb_internal_trim('{^[%s]+|[%1$s]+$}Du', (string)$string, $characters, $encoding, __FUNCTION__);
     }
 }
 
 if (!function_exists('mb_ltrim')) {
-    function mb_ltrim(string $string, ?string $characters = null, ?string $encoding = null): string
+    function mb_ltrim(?string $string, ?string $characters = null, ?string $encoding = null): string
     {
-        return mb_internal_trim('{^[%s]+}Du', $string, $characters, $encoding, __FUNCTION__);
+        return mb_internal_trim('{^[%s]+}Du', (string)$string, $characters, $encoding, __FUNCTION__);
     }
 }
 
 if (!function_exists('mb_rtrim')) {
-    function mb_rtrim(string $string, ?string $characters = null, ?string $encoding = null): string
+    function mb_rtrim(?string $string, ?string $characters = null, ?string $encoding = null): string
     {
-        return mb_internal_trim('{[%s]+$}Du', $string, $characters, $encoding, __FUNCTION__);
+        return mb_internal_trim('{[%s]+$}Du', (string)$string, $characters, $encoding, __FUNCTION__);
     }
 }
 
