@@ -24,7 +24,7 @@ if (!defined('DB_ERROR_NOT_CONNECTED')) {
  */
 class queryFactory extends base
 {
-    public mysqli $link; // mysqli object
+    public mysqli|false $link; // mysqli object
     private int $count_queries = 0;
     private float|int $total_query_time = 0;
     public bool $dieOnErrors = false;
