@@ -2,7 +2,7 @@
 
 /**
  * MySQL query_factory class.
- * Class used for database abstraction to MySQL via mysqli
+ * Class used for database abstraction to MySQL via mysqli procedural interface.
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -18,7 +18,7 @@ if (!defined('DB_ERROR_NOT_CONNECTED')) {
 }
 
 /**
- * Queryfactory - A simple database abstraction layer
+ * QueryFactory - A simple database abstraction class for MySQL using mysqli procedural interface, with built-in error handling and support for query caching and logging.
  *
  * @since ZC v1.2.0d
  */
