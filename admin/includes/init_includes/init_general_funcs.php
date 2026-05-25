@@ -6,12 +6,11 @@
  * @version $Id: DrByte 2025 Feb 27 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 
 // customization for the design layout
-define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
-
+zen_define_default('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
 
 require 'includes/init_includes/init_pci_settings.php';
 
@@ -22,6 +21,7 @@ require DIR_WS_FUNCTIONS . 'functions_mfa.php';
 
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_attributes.php';
+require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_templates.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_files.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_traffic.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';

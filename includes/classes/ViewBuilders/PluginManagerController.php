@@ -11,15 +11,16 @@ use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
 use Zencart\PluginSupport\PluginStatus;
+use Zencart\ResourceLoaders;
 
 /**
  * @since ZC v1.5.8
  */
 class PluginManagerController extends BaseController
 {
-
     protected PluginManager $pluginManager;
     protected InstallerFactory $installerFactory;
+    protected array $manifests;
 
     /**
      * @since ZC v1.5.8
@@ -35,11 +36,16 @@ class PluginManagerController extends BaseController
      */
     protected function getManifest(string $unique_key, string $version): null|array
     {
+        if (isset($this->manifests[$unique_key][$version])) {
+            return $this->manifests[$unique_key][$version];
+        }
         $manifest_file = DIR_FS_CATALOG . "zc_plugins/$unique_key/$version/manifest.php";
         if (!file_exists($manifest_file)) {
             return null;
         }
-        return require $manifest_file;
+        $manifest = require $manifest_file;
+        $this->manifests[$unique_key][$version] = $manifest;
+        return $manifest;
     }
 
     /**
@@ -52,6 +58,24 @@ class PluginManagerController extends BaseController
     }
 
     /**
+     * @since ZC v3.0.0
+     */
+    protected function isSelectableTemplate(string $unique_key, string $version): bool
+    {
+        $manifest = $this->getManifest($unique_key, $version);
+        return !empty($manifest['template']);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function getSelectableTemplateKey(string $unique_key, string $version): ?string
+    {
+        $manifest = $this->getManifest($unique_key, $version);
+        return $manifest['template']['key'] ?? null;
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     protected function processDefaultAction(): void
@@ -60,11 +84,15 @@ class PluginManagerController extends BaseController
             zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER));
         }
 
-        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $this->currentFieldValue('unique_key'), $this->currentFieldValue('name')) . '</h4>');
-        if ($this->currentFieldValue('status') == 1) {
-            $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $this->currentFieldValue('version')) . '<br>');
+        $unique_key = $this->currentFieldValue('unique_key');
+        $version = $this->currentFieldValue('version');
+        $status = (int)$this->currentFieldValue('status');
+
+        $this->setBoxHeader('<h4>' . zen_lookup_admin_menu_language_override('plugin_name', $unique_key, $this->currentFieldValue('name')) . '</h4>');
+        if ($status === PluginStatus::ENABLED) {
+            $this->setBoxContent('<br>' . sprintf(TEXT_VERSION_INSTALLED, $version) . '<br>');
         }
-        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $this->currentFieldValue('unique_key'), $this->currentFieldValue('description')));
+        $this->setBoxContent('<br>' . TEXT_INFO_DESCRIPTION . '<br>' . zen_lookup_admin_menu_language_override('plugin_description', $unique_key, $this->currentFieldValue('description')));
 
         if (!empty($this->currentFieldValue('author'))) {
             $this->setBoxContent(
@@ -72,7 +100,7 @@ class PluginManagerController extends BaseController
             );
         }
 
-        if ((int)$this->currentFieldValue('status') === PluginStatus::NOT_INSTALLED) {
+        if ($status === PluginStatus::NOT_INSTALLED) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -81,7 +109,7 @@ class PluginManagerController extends BaseController
             );
         }
 
-        if ($available = $this->pluginManager->isNewDownloadAvailable($this->currentFieldValue('zc_contrib_id'), $this->currentFieldValue('version'))) {
+        if ($available = $this->pluginManager->isNewDownloadAvailable($this->currentFieldValue('zc_contrib_id'), $version)) {
             $this->setBoxContent(
                 sprintf(TEXT_NEW_PLUGIN_DOWNLOAD_AVAILABLE, $available['latest_plugin_version'], $available['id'])
             );
@@ -91,7 +119,7 @@ class PluginManagerController extends BaseController
             );
         }
 
-        if ($this->pluginManager->isUpgradeAvailable($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
+        if ($this->pluginManager->isUpgradeAvailable($unique_key, $version)) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -99,35 +127,61 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
             );
         }
-        if ((int)$this->currentFieldValue('status') === PluginStatus::ENABLED) {
-            $this->setBoxContent(
-                '<a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=disable'
-                ) . '" class="btn btn-primary" role="button">' . TEXT_DISABLE . '</a>'
-            );
-            $this->setBoxContent(
-                '<a href="' . zen_href_link(
-                    FILENAME_PLUGIN_MANAGER,
-                    $this->pageLink() . '&' . $this->colKeyLink() . '&action=uninstall'
-                ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
-            );
-        } elseif ((int)$this->currentFieldValue('status') === PluginStatus::DISABLED) {
+
+        if ($status === PluginStatus::ENABLED) {
+            // -----
+            // Template packages have a 'template' array within their manifest and
+            // are enabled/disabled via the "Template Selection" tool, so the 'Disable'
+            // action isn't displayed by the "Plugin Manager".
+            //
+            if (!$this->isSelectableTemplate($unique_key, $version)) {
+                $this->setBoxContent(
+                    '<a href="' . zen_href_link(
+                        FILENAME_PLUGIN_MANAGER,
+                        $this->pageLink() . '&' . $this->colKeyLink() . '&action=disable'
+                    ) . '" class="btn btn-primary" role="button">' . TEXT_DISABLE . '</a>'
+                );
+            }
+        } elseif ($status === PluginStatus::DISABLED) {
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
                     $this->pageLink() . '&' . $this->colKeyLink() . '&action=enable'
                 ) . '" class="btn btn-primary" role="button">' . TEXT_ENABLE . '</a>'
             );
+        }
+        if ($status === PluginStatus::DISABLED || $status === PluginStatus::ENABLED) {
+            $btn_type = 'primary';
+            if ($this->isSelectableTemplate($unique_key, $version)) {
+                $plugin_template_key = $this->getSelectableTemplateKey($unique_key, $version);
+                if ($plugin_template_key !== null) {
+                    $templateSelect = new \Zencart\Templates\TemplateSelect();
+                    $isAssignedTemplate = false;
+                    foreach ($templateSelect->getAllActiveTemplates() as $selectedTemplate) {
+                        if (($selectedTemplate['template_dir'] ?? null) === $plugin_template_key) {
+                            $isAssignedTemplate = true;
+                            break;
+                        }
+                    }
+
+                    if ($isAssignedTemplate) {
+                        $btn_type = 'warning';
+                        $this->setBoxContent(
+                            sprintf(WARNING_TEMPLATE_IS_ACTIVE, zen_href_link(FILENAME_TEMPLATE_SELECT), BOX_TOOLS_TEMPLATE_SELECT)
+                        );
+                    }
+                }
+            }
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
                     $this->pageLink() . '&' . $this->colKeyLink() . '&action=uninstall'
-                ) . '" class="btn btn-primary" role="button">' . TEXT_UNINSTALL . '</a>'
+                ) . '" class="btn btn-' . $btn_type . '" role="button">' . TEXT_UNINSTALL . '</a>'
             );
         }
-        if ($this->pluginManager->hasPluginVersionsToClean($this->currentFieldValue('unique_key'), $this->currentFieldValue('version'))) {
-            $this->setBoxContent('<br>' . TEXT_INFO_CLEANUP);
+
+        if ($this->pluginManager->hasPluginVersionsToClean($unique_key, $version)) {
+            $this->setBoxContent(TEXT_INFO_CLEANUP);
             $this->setBoxContent(
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,

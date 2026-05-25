@@ -95,8 +95,13 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
         // current session's language**, load those definitions, adding to the
         // to-be-generated constants' list.
         //
-        if ($this->fileSystem->hasTemplateLanguageOverride($this->templateDir, DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES)) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES, '/' . $this->templateDir);
+        $templateOverrideFile = $this->findTemplateLanguageOverrideFile(
+            DIR_FS_CATALOG . DIR_WS_LANGUAGES,
+            $_SESSION['language'],
+            'lang.' . FILENAME_OTHER_IMAGES_NAMES
+        );
+        if ($templateOverrideFile !== null) {
+            $defineList = $this->loadArrayDefineFile($templateOverrideFile);
             $this->addLanguageDefines($defineList);
         }
     }
