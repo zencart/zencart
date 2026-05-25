@@ -33,7 +33,8 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
-        "ext-pcre": "*"
+        "ext-pcre": "*",
+        "ext-mysqli": "*"
     },
     "require-dev": {
         "ext-pdo": "*",
