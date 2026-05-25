@@ -93,6 +93,7 @@ class PluginControlRepository
                 ") ON DUPLICATE KEY UPDATE " .
                 "name = VALUES(name), " .
                 "description = VALUES(description), " .
+                "type = VALUES(type), " .
                 "infs = VALUES(infs), " .
                 "author = VALUES(author), " .
                 "zc_contrib_id = VALUES(zc_contrib_id)"

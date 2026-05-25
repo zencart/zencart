@@ -271,15 +271,16 @@ class PluginManager
                     'unique_key' => $uniqueKey,
                     'name' => $plugin[$pluginVersion]['pluginName'],
                     'description' => $plugin[$pluginVersion]['pluginDescription'],
-                    'type' => '',
+                    'type' => isset($plugin[$pluginVersion]['template']) ? 'template' : '',
                     'status' => PluginStatus::NOT_INSTALLED,
                     'author' => $plugin[$pluginVersion]['pluginAuthor'],
                     'version' => '',
                     'zc_versions' => '',
                     'infs' => 1,
-                    'zc_contrib_id' => $plugin[$pluginVersion]['pluginId'],
+                    'zc_contrib_id' => (int)$plugin[$pluginVersion]['pluginId'],
                 ];
         }
+
         // Insert new, and update existing, plugins
         $this->pluginControl->upsertMany($insertValues);
         $this->pluginControlVersion->upsertMany($versionInsertValues);

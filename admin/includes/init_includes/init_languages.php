@@ -41,13 +41,7 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
 // and order-total language files to also apply to their associated 'Modules' page
 // display.
 //
-$template_query = $db->Execute(
-    "SELECT template_dir
-       FROM " . TABLE_TEMPLATE_SELECT . "
-       WHERE template_language in (" . (int)$_SESSION['languages_id'] . ', 0' . ")
-       ORDER BY template_language DESC"
-);
-$template_dir = $template_query->fields['template_dir'];
+$template_dir = zen_resolve_template_key();
 
 // include the language translations
 $current_page = ($PHP_SELF === 'home.php') ? 'index.php' : $PHP_SELF;

@@ -131,10 +131,19 @@ class ArraysLanguageLoader extends BaseLanguageLoader
             $defineListMain = array_merge($defineListMain, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
         }
 
-        $extraPath .= '/' . $this->templateDir;
-        $defineListTemplate = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
-        if ($language !== $this->fallback) {
-            $defineListTemplate = array_merge($defineListTemplate, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
+        $defineListTemplate = [];
+        foreach ($this->getTemplateInheritanceChainForLookup(true) as $templateKey) {
+            $templateExtraPath = $extraPath . '/' . $templateKey;
+            $defineListTemplate = array_merge(
+                $defineListTemplate,
+                $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $templateExtraPath)
+            );
+            if ($language !== $this->fallback) {
+                $defineListTemplate = array_merge(
+                    $defineListTemplate,
+                    $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $templateExtraPath)
+                );
+            }
         }
 
         $defineList = array_merge($defineListMain, $defineListTemplate);
@@ -188,8 +197,10 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         // Finally, gather any template-override definitions **for the current session language**. Any language
         // definitions found here overwrite any previously-loaded ones.
         //
-        $defineListTemplate = $this->loadModuleDefinesFromArrayFile($_SESSION['language'], $fileName, $module_type, $this->templateDir . '/');
-        $defineList = array_merge($defineList, $defineListTemplate);
+        foreach ($this->getTemplateInheritanceChainForLookup(true) as $templateKey) {
+            $defineListTemplate = $this->loadModuleDefinesFromArrayFile($_SESSION['language'], $fileName, $module_type, $templateKey . '/');
+            $defineList = array_merge($defineList, $defineListTemplate);
+        }
 
         // -----
         // Create the language constants from the definitions found and return an indication of whether/not
@@ -340,8 +351,9 @@ class ArraysLanguageLoader extends BaseLanguageLoader
             $defineList = array_merge($defineList, $pluginDefineList);
         }
 
-        $templateFile = $rootDir . $_SESSION['language'] . $extraDir . '/' . $this->templateDir . '/' . $fileName;
-        $defineList = array_merge($defineList, $this->loadArrayDefineFile($templateFile));
+        foreach ($this->getTemplateLanguageOverrideFiles($rootDir, $_SESSION['language'], $fileName, $extraDir) as $templateFile) {
+            $defineList = array_merge($defineList, $this->loadArrayDefineFile($templateFile));
+        }
 
         $this->makeConstants($defineList);
     }

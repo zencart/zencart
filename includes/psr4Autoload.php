@@ -16,6 +16,7 @@ $psr4Autoloader->addPrefix('Zencart\LanguageLoader', DIR_FS_CATALOG . DIR_WS_CLA
 $psr4Autoloader->addPrefix('Zencart\ResourceLoaders', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ResourceLoaders');
 $psr4Autoloader->addPrefix('Zencart\PageLoader', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ResourceLoaders');
 $psr4Autoloader->addPrefix('Zencart\Events', DIR_FS_CATALOG . DIR_WS_CLASSES );
+$psr4Autoloader->addPrefix('Zencart\Templates', DIR_FS_CATALOG . DIR_WS_CLASSES );
 
 $psr4Autoloader->addPrefix('Zencart\DbRepositories', DIR_FS_CATALOG . DIR_WS_CLASSES . 'DbRepositories');
 // The two App\Models classes are aliases for the above Zencart\DbRepositories classes, so that encap plugins built for prior versions can still type-hint against \App\Models without throwing errors.
