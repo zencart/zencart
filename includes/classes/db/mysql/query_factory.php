@@ -246,14 +246,14 @@ class queryFactory extends base
 
     /**
      * @param string $sqlQuery
-     * @param string|int|null $limit
+     * @param string|int|null|bool $limit (will be cast to int)
      * @param bool $enableCaching
      * @param int $cacheSeconds
      * @param bool $removeFromQueryCache
      * @return queryFactoryResult
      * @since ZC v1.2.0d
      */
-    public function Execute(string $sqlQuery, int|string|null $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
+    public function Execute(string $sqlQuery, int|string|bool|null $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
     {
         // do SELECT logging if enabled
         $this->logQuery($sqlQuery);
