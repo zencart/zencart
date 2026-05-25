@@ -13,6 +13,9 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
+if (!defined('DB_ERROR_NOT_CONNECTED')) {
+    define('DB_ERROR_NOT_CONNECTED', 'Error - Could not connect to Database');
+}
 
 /**
  * Queryfactory - A simple database abstraction layer
@@ -21,7 +24,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class queryFactory extends base
 {
-    public $link; // mysqli object
+    public mysqli $link; // mysqli object
     private int $count_queries = 0;
     private float|int $total_query_time = 0;
     public bool $dieOnErrors = false;
@@ -34,14 +37,14 @@ class queryFactory extends base
     /**
      * @var bool
      */
-    private $db_connected = false;
+    private bool $db_connected = false;
 
-    private $host = '';
-    private $database = '';
-    private $user = '';
-    private $password = '';
-    private $zf_sql = '';
-    private $ignored_error_codes = [
+    private string $host = '';
+    private string $database = '';
+    private string $user = '';
+    private string $password = '';
+    private string $zf_sql = '';
+    private array $ignored_error_codes = [
         2002, // connection refused via socket
         2003, // cannot connect to host
         2006, // server has gone away / (MySQL server wait timeout)
@@ -53,13 +56,22 @@ class queryFactory extends base
         1203, // too many user connections
     ];
 
-    function __construct()
+    public function __construct()
     {
         $this->count_queries = 0;
         $this->total_query_time = 0;
     }
 
     /**
+     * Connect to the db server, select database, set client connection/collation details, set timezone and MySQL mode, and handle any connection errors.
+     *
+     * The connection error handling includes retry logic for certain error codes that may indicate a temporary service unavailability,
+     * and will trigger error logging and display an error message if the connection cannot be established after retries.
+     *
+     * The $dieOnErrors parameter controls whether the method should trigger error logging and display an error message on failure, or fail silently.
+     *
+     * The $options parameter allows passing additional configuration such as the desired database charset.
+     *
      * @param string $db_host database server hostname
      * @param string $db_user db username
      * @param string $db_password db password
@@ -121,8 +133,11 @@ class queryFactory extends base
                 }
 
                 // Set MySQL mode, if one is defined before execution. Ref: https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html (must be only A-Z or _ or , characters)
-                if (defined('DB_MYSQL_MODE') && DB_MYSQL_MODE != '') {
-                    mysqli_query($this->link, "SET SESSION sql_mode = '" . preg_replace('/[^A-Z_,]/', '', DB_MYSQL_MODE) . "'");
+                if (defined('DB_MYSQL_MODE') && DB_MYSQL_MODE !== '') {
+                    $mode = preg_replace('/[^A-Z_,]/', '', DB_MYSQL_MODE);
+                    if (!empty($mode)) {
+                        mysqli_query($this->link, "SET SESSION sql_mode = '" . $mode . "'");
+                    }
                 }
 
                 $result = $this->Execute("SELECT @@character_set_database, @@collation_database");
@@ -141,6 +156,11 @@ class queryFactory extends base
     }
 
     /**
+     * A simplified version of connect() that does not attempt to handle errors,
+     * for use in contexts where procedural error handling is preferred, such as during installation
+     * when the database may not yet be configured correctly and we want to avoid triggering error logging
+     * or displaying error messages that could be confusing when displayed.
+     *
      * @param string $db_host database server hostname
      * @param string $db_user db username
      * @param string $db_password db password
@@ -148,7 +168,7 @@ class queryFactory extends base
      * @return bool
      * @since ZC v1.5.2
      */
-    public function simpleConnect($db_host, $db_user, $db_password, $db_name): bool
+    public function simpleConnect(string $db_host, string $db_user, string $db_password, string $db_name): bool
     {
         // use default reporting setting, so exceptions aren't thrown, since we attempt to catch errors here procedurally.
         mysqli_report(MYSQLI_REPORT_OFF);
@@ -175,10 +195,10 @@ class queryFactory extends base
     /**
      * @param string $sqlQuery
      * @param bool $removeFromQueryCache Whether to skip the MySQL resource cache for repeats of the same query string during the same page-load
-     * @return bool|mixed|mysqli_result
+     * @return bool|mysqli_result
      * @since ZC v1.5.8
      */
-    protected function runQuery(string $sqlQuery, bool $removeFromQueryCache)
+    protected function runQuery(string $sqlQuery, bool $removeFromQueryCache): bool|mysqli_result
     {
         // ensure db connection
         if (!$this->db_connected) {
@@ -193,6 +213,7 @@ class queryFactory extends base
         if (!$zp_db_resource) {
             if (in_array(mysqli_errno($this->link), [2006, 4031])) {
                 $this->link = false;
+                // reconnect and set new $this->link if successful
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
                 // run the query directly, bypassing the queryCache
                 $zp_db_resource = mysqli_query($this->link, $sqlQuery);
@@ -205,11 +226,9 @@ class queryFactory extends base
      * Escape SQL query value for binding
      * Alias for mysqli_real_escape_string()
      *
-     * @param string|null|mixed $string
-     * @return string
      * @since ZC v1.2.0d
      */
-    public function prepare_input($string): string
+    public function prepare_input(string $string): string
     {
         return mysqli_real_escape_string($this->link, $string);
     }
@@ -217,12 +236,10 @@ class queryFactory extends base
     /**
      * Alias to prepare_input(), which calls mysqli_real_escape_string()
      *
-     * @param string|null|mixed $string
-     * @return string
      * @see $this->prepare_input()
      * @since ZC v1.3.0
      */
-    function prepareInput($string)
+    function prepareInput(string $string)
     {
         return $this->prepare_input($string);
     }
@@ -236,7 +253,7 @@ class queryFactory extends base
      * @return queryFactoryResult
      * @since ZC v1.2.0d
      */
-    public function Execute(string $sqlQuery, $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
+    public function Execute(string $sqlQuery, int|string|null $limit = null, bool $enableCaching = false, int $cacheSeconds = 0, bool $removeFromQueryCache = false): \queryFactoryResult
     {
         // do SELECT logging if enabled
         $this->logQuery($sqlQuery);
@@ -336,11 +353,9 @@ class queryFactory extends base
     /**
      * Use this form of the Execute method to ensure that any SELECT result is pulled from the database, bypassing the cache.
      *
-     * @param string $sqlQuery
-     * @return queryFactoryResult
      * @since ZC v1.5.5f
      */
-    function ExecuteNoCache(string $sqlQuery)
+    public function ExecuteNoCache(string $sqlQuery): queryFactoryResult
     {
         return $this->Execute($sqlQuery, false, false, 0, true);
     }
@@ -349,12 +364,9 @@ class queryFactory extends base
      * Execute a SELECT query and return the results in a random order
      * The results should be iterated with MoveNextRandom()
      *
-     * @param string $sqlQuery
-     * @param int $limit
-     * @return queryFactoryResult
      * @since ZC v1.2.0d
      */
-    public function ExecuteRandomMulti(string $sqlQuery, $limit = 0): \queryFactoryResult
+    public function ExecuteRandomMulti(string $sqlQuery, int $limit = 0): \queryFactoryResult
     {
         $time_start = microtime(as_float: true);
         $this->zf_sql = $sqlQuery;
@@ -426,13 +438,9 @@ class queryFactory extends base
     /**
      * Execute the database query, using the queryCache memoization cache to re-use same Resource for repeat queries
      *
-     * @param mysqli $link
-     * @param string $query
-     * @param bool $removeFromQueryCache
-     * @return bool|mixed|mysqli_result
      * @since ZC v1.5.1
      */
-    protected function query($link, string $query, bool $removeFromQueryCache = false)
+    protected function query($link, string $query, bool $removeFromQueryCache = false): bool|mysqli_result
     {
         global $queryCache;
 
@@ -460,10 +468,9 @@ class queryFactory extends base
     /**
      * Get ID of last inserted record
      *
-     * @return int|string
      * @since ZC v1.2.0d
      */
-    public function insert_ID()
+    public function insert_ID(): int|string
     {
         return @mysqli_insert_id($this->link);
     }
@@ -473,7 +480,7 @@ class queryFactory extends base
      *
      * @since ZC v1.5.5f
      */
-    public function affectedRows()
+    public function affectedRows(): int
     {
         return ($this->link) ? $this->link->affected_rows : 0;
     }
@@ -481,7 +488,6 @@ class queryFactory extends base
     /**
      * Return the number of queries executed since the counter started
      *
-     * @return int
      * @since ZC v1.2.0d
      */
     public function queryCount(): int
@@ -663,8 +669,8 @@ class queryFactory extends base
     }
 
     /**
-     * @param string $db_name
-     * @return bool
+     * Select the specified database, and set corresponding charset/collation into client connection.
+     *
      * @since ZC v1.2.0d
      */
     public function selectdb(string $db_name): bool
@@ -715,7 +721,7 @@ class queryFactory extends base
     {
         $this->error_number = $err_num;
         $this->error_text = $err_text;
-        if ($dieOnErrors && $err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue on instead
+        if ($dieOnErrors && $err_num != 1141) { // error 1141 is okay ... should not die on 1141, but just continue instead
             $this->show_error();
             if (!defined('DIR_FS_INSTALL')) {
                 die();
@@ -724,12 +730,11 @@ class queryFactory extends base
     }
 
     /**
-     * Display DB Connection Failure error message
-     * and trigger error logging
+     * Display DB Connection Failure error message and trigger error logging
      *
      * @since ZC v1.2.0d
      */
-    protected function show_error()
+    protected function show_error(): void
     {
         if (!headers_sent()) {
             header("HTTP/1.1 503 Service Unavailable");
@@ -754,7 +759,7 @@ class queryFactory extends base
         echo '<div class="systemError">';
         if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true) {
             echo $this->error_number . ' ' . $this->error_text;
-            echo '<br>in:<br>[' . (strstr($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br>';
+            echo '<br>in:<br>[' . (str_contains($this->zf_sql, 'db_cache') ? 'db_cache table' : $this->zf_sql) . ']<br>';
         } else {
             echo 'WARNING: An Error occurred, please let us know!';
         }
@@ -767,7 +772,7 @@ class queryFactory extends base
         $backtrace_array = debug_backtrace();
         $query_factory_caller = '';
         foreach ($backtrace_array as $current_caller) {
-            if (strcmp($current_caller['file'], __FILE__) != 0) {
+            if (strcmp($current_caller['file'], __FILE__) !== 0) {
                 $query_factory_caller = ' ==> (as called by) ' . $current_caller['file'] . ' on line ' . $current_caller['line'] . ' <==';
                 break;
             }
@@ -795,7 +800,7 @@ class queryFactory extends base
     /**
      * @since ZC v1.2.0d
      */
-    function get_server_info()
+    public function get_server_info(): string
     {
         if ($this->link) {
             return mysqli_get_server_info($this->link);
@@ -807,17 +812,16 @@ class queryFactory extends base
     /**
      * If logging is enabled, log SELECT queries for later analysis
      *
-     * @param $sqlQuery
      * @since ZC v1.5.8
      */
-    protected function logQuery($sqlQuery)
+    protected function logQuery(string $sqlQuery): void
     {
         if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS === 'false' || STORE_DB_TRANSACTIONS === false) {
             return;
         }
         global $PHP_SELF, $box_id, $current_page_base;
 
-        if (strtoupper(substr($sqlQuery, 0, 6)) != 'SELECT' /*&& strstr($sqlQuery,'products_id')*/) {
+        if (strtoupper(substr($sqlQuery, 0, 6)) !== 'SELECT' /*&& strstr($sqlQuery,'products_id')*/) {
             return;
         }
 // optional isolation
@@ -829,7 +833,7 @@ class queryFactory extends base
         if ($f) {
             $backtrace = '';
 
-            if (STORE_DB_TRANSACTIONS == 'backtrace') {
+            if (STORE_DB_TRANSACTIONS === 'backtrace') {
                 ob_start();
                 debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
                 $backtrace = ob_get_clean();
@@ -851,86 +855,62 @@ class queryFactoryResult implements Countable, Iterator
 {
     /**
      * Indicates if the result has reached the last row of data.
-     *
-     * @var boolean
      */
-    public $EOF = true;
+    public bool $EOF = true;
 
     /**
      * Indicates the current database row.
-     *
-     * @var int
      */
-    public $cursor = 0;
+    public int $cursor = 0;
 
     /**
      * Contains the data for the current database row (fields + values).
      *
      * @var array of field => value pairs
      */
-    public $fields = [];
+    public array $fields = [];
 
     /**
      * Indicates if the result is cached.
-     *
-     * @var boolean
      */
-    public $is_cached = false;
+    public bool $is_cached = false;
 
     /**
      * Contains stored results of query
-     *
-     * @var array
      */
-    public $result = [];
+    public array $result = [];
 
     /**
-     * Contains randomized results if ExecuteRandomMulti was called
-     *
-     * @var array
+     * Contains randomized results if ExecuteRandomMulti was called (int is allowed here for internals only; it should only be an array whenever accessed from outside the class)
      */
-    public $result_random = [];
+    public array|int|string $result_random = [];
 
     /**
      * The maximum number of rows allowed to be iterated over.
-     *
-     * @var int
      */
-    public $limit = null;
+    public ?int $limit = null;
 
     /**
-     * The raw result returned by the mysqli call.
-     *
-     * @var mysqli_result
+     * The resource (contains the raw result, or bool) returned by the mysqli call.
      */
-    public $resource;
+    public mysqli_result|bool $resource;
 
-    /**
-     * @var string
-     */
-    public $sql_query = '';
-
-    /**
-     * @var mysqli MySQL connection link
-     */
-    public $link;
+    public string $sql_query = '';
 
     /**
      * @param mysqli $link
      */
-    function __construct($link)
+    public function __construct(public mysqli $link)
     {
-        $this->link = $link;
     }
 
     /* (non-PHPdoc)
      * @see Iterator::current()
      */
-    #[ReturnTypeWillChange]
     /**
      * @since ZC v1.5.5
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->fields;
     }
@@ -938,11 +918,10 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::key()
      */
-    #[ReturnTypeWillChange]
     /**
      * @since ZC v1.5.5
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->cursor;
     }
@@ -950,11 +929,10 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::next()
      */
-    #[ReturnTypeWillChange]
     /**
      * @since ZC v1.5.5
      */
-    public function next()
+    public function next(): void
     {
         $this->MoveNext();
     }
@@ -964,7 +942,7 @@ class queryFactoryResult implements Countable, Iterator
      *
      * @since ZC v1.2.0d
      */
-    public function MoveNext()
+    public function MoveNext(): void
     {
         $this->cursor++;
         if (!$this->valid()) {
@@ -996,7 +974,7 @@ class queryFactoryResult implements Countable, Iterator
      *
      * @since ZC v1.2.0d
      */
-    public function MoveNextRandom()
+    public function MoveNextRandom(): void
     {
         $this->cursor++;
         if ($this->cursor < $this->limit) {
@@ -1009,13 +987,12 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::rewind()
      */
-    #[ReturnTypeWillChange]
     /**
      * @since ZC v1.5.5
      */
-    public function rewind()
+    public function rewind(): void
     {
-        $this->EOF = ($this->RecordCount() == 0);
+        $this->EOF = ($this->RecordCount() === 0);
         if ($this->RecordCount() !== 0) {
             $this->Move(0);
         }
@@ -1024,23 +1001,18 @@ class queryFactoryResult implements Countable, Iterator
     /* (non-PHPdoc)
      * @see Iterator::valid()
      */
-    #[ReturnTypeWillChange]
     /**
      * @since ZC v1.5.5
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->cursor < $this->RecordCount() && !$this->EOF;
     }
 
-    /* (non-PHPdoc)
-     * @see Iterator::count()
-     */
-    #[ReturnTypeWillChange]
     /**
      * @since ZC v1.5.5
      */
-    public function count()
+    public function count(): int
     {
         return $this->RecordCount();
     }
@@ -1048,10 +1020,9 @@ class queryFactoryResult implements Countable, Iterator
     /**
      * Returns the number of rows (records).
      *
-     * @return int
      * @since ZC v1.2.0d
      */
-    public function RecordCount()
+    public function RecordCount(): int
     {
         if ($this->is_cached && is_countable($this->result)) {
             return count($this->result);
@@ -1070,7 +1041,7 @@ class queryFactoryResult implements Countable, Iterator
      * @param int $zp_row the row to move to
      * @since ZC v1.2.0d
      */
-    public function Move($zp_row)
+    public function Move(int $zp_row): void
     {
         if ($this->is_cached) {
             if ($zp_row >= count($this->result)) {
