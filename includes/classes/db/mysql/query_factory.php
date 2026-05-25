@@ -447,9 +447,7 @@ class queryFactory extends base
         if (isset($queryCache)) {
             if ($removeFromQueryCache) {
                 $queryCache->reset($query);
-            }
-
-            if ($queryCache->inCache($query)) {
+            } elseif ($queryCache->inCache($query)) {
                 $cached_value = $queryCache->getFromCache($query);
                 $this->count_queries--;
                 return $cached_value;
@@ -482,7 +480,7 @@ class queryFactory extends base
      */
     public function affectedRows(): int
     {
-        return ($this->link) ? $this->link->affected_rows : 0;
+        return $this->link->affected_rows ?? 0;
     }
 
     /**
@@ -951,25 +949,32 @@ class queryFactoryResult implements Countable, Iterator
         $this->cursor++;
         if (!$this->valid()) {
             $this->EOF = true;
-        } else if ($this->is_cached) {
+            return;
+        }
+
+        if ($this->is_cached) {
             if ($this->cursor >= count($this->result)) {
                 $this->EOF = true;
             } else {
                 $this->fields = array_replace($this->fields, $this->result[$this->cursor]);
             }
-        } else if (!empty($this->result_random)) {
+            return;
+        }
+
+        if (!empty($this->result_random)) {
             if ($this->cursor < $this->limit) {
                 $this->fields = array_replace($this->fields, $this->result[$this->result_random[$this->cursor]]);
             } else {
                 $this->EOF = true;
             }
-        } else {
-            $zp_result_array = @mysqli_fetch_assoc($this->resource);
-            $this->fields = array_replace($this->fields, $zp_result_array);
-            if (!$zp_result_array) {
-                $this->EOF = true;
-                unset($this->fields);
-            }
+            return;
+        }
+
+        $zp_result_array = @mysqli_fetch_assoc($this->resource);
+        $this->fields = array_replace($this->fields, $zp_result_array);
+        if (!$zp_result_array) {
+            $this->EOF = true;
+            unset($this->fields);
         }
     }
 
@@ -983,9 +988,10 @@ class queryFactoryResult implements Countable, Iterator
         $this->cursor++;
         if ($this->cursor < $this->limit) {
             $this->fields = array_replace($this->fields, $this->result[$this->result_random[$this->cursor]]);
-        } else {
-            $this->EOF = true;
+            return;
         }
+
+        $this->EOF = true;
     }
 
     /* (non-PHPdoc)
@@ -1051,18 +1057,23 @@ class queryFactoryResult implements Countable, Iterator
             if ($zp_row >= count($this->result)) {
                 $this->cursor = count($this->result);
                 $this->EOF = true;
-            } else {
-                $this->fields = array_replace($this->fields, $this->result[$zp_row]);
-                $this->cursor = $zp_row;
-                $this->EOF = false;
+                return;
             }
-        } else if (@mysqli_data_seek($this->resource, $zp_row)) {
+
+            $this->fields = array_replace($this->fields, $this->result[$zp_row]);
+            $this->cursor = $zp_row;
+            $this->EOF = false;
+            return;
+        }
+
+        if (@mysqli_data_seek($this->resource, $zp_row)) {
             $this->fields = array_replace($this->fields, @mysqli_fetch_assoc($this->resource));
             $this->cursor = $zp_row;
             $this->EOF = false;
-        } else {
-            $this->EOF = true;
+            return;
         }
+
+        $this->EOF = true;
     }
 }
 
