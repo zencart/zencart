@@ -16,7 +16,7 @@
   *
   * @since ZC v1.5.6
   */
-function zen_validate_configuration_entry($variable, $check_string, $config_name = '')
+function zen_validate_configuration_entry(string $variable, string $check_string, string $config_name = '')
 {
     global $messageStack;
 
@@ -27,13 +27,15 @@ function zen_validate_configuration_entry($variable, $check_string, $config_name
         return;
     }
 
+    $options = $data['options'];
+
     if (!defined($data['error'])) {
         switch (true) {
-            case (strpos($data['error'], 'TEXT_MIN_ADMIN') === 0):
-                $error_msg = TEXT_MIN_GENERAL_ADMIN;
+            case str_starts_with($data['error'], 'TEXT_MIN_ADMIN'):
+                $error_msg = sprintf(TEXT_MIN_GENERAL_ADMIN, $config_name, $options['options']['min_range'] ?? '0', zen_output_string_protected($variable));
                 break;
-            case (strpos($data['error'], 'TEXT_MAX_ADMIN') === 0):
-                $error_msg = TEXT_MAX_GENERAL_ADMIN;
+            case str_starts_with($data['error'], 'TEXT_MAX_ADMIN'):
+                $error_msg = sprintf(TEXT_MAX_GENERAL_ADMIN, $config_name, $options['options']['min_range'] ?? '0', zen_output_string_protected($variable));
                 break;
             default:
                 $error_msg = TEXT_DATA_OUT_OF_RANGE;
@@ -52,8 +54,6 @@ function zen_validate_configuration_entry($variable, $check_string, $config_name
     } else {
         return;
     }
-
-    $options = $data['options'];
 
     $result = filter_var($variable, $id, $options);
     if ($result === false) {
