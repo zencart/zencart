@@ -14,7 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 if (IS_ADMIN_FLAG === true) {
     $SESS_LIFE = (int)zen_config('SESSION_TIMEOUT_ADMIN');
     // if strict is enabled, must be a max of 900
-    if (zen_config('PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED') !== 0 && $SESS_LIFE > 900) {
+    if ((int)zen_config('PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED') !== 0 && $SESS_LIFE > 900) {
         $SESS_LIFE = 900;
     }
 } else {
@@ -123,7 +123,7 @@ function zen_session_recreate(): void
     global $http_domain, $https_domain;
     if ($http_domain === $https_domain) {
         $saveSession = $_SESSION;
-        $oldSessID   = session_id();
+        $oldSessID = session_id();
         session_regenerate_id();
         $newSessID = session_id();
         $_SESSION = $saveSession;
