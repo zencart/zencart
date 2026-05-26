@@ -15,7 +15,7 @@ $define = [
     'TEXT_HINT_PASSWORD_RESET_TOKEN_LENGTH' => 'Value must be an integer between 12-100.',
     'TEXT_HINT_PASSWORD_RESET_TOKEN_VALID_MINUTES' => 'Value must be an integer between 1-1440.',
 
-    'TEXT_VALUE_SAVED' => 'The value for &quot;%1$s&quot; was changed from %2$s to %3$s.',
+    'TEXT_VALUE_SAVED' => 'The value for &quot;%1$s&quot; was changed from &quot;%2$s&quot; to &quot;%3$s&quot;.',
 ];
 
 return $define;
