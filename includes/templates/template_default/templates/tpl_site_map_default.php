@@ -29,9 +29,13 @@ if (in_array(zen_config('DEFINE_SITE_MAP_STATUS'), ['1', '2'], true)) {
 ?>
     <div id="siteMapList"><?= $zen_SiteMapTree->buildTree() ?>
         <ul>
-            <li><?= '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>' ?></li>
-
 <?php
+if (!empty($flag_show_about_us_sidebox_link)) {
+?>
+            <li><?= '<a href="' . zen_href_link(FILENAME_ABOUT_US) . '">' . BOX_INFORMATION_ABOUT_US . '</a>' ?></li>
+<?php
+}
+
 if (zen_config('SHOW_ACCOUNT_LINKS_ON_SITE_MAP') === 'Yes') {
 ?>
             <li><?= '<a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . PAGE_ACCOUNT . '</a>' ?><ul>
@@ -70,9 +74,13 @@ if (zen_config('DEFINE_CONDITIONS_STATUS') <= '1') {
                 <li><?= '<a href="' . zen_href_link(FILENAME_CONDITIONS) . '">' . BOX_INFORMATION_CONDITIONS . '</a>' ?></li>
 <?php
 }
+
+if (!empty($flag_show_accessibility_sidebox_link)) {
 ?>
                 <li><?= '<a href="' . zen_href_link(FILENAME_ACCESSIBILITY) . '">' . BOX_INFORMATION_ACCESSIBILITY . '</a>' ?></li>
 <?php
+}
+
 if (zen_config('DEFINE_CONTACT_US_STATUS') <= '1') {
 ?>
                 <li><?= '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . BOX_INFORMATION_CONTACT . '</a>' ?></li>
