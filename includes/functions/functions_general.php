@@ -23,7 +23,7 @@ function zen_create_sort_heading($sortby, $colnum, $heading)
 
     if ($sortby) {
         $sort_prefix = '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . zen_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading" rel="nofollow">';
-        $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? PRODUCT_LIST_SORT_ORDER_ASCENDING : PRODUCT_LIST_SORT_ORDER_DESCENDING) : '') . '</a>';
+        $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? zen_config('PRODUCT_LIST_SORT_ORDER_ASCENDING') : zen_config('PRODUCT_LIST_SORT_ORDER_DESCENDING')) : '') . '</a>';
     }
 
     return $sort_prefix . $heading . $sort_suffix;
@@ -60,7 +60,7 @@ function zen_count_modules($modules = '')
  */
 function zen_count_payment_modules()
 {
-    return zen_count_modules(MODULE_PAYMENT_INSTALLED);
+    return zen_count_modules(zen_config('MODULE_PAYMENT_INSTALLED'));
 }
 
 /**
@@ -68,7 +68,7 @@ function zen_count_payment_modules()
  */
 function zen_count_shipping_modules()
 {
-    return zen_count_modules(MODULE_SHIPPING_INSTALLED);
+    return zen_count_modules(zen_config('MODULE_SHIPPING_INSTALLED'));
 }
 
 
@@ -128,7 +128,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
     global $db, $zco_notifier, $current_page_base;
 
 // show case only supercedes all other settings
-    if (STORE_STATUS != '0') {
+    if (zen_config('STORE_STATUS') != '0') {
         return '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id, 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
     }
 
@@ -141,12 +141,12 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE .
         '</a>';
     switch (true) {
-        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') == '1' && !zen_is_logged_in()):
             // customer must be logged in to browse
             $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' . TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') == '2' && !zen_is_logged_in()):
             if (TEXT_LOGIN_FOR_PRICE_PRICE == '') {
                 // show room only
                 return TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE;
@@ -157,20 +157,20 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             return $login_for_price;
             break;
         // show room only
-        case (CUSTOMERS_APPROVAL == '3'):
+        case (zen_config('CUSTOMERS_APPROVAL') == '3'):
             $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '3' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '3' && !zen_is_logged_in()):
             // customer must be logged in to browse
             return $auth_pending_link;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION === '3' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '3' && !zen_is_logged_in()):
             // customer must be logged in and approved to add to cart
             $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' . TEXT_LOGIN_TO_SHOP_BUTTON_REPLACE . '</a>';
             return $login_for_price;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && (int)($_SESSION['customers_authorization'] ?? 0) > 0):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && (int)($_SESSION['customers_authorization'] ?? 0) > 0):
             // customer must be logged in to browse
             return $auth_pending_link;
             break;
@@ -192,11 +192,11 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
         case ($button_check->fields['product_is_call'] == '1'):
             $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id . '&cfp=true', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
             break;
-        case ($button_check->fields['products_quantity'] <= 0 and SHOW_PRODUCTS_SOLD_OUT_IMAGE == '1'):
+        case ($button_check->fields['products_quantity'] <= 0 and zen_config('SHOW_PRODUCTS_SOLD_OUT_IMAGE') == '1'):
             global $template;
             $image = BUTTON_IMAGE_SOLD_OUT;
             $alt = BUTTON_SOLD_OUT_ALT;
-            if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || strtolower(IMAGE_USE_CSS_BUTTONS) === 'found') {
+            if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'yes' || strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'found') {
                 $return_button = zen_image_button($image, $alt);
             } else {
                 $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>';

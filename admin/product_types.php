@@ -262,7 +262,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
         }
 
         $contents = ['form' => zen_draw_form('configuration', FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_save')];
-        if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
+        if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
             $contents[] = ['text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>'];
         }
         $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
@@ -277,7 +277,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
     } elseif (isset($cInfo) && is_object($cInfo)) {
         $heading[] = ['text' => '<h4>' . $cInfo->configuration_title . '</h4>'];
 
-        if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
+        if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
             $contents[] = ['text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>'];
         }
         $contents[] = [

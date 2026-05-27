@@ -445,13 +445,13 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         }
     } // END LOGIN SLAM PREVENTION
     // deal with expireds for SSL change
-    if (zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 1 && $error === false && $result['pwd_last_change_date'] === '1990-01-01 14:02:22') {
+    if ((int)zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 1 && $error === false && $result['pwd_last_change_date'] === '1990-01-01 14:02:22') {
         $expired = true;
         $error = true;
         $message = ($message === '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
     }
     // deal with expireds for PA-DSS
-    if ($error === false && zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
+    if ($error === false && (int)zen_config('PADSS_PWD_EXPIRY_ENFORCED') === 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
         $expired = true;
         $error = true;
     }

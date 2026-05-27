@@ -79,7 +79,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           $products_image_name = $_POST['img_dir'] . $_POST['products_image_manual'];
           $pInfo->products_name = $products_image_name;
         }
-        if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') == '1')) {
+        if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && (int)zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === 1)) {
           echo zen_image(DIR_WS_CATALOG_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE'), $pInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="img-thumbnail pull-right"');
         } else {
           echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="img-thumbnail pull-right object-fit-contain"');

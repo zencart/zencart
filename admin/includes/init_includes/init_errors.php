@@ -176,13 +176,13 @@ if ((int)zen_config('NEW_SIGNUP_DISCOUNT_COUPON') > 0) {
 }
 
 // Alerts for EZ-Pages
-if (zen_config('EZPAGES_STATUS_HEADER') === '2' && zen_is_whitelisted_admin_ip()) {
+if ((int)zen_config('EZPAGES_STATUS_HEADER') === 2 && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_HEADER_ADMIN, 'caution');
 }
-if (zen_config('EZPAGES_STATUS_FOOTER') === '2' && zen_is_whitelisted_admin_ip()) {
+if ((int)zen_config('EZPAGES_STATUS_FOOTER') === 2 && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_FOOTER_ADMIN, 'caution');
 }
-if (zen_config('EZPAGES_STATUS_SIDEBOX') === '2' && zen_is_whitelisted_admin_ip()) {
+if ((int)zen_config('EZPAGES_STATUS_SIDEBOX') === 2 && zen_is_whitelisted_admin_ip()) {
     $messageStack->add(TEXT_EZPAGES_STATUS_SIDEBOX_ADMIN, 'caution');
 }
 

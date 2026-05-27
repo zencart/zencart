@@ -119,7 +119,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $zco_notifier->notify('ADMIN_COUPON_CODE_EMAILED_TO_CUSTOMER', $coupon_result->fields['coupon_code'], $item['customers_email_address']);
     $recip_count++;
     // send copy to Admin if enabled
-    if (zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS') === '1' && zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO') !== '') {
+    if ((int)zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS') === 1 && zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO') !== '') {
       zen_mail('', zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO'), SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, '', $from, $html_msg, 'coupon_extra');
     }
   }

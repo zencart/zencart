@@ -63,6 +63,6 @@ $email_text = $name . "\n\n" . $body;
 // $html_msg = 'none';
 
 // Send the email
-zen_mail($name, $customer->getData('customers_email_address'), EMAIL_AUTH_TOKEN_SUBJECT, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'password_forgotten');
+zen_mail($name, $customer->getData('customers_email_address'), EMAIL_AUTH_TOKEN_SUBJECT, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'password_forgotten');
 
 $messageStack->add_session('header', sprintf(SUCCESS_AUTH_TOKEN_SENT, $customer->getData('customers_email_address')), 'success');

@@ -448,7 +448,7 @@ if (empty($order->info)) {
         }
         ?>
         </table>
-        <?php if (zen_config('ORDER_COMMENTS_INVOICE') > 0) { ?>
+        <?php if ((int)zen_config('ORDER_COMMENTS_INVOICE') > 0) { ?>
         <table class="table table-condensed" style="width:100%;">
           <thead>
             <tr>
@@ -489,7 +489,7 @@ if (empty($order->info)) {
                   </td>
                 </tr>
                 <?php
-                if (zen_config('ORDER_COMMENTS_INVOICE') === 1 && $count_comments >= 1) {
+                if ((int)zen_config('ORDER_COMMENTS_INVOICE') === 1 && $count_comments >= 1) {
                   break;
                 }
               }

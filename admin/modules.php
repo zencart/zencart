@@ -405,7 +405,7 @@ switch ($action) {
         $keys = '';
         foreach ($mInfo->keys as $key => $value) {
             $displayKey = '';
-            if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
+            if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
                 $displayKey = 'Key: ' . $key . '<br>';
             }
             $keys .= '<b>' . $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>' . zen_lookup_admin_menu_language_override('configuration_key_description', $key, $value['description']) . '<br>';
@@ -421,7 +421,7 @@ switch ($action) {
         $contents = [
             'form' => zen_draw_form('modules', FILENAME_MODULES, 'set=' . $set . ($_GET['module'] !== '' ? '&module=' . $_GET['module'] : '') . '&action=save', 'post', 'class="form-horizontal"', true)
         ];
-        if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
+        if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
             $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
         }
         $contents[] = ['text' => $keys];
@@ -463,7 +463,7 @@ switch ($action) {
             $keys = '';
             foreach ($mInfo->keys as $key => $value) {
                 $displayKey = '';
-                if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
+                if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
                     $displayKey = 'Key: ' . $key . '<br>';
                 }
                 $keys .= '<b>'. $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>';
@@ -487,7 +487,7 @@ switch ($action) {
                 $keys .= '<br><br>';
             }
 
-            if (zen_config('ADMIN_CONFIGURATION_KEY_ON') === '1') {
+            if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
                 $contents[] = ['text' => '<strong>Module code: ' . $mInfo->code . '</strong><br>'];
             }
             $keys = substr($keys, 0, strrpos($keys, '<br><br>') ?? 0);

@@ -210,7 +210,7 @@ if ($action == 'preview') {
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE_HTML); ?></b></div>
           <div class="col-sm-9">
-              <?php if (zen_config('EMAIL_USE_HTML') != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
+              <?php if (zen_config('EMAIL_USE_HTML') !== 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
               <?php
               $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
               echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));
@@ -279,7 +279,7 @@ if ($action == 'preview') {
             <?php echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 control-label"'); //HTML version   ?>
             <div class="col-sm-9">
                 <?php
-                if (zen_config('EMAIL_USE_HTML') == 'true') {
+                if (zen_config('EMAIL_USE_HTML') === 'true') {
                   echo zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
                 } else {
                   echo TEXT_WARNING_HTML_DISABLED;
