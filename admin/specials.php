@@ -226,7 +226,7 @@ if (!empty($action)) {
         if ($check_product->RecordCount() < 1) {// check for valid PID
           $skip_special = true;
           $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST, (int)$_POST['pre_add_products_id']), 'caution');
-        } elseif ((zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL') === 'false') && (substr($check_product->fields['products_model'] ?? '', 0, 4) === 'GIFT')) { // check for PID as a gift voucher
+        } elseif ((zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'false') === 'false') && (substr($check_product->fields['products_model'] ?? '', 0, 4) === 'GIFT')) { // check for PID as a gift voucher
           $skip_special = true;
           $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_GIFT, (int)$_POST['pre_add_products_id']), 'caution');
         }
@@ -338,7 +338,7 @@ if (!empty($action)) {
           }
 
 // never include Gift Vouchers for specials when set to false
-          if (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL') === 'false') {
+          if (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'false') === 'false') {
             $gift_vouchers = $db->Execute("SELECT distinct p.products_id, p.products_model
                                            FROM " . TABLE_PRODUCTS . " p,
                                                 " . TABLE_SPECIALS . " s

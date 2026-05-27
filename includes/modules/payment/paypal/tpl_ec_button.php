@@ -9,7 +9,7 @@
 
 // PayPal module cannot be used for purchase > $10,000 USD equiv
 require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
-$paypalec_enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True'  && paypalUSDCheck($_SESSION['cart']->total) === true);
+$paypalec_enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS', 'True') === 'True'  && paypalUSDCheck($_SESSION['cart']->total) === true);
 $ecs_off = (zen_config('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') === 'Off');
 if ($ecs_off) $paypalec_enabled = FALSE;
 

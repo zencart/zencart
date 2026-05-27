@@ -187,7 +187,7 @@ class Product
 
         if ($allow_add_to_cart && $this->isGiftVoucher()) {
             // if GV feature disabled, can't allow GV's to be added to cart
-            if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') !== 'true') {
+            if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'false') === 'false') {
                 $allow_add_to_cart = false;
             }
         }

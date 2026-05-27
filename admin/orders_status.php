@@ -200,7 +200,7 @@ if (!empty($action)) {
               case 'new':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_NEW_ORDERS_STATUS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('status', zen_config('FILENAME_ORDERS_STATUS'), 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=insert', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
 
                 $orders_status_inputs_string = '';
@@ -224,7 +224,7 @@ if (!empty($action)) {
               case 'edit':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_EDIT_ORDERS_STATUS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('status', zen_config('FILENAME_ORDERS_STATUS'), 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=save', 'post', 'class="form-horizontal"'));
+                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oSID=' . $oInfo->orders_status_id . '&action=save', 'post', 'class="form-horizontal"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
 
                 $orders_status_inputs_string = '';
@@ -252,7 +252,7 @@ if (!empty($action)) {
               case 'delete':
                 $heading[] = array('text' => '<h4>' . TEXT_INFO_HEADING_DELETE_ORDERS_STATUS . '</h4>');
 
-                $contents = array('form' => zen_draw_form('status', zen_config('FILENAME_ORDERS_STATUS'), 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('oSID', $oInfo->orders_status_id));
+                $contents = array('form' => zen_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=deleteconfirm') . zen_draw_hidden_field('oSID', $oInfo->orders_status_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br><b>' . $oInfo->orders_status_name . '</b>');
                 if ($remove_status) {

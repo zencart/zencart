@@ -142,7 +142,7 @@ if ($gID === 7) {
     if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
         $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
     }
-    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
+    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS', 'false') === 'false')) {
         $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
     }
     if ($shipping_errors !== '') {

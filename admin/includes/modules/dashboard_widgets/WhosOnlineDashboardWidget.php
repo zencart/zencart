@@ -5,7 +5,7 @@
  * @version $Id: ZenExpert 2026-04-06 Modified in v3.0.0 $
  */
 
-if (!zen_is_superuser() && !check_page(zen_config('FILENAME_WHOS_ONLINE'), '')) {
+if (!zen_is_superuser() && !check_page(FILENAME_WHOS_ONLINE, '')) {
     return;
 }
 
@@ -38,7 +38,7 @@ $spiders = $get_detailed_counts($spider_array);
     <div class="panel-heading">
         <i class="fa fa-globe"></i> <?= WO_GRAPH_TITLE ?>
         <div class="pull-right">
-            <a href="<?= zen_href_link(zen_config('FILENAME_WHOS_ONLINE')) ?>" class="btn btn-xs btn-default"><?= BOX_ENTRY_VIEW_ALL ?></a>
+            <a href="<?= zen_href_link(FILENAME_WHOS_ONLINE) ?>" class="btn btn-xs btn-default"><?= BOX_ENTRY_VIEW_ALL ?></a>
         </div>
     </div>
 

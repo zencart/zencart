@@ -63,7 +63,7 @@ if (!empty($action)) {
 
 $query = $db->Execute("SELECT COUNT(*) AS count
                        FROM " . TABLE_GROUP_PRICING);
-if ($query->fields['count'] > 0 && (zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS') !== 'true')) {
+if ($query->fields['count'] > 0 && (zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_STATUS', 'True') !== 'true')) {
   $messageStack->add(ERROR_MODULE_NOT_CONFIGURED, 'error');
 }
 ?>

@@ -41,7 +41,7 @@ class zcObserverDownloadsViaRedirect extends base {
   public function __construct()
   {
 
-    if (zen_config('DOWNLOAD_BY_REDIRECT') !== 'true') return false;
+    if (zen_config('DOWNLOAD_BY_REDIRECT', 'false') === 'false') return false;
 
     $this->pubFolder = DIR_FS_DOWNLOAD_PUBLIC;
     $this->wsPubFolder = HTTP_SERVER . DIR_WS_DOWNLOAD_PUBLIC;

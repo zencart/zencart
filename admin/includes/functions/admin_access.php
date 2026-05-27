@@ -765,22 +765,22 @@ function zen_get_admin_pages(bool $menu_only): array
  * @since ZC v1.5.0
      */
     // Include PayPal Standard menu only if that payment mod is enabled
-    if (zen_config('MODULE_PAYMENT_PAYPAL_STATUS') === 'True' &&
-        zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' &&
-        zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True') {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_STATUS', 'True') === 'True' &&
+        zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS', 'True') === 'True' &&
+        zen_config('MODULE_PAYMENT_PAYPALDP_STATUS', 'True') === 'True') {
         unset ($retVal['customers']['paypal']);
     }
 
     // don't show Coupon Admin unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') !== 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS', 'false') === 'false') {
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') !== 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'false') === 'false') {
         unset($retVal['gv']['gvQueue'], $retVal['gv']['gvMail'], $retVal['gv']['gvSent']);
     }
     // if Coupons and Gift Vouchers are off display msg
-    if (!defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && !defined('MODULE_ORDER_TOTAL_GV_STATUS')) {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') && (zen_config('MODULE_ORDER_TOTAL_GV_STATUS'))) {
         $retVal['gv']['message'] = [
             'name' => NOT_INSTALLED_TEXT,
             'file' => FILENAME_MODULES,

@@ -362,7 +362,7 @@ if (empty($order->info)) {
                   </td>
                 </tr>
                 <?php
-                if (zen_config('ORDER_COMMENTS_PACKING_SLIP') === 1 && $count_comments >= 1) {
+                if ((int)zen_config('ORDER_COMMENTS_PACKING_SLIP') === 1 && $count_comments >= 1) {
                   break;
                 }
               }

@@ -60,7 +60,7 @@ foreach ($results as $result) {
     </ul>
 
     <div class="panel-footer text-center">
-        <a href="<?= zen_href_link(zen_config('FILENAME_ORDERS_STATUS')) ?>" class="small text-muted">
+        <a href="<?= zen_href_link(FILENAME_ORDERS_STATUS) ?>" class="small text-muted">
             <i class="fa fa-cog"></i> <?= BOX_ORDER_STATUS_MANAGE ?>
         </a>
     </div>
