@@ -173,7 +173,7 @@ $saniGroup3 = [
     'pto',   //- Searches, price-to (float)
 ];
 foreach ($saniGroup3 as $key) {
-    if (isset($_GET[$key]) && !preg_match('/^\d+(\.\d+)?/', $_GET[$key])) {
+    if (isset($_GET[$key]) && !preg_match('/^\d+(\.\d+)?/', (string)$_GET[$key])) {
         $_GET[$key] = '';
         if (isset($_REQUEST[$key])) {
             $_REQUEST[$key] = '';
@@ -192,15 +192,15 @@ if (isset($_GET['cPath']) && !preg_match('/^\d+(_\d+)*/', (string)$_GET['cPath']
 // Other variables with special formatting.
 //
 if (isset($_GET['typefilter'])) {
-    $_GET['typefilter'] = preg_replace('/[^0-9a-zA-Z_-]/', '', $_GET['typefilter']);
+    $_GET['typefilter'] = preg_replace('/[^0-9a-zA-Z_-]/', '', (string)$_GET['typefilter']);
 }
 if (isset($_GET['main_page'])) {
-    $_GET['main_page'] = preg_replace('/[^0-9a-zA-Z_]/', '', $_GET['main_page']);
+    $_GET['main_page'] = preg_replace('/[^0-9a-zA-Z_]/', '', (string)$_GET['main_page']);
 }
-if (isset($_GET['sort']) && !ctype_alnum($_GET['sort'])) {
+if (isset($_GET['sort']) && !ctype_alnum((string)$_GET['sort'])) {
     $_GET['sort'] = '';
 }
-if (isset($_GET['gv_no']) && !ctype_alnum($_GET['gv_no'])) {
+if (isset($_GET['gv_no']) && !ctype_alnum((string)$_GET['gv_no'])) {
     $_GET['gv_no'] = '';
 }
 if (isset($_GET['addr']) && !filter_var($_GET['addr'], FILTER_VALIDATE_EMAIL)) {
@@ -230,13 +230,13 @@ $saniGroup4 = [
     'tx',                               //- paypal/paypay_functions
     'type',                             //- Paypal
     'zenid',                            //- [a-z0-9]
-    $zenSessionId,                       //- [a-z0-9]
+    $zenSessionId,                      //- [a-z0-9]
 ];
 foreach ($saniGroup4 as $key) {
     if (isset($_GET[$key])) {
-        $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_.-]/', '', $_GET[$key]);
+        $_GET[$key] = preg_replace('/[^\/0-9a-zA-Z_.-]/', '', (string)$_GET[$key]);
         if (isset($_REQUEST[$key])) {
-            $_REQUEST[$key] = preg_replace('/[^\/0-9a-zA-Z_.-]/', '', $_REQUEST[$key]);
+            $_REQUEST[$key] = preg_replace('/[^\/0-9a-zA-Z_.-]/', '', (string)$_REQUEST[$key]);
         }
     }
 }
@@ -250,25 +250,26 @@ foreach ($_GET as $key => $value) {
     if (is_array($value)) {
         foreach ($value as $key2 => $val2) {
             if ($key2 === 'keyword') {
-                $_GET[$key][$key2] = str_replace($unStrictReplace, '', $val2);
+                $_GET[$key][$key2] = str_replace($unStrictReplace, '', (string)$val2);
                 if (isset($_REQUEST[$key][$key2])) {
-                    $_REQUEST[$key][$key2] = str_replace($unStrictReplace, '', $val2);
+                    $_REQUEST[$key][$key2] = str_replace($unStrictReplace, '', (string)$val2);
                 }
             } elseif (is_array($val2)) {
                 foreach ($val2 as $key3 => $val3) {
-                    $_GET[$key][$key2][$key3] = str_replace($strictReplace, '', $val3);
+                    $_GET[$key][$key2][$key3] = str_replace($strictReplace, '', (string)$val3);
                     if (isset($_REQUEST[$key][$key2][$key3])) {
-                        $_REQUEST[$key][$key2][$key3] = str_replace($strictReplace, '', $val3);
+                        $_REQUEST[$key][$key2][$key3] = str_replace($strictReplace, '', (string)$val3);
                     }
                 }
             } else {
-                $_GET[$key][$key2] = str_replace($strictReplace, '', $val2);
+                $_GET[$key][$key2] = str_replace($strictReplace, '', (string)$val2);
                 if (isset($_REQUEST[$key][$key2])) {
-                    $_REQUEST[$key][$key2] = str_replace($strictReplace, '', $val2);
+                    $_REQUEST[$key][$key2] = str_replace($strictReplace, '', (string)$val2);
                 }
             }
         }
     } else {
+        $value = (string)$value;
         if ($key === 'keyword') {
             $_GET[$key] = str_replace($unStrictReplace, '', $value);
             if (isset($_REQUEST[$key])) {
@@ -307,13 +308,13 @@ if (empty($_GET['main_page'])) {
 }
 
 $pageLoader = PageLoader::getInstance();
-$pageLoader->init($installedPlugins, $_GET['main_page'], new FileSystem);
+$pageLoader->init($installedPlugins, (string)$_GET['main_page'], new FileSystem());
 
 $pageDir = $pageLoader->findModulePageDirectory();
 if ($pageDir === false) {
-    if (MISSING_PAGE_CHECK === 'On' || MISSING_PAGE_CHECK === 'true') {
+    if (zen_config('MISSING_PAGE_CHECK') === 'On' || zen_config('MISSING_PAGE_CHECK') === 'true') {
         zen_redirect(zen_href_link(FILENAME_DEFAULT));
-    } elseif (MISSING_PAGE_CHECK === 'Page Not Found') {
+    } elseif (zen_config('MISSING_PAGE_CHECK') === 'Page Not Found') {
         header('HTTP/1.1 404 Not Found');
         zen_redirect(zen_href_link(FILENAME_PAGE_NOT_FOUND));
     }
