@@ -15,7 +15,6 @@ $action = $_GET['action'] ?? '';
 if (!empty($action)) {
     switch ($action) {
         case 'saveall':
-            $counter = 0;
             // Handle radio fields (configuration[cfg_XX])
             if (is_array($_POST['configuration'] ?? false)) {
                 foreach ($_POST['configuration'] as $key => $value) {
@@ -24,11 +23,12 @@ if (!empty($action)) {
                         $configuration_value = zen_db_prepare_input($value);
 
                         // See if there are any configuration checks
-                        $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
-                        if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+                        $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
+                        if (!$checks->EOF && $checks->fields['val_function'] !== null) {
                             require_once 'includes/functions/configuration_checks.php';
-                            if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'])) {
-                                zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID']));
+                            if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'], $checks->fields['configuration_title'])) {
+                                $cID_param ??= "&cID=$config_id";
+                                continue;
                             }
                         }
 
@@ -41,7 +41,7 @@ if (!empty($action)) {
                                     last_modified = now()
                               WHERE configuration_id = " . $config_id
                         );
-                        $counter++;
+                        $messageStack->add_session(sprintf(TEXT_VALUE_SAVED, $checks->fields['configuration_title'], $_POST['orig_' . $key], zen_output_string_protected($configuration_value)), 'success');
                     }
 
                     $result = $db->Execute(
@@ -64,11 +64,12 @@ if (!empty($action)) {
                     $configuration_value = zen_db_prepare_input($value);
 
                     // See if there are any configuration checks
-                    $checks = $db->Execute("SELECT val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
-                    if (!$checks->EOF && $checks->fields['val_function'] != NULL) {
+                    $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
+                    if (!$checks->EOF && $checks->fields['val_function'] !== null) {
                         require_once 'includes/functions/configuration_checks.php';
-                        if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'])) {
-                            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID']));
+                        if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'], $checks->fields['configuration_title'])) {
+                            $cID_param ??= "&cID=$config_id";
+                            continue;
                         }
                     }
 
@@ -81,7 +82,7 @@ if (!empty($action)) {
                                 last_modified = now()
                           WHERE configuration_id = " . $config_id
                     );
-                    $counter++;
+                    $messageStack->add_session(sprintf(TEXT_VALUE_SAVED, $checks->fields['configuration_title'], $_POST['orig_' . $key], zen_output_string_protected($configuration_value)), 'success');
 
                     $result = $db->Execute(
                         "SELECT configuration_key
@@ -106,10 +107,7 @@ if (!empty($action)) {
                       LIMIT 1"
                 );
             }
-
-            $messageStack->add_session(sprintf(TEXT_CONFIG_SAVED_SUCCESS, $counter), 'success');
-
-            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID']));
+            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . ($cID_param ?? '')));
             break;
 
         default:
