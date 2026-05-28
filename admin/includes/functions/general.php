@@ -315,7 +315,7 @@ function zen_cfg_select_option(array $select_array, string $key_value, string $k
 function zen_cfg_select_drop_down(array $select_array, string $key_value, string $key = ''): string
 {
     $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
-    return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
+    return zen_draw_pull_down_menu($name, $select_array, $key_value, 'class="form-control"');
 }
 
 /**
