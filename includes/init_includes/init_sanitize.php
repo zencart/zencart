@@ -312,7 +312,7 @@ $pageLoader->init($installedPlugins, (string)$_GET['main_page'], new FileSystem(
 
 $pageDir = $pageLoader->findModulePageDirectory();
 if ($pageDir === false) {
-    if (zen_config('MISSING_PAGE_CHECK') === 'On' || zen_config('MISSING_PAGE_CHECK') === 'true') {
+    if (zen_config('MISSING_PAGE_CHECK') === 'On' || zen_config('MISSING_PAGE_CHECK', 'True') === 'true') {
         zen_redirect(zen_href_link(FILENAME_DEFAULT));
     } elseif (zen_config('MISSING_PAGE_CHECK') === 'Page Not Found') {
         header('HTTP/1.1 404 Not Found');

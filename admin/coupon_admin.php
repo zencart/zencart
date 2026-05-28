@@ -616,7 +616,7 @@ switch ($_GET['action']) {
                 <td class="text-right"><b><?= TEXT_SUBJECT ?></b></td>
                 <td><?= htmlspecialchars(stripslashes($_POST['subject']), ENT_COMPAT, CHARSET, TRUE) ?></td>
               </tr>
-              <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
+              <?php if (zen_config('EMAIL_USE_HTML', 'True') === 'true') { ?>
                 <tr>
                   <td class="text-right"><hr><b><?= TEXT_RICH_TEXT_MESSAGE ?></b></td>
                   <td><?= stripslashes($_POST['message_html']) ?></td>
@@ -680,7 +680,7 @@ switch ($_GET['action']) {
                 <?= zen_draw_input_field('subject', '', 'size="50" class="form-control" id="subject"', true) ?>
               </div>
             </div>
-            <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
+            <?php if (zen_config('EMAIL_USE_HTML', 'True') === 'true') { ?>
               <div class="form-group">
                 <?= zen_draw_label(TEXT_RICH_TEXT_MESSAGE, 'message_html', 'class="control-label col-sm-3"') ?>
                 <div class="col-sm-9 col-md-6"><?= zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(empty($_POST['message_html']) ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"') ?></div>

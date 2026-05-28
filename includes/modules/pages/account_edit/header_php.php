@@ -20,13 +20,13 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $error = false;
 
 if (!empty($_POST['action']) && $_POST['action'] === 'process') {
-    if (zen_config('ACCOUNT_GENDER') === 'true') {
+    if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
         $gender = zen_db_prepare_input($_POST['gender']);
     }
     $firstname = zen_db_prepare_input($_POST['firstname']);
     $lastname = zen_db_prepare_input($_POST['lastname']);
     $nick = (!empty($_POST['nick']) ? zen_db_prepare_input($_POST['nick']) : '');
-    if (zen_config('ACCOUNT_DOB') === 'true') {
+    if (zen_config('ACCOUNT_DOB', 'True') === 'true') {
         $dob = (empty($_POST['dob']) ? zen_db_prepare_input('0001-01-01 00:00:00') : zen_db_prepare_input($_POST['dob']));
     }
     $email_address = zen_db_prepare_input($_POST['email_address']);
@@ -35,11 +35,11 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
     $email_format = in_array($_POST['email_format'], ['HTML', 'TEXT', 'NONE', 'OUT'], true) ? $_POST['email_format'] : 'TEXT';
 
     $customers_referral = '';
-    if (zen_config('CUSTOMERS_REFERRAL_STATUS') === '2' && !empty($_POST['customers_referral']) ) {
+    if ((int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 2 && !empty($_POST['customers_referral']) ) {
         $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
     }
 
-    if (zen_config('ACCOUNT_GENDER') === 'true' && $gender !== 'm' && $gender !== 'f') {
+    if (zen_config('ACCOUNT_GENDER', 'True') === 'true' && $gender !== 'm' && $gender !== 'f') {
         $error = true;
         $messageStack->add('account_edit', ENTRY_GENDER_ERROR);
     }
@@ -54,7 +54,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
         $messageStack->add('account_edit', ENTRY_LAST_NAME_ERROR);
     }
 
-    if (zen_config('ACCOUNT_DOB') === 'true' && (zen_config('ENTRY_DOB_MIN_LENGTH') > 0 || !empty($_POST['dob']))) {
+    if (zen_config('ACCOUNT_DOB', 'True') === 'true' && ((int)zen_config('ENTRY_DOB_MIN_LENGTH') > 0 || !empty($_POST['dob']))) {
         if (strlen($dob) > 10 || zen_valid_date($dob) === false) {
             $error = true;
             $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
@@ -116,13 +116,13 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
             ['fieldName' => 'customers_email_format', 'value' => $email_format, 'type' => 'stringIgnoreNull'],
         ];
 
-        if (zen_config('CUSTOMERS_REFERRAL_STATUS') === '2' && $customers_referral !== '') {
+        if ((int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 2 && $customers_referral !== '') {
             $sql_data_array[] = ['fieldName' => 'customers_referral', 'value' => $customers_referral, 'type' => 'stringIgnoreNull'];
         }
-        if (zen_config('ACCOUNT_GENDER') === 'true') {
+        if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
             $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $gender, 'type' => 'stringIgnoreNull'];
         }
-        if (zen_config('ACCOUNT_DOB') === 'true') {
+        if (zen_config('ACCOUNT_DOB', 'True') === 'true') {
             if ($dob === '0001-01-01 00:00:00' || $_POST['dob'] === '') {
                 $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' => '0001-01-01 00:00:00', 'type' => 'date'];
             } else {
@@ -132,7 +132,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
 
         $customer = new Customer();
         $email_address_changed = false;
-        if (zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'true' && $customer->getData('customers_email_address') !== $email_address) {
+        if (zen_config('CUSTOMERS_ACTIVATION_REQUIRED', 'True') === 'true' && $customer->getData('customers_email_address') !== $email_address) {
             $email_address_changed = true;
             $sql_data_array[] = ['fieldName' => 'activation_required', 'value' => 1, 'type' => 'integer'];
             $sql_data_array[] = ['fieldName' => 'customers_authorization', 'value' => Customer::AUTH_NO_PURCHASE, 'type' => 'integer'];
@@ -171,7 +171,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
 
 $customer = new Customer();
 $account_data = $customer->getData();
-if (zen_config('ACCOUNT_GENDER') === 'true') {
+if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
     if (isset($gender)) {
         $male = ($gender === 'm');
     } else {

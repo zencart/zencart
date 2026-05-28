@@ -60,7 +60,7 @@ class currencies extends base
      */
     public function format(mixed $number, bool $calculate_using_exchange_rate = true, string $currency_code = '', mixed $currency_value = ''): string
     {
-        if (IS_ADMIN_FLAG === false && zen_config('DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE_PRICES_OFF') === 'true' && !zen_is_whitelisted_admin_ip()) {
+        if (IS_ADMIN_FLAG === false && zen_config('DOWN_FOR_MAINTENANCE', 'True') === 'true' && zen_config('DOWN_FOR_MAINTENANCE_PRICES_OFF', 'True') === 'true' && !zen_is_whitelisted_admin_ip()) {
             return '';
         }
 

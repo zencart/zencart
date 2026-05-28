@@ -36,7 +36,7 @@ class table extends ZenShipping
         $this->tax_basis = zen_config('MODULE_SHIPPING_TABLE_TAX_BASIS');
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = (zen_config('MODULE_SHIPPING_TABLE_STATUS') === 'True');
+            $this->enabled = (zen_config('MODULE_SHIPPING_TABLE_STATUS', 'True') === 'True');
         } else {
             $this->enabled = false;
         }

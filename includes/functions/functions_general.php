@@ -128,7 +128,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
     global $db, $zco_notifier, $current_page_base;
 
 // show case only supercedes all other settings
-    if (zen_config('STORE_STATUS') != '0') {
+    if (zen_config('STORE_STATUS') !== '0') {
         return '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id, 'SSL') . '">' . TEXT_SHOWCASE_ONLY . '</a>';
     }
 
@@ -141,12 +141,12 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE .
         '</a>';
     switch (true) {
-        case (zen_config('CUSTOMERS_APPROVAL') == '1' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()):
             // customer must be logged in to browse
             $login_for_price = '<a href="' . zen_href_link(FILENAME_LOGIN, '', 'SSL') . '">' . TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE . '</a>';
             return $login_for_price;
             break;
-        case (zen_config('CUSTOMERS_APPROVAL') == '2' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') === '2' && !zen_is_logged_in()):
             if (TEXT_LOGIN_FOR_PRICE_PRICE == '') {
                 // show room only
                 return TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE;
@@ -157,7 +157,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             return $login_for_price;
             break;
         // show room only
-        case (zen_config('CUSTOMERS_APPROVAL') == '3'):
+        case (zen_config('CUSTOMERS_APPROVAL') === '3'):
             $login_for_price = TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM;
             return $login_for_price;
             break;
@@ -192,7 +192,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
         case ($button_check->fields['product_is_call'] == '1'):
             $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id . '&cfp=true', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
             break;
-        case ($button_check->fields['products_quantity'] <= 0 and zen_config('SHOW_PRODUCTS_SOLD_OUT_IMAGE') == '1'):
+        case ($button_check->fields['products_quantity'] <= 0 and zen_config('SHOW_PRODUCTS_SOLD_OUT_IMAGE') === '1'):
             global $template;
             $image = BUTTON_IMAGE_SOLD_OUT;
             $alt = BUTTON_SOLD_OUT_ALT;

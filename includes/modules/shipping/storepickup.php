@@ -43,7 +43,7 @@ class storepickup extends ZenShipping
         $this->icon = ''; // add image filename here; must be uploaded to the /images/ subdirectory
         $this->tax_class = zen_config('MODULE_SHIPPING_STOREPICKUP_TAX_CLASS');
         $this->tax_basis = zen_config('MODULE_SHIPPING_STOREPICKUP_TAX_BASIS');
-        $this->enabled = (zen_config('MODULE_SHIPPING_STOREPICKUP_STATUS') === 'True');
+        $this->enabled = (zen_config('MODULE_SHIPPING_STOREPICKUP_STATUS', 'True') === 'True');
         $this->update_status();
     }
 

@@ -225,7 +225,7 @@ $userList = zen_get_users();
                 if (zen_is_superuser()) {
                     $userFresh = zen_read_user($userDetails['name']);
                     $user_mfa_data = json_decode($userFresh['mfa'] ?? '', true, 2);
-                    $mfa_status_of_store = zen_config('MFA_ENABLED') === 'True';
+                    $mfa_status_of_store = zen_config('MFA_ENABLED', 'True') === 'True';
                     $mfa_status = !empty($user_mfa_data['generated_at']) && !empty($user_mfa_data['secret']);
                     $mfa_exempt = !empty($user_mfa_data['exempt']);
                     $mfa_date = $mfa_status ? (new DateTime)->setTimestamp($user_mfa_data['generated_at'])->setTimezone((new DateTime)->getTimezone())->format('Y-m-d H:i:s') : '';

@@ -28,7 +28,7 @@ class flat extends ZenShipping
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = zen_config('MODULE_SHIPPING_FLAT_STATUS') === 'True';
+            $this->enabled = zen_config('MODULE_SHIPPING_FLAT_STATUS', 'True') === 'True';
         } else {
             $this->enabled = false;
         }

@@ -24,7 +24,7 @@ if (function_exists('ini_get') && ((bool)ini_get('file_uploads') === false)) {
 }
 
 // check if email subsystem has been disabled
-if (zen_config('SEND_EMAILS') !== 'true') {
+if (zen_config('SEND_EMAILS', 'True') !== 'true') {
     $messageStack->add(WARNING_EMAIL_SYSTEM_DISABLED, 'error');
 }
 
@@ -37,7 +37,7 @@ if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATU
 }
 
 // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
-  if (zen_config('DOWN_FOR_MAINTENANCE') === 'true') {
+  if (zen_config('DOWN_FOR_MAINTENANCE', True) === 'true') {
     $messageStack->add(WARNING_ADMIN_DOWN_FOR_MAINTENANCE, 'caution');
 }
 

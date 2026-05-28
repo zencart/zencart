@@ -95,12 +95,12 @@ if (!empty($action)) {
             $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
             $customers_whole = (int)($_POST['customers_whole'] ?? 0); //- Not present if Wholesale Pricing isn't enabled for the site or a group-pricing group's selected!
 
-            if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '2' && $customers_authorization === 1) {
+            if ((int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === 2 && $customers_authorization === 1) {
                 $customers_authorization = 2;
                 $messageStack->add_session(ERROR_CUSTOMER_APPROVAL_CORRECTION2, 'caution');
             }
 
-            if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && $customers_authorization === 2) {
+            if ((int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === 1 && $customers_authorization === 2) {
                 $customers_authorization = 1;
                 $messageStack->add_session(ERROR_CUSTOMER_APPROVAL_CORRECTION1, 'caution');
             }
@@ -115,14 +115,14 @@ if (!empty($action)) {
             $entry_state = zen_db_prepare_input($_POST['entry_state'] ?? '');
             $entry_zone_id = (int)($_POST['entry_zone_id'] ?? 0);
 
-            if (zen_config('ACCOUNT_GENDER') === 'true' && empty($customers_gender)) {
+            if (zen_config('ACCOUNT_GENDER', 'True') === 'true' && empty($customers_gender)) {
                 $error = true;
                 $entry_gender_error = true;
             } else {
                 $entry_gender_error = false;
             }
 
-            if (zen_config('ACCOUNT_DOB') === 'true') {
+            if (zen_config('ACCOUNT_DOB', 'True') === 'true') {
                 if (checkdate(
                     (int)substr(zen_date_raw($customers_dob), 4, 2),
                     (int)substr(zen_date_raw($customers_dob), 6, 2),
@@ -152,7 +152,7 @@ if (!empty($action)) {
             }
 
             $entry_state_error = false;
-            if (zen_config('ACCOUNT_STATE') === 'true') {
+            if (zen_config('ACCOUNT_STATE', 'True') === 'true') {
                 $entry_state_has_zones = count(zen_get_country_zones((int)$entry_country_id)) > 0;
                 if ($entry_state_has_zones) {
                     $zone_query = $db->Execute(
@@ -187,10 +187,10 @@ if (!empty($action)) {
                     ['fieldName' => 'customers_whole', 'value' => $customers_whole, 'type' => 'stringIgnoreNull'],
                 ];
 
-                if (zen_config('ACCOUNT_GENDER') === 'true') {
+                if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
                     $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $customers_gender, 'type' => 'stringIgnoreNull'];
                 }
-                if (zen_config('ACCOUNT_DOB') === 'true') {
+                if (zen_config('ACCOUNT_DOB', 'True') === 'true') {
                     $sql_data_array[] = [
                         'fieldName' => 'customers_dob',
                         'value' => ($customers_dob === '0001-01-01 00:00:00') ?
@@ -216,14 +216,14 @@ if (!empty($action)) {
                     ['fieldName' => 'entry_country_id', 'value' => $entry_country_id, 'type' => 'integer'],
                 ];
 
-                if (zen_config('ACCOUNT_COMPANY') === 'true') {
+                if (zen_config('ACCOUNT_COMPANY', 'True') === 'true') {
                     $sql_data_array[] = ['fieldName' => 'entry_company', 'value' => $entry_company, 'type' => 'stringIgnoreNull'];
                 }
-                if (zen_config('ACCOUNT_SUBURB') === 'true') {
+                if (zen_config('ACCOUNT_SUBURB', 'True') === 'true') {
                     $sql_data_array[] = ['fieldName' => 'entry_suburb', 'value' => $entry_suburb, 'type' => 'stringIgnoreNull'];
                 }
 
-                if (zen_config('ACCOUNT_STATE') === 'true') {
+                if (zen_config('ACCOUNT_STATE', 'True') === 'true') {
                     if ($entry_zone_id > 0) {
                         $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => $entry_zone_id, 'type' => 'integer'];
                         $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => '', 'type' => 'string'];
@@ -372,7 +372,7 @@ if ($action === 'edit' || $action === 'update') {
                 var error_message = '<?= JS_ERROR ?>';
 
 <?php
-    if (zen_config('ACCOUNT_GENDER') === 'true') {
+    if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
 ?>
                 if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
                 } else {
@@ -443,7 +443,7 @@ if ($action === 'edit' || $action === 'update') {
         <div class="row formAreaTitle"><?= CATEGORY_PERSONAL ?></div>
         <div class="formArea">
 <?php
-    if (zen_config('ACCOUNT_GENDER') === 'true') {
+    if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
 ?>
             <div class="form-group">
                 <div class="col-sm-3">
@@ -540,7 +540,7 @@ if ($action === 'edit' || $action === 'update') {
                 </div>
             </div>
 <?php
-    if (zen_config('ACCOUNT_DOB') === 'true') {
+    if (zen_config('ACCOUNT_DOB', 'True') === 'true') {
 ?>
             <div class="form-group">
                 <?= zen_draw_label(ENTRY_DATE_OF_BIRTH, 'customers_dob', 'class="col-sm-3 control-label"') ?>
@@ -551,7 +551,7 @@ if ($action === 'edit' || $action === 'update') {
                             (($action === 'edit') ? zen_date_short($cInfo->customers_dob) : $cInfo->customers_dob)
                         ),
                         'maxlength="10" class="form-control" id="customers_dob" minlength="' . zen_config('ENTRY_DOB_MIN_LENGTH') . '"',
-                        (zen_config('ACCOUNT_DOB') === 'true' && (int)zen_config('ENTRY_DOB_MIN_LENGTH') !== 0)
+                        (zen_config('ACCOUNT_DOB', 'True') === 'true' && (int)zen_config('ENTRY_DOB_MIN_LENGTH') !== 0)
                     ) ?>
                     <?= ($error === true && $entry_date_of_birth_error === true) ? '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR : '' ?>
                 </div>
@@ -610,7 +610,7 @@ if ($action === 'edit' || $action === 'update') {
 ?>
         </div>
 <?php
-    if (zen_config('ACCOUNT_COMPANY') === 'true') {
+    if (zen_config('ACCOUNT_COMPANY', 'True') === 'true') {
 ?>
         <div class="row">
             <?= zen_draw_separator('pixel_trans.gif', '1', '10') ?>
@@ -659,7 +659,7 @@ if ($action === 'edit' || $action === 'update') {
                 </div>
             </div>
 <?php
-    if (zen_config('ACCOUNT_SUBURB') === 'true') {
+    if (zen_config('ACCOUNT_SUBURB', 'True') === 'true') {
 ?>
             <div class="form-group">
                 <?= zen_draw_label(ENTRY_SUBURB, 'entry_suburb', 'class="col-sm-3 control-label"') ?>
@@ -709,7 +709,7 @@ if ($action === 'edit' || $action === 'update') {
                 </div>
             </div>
 <?php
-    if (zen_config('ACCOUNT_STATE') === 'true') {
+    if (zen_config('ACCOUNT_STATE', 'True') === 'true') {
 ?>
             <div class="form-group">
                 <?= zen_draw_label(ENTRY_STATE, 'entry_state', 'class="col-sm-3 control-label"') ?>
@@ -768,12 +768,12 @@ if ($action === 'edit' || $action === 'update') {
                             'customers_telephone',
                             15
                         ) . ' class="form-control" id="customers_telephone" minlength="' . zen_config('ENTRY_TELEPHONE_MIN_LENGTH') . '"',
-                        (zen_config('ENTRY_TELEPHONE_MIN_LENGTH') > 0)
+                        ((int)zen_config('ENTRY_TELEPHONE_MIN_LENGTH') > 0)
                     ) ?>
                 </div>
             </div>
 <?php
-    if (zen_config('ACCOUNT_FAX_NUMBER') === 'true') {
+    if (zen_config('ACCOUNT_FAX_NUMBER', 'True') === 'true') {
 ?>
             <div class="form-group">
                 <?= zen_draw_label(ENTRY_FAX_NUMBER, 'customers_fax', 'class="col-sm-3 control-label"') ?>
@@ -857,7 +857,7 @@ if ($action === 'edit' || $action === 'update') {
                 </div>
             </div>
 <?php
-    if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
+    if (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false') {
 ?>
             <div class="form-group">
                 <?= zen_draw_label(TEXT_WHOLESALE_LEVEL, 'customers-whole', 'class="col-sm-3 control-label"') ?>
@@ -1098,7 +1098,7 @@ if ($action === 'edit' || $action === 'update') {
                                 </a>
                             </th>
 <?php
-    if (zen_config('ACCOUNT_COMPANY') === 'true') {
+    if (zen_config('ACCOUNT_COMPANY', 'True') === 'true') {
 ?>
                             <th class="dataTableHeadingContent">
                                 <?= ($_GET['list_order'] === 'company' || $_GET['list_order'] === 'company-desc') ?
@@ -1194,7 +1194,7 @@ if ($action === 'edit' || $action === 'update') {
                                 </a>
                             </th>
 <?php
-    if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
+    if (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false') {
 ?>
                             <th class="dataTableHeadingContent">
                                 <?= ($_GET['list_order'] === 'wholesale-asc' || $_GET['list_order'] === 'wholesale-desc') ?
@@ -1388,7 +1388,7 @@ if ($action === 'edit' || $action === 'update') {
                                 <td class="dataTableContent"><?= $customer['customers_lastname'] ?></td>
                                 <td class="dataTableContent"><?= $customer['customers_firstname'] ?></td>
 <?php
-        if (zen_config('ACCOUNT_COMPANY') === 'true') {
+        if (zen_config('ACCOUNT_COMPANY', 'True') === 'true') {
 ?>
                                 <td class="dataTableContent"><?= zen_output_string_protected($customer['company'] ?? '') ?></td>
 <?php
@@ -1452,7 +1452,7 @@ if ($action === 'edit' || $action === 'update') {
                                     <?= zen_date_short($customer['date_of_last_login']) ?>
                                 </td>
 <?php
-        if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
+        if (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false') {
 ?>
                                 <td class="dataTableContent text-center">
                                     <?= $customer['customers_whole'] ?>

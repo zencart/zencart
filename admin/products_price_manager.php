@@ -946,7 +946,7 @@ if (!empty($action)) {
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_QTY; ?></th>
                         <th class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE; ?></th>
 <?php
-                        if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
+                        if (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false') {
 ?>
                         <th class="main">
                             <?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_W; ?>
@@ -958,7 +958,7 @@ if (!empty($action)) {
                         }
 ?>
                         <?php
-                        if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
+                        if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN', 'True') === 'true') {
                           ?>
                           <th class="main text-right"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_EACH_TAX; ?></th>
                           <th class="main text-right"><?php echo TEXT_PRODUCTS_DISCOUNT_PRICE_EXTENDED_TAX; ?></th>
@@ -1022,14 +1022,14 @@ if (!empty($action)) {
                           <td class="main"><?php echo zen_draw_input_field('discount_qty[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_qty'], 'class="form-control"' . $readonly); ?></td>
                           <td class="main"><?php echo zen_draw_input_field('discount_price[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price'], 'class="form-control"' . $readonly); ?></td>
 <?php
-                        if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
+                        if (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false') {
 ?>
                           <td class="main"><?php echo zen_draw_input_field('discount_price_w[' . $discount_name[$i]['id'] . ']', $discount_name[$i]['discount_price_w'], 'class="form-control"' . $readonly); ?></td>
 <?php
                         }
 ?>
                           <?php
-                          if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
+                          if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN', True) === 'true') {
                             ?>
                             <td class="main text-right"><?php echo $currencies->display_price($discounted_price, '', 1) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), 1); ?></td>
                             <td class="main text-right"><?php echo ' x ' . number_format($discount_name[$i]['discount_qty']) . ' = ' . $currencies->display_price($discounted_price, '', $discount_name[$i]['discount_qty']) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), $discount_name[$i]['discount_qty']); ?></td>

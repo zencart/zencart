@@ -374,7 +374,7 @@ function zen_get_system_information(bool $privacy = false): array
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
-    $uptime = (zen_config('DISPLAY_SERVER_UPTIME') === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
+    $uptime = (zen_config('DISPLAY_SERVER_UPTIME', True) === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
     $exec_disabled = false;
@@ -391,7 +391,7 @@ function zen_get_system_information(bool $privacy = false): array
             [$system, $host, $kernel] = preg_split('/[\s,]+/', $output[0], 5);
         }
         $output = '';
-        if (zen_config('DISPLAY_SERVER_UPTIME') === 'true') {
+        if (zen_config('DISPLAY_SERVER_UPTIME', 'True') === 'true') {
             @exec('uptime 2>&1', $output, $errnum);
             if ($errnum == 0 && isset($output[0])) {
                 $uptime = $output[0];

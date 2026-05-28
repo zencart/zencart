@@ -55,7 +55,7 @@ class Customer extends base
                 'wholesale_tier' => 0,
                 'is_tax_exempt' => false,
             ];
-            if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false' && zen_is_logged_in() && !zen_in_guest_checkout()) {
+            if (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false' && zen_is_logged_in() && !zen_in_guest_checkout()) {
                 global $db;
                 $wholesale = $db->Execute(
                     "SELECT customers_whole
@@ -499,7 +499,7 @@ class Customer extends base
      */
     public function createAuthToken(): string|false
     {
-        if (empty($this->data) || zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'false') {
+        if (empty($this->data) || zen_config('CUSTOMERS_ACTIVATION_REQUIRED', 'false') === 'false') {
             return false;
         }
 
@@ -838,7 +838,7 @@ class Customer extends base
         global $db;
 
         $activation_required = 0;
-        if ($status !== self::AUTH_OK && zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'true') {
+        if ($status !== self::AUTH_OK && zen_config('CUSTOMERS_ACTIVATION_REQUIRED', 'True') === 'true') {
             $activation_required = (int)($status === self::AUTH_NO_PURCHASE);
         }
 
@@ -1273,7 +1273,7 @@ class Customer extends base
 
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDING_CUSTOMER_RECORD', null, $data);
 
-        $activation_required = (int)(zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'true');
+        $activation_required = (zen_config('CUSTOMERS_ACTIVATION_REQUIRED', 'True') === 'true');
 
         $sql_data_array = [
             ['fieldName' => 'customers_firstname', 'value' => $data['firstname'], 'type' => 'stringIgnoreNull'],
@@ -1293,13 +1293,13 @@ class Customer extends base
             ['fieldName' => 'last_login_ip', 'value' => $data['ip_address'], 'type' => 'string'],
         ];
 
-        if (zen_config('CUSTOMERS_REFERRAL_STATUS') === '2' && !empty($data['customers_referral'])) {
+        if ((int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 2 && !empty($data['customers_referral'])) {
             $sql_data_array[] = ['fieldName' => 'customers_referral', 'value' => $data['customers_referral'], 'type' => 'stringIgnoreNull'];
         }
-        if (zen_config('ACCOUNT_GENDER') === 'true') {
+        if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
             $sql_data_array[] = ['fieldName' => 'customers_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
-        if (zen_config('ACCOUNT_DOB') === 'true') {
+        if (zen_config('ACCOUNT_DOB', 'True') === 'true') {
             $dob = (empty($data['dob']) || $data['dob'] === '0001-01-01 00:00:00') ? '0001-01-01 00:00:00' : zen_date_raw($data['dob']);
             $sql_data_array[] = ['fieldName' => 'customers_dob', 'value' => $dob, 'type' => 'date'];
         }
@@ -1325,17 +1325,17 @@ class Customer extends base
             ['fieldName' => 'entry_country_id', 'value' => $data['country'], 'type' => 'integer'],
         ];
 
-        if (zen_config('ACCOUNT_GENDER') === 'true') {
+        if (zen_config('ACCOUNT_GENDER', 'True') === 'true') {
             $sql_data_array[] = ['fieldName' => 'entry_gender', 'value' => $data['gender'], 'type' => 'stringIgnoreNull'];
         }
-        if (zen_config('ACCOUNT_COMPANY') === 'true') {
+        if (zen_config('ACCOUNT_COMPANY', 'True') === 'true') {
             $sql_data_array[] = ['fieldName' => 'entry_company', 'value' => $data['company'], 'type' => 'stringIgnoreNull'];
         }
-        if (zen_config('ACCOUNT_SUBURB') === 'true') {
+        if (zen_config('ACCOUNT_SUBURB', 'True') === 'true') {
             $sql_data_array[] = ['fieldName' => 'entry_suburb', 'value' => $data['suburb'], 'type' => 'stringIgnoreNull'];
         }
 
-        if (zen_config('ACCOUNT_STATE') === 'true') {
+        if (zen_config('ACCOUNT_STATE', 'True') === 'true') {
             if ($data['zone_id'] > 0) {
                 $sql_data_array[] = ['fieldName' => 'entry_zone_id', 'value' => $data['zone_id'], 'type' => 'integer'];
                 $sql_data_array[] = ['fieldName' => 'entry_state', 'value' => '', 'type' => 'stringIgnoreNull'];

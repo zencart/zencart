@@ -34,7 +34,7 @@ function zen_mfa_handler(array $admin_info = []): bool
 
     $user_mfa_data = json_decode($admin_info['mfa'] ?? '', true, 2);
 
-    $mfa_status_of_store = zen_config('MFA_ENABLED') === 'True';
+    $mfa_status_of_store = zen_config('MFA_ENABLED', 'True') === 'True';
     if ($mfa_status_of_store === false) {
         return true;
     }
