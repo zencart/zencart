@@ -219,7 +219,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
               <td><?php echo $currencies->format(nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, true))) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : ''); ?>
               </td>
             </tr>
-            <?php if (zen_config('EMAIL_USE_HTML', True) === 'true') { ?>
+            <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
               <tr>
                 <td class="text-right"><b><?php echo TEXT_HTML_MESSAGE; ?></b></td>
                 <td><?php echo stripslashes($_POST['message_html']); ?></td>
