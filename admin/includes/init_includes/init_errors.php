@@ -37,7 +37,7 @@ if (defined('DEVELOPER_OVERRIDE_EMAIL_STATUS') && DEVELOPER_OVERRIDE_EMAIL_STATU
 }
 
 // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
-  if (zen_config('DOWN_FOR_MAINTENANCE', True) === 'true') {
+  if (zen_config('DOWN_FOR_MAINTENANCE') === 'true') {
     $messageStack->add(WARNING_ADMIN_DOWN_FOR_MAINTENANCE, 'caution');
 }
 
