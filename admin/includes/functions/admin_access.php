@@ -772,15 +772,15 @@ function zen_get_admin_pages(bool $menu_only): array
     }
 
     // don't show Coupon Admin unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS', 'True') !== 'True') {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS', 'true') !== 'true') {
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'True') !== 'True') {
+    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'true') !== 'true') {
         unset($retVal['gv']['gvQueue'], $retVal['gv']['gvMail'], $retVal['gv']['gvSent']);
     }
     // if Coupons and Gift Vouchers are off display msg
-    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') && (zen_config('MODULE_ORDER_TOTAL_GV_STATUS'))) {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') !== 'true' && zen_config('MODULE_ORDER_TOTAL_GV_STATUS') !== 'true') {
         $retVal['gv']['message'] = [
             'name' => NOT_INSTALLED_TEXT,
             'file' => FILENAME_MODULES,
