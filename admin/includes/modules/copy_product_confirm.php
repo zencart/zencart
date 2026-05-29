@@ -159,7 +159,7 @@ if ($_POST['copy_as'] === 'link') {
 
 // copy attributes to Duplicate
     if (!empty($_POST['copy_attributes']) && $_POST['copy_attributes'] === 'copy_attributes_yes') {
-        if (zen_config('DOWNLOAD_ENABLED', True) === 'true') {
+        if (zen_config('DOWNLOAD_ENABLED') === 'true') {
             $copy_attributes_include_downloads = '1';
             $copy_attributes_include_filename = '1';
         } else {
