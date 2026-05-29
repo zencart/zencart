@@ -776,7 +776,7 @@ function zen_get_admin_pages(bool $menu_only): array
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'true') !== 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') !== 'true') {
         unset($retVal['gv']['gvQueue'], $retVal['gv']['gvMail'], $retVal['gv']['gvSent']);
     }
     // if Coupons and Gift Vouchers are off display msg
