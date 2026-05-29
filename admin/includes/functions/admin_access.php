@@ -772,7 +772,7 @@ function zen_get_admin_pages(bool $menu_only): array
     }
 
     // don't show Coupon Admin unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS', 'true') !== 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') !== 'true') {
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
