@@ -476,7 +476,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
         $db->Execute($sql);
         $_SESSION['admin_id'] = $result['admin_id'];
-        if (zen_config('SESSION_RECREATE', True) === 'True') {
+        if (zen_config('SESSION_RECREATE') === 'True') {
             zen_session_recreate();
         }
         $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
