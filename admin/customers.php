@@ -1233,7 +1233,7 @@ if ($action === 'edit' || $action === 'update') {
                             </th>
 
 <?php
-    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'True') === 'true') {
+    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') === 'true') {
 ?>
                             <th class="dataTableHeadingContent text-right">
                                 <?= ($_GET['list_order'] === 'gv_balance-asc' or $_GET['list_order'] === 'gv_balance-desc') ?
@@ -1464,7 +1464,7 @@ if ($action === 'edit' || $action === 'update') {
                                     <?= $customer['pricing_group_name'] ?>
                                 </td>
 <?php
-        if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'True') === 'true') {
+        if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') === 'true') {
 ?>
                                 <td class="dataTableContent text-right">
                                     <?= $currencies->format($customer['gv_balance']) ?>
@@ -1713,7 +1713,7 @@ if ($action === 'edit' || $action === 'update') {
                         zen_catalog_href_link(FILENAME_LOGIN, '', 'SSL') .
                         '" method="post">';
                     $hiddenFields = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
-                    if (zen_config('EMP_LOGIN_AUTOMATIC', 'True') === 'true' && ENABLE_SSL_CATALOG === 'true') {
+                    if (zen_config('EMP_LOGIN_AUTOMATIC') === 'true' && ENABLE_SSL_CATALOG === 'true') {
                         $secret = zen_update_customers_secret($cInfo->customers_id);
                         $timestamp = time();
                         $hmacpostdata = [
