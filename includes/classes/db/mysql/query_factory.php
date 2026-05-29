@@ -323,6 +323,11 @@ class queryFactory extends base
             $query_time = $time_end - $time_start;
             $this->total_query_time += $query_time;
             $this->count_queries++;
+            $this->notifyQueryExecuted($obj, 'Execute', $query_time, $zp_db_resource !== false, [
+                'cache_seconds' => $cacheSeconds,
+                'enable_caching' => $enableCaching,
+                'remove_from_query_cache' => $removeFromQueryCache,
+            ]);
 
             return $obj;
         }
@@ -345,6 +350,14 @@ class queryFactory extends base
             $query_time = $time_end - $time_start;
             $this->total_query_time += $query_time;
             $this->count_queries++;
+        }
+
+        if (isset($query_time)) {
+            $this->notifyQueryExecuted($obj, 'Execute', $query_time, $zp_db_resource !== false, [
+                'cache_seconds' => $cacheSeconds,
+                'enable_caching' => $enableCaching,
+                'remove_from_query_cache' => $removeFromQueryCache,
+            ]);
         }
 
         return $obj;
@@ -421,6 +434,10 @@ class queryFactory extends base
         $query_time = $time_end - $time_start;
         $this->total_query_time += $query_time;
         $this->count_queries++;
+        $this->notifyQueryExecuted($obj, 'ExecuteRandomMulti', $query_time, $zp_db_resource !== false, [
+            'enable_caching' => false,
+            'remove_from_query_cache' => true,
+        ]);
         return $obj;
     }
 
@@ -501,6 +518,32 @@ class queryFactory extends base
     public function queryTime(): float
     {
         return (float)$this->total_query_time;
+    }
+
+    protected function notifyQueryExecuted(queryFactoryResult $obj, string $method, float $queryTime, bool $success, array $extra = []): void
+    {
+        $recordCount = 0;
+        if (isset($obj->resource) && $obj->resource instanceof mysqli_result) {
+            $recordCount = mysqli_num_rows($obj->resource);
+        } elseif (isset($obj->result) && is_array($obj->result)) {
+            $recordCount = count($obj->result);
+        }
+
+        $payload = array_merge([
+            'sql' => $obj->sql_query,
+            'method' => $method,
+            'success' => $success,
+            'query_time' => $queryTime,
+            'query_count' => $this->count_queries,
+            'total_query_time' => (float)$this->total_query_time,
+            'is_cached' => $obj->is_cached ?? false,
+            'error_number' => $success ? 0 : $this->error_number,
+            'error_text' => $success ? '' : $this->error_text,
+            'record_count' => $recordCount,
+            'affected_rows' => $this->affectedRows(),
+        ], $extra);
+
+        $this->notify('NOTIFY_QUERY_FACTORY_EXECUTE_END', $payload);
     }
 
     /**
