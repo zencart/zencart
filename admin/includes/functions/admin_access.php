@@ -765,9 +765,9 @@ function zen_get_admin_pages(bool $menu_only): array
  * @since ZC v1.5.0
      */
     // Include PayPal Standard menu only if that payment mod is enabled
-    if (zen_config('MODULE_PAYMENT_PAYPAL_STATUS') === 'True' &&
-        zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' &&
-        zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True') {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_STATUS') !== 'True' &&
+        zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') !== 'True' &&
+        zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') !== 'True') {
         unset ($retVal['customers']['paypal']);
     }
 
