@@ -166,7 +166,7 @@ if ($error == true) {
 $breadcrumb->add(NAVBAR_TITLE);
 
 // Check for PayPal express checkout button suitability:
-$paypalec_enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS', 'True') === 'True' && zen_config('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') === 'On');
+$paypalec_enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' && zen_config('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') === 'On');
 // Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD):
 require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
 $ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && paypalUSDCheck($_SESSION['cart']->total) === true);
