@@ -15,14 +15,14 @@ $currencies = new currencies();
 $ary = [];
 $chk_option_values = $db->Execute("SELECT language_id
                                    FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-                                   WHERE products_options_values_id = " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
+                                   WHERE products_options_values_id = " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID'));
 foreach ($chk_option_values as $item) {
     $ary[] = (int)$item['language_id'];
 }
 for ($i = 0, $n = count($languages); $i < $n; $i++) {
     if ((int)$languages[$i]['id'] > 0 && !in_array((int)$languages[$i]['id'], $ary, true)) {
         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name)
-                  VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
+                  VALUES (" . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') . ", " . (int)$languages[$i]['id'] . ", 'TEXT')");
         $messageStack->add(TEXT_WARNING_TEXT_OPTION_NAME_RESTORED, 'info');
     }
 }
@@ -61,10 +61,10 @@ if (!empty($action)) {
             }
 
             switch ($option_type) {
-                case PRODUCTS_OPTIONS_TYPE_TEXT:
-                case PRODUCTS_OPTIONS_TYPE_FILE:
+                case zen_config('PRODUCTS_OPTIONS_TYPE_TEXT'):
+                case zen_config('PRODUCTS_OPTIONS_TYPE_FILE'):
                     $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_values_id, products_options_id)
-                        VALUES (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ",
+                        VALUES (" . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') . ",
                                 " . $next_id . ")");
                     break;
             }
@@ -132,8 +132,8 @@ if (!empty($action)) {
             }
 
             switch ($option_type) {
-                case PRODUCTS_OPTIONS_TYPE_TEXT:
-                case PRODUCTS_OPTIONS_TYPE_FILE:
+                case zen_config('PRODUCTS_OPTIONS_TYPE_TEXT'):
+                case zen_config('PRODUCTS_OPTIONS_TYPE_FILE'):
 // disabled because this could cause trouble if someone changed types unintentionally and deleted all their option values.  Shops with small numbers of values per option should consider uncommenting this.
 //            zen_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_id = '" . $_POST['option_id'] . "'");
 // add in a record if none exists when option type is switched
@@ -143,14 +143,14 @@ if (!empty($action)) {
                                       AND products_options_values_id = 0");
                     if ($check_type->fields['count'] === '0') {
                         $db->Execute("INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id)
-                          VALUES (" . (int)$_POST['option_id'] . ", " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ")");
+                          VALUES (" . (int)$_POST['option_id'] . ", " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') . ")");
                     }
                     break;
                 default:
 // if switched from file or text remove 0
                     $db->Execute("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . "
                         WHERE products_options_id = " . (int)$_POST['option_id'] . "
-                        AND products_options_values_id = " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID);
+                        AND products_options_values_id = " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID'));
                     break;
             }
 
@@ -489,7 +489,7 @@ function translate_type_to_name($opt_type)
                                 FROM " . TABLE_PRODUCTS_OPTIONS . "
                                 WHERE language_id = " . (int)$_SESSION['languages_id'] . "
                                 ORDER BY " . ($option_order_by === 'id' ? 'products_options_id' : 'products_options_name');
-        $options_split = new splitPageResults($currentPage, MAX_ROW_LISTS_OPTIONS, $options_query_raw, $options_query_numrows);
+        $options_split = new splitPageResults($currentPage, zen_config('MAX_ROW_LISTS_OPTIONS'), $options_query_raw, $options_query_numrows);
         $options_names = $db->Execute($options_query_raw);
         if ($options_names->RecordCount() > 1) {
             echo zen_draw_form('option_order_by_form', FILENAME_OPTIONS_NAME_MANAGER, '', 'get', 'class="form-horizontal"'); ?>
@@ -503,8 +503,8 @@ function translate_type_to_name($opt_type)
             <?php echo '</form>'; ?>
             <div class="row">
                 <?php echo zen_draw_separator('pixel_trans.gif'); ?>
-                <div class="col-sm-6"><?php echo $options_split->display_count($options_query_numrows, MAX_ROW_LISTS_OPTIONS, $currentPage, TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
-                <div class="col-sm-6 text-right"><?php echo $options_split->display_links($options_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $currentPage, zen_get_all_get_params(['page'])); ?></div>
+                <div class="col-sm-6"><?php echo $options_split->display_count($options_query_numrows, zen_config('MAX_ROW_LISTS_OPTIONS'), $currentPage, TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
+                <div class="col-sm-6 text-right"><?php echo $options_split->display_links($options_query_numrows, zen_config('MAX_ROW_LISTS_OPTIONS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $currentPage, zen_get_all_get_params(['page'])); ?></div>
             </div>
         <?php } ?>
         <table class="table table-striped">
@@ -711,8 +711,8 @@ function translate_type_to_name($opt_type)
                                         FROM " . TABLE_PRODUCTS_OPTIONS . "
                                         WHERE language_id = " . (int)$_SESSION['languages_id'] . "
                                         AND products_options_name != ''
-                                        AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                                        AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+                                        AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') . "
+                                        AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_FILE') . "
                                         ORDER BY products_options_name");
     $optionsValuesArray = []; // array for dropdown list of Option Names
     $optionsValuesArray[] = [

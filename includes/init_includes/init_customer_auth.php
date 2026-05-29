@@ -1,6 +1,6 @@
 <?php
 /**
- * customer authorisation based on DOWN_FOR_MAINTENANCE and CUSTOMERS_APPROVAL_AUTHORIZATION settings
+ * customer authorisation based on zen_config('DOWN_FOR_MAINTENANCE') and zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') settings
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -27,7 +27,7 @@ $down_for_maint_flag = false;
 /**
  * do not let people get to down for maintenance page if not turned on unless is admin in IP list
  */
-if (DOWN_FOR_MAINTENANCE=='false' and $_GET['main_page'] == DOWN_FOR_MAINTENANCE_FILENAME && !zen_is_whitelisted_admin_ip()){
+if (zen_config('DOWN_FOR_MAINTENANCE')=='false' and $_GET['main_page'] == zen_config('DOWN_FOR_MAINTENANCE_FILENAME') && !zen_is_whitelisted_admin_ip()){
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
 /**
@@ -37,9 +37,9 @@ if (!defined('DOWN_FOR_MAINTENANCE_TYPE')) define('DOWN_FOR_MAINTENANCE_TYPE', '
 /**
  * check to see if site is DFM, and set a flag for use later
  */
-if (DOWN_FOR_MAINTENANCE == 'true') {
+if (zen_config('DOWN_FOR_MAINTENANCE') == 'true') {
   if (!zen_is_whitelisted_admin_ip()){
-    if ($_GET['main_page'] != DOWN_FOR_MAINTENANCE_FILENAME) $down_for_maint_flag = true;
+    if ($_GET['main_page'] != zen_config('DOWN_FOR_MAINTENANCE_FILENAME')) $down_for_maint_flag = true;
   }
 }
 /**
@@ -89,7 +89,7 @@ switch (true) {
     zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
   break;
 
-  case ((DOWN_FOR_MAINTENANCE == 'true') && !in_array($_GET['main_page'], array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING))):
+  case ((zen_config('DOWN_FOR_MAINTENANCE') == 'true') && !in_array($_GET['main_page'], array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING))):
     // on special pages, if DFM mode is "relaxed", allow access to these pages
     if ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'relaxed') {
       zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
@@ -103,12 +103,12 @@ switch (true) {
 /**
  * check store status before authorizations
  */
-  case (STORE_STATUS != 0):
+  case (zen_config('STORE_STATUS') != 0):
     break;
 /**
  * if not down for maintenance check login status
  */
-  case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
+  case (zen_config('CUSTOMERS_APPROVAL') == '1' && !zen_is_logged_in()):
   /**
    * customer must be logged in to browse
    */
@@ -120,7 +120,7 @@ switch (true) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
   break;
-  case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
+  case (zen_config('CUSTOMERS_APPROVAL') == '2' && !zen_is_logged_in()):
   /**
    * customer may browse but no prices
    */
@@ -143,14 +143,14 @@ switch (true) {
 /**
  * check store status before authorizations
  */
-  case (STORE_STATUS != 0):
+  case (zen_config('STORE_STATUS') != 0):
     break;
 
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '1' && !zen_is_logged_in()):
+  case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '1' && !zen_is_logged_in()):
   /**
    * customer must be logged in to browse
    */
-  if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CREATE_ACCOUNT, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_PRIVACY, DOWN_FOR_MAINTENANCE_FILENAME))) {
+  if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CREATE_ACCOUNT, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_PRIVACY, zen_config('DOWN_FOR_MAINTENANCE_FILENAME')))) {
     if (!isset($_GET['set_session_login'])) {
       $_GET['set_session_login'] = 'true';
       $_SESSION['navigation']->set_snapshot();
@@ -158,7 +158,7 @@ switch (true) {
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
   break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' && !zen_is_logged_in()):
+  case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '2' && !zen_is_logged_in()):
   /**
    * customer may browse but no prices unless Authorized
    */
@@ -172,19 +172,19 @@ switch (true) {
   }
   */
   break;
-  case (isset($_SESSION['customers_authorization']) && ((CUSTOMERS_APPROVAL_AUTHORIZATION == '1' && $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1)):
+  case (isset($_SESSION['customers_authorization']) && ((zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '1' && $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1)):
   /**
    * customer is pending approval
    * customer must be logged in to browse
    * customer is logged in and changed to must be authorized to browse
    */
   if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
-    if ($_GET['main_page'] != CUSTOMERS_AUTHORIZATION_FILENAME) {
-      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', CUSTOMERS_AUTHORIZATION_FILENAME)));
+    if ($_GET['main_page'] != zen_config('CUSTOMERS_AUTHORIZATION_FILENAME')) {
+      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', zen_config('CUSTOMERS_AUTHORIZATION_FILENAME'))));
     }
   }
   break;
-  case (CUSTOMERS_APPROVAL_AUTHORIZATION == '2' and $_SESSION['customers_authorization'] != '0'):
+  case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '2' and $_SESSION['customers_authorization'] != '0'):
   /**
    * customer may browse but no prices
    */

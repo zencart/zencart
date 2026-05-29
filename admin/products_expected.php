@@ -52,7 +52,7 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
             <tbody>
                 <?php
                 $products_query_raw = "select pd.products_id, pd.products_name, p.products_date_available from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS . " p where p.products_id = pd.products_id and p.products_date_available IS NOT NULL and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_date_available DESC";
-                $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $products_query_raw, $products_query_numrows);
+                $products_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $products_query_raw, $products_query_numrows);
                 $products = $db->Execute($products_query_raw);
                 foreach ($products as $product) {
                   if ((!isset($_GET['pID']) || (isset($_GET['pID']) && ($_GET['pID'] == $product['products_id']))) && !isset($pInfo)) {
@@ -104,8 +104,8 @@ $db->Execute("UPDATE " . TABLE_PRODUCTS . "
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED); ?></td>
-            <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $products_split->display_count($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED); ?></td>
+            <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
         </table>
       </div>

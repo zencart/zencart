@@ -123,7 +123,7 @@ $js_orders_data = json_encode(array_values($orders_data));
                                 var value = context.parsed.y;
 
                                 if (label === '<?= BOX_SALES_LABEL_REVENUE ?>') {
-                                    return label + ': ' + new Intl.NumberFormat('<?= BOX_SALES_GRAPH_NUMBER_FORMAT ?>', { style: 'currency', currency: '<?= DEFAULT_CURRENCY ?>' }).format(value);
+                                    return label + ': ' + new Intl.NumberFormat('<?= BOX_SALES_GRAPH_NUMBER_FORMAT ?>', { style: 'currency', currency: '<?= zen_config('DEFAULT_CURRENCY') ?>' }).format(value);
                                 } else {
                                     return label + ': ' + value;
                                 }

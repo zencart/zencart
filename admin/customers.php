@@ -95,12 +95,12 @@ if (!empty($action)) {
             $customers_referral = zen_db_prepare_input($_POST['customers_referral']);
             $customers_whole = (int)($_POST['customers_whole'] ?? 0); //- Not present if Wholesale Pricing isn't enabled for the site or a group-pricing group's selected!
 
-            if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '2' && $customers_authorization === 1) {
+            if ((int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === 2 && $customers_authorization === 1) {
                 $customers_authorization = 2;
                 $messageStack->add_session(ERROR_CUSTOMER_APPROVAL_CORRECTION2, 'caution');
             }
 
-            if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && $customers_authorization === 2) {
+            if ((int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === 1 && $customers_authorization === 2) {
                 $customers_authorization = 1;
                 $messageStack->add_session(ERROR_CUSTOMER_APPROVAL_CORRECTION1, 'caution');
             }
@@ -768,7 +768,7 @@ if ($action === 'edit' || $action === 'update') {
                             'customers_telephone',
                             15
                         ) . ' class="form-control" id="customers_telephone" minlength="' . zen_config('ENTRY_TELEPHONE_MIN_LENGTH') . '"',
-                        (zen_config('ENTRY_TELEPHONE_MIN_LENGTH') > 0)
+                        ((int)zen_config('ENTRY_TELEPHONE_MIN_LENGTH') > 0)
                     ) ?>
                 </div>
             </div>

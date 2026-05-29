@@ -224,20 +224,20 @@ if (is_array($extra_headings)) {
               if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['mID'])) {
                 $check_page = $db->Execute($manufacturers_query_raw);
                 $check_count = 0;
-                if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
                   foreach ($check_page as $item) {
                     if ($item['manufacturers_id'] == $_GET['mID']) {
                       break;
                     }
                     $check_count++;
                   }
-                  $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                  $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
                 } else {
                   $_GET['page'] = 1;
                 }
               }
 
-              $manufacturers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $manufacturers_query_raw, $manufacturers_query_numrows);
+              $manufacturers_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $manufacturers_query_raw, $manufacturers_query_numrows);
               $manufacturers = $db->Execute($manufacturers_query_raw);
               foreach ($manufacturers as $manufacturer) {
                 if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $manufacturer['manufacturers_id']))) && !isset($mInfo) && (substr($action, 0, 3) !== 'new')) {
@@ -396,7 +396,7 @@ if (is_array($extra_data)) {
 
               $contents[] = ['text' => zen_draw_label(TEXT_IMAGE_MANUAL, 'manufacturers_image_manual', 'class="control-label"') . zen_draw_input_field('manufacturers_image_manual', '', 'class="form-control" id="manufacturers_image_manual"')];
 
-              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="object-fit-contain"')];
+              $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="object-fit-contain"')];
               $manufacturer_inputs_string = '';
               for ($i = 0, $n = count($languages); $i < $n; $i++) {
                 $manufacturer_inputs_string .= '<div class="input-group"><span class="input-group-addon">' . zen_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '</span>' . zen_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', zen_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']), zen_set_field_length(TABLE_MANUFACTURERS_INFO, 'manufacturers_url') . ' class="form-control"') . '</div><br>';
@@ -432,7 +432,7 @@ if (is_array($extra_data)) {
                 if (zen_not_null($mInfo->last_modified)) {
                   $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($mInfo->last_modified)];
                 }
-                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="object-fit-contain"')];
+                $contents[] = ['text' => zen_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="object-fit-contain"')];
                 $contents[] = ['text' => TEXT_PRODUCTS . ' ' . $mInfo->products_count];
               }
               break;
@@ -457,8 +457,8 @@ if (is_array($extra_data)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $manufacturers_split->display_count($manufacturers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS); ?></td>
-            <td class="text-right"><?php echo $manufacturers_split->display_links($manufacturers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $manufacturers_split->display_count($manufacturers_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS); ?></td>
+            <td class="text-right"><?php echo $manufacturers_split->display_links($manufacturers_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
         </table>
       </div>

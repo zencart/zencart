@@ -40,7 +40,7 @@ $parameters = [
   'product_is_call' => '0',
   'products_quantity_mixed' => '1',
   'product_is_always_free_shipping' => 0,
-  'products_qty_box_status' => PRODUCTS_QTY_BOX_STATUS,
+  'products_qty_box_status' => zen_config('PRODUCTS_QTY_BOX_STATUS'),
   'products_quantity_order_max' => '0',
   'products_sort_order' => '0',
   'products_discount_type' => '0',
@@ -135,7 +135,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     }
     ?>
   <h3 class="col-sm-11"><?= sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)) ?></h3>
-  <div class="col-sm-1"><?= zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT, 'class="object-fit-contain"') ?></div>
+  <div class="col-sm-1"><?= zen_info_image($cInfo->categories_image, $cInfo->categories_name, zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT'), 'class="object-fit-contain"') ?></div>
     <div class="floatButton text-right">
       <button type="submit" class="btn btn-primary"><?= IMAGE_PREVIEW ?></button>&nbsp;&nbsp;
         <a href="<?= zen_href_link(
@@ -302,7 +302,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?= zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), MEDIUM_IMAGE_WIDTH) ?>
+                <?= zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), zen_config('MEDIUM_IMAGE_WIDTH')) ?>
                 <br>
                 <?= $pInfo->products_image ?>
             </div>
@@ -339,7 +339,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <?= zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"') ?>
         </div>
     </div>
-    <?php if (ADDITIONAL_IMAGES_HANDLING === 'Database') { ?>
+    <?php if (zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') { ?>
         <h3><?= TEXT_PRODUCTS_ADDITIONAL_IMAGES ?></h3>
         <?php if (!empty($additional_images)) { ?>
             <div class="form-group">

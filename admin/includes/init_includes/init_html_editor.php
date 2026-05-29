@@ -80,11 +80,11 @@ foreach ($editors_list as $key => $value) {
  * it might still be set for the HTMLAREA editor!  If the preferred editor is no longer
  * valid, use 'NONE' as the default.
  */
-$preferred_editor = HTML_EDITOR_PREFERENCE;
-if (!in_array(HTML_EDITOR_PREFERENCE, array_keys($editors_list))) {
+$preferred_editor = zen_config('HTML_EDITOR_PREFERENCE');
+if (!in_array(zen_config('HTML_EDITOR_PREFERENCE'), array_keys($editors_list))) {
     $preferred_editor = 'NONE';
     $current_editor_key = $plain_editor_key;
-    $messageStack->add(sprintf(ERROR_EDITOR_NOT_FOUND, HTML_EDITOR_PREFERENCE), 'error');
+    $messageStack->add(sprintf(ERROR_EDITOR_NOT_FOUND, zen_config('HTML_EDITOR_PREFERENCE')), 'error');
 }
 
 /**

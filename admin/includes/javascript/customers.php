@@ -7,7 +7,7 @@
 // -----
 // If the site does NOT require a 'State' entry in an address, nothing to be done here!
 //
-if (ACCOUNT_STATE !== 'true') {
+if (zen_config('ACCOUNT_STATE') !== 'true') {
     return;
 }
 

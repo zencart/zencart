@@ -262,7 +262,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
         }
 
         $contents = ['form' => zen_draw_form('configuration', FILENAME_PRODUCT_TYPES, 'ptID=' . $_GET['ptID'] . '&cID=' . $cInfo->configuration_id . '&action=layout_save')];
-        if (ADMIN_CONFIGURATION_KEY_ON == 1) {
+        if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
             $contents[] = ['text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>'];
         }
         $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
@@ -277,7 +277,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
     } elseif (isset($cInfo) && is_object($cInfo)) {
         $heading[] = ['text' => '<h4>' . $cInfo->configuration_title . '</h4>'];
 
-        if (ADMIN_CONFIGURATION_KEY_ON == 1) {
+        if ((int)zen_config('ADMIN_CONFIGURATION_KEY_ON') === 1) {
             $contents[] = ['text' => '<strong>Key: ' . $cInfo->configuration_key . '</strong><br>'];
         }
         $contents[] = [
@@ -410,7 +410,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
                     zen_draw_label(TEXT_UPLOAD_DIR, 'img_dir' ,'class="control-label"') .
                     zen_draw_pull_down_menu('img_dir', $dir_info, $default_directory, 'class="form-control"')
             ];
-            $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+            $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'))];
 
             $contents[] = [
                 'text' =>
@@ -476,7 +476,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
                 if (!empty($ptInfo->last_modified)) {
                     $contents[] = ['text' => TEXT_INFO_LAST_MODIFIED . ' ' . zen_date_short($ptInfo->last_modified)];
                 }
-                $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)];
+                $contents[] = ['text' => $ptInfo->default_image === '' ? '' : zen_info_image($ptInfo->default_image, $ptInfo->type_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'))];
                 $contents[] = ['text' => '<br>' . TEXT_PRODUCTS . ' ' . $ptInfo->products_count];
             }
             break;

@@ -1273,7 +1273,7 @@ class Customer extends base
 
         $this->notify('NOTIFY_MODULE_CREATE_ACCOUNT_ADDING_CUSTOMER_RECORD', null, $data);
 
-        $activation_required = (int)(zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'true');
+        $activation_required = (zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'true');
 
         $sql_data_array = [
             ['fieldName' => 'customers_firstname', 'value' => $data['firstname'], 'type' => 'stringIgnoreNull'],
@@ -1293,7 +1293,7 @@ class Customer extends base
             ['fieldName' => 'last_login_ip', 'value' => $data['ip_address'], 'type' => 'string'],
         ];
 
-        if (zen_config('CUSTOMERS_REFERRAL_STATUS') === '2' && !empty($data['customers_referral'])) {
+        if ((int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 2 && !empty($data['customers_referral'])) {
             $sql_data_array[] = ['fieldName' => 'customers_referral', 'value' => $data['customers_referral'], 'type' => 'stringIgnoreNull'];
         }
         if (zen_config('ACCOUNT_GENDER') === 'true') {

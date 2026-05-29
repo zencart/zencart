@@ -74,7 +74,7 @@ if ($expired && $message == '') {
           <?php if (defined('HEADER_LOGO_IMAGE_HOME') && HEADER_LOGO_IMAGE_HOME !== '') { ?>
               <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE_HOME, HEADER_ALT_TEXT, '', '', 'class="img-responsive object-fit-contain"') . PHP_EOL; ?>
           <?php } else { ?>
-              <i class="fa fa-home text-primary"></i> <?php echo STORE_NAME; ?>
+              <i class="fa fa-home text-primary"></i> <?php echo zen_config('STORE_NAME'); ?>
           <?php } ?>
       </div>
 

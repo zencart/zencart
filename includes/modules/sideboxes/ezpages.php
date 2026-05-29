@@ -11,7 +11,7 @@
   $zco_notifier->notify('NOTIFY_START_EZPAGES_SIDEBOX');
 
   // test if sidebox should display
-  if (zen_config('EZPAGES_STATUS_SIDEBOX') === '1' || (zen_config('EZPAGES_STATUS_SIDEBOX') === '2' && zen_is_whitelisted_admin_ip())) {
+  if ((int)zen_config('EZPAGES_STATUS_SIDEBOX') === 1 || ((int)zen_config('EZPAGES_STATUS_SIDEBOX') === 2 && zen_is_whitelisted_admin_ip())) {
     if (isset($var_linksList)) {
       unset($var_linksList);
     }

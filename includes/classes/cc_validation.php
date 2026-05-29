@@ -29,34 +29,34 @@ class cc_validation
 
         // NOTE: We check Solo before Maestro, and Maestro/Switch *before* we check Visa/Mastercard, so we don't have to rule-out numerous types from V/MC matching rules.
         switch (true) {
-            case preg_match('/^(6334[5-9][0-9]|6767[0-9]{2})[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && zen_config('CC_ENABLED_SOLO') === '1':
+            case preg_match('/^(6334[5-9][0-9]|6767[0-9]{2})[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && (int)zen_config('CC_ENABLED_SOLO') === 1:
                 $this->cc_type = "Solo"; // is also a Maestro product
                 break;
-            case preg_match('/^(49369[8-9]|490303|6333[0-4][0-9]|6759[0-9]{2}|5[0678][0-9]{4}|6[0-9][02-9][02-9][0-9]{2})[0-9]{6,13}?$/', $this->cc_number) && zen_config('CC_ENABLED_MAESTRO') === '1':
+            case preg_match('/^(49369[8-9]|490303|6333[0-4][0-9]|6759[0-9]{2}|5[0678][0-9]{4}|6[0-9][02-9][02-9][0-9]{2})[0-9]{6,13}?$/', $this->cc_number) && (int)zen_config('CC_ENABLED_MAESTRO') === 1:
                 $this->cc_type = "Maestro";
                 break;
-            case preg_match('/^(49030[2-9]|49033[5-9]|4905[0-9]{2}|49110[1-2]|49117[4-9]|49918[0-2]|4936[0-9]{2}|564182|6333[0-4][0-9])[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && zen_config('CC_ENABLED_MAESTRO') == '1':
+            case preg_match('/^(49030[2-9]|49033[5-9]|4905[0-9]{2}|49110[1-2]|49117[4-9]|49918[0-2]|4936[0-9]{2}|564182|6333[0-4][0-9])[0-9]{10}([0-9]{2,3}?)?$/', $this->cc_number) && (int)zen_config('CC_ENABLED_MAESTRO') == 1:
                 $this->cc_type = "Maestro"; // SWITCH is now Maestro
                 break;
-            case preg_match('/^4[0-9]{12}([0-9]{3})?$/', $this->cc_number) && zen_config('CC_ENABLED_VISA') === '1':
+            case preg_match('/^4[0-9]{12}([0-9]{3})?$/', $this->cc_number) && (int)zen_config('CC_ENABLED_VISA') === 1:
                 $this->cc_type = 'Visa';
                 break;
-            case preg_match('/^(5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/', $this->cc_number) && zen_config('CC_ENABLED_MC') === '1':
+            case preg_match('/^(5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$/', $this->cc_number) && (int)zen_config('CC_ENABLED_MC') === 1:
                 $this->cc_type = 'MasterCard'; // 510000-550000, 222100-272099
                 break;
-            case preg_match('/^3[47][0-9]{13}$/', $this->cc_number) && zen_config('CC_ENABLED_AMEX') === '1':
+            case preg_match('/^3[47][0-9]{13}$/', $this->cc_number) && (int)zen_config('CC_ENABLED_AMEX') === 1:
                 $this->cc_type = 'American Express';
                 break;
-            case preg_match('/^3(0[0-5]|[68][0-9])[0-9]{11}$/', $this->cc_number) && zen_config('CC_ENABLED_DINERS_CLUB') === '1':
+            case preg_match('/^3(0[0-5]|[68][0-9])[0-9]{11}$/', $this->cc_number) && (int)zen_config('CC_ENABLED_DINERS_CLUB') === 1:
                 $this->cc_type = 'Diners Club';
                 break;
-            case preg_match('/^(6011[0-9]{12}|622[1-9][0-9]{12}|64[4-9][0-9]{13}|65[0-9]{14})$/', $this->cc_number) && zen_config('CC_ENABLED_DISCOVER') === '1':
+            case preg_match('/^(6011[0-9]{12}|622[1-9][0-9]{12}|64[4-9][0-9]{13}|65[0-9]{14})$/', $this->cc_number) && (int)zen_config('CC_ENABLED_DISCOVER') === 1:
                 $this->cc_type = 'Discover';
                 break;
-            case preg_match('/^(35(28|29|[3-8][0-9])[0-9]{12}|2131[0-9]{11}|1800[0-9]{11})$/', $this->cc_number) && zen_config('CC_ENABLED_JCB') === '1':
+            case preg_match('/^(35(28|29|[3-8][0-9])[0-9]{12}|2131[0-9]{11}|1800[0-9]{11})$/', $this->cc_number) && (int)zen_config('CC_ENABLED_JCB') === 1:
                 $this->cc_type = "JCB";
                 break;
-            case preg_match('/^5610[0-9]{12}$/', $this->cc_number) && zen_config('CC_ENABLED_AUSTRALIAN_BANKCARD') === '1':
+            case preg_match('/^5610[0-9]{12}$/', $this->cc_number) && (int)zen_config('CC_ENABLED_AUSTRALIAN_BANKCARD') === 1:
                 $this->cc_type = 'Australian BankCard'; // NOTE: is now obsolete
                 break;
             default:

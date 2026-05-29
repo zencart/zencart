@@ -52,7 +52,7 @@ if (($_GET['action'] ?? '') === 'process') {
     $password = zen_db_prepare_input(isset($_POST['password']) ? trim($_POST['password']) : '');
 
     /* Privacy-policy-read does not need to be checked during "login"
-    if (DISPLAY_PRIVACY_CONDITIONS == 'true') {
+    if (zen_config('DISPLAY_PRIVACY_CONDITIONS') == 'true') {
     if (!isset($_POST['privacy_conditions']) || ($_POST['privacy_conditions'] != '1')) {
     $error = true;
     $messageStack->add('create_account', ERROR_PRIVACY_STATEMENT_NOT_ACCEPTED, 'error');
@@ -92,14 +92,14 @@ if (($_GET['action'] ?? '') === 'process') {
 
             $zc_check_basket_before = 0;
             // save current cart contents count if required
-            if (SHOW_SHOPPING_CART_COMBINED > 0) {
+            if (zen_config('SHOW_SHOPPING_CART_COMBINED') > 0) {
                 $zc_check_basket_before = $_SESSION['cart']->count_contents();
             }
 
             // login and restore cart
             $customer->login($login_attempt['customers_id'], $restore_cart = true);
 
-            if (SESSION_RECREATE == 'True') {
+            if (zen_config('SESSION_RECREATE') == 'True') {
                 zen_session_recreate();
             }
 
@@ -107,12 +107,12 @@ if (($_GET['action'] ?? '') === 'process') {
 
             // check current cart contents count if required
             $zc_check_basket_after = $_SESSION['cart']->count_contents();
-            if (SHOW_SHOPPING_CART_COMBINED > 0 && $zc_check_basket_after > 0 && $zc_check_basket_before != $zc_check_basket_after) {
-                if (SHOW_SHOPPING_CART_COMBINED == 2) {
+            if (zen_config('SHOW_SHOPPING_CART_COMBINED') > 0 && $zc_check_basket_after > 0 && $zc_check_basket_before != $zc_check_basket_after) {
+                if (zen_config('SHOW_SHOPPING_CART_COMBINED') == 2) {
                     // warning only do not send to cart
                     $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
                 }
-                if (SHOW_SHOPPING_CART_COMBINED == 1) {
+                if (zen_config('SHOW_SHOPPING_CART_COMBINED') == 1) {
                     // show warning and send to shopping cart for review
                     if (!(isset($_GET['gv_no']))) {
                         $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
@@ -166,7 +166,7 @@ if ($error == true) {
 $breadcrumb->add(NAVBAR_TITLE);
 
 // Check for PayPal express checkout button suitability:
-$paypalec_enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True' && defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') && MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON == 'On');
+$paypalec_enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' && zen_config('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') === 'On');
 // Check for express checkout button suitability (must have cart contents, value > 0, and value < 10000USD):
 require_once DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/paypal_currency_check.php';
 $ec_button_enabled = ($paypalec_enabled && $_SESSION['cart']->count_contents() > 0 && $_SESSION['cart']->total > 0 && paypalUSDCheck($_SESSION['cart']->total) === true);

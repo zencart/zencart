@@ -68,7 +68,7 @@ switch ($action) {
             zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_DELETED, $uname, $admname), 'warning');
             $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_DELETED, $uname, $admname);
             $block = ['EMAIL_MESSAGE_HTML' => $email_text];
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_MFA_DELETED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+            zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_ADMIN_MFA_DELETED, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $block, 'admin_settings_changed');
         }
         break;
     case 'exemptmfa_confirm': // mark user account to be excluded from mfa
@@ -79,7 +79,7 @@ switch ($action) {
             zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_EXEMPTED, $uname, $admname), 'warning');
             $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_EXEMPTED, $uname, $admname);
             $block = ['EMAIL_MESSAGE_HTML' => $email_text];
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_MFA_EXEMPTED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+            zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_ADMIN_MFA_EXEMPTED, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $block, 'admin_settings_changed');
         }
         break;
     case 'unexemptmfa_confirm': // undo mfa exemption
@@ -90,7 +90,7 @@ switch ($action) {
             zen_record_admin_activity(sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_UNEXEMPTED, $uname, $admname), 'warning');
             $email_text = sprintf(TEXT_EMAIL_MESSAGE_ADMIN_MFA_UNEXEMPTED, $uname, $admname);
             $block = ['EMAIL_MESSAGE_HTML' => $email_text];
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, TEXT_EMAIL_SUBJECT_ADMIN_MFA_UNEXEMPTED, $email_text, STORE_NAME, EMAIL_FROM, $block, 'admin_settings_changed');
+            zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_ADMIN_MFA_UNEXEMPTED, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $block, 'admin_settings_changed');
         }
         break;
     case 'insert': // insert new user into database. Post data is prep'd for db in the first function call
@@ -225,7 +225,7 @@ $userList = zen_get_users();
                 if (zen_is_superuser()) {
                     $userFresh = zen_read_user($userDetails['name']);
                     $user_mfa_data = json_decode($userFresh['mfa'] ?? '', true, 2);
-                    $mfa_status_of_store = MFA_ENABLED === 'True';
+                    $mfa_status_of_store = zen_config('MFA_ENABLED') === 'True';
                     $mfa_status = !empty($user_mfa_data['generated_at']) && !empty($user_mfa_data['secret']);
                     $mfa_exempt = !empty($user_mfa_data['exempt']);
                     $mfa_date = $mfa_status ? (new DateTime)->setTimestamp($user_mfa_data['generated_at'])->setTimezone((new DateTime)->getTimezone())->format('Y-m-d H:i:s') : '';

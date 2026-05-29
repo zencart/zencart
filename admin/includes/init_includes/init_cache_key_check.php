@@ -11,8 +11,8 @@
  *  else it uses the /cache/ directory located in the catalog area.)
  */
 
-if (!file_exists(SESSION_WRITE_DIRECTORY) || !is_writable(SESSION_WRITE_DIRECTORY)) {
-  zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . SESSION_WRITE_DIRECTORY, 'notice');
+if (!file_exists(zen_config('SESSION_WRITE_DIRECTORY')) || !is_writable(zen_config('SESSION_WRITE_DIRECTORY'))) {
+  zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . zen_config('SESSION_WRITE_DIRECTORY'), 'notice');
   define('DIR_FS_ROOT', realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/../') . '/');
 
   $possible_dir = array();

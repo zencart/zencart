@@ -224,7 +224,7 @@ class Search extends \base
         */
 
         // always add quantity regardless of whether or not it is in the listing for add to cart buttons
-        if (zen_config('PRODUCT_LIST_QUANTITY') < 1) {
+        if ((int)zen_config('PRODUCT_LIST_QUANTITY') < 1) {
             if (empty($select_column_list)) {
                 $select_column_list .= ' p.products_quantity ';
             } else {

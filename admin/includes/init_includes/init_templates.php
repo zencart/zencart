@@ -51,7 +51,7 @@ if ($pagename === 'index') {
 
 $pagename = ucwords($pagename);
 if ($pagename === '') {
-  $pagename = STORE_NAME;
+  $pagename = zen_config('STORE_NAME');
 }
 $title = TEXT_ADMIN_TAB_PREFIX . ' ' . $pagename;
 zen_define_default('TITLE', $title);
