@@ -980,7 +980,7 @@ if ($action === '') {
 // -----
 // Defining variables common to various display layouts.
 //
-$wholesale_pricing_enabled = (zen_config('WHOLESALE_PRICING_CONFIG','false') !== 'false');
+$wholesale_pricing_enabled = (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false');
 $wholesale_pricing_indicator = '<span class="text-danger">*</span>';
 $wholesale_pricing_heading = ($wholesale_pricing_enabled === true) ? '<br>' . $wholesale_pricing_indicator . '<small>' . TABLE_HEADING_HAS_WHOLESALE_PRICE . '</small>' : '';
 
