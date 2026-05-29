@@ -66,7 +66,7 @@ class zcAjaxSelect2Lookups extends base
 
         $exclude_gv = '';
         // exclude GV's if feature is disabled
-        if (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'false') === 'false') {
+        if (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL') === 'false') {
             $exclude_gv = " AND p.products_model NOT LIKE 'GIFT%' ";
         }
 
