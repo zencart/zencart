@@ -820,7 +820,7 @@ if (!empty($action)) {
                     if (empty($pInfo->products_model)) {
                         $pInfo->products_model = '';
                     }
-                    if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'True') === 'true'))) {
+                    if ((substr($pInfo->products_model, 0, 4) != 'GIFT') || (substr($pInfo->products_model, 0, 4) == 'GIFT' && (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'true') === 'true'))) {
                       ?>
                       <a href="<?php echo zen_href_link(FILENAME_SPECIALS, 'add_products_id=' . $_GET['products_filter'] . '&action=new' . (isset($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . '&go_back=ON' . '&current_category_id=' . $current_category_id); ?>" class="btn btn-info" role="button"><i class="fa-solid fa-plus"></i> <?php echo IMAGE_INSTALL_SPECIAL; ?></a>
                     <?php } else { ?>
@@ -1029,7 +1029,7 @@ if (!empty($action)) {
                         }
 ?>
                           <?php
-                          if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN', True) === 'true') {
+                          if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
                             ?>
                             <td class="main text-right"><?php echo $currencies->display_price($discounted_price, '', 1) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), 1); ?></td>
                             <td class="main text-right"><?php echo ' x ' . number_format($discount_name[$i]['discount_qty']) . ' = ' . $currencies->display_price($discounted_price, '', $discount_name[$i]['discount_qty']) . ' ' . $currencies->display_price($discounted_price, zen_get_tax_rate(1), $discount_name[$i]['discount_qty']); ?></td>
