@@ -345,20 +345,17 @@ class queryFactory extends base
                     $obj->EOF = false;
                 }
             }
-
-            $time_end = microtime(as_float: true);
-            $query_time = $time_end - $time_start;
-            $this->total_query_time += $query_time;
-            $this->count_queries++;
         }
 
-        if (isset($query_time)) {
-            $this->notifyQueryExecuted($obj, 'Execute', $query_time, $zp_db_resource !== false, [
-                'cache_seconds' => $cacheSeconds,
-                'enable_caching' => $enableCaching,
-                'remove_from_query_cache' => $removeFromQueryCache,
-            ]);
-        }
+        $time_end = microtime(as_float: true);
+        $query_time = $time_end - $time_start;
+        $this->total_query_time += $query_time;
+        $this->count_queries++;
+        $this->notifyQueryExecuted($obj, 'Execute', $query_time, $zp_db_resource !== false, [
+            'cache_seconds' => $cacheSeconds,
+            'enable_caching' => $enableCaching,
+            'remove_from_query_cache' => $removeFromQueryCache,
+        ]);
 
         return $obj;
     }
@@ -523,10 +520,10 @@ class queryFactory extends base
     protected function notifyQueryExecuted(queryFactoryResult $obj, string $method, float $queryTime, bool $success, array $extra = []): void
     {
         $recordCount = 0;
-        if (isset($obj->resource) && $obj->resource instanceof mysqli_result) {
-            $recordCount = mysqli_num_rows($obj->resource);
-        } elseif (isset($obj->result) && is_array($obj->result)) {
+        if (isset($obj->result) && is_array($obj->result)) {
             $recordCount = count($obj->result);
+        } elseif (isset($obj->resource) && $obj->resource instanceof mysqli_result) {
+            $recordCount = mysqli_num_rows($obj->resource);
         }
 
         $payload = array_merge([
