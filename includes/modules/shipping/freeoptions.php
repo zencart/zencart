@@ -26,7 +26,7 @@ class freeoptions extends ZenShipping
 
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = (zen_config('MODULE_SHIPPING_FREEOPTIONS_STATUS', 'True') === 'True');
+            $this->enabled = (zen_config('MODULE_SHIPPING_FREEOPTIONS_STATUS') === 'True');
         } else {
             $this->enabled = false;
         }
@@ -212,7 +212,7 @@ class freeoptions extends ZenShipping
     public function install(): void
     {
         global $db;
-        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Free Options Shipping', 'MODULE_SHIPPING_FREEOPTIONS_STATUS', 'True', 'Free Options is used to display a Free Shipping option when other Shipping Modules are displayed.
+        $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Free Options Shipping', 'MODULE_SHIPPING_FREEOPTIONS_STATUS', 'Free Options is used to display a Free Shipping option when other Shipping Modules are displayed.
 It can be based on: Always show, Order Total, Order Weight or Order Item Count.
 The Free Options module does not show when Free Shipper is displayed.<br><br>
 Setting Total to >= 0.00 and <= nothing (leave blank) will activate this module to show with all shipping modules, except for Free Shipping - freeshipper.<br><br>

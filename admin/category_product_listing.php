@@ -563,7 +563,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
                 $show_prod_labels = ($search_result || $categories->EOF);
 
-                $wholesale_pricing_enabled = (zen_config('WHOLESALE_PRICING_CONFIG', 'false') !== 'false');
+                $wholesale_pricing_enabled = (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false');
                 $wholesale_pricing_indicator = '<span class="text-danger">*</span>';
                 $wholesale_pricing_heading = ($wholesale_pricing_enabled === true) ? '<br>' . $wholesale_pricing_indicator . '<small>' . TABLE_HEADING_HAS_WHOLESALE_PRICE . '</small>' : '';
                 ?>
@@ -609,7 +609,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     }
                 }
 ?>
-                        <?php if ($show_prod_labels || zen_config('SHOW_COUNTS_ADMIN', 'True') === 'true') { ?>
+                        <?php if ($show_prod_labels || zen_config('SHOW_COUNTS_ADMIN') === 'true') { ?>
                             <th class="text-right hidden-sm hidden-xs"><?= TABLE_HEADING_QUANTITY ?></th>
                         <?php } ?>
 <?php
@@ -730,10 +730,10 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                             <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                             <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
                         <?php } ?>
-                        <?php if ($show_prod_labels === true || zen_config('SHOW_COUNTS_ADMIN', 'True') === 'true') { ?>
+                        <?php if ($show_prod_labels === true || zen_config('SHOW_COUNTS_ADMIN') === 'true') { ?>
                             <td class="text-right hidden-sm hidden-xs">
                                 <?php
-                                if (zen_config('SHOW_COUNTS_ADMIN', 'True') === 'true') {
+                                if (zen_config('SHOW_COUNTS_ADMIN') === 'true') {
                                     // show counts
                                     $total_products = zen_get_products_to_categories($current_cID, true);
                                     $total_products_on = zen_get_products_to_categories($current_cID);
@@ -774,7 +774,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         }
 ?>
                             <td class="text-right dataTableButtonCell actions">
-                            <?php if (zen_config('SHOW_CATEGORY_PRODUCTS_LINKED_STATUS', 'True') === 'true' && zen_get_products_to_categories($current_cID, true, 'products_active') === 'true') {
+                            <?php if (zen_config('SHOW_CATEGORY_PRODUCTS_LINKED_STATUS') === 'true' && zen_get_products_to_categories($current_cID, true, 'products_active') === 'true') {
                                 echo zen_icon('linked', IMAGE_ICON_LINKED, size: 'lg', hidden: true);
                             }
                             if ($category['categories_status'] === '1') { ?>

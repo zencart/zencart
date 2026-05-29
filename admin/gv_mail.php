@@ -93,14 +93,14 @@ if ($action != '') {
         $html_msg['EMAIL_LAST_NAME'] = $row['customers_lastname'];
 
         $message .= zen_db_prepare_input($_POST['message']);
-        if (zen_config('EMAIL_USE_HTML', 'True') === 'true') {
+        if (zen_config('EMAIL_USE_HTML') === 'true') {
           $html_msg['EMAIL_MESSAGE_HTML'] = zen_db_prepare_input($_POST['message_html']);
         } else {
           $html_msg['EMAIL_MESSAGE_HTML'] = '';
         }
 
         $gv_value = $currencies->format($_POST['amount']);
-        if (zen_config('SEARCH_ENGINE_FRIENDLY_URLS', 'True') === 'true') {
+        if (zen_config('SEARCH_ENGINE_FRIENDLY_URLS') === 'true') {
           $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php/gv_redeem/gv_no/';
         } else {
           $url = HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=gv_redeem&gv_no=';
@@ -310,7 +310,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           <div class="form-group">
             <div class="col-sm-12"><?php echo TEXT_MESSAGE_INFO; ?></div>
           </div>
-          <?php if (zen_config('EMAIL_USE_HTML', 'True') === 'true') { ?>
+          <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
             <div class="form-group">
               <?php echo zen_draw_label(TEXT_HTML_MESSAGE, 'message_html', 'class="control-label col-sm-3"'); ?>
               <div class="col-sm-9 col-md-6">

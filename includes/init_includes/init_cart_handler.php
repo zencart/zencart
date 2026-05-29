@@ -17,7 +17,7 @@ if (isset($_GET['action'])) {
   if ($session_started == false) {
     zen_redirect(zen_href_link(FILENAME_COOKIE_USAGE));
   }
-  if (zen_config('DISPLAY_CART', 'True') === 'true') {
+  if (zen_config('DISPLAY_CART') === 'true') {
     $goto =  FILENAME_SHOPPING_CART;
     $parameters = array('action', 'cPath', 'products_id', 'pID', 'pid', 'main_page');
   } else {

@@ -206,7 +206,7 @@ class category_tree extends base
             $this->box_categories_array[$ii]['has_sub_cat'] = false;
         }
 
-        if (zen_config('SHOW_COUNTS', 'True') === 'true') {
+        if (zen_config('SHOW_COUNTS') === 'true') {
             $products_in_category = zen_count_products_in_category($counter);
             if ($products_in_category > 0) {
                 $this->box_categories_array[$ii]['count'] = $products_in_category;

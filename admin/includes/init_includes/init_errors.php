@@ -24,7 +24,7 @@ if (function_exists('ini_get') && ((bool)ini_get('file_uploads') === false)) {
 }
 
 // check if email subsystem has been disabled
-if (zen_config('SEND_EMAILS', 'True') !== 'true') {
+if (zen_config('SEND_EMAILS') !== 'true') {
     $messageStack->add(WARNING_EMAIL_SYSTEM_DISABLED, 'error');
 }
 

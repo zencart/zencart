@@ -46,7 +46,7 @@ $doVersionCheck = false;
 $versionCheckError = false;
 
 // ignore version check if not enabled or if not on main page or sysinfo page
-if ((zen_config('SHOW_VERSION_UPDATE_IN_HEADER', 'True') === 'true'
+if ((zen_config('SHOW_VERSION_UPDATE_IN_HEADER') === 'true'
         && $version_from_ini !== 'off'
         && ($version_check_sysinfo === true || $version_check_index === true)
         && $zv_db_patch_ok === true)

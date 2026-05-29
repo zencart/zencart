@@ -772,11 +772,11 @@ function zen_get_admin_pages(bool $menu_only): array
     }
 
     // don't show Coupon Admin unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS', 'false') === 'false') {
+    if (zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS', 'True') !== 'True') {
         unset ($retVal['gv']['couponAdmin']);
     }
     // don't show Gift Vouchers unless installed
-    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'false') === 'false') {
+    if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS', 'True') !== 'True') {
         unset($retVal['gv']['gvQueue'], $retVal['gv']['gvMail'], $retVal['gv']['gvSent']);
     }
     // if Coupons and Gift Vouchers are off display msg

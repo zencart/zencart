@@ -31,7 +31,7 @@ if (isset($_SESSION['mfa']['expires']) && $_SESSION['mfa']['expires'] < time()) 
 if (empty($_SESSION['mfa']) || str_starts_with($_POST['action'] ?? '', 'setup') || $setup_required) {
     $user = zen_read_user(zen_get_admin_name($_SESSION['admin_id']));
     $user_mfa_data = json_decode($user['mfa'] ?? '', true, 2);
-    $mfa_status_of_store = zen_config('MFA_ENABLED', 'True') === 'True';
+    $mfa_status_of_store = zen_config('MFA_ENABLED') === 'True';
     $mfa_otp_status = !empty($user_mfa_data['generated_at']) && !empty($user_mfa_data['secret']);
     $mfa_email_status = !empty($user_mfa_data['via_email']);
     $mfa_exempt = !empty($user_mfa_data['exempt']);

@@ -38,7 +38,7 @@ if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
-$show_including_tax = (zen_config('DISPLAY_PRICE_WITH_TAX', 'True') === 'true');
+$show_including_tax = (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true');
 // prepare order-status look-up list
 $ordersStatus = zen_getOrdersStatuses();
 $orders_status_array = $ordersStatus['orders_status_array'];
@@ -895,7 +895,7 @@ if ($show_product_tax) { ?>
                         <?php
                         $weight_unit = ' ' . ltrim(TEXT_PRODUCT_WEIGHT_UNIT, ' ');
                         for ($i = 0, $n = count($order->products); $i < $n; $i++) {
-                            if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN', 'True') === 'true') {
+                            if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
                                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
                             } else {
                                 $priceIncTax = $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);

@@ -54,7 +54,7 @@ if (empty($order->info)) {
       <p class="text-danger text-center"><?= ERROR_ORDER_DOES_NOT_EXIST . $oID ?></p>
 <?php
 } else {
-    $show_including_tax = (zen_config('DISPLAY_PRICE_WITH_TAX', 'True') === 'true');
+    $show_including_tax = (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true');
 
     // prepare order-status pulldown list
     $ordersStatus = zen_getOrdersStatuses();
@@ -254,7 +254,7 @@ if (empty($order->info)) {
                     $i = $ii;
                 }
                 $product_name = $order->products[$i]['name'];
-              if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN', 'True') === 'true') {
+              if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
               } else {
                 $priceIncTax = $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);

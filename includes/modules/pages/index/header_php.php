@@ -119,7 +119,7 @@ if (isset($cPath) && zen_not_null($cPath)) {
 }
 
 // include template specific file name defines
-$define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_MAIN_PAGE, 'false');
+$define_page = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/', FILENAME_DEFINE_MAIN_PAGE);
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // set the product filters according to selected product type
@@ -144,7 +144,7 @@ $index_listing_has_products = ($category_depth === 'products' || $do_filter_list
 
 // if only one product in this category, go directly to the product page, instead of displaying a link to just one item:
 // if filter_id exists the 1 product redirect is ignored
-if (zen_config('SKIP_SINGLE_PRODUCT_CATEGORIES', 'True') === 'True' && !isset($_GET['filter_id']) && !isset($_GET['alpha_filter_id'])) {
+if (zen_config('SKIP_SINGLE_PRODUCT_CATEGORIES') === 'True' && !isset($_GET['filter_id']) && !isset($_GET['alpha_filter_id'])) {
     if ($listing->RecordCount() == 1) {
         zen_redirect(zen_href_link(zen_get_info_page($listing->fields['products_id']), ($cPath ? 'cPath=' . $cPath . '&' : '') . 'products_id=' . $listing->fields['products_id']));
     }
