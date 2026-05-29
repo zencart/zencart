@@ -315,7 +315,7 @@ function zen_cfg_select_option(array $select_array, string $key_value, string $k
 function zen_cfg_select_drop_down(array $select_array, string $key_value, string $key = ''): string
 {
     $name = (!empty($key)) ? 'configuration[' . $key . ']' : 'configuration_value';
-    return zen_draw_pull_down_menu($name, $select_array, (int)$key_value, 'class="form-control"');
+    return zen_draw_pull_down_menu($name, $select_array, $key_value, 'class="form-control"');
 }
 
 /**
@@ -374,7 +374,7 @@ function zen_get_system_information(bool $privacy = false): array
 
     $errnum = 0;
     $system = $host = $kernel = $output = '';
-    $uptime = (zen_config('DISPLAY_SERVER_UPTIME', True) === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
+    $uptime = (zen_config('DISPLAY_SERVER_UPTIME') === 'true') ? 'Unsupported' : 'Disabled/Unavailable';
 
     // check to see if "exec()" is disabled in PHP -- if not, get additional info via command line
     $exec_disabled = false;
