@@ -17,7 +17,7 @@ zen_session_save_path(zen_config('SESSION_WRITE_DIRECTORY'));
 
 // set the session cookie parameters
 $path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-if (zen_config('SESSION_USE_ROOT_COOKIE_PATH', 'True') === 'True') $path = '/';
+if (zen_config('SESSION_USE_ROOT_COOKIE_PATH') === 'True') $path = '/';
 $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
 $domainPrefix = (zen_config('SESSION_ADD_PERIOD_PREFIX', 'True') === 'True') ? '.' : '';
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) $domainPrefix = '';
