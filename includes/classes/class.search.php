@@ -269,7 +269,7 @@ class Search extends \base
                 $_SESSION['customer_zone_id'] = STORE_ZONE;
             }
             $from_str .=
-                "LEFT JOIN (
+                " LEFT JOIN (
                     SELECT SUM(tr.tax_rate) AS tax_rate, tr.tax_class_id
                       FROM " . TABLE_TAX_RATES . " tr
                         INNER JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz
