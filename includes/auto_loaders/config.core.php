@@ -99,7 +99,6 @@ $autoLoadConfig[45][] = [
  * Breakpoint 50.
  *
  * $sniffer = new sniffer();
- * require 'includes/init_includes/init_gzip.php';
  * require 'includes/init_includes/init_sefu.php';
  */
 //- sniffer class loaded via psr4Autoload.php
@@ -107,10 +106,6 @@ $autoLoadConfig[50][] = [
     'autoType' => 'classInstantiate',
     'className' => 'sniffer',
     'objectName' => 'sniffer',
-];
-$autoLoadConfig[50][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_gzip.php',
 ];
 $autoLoadConfig[50][] = [
     'autoType' => 'init_script',

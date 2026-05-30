@@ -285,17 +285,6 @@ systemChecks:
       checkFunctionExists:
         parameters:
           functionName: xml_parser_create
-  checkGzip:
-    runLevel: always
-    errorLevel: WARN
-    mainErrorText: <?php echo TEXT_ERROR_GZIP .PHP_EOL; ?>
-    mainErrorTextHelpId: helpIdGzip
-    onlyWhen: server=apache
-    methods:
-      checkIniGet:
-        parameters:
-          inigetName: output_buffering
-          expectedValue: TRUE
   checkHttpsRequest:
     runLevel: always
     errorLevel: WARN
