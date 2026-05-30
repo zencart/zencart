@@ -244,8 +244,9 @@ class Search extends \base
             p.products_price, p.products_tax_class_id, p.products_price_sorter,
             p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
 
-        if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
-            $select_str .= ", SUM(tr.tax_rate) AS tax_rate ";
+        $displaying_prices_with_tax = (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true');
+        if ($displaying_prices_with_tax && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
+            $select_str .= ", tr2.tax_rate ";
         }
 
         // Notifier Point
@@ -262,18 +263,21 @@ class Search extends \base
             $from_str = $db->bindVars($from_str, ':languagesID', $_SESSION['languages_id'], 'integer');
         }
 
-        if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
+        if ($displaying_prices_with_tax && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             if (empty($_SESSION['customer_country_id'])) {
                 $_SESSION['customer_country_id'] = STORE_COUNTRY;
                 $_SESSION['customer_zone_id'] = STORE_ZONE;
             }
-            $from_str .= " LEFT JOIN " . TABLE_TAX_RATES . " tr
-                        ON p.products_tax_class_id = tr.tax_class_id
-                        LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz
-                        ON tr.tax_zone_id = gz.geo_zone_id
-                        AND (gz.zone_country_id IS null OR gz.zone_country_id = 0 OR gz.zone_country_id = :zoneCountryID)
-                        AND (gz.zone_id IS null OR gz.zone_id = 0 OR gz.zone_id = :zoneID)";
-
+            $from_str .=
+                "LEFT JOIN (
+                    SELECT SUM(tr.tax_rate) AS tax_rate, tr.tax_class_id
+                      FROM " . TABLE_TAX_RATES . " tr
+                        INNER JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz
+                            ON tr.tax_zone_id = gz.geo_zone_id
+                           AND (gz.zone_country_id IS NULL OR gz.zone_country_id = 0 OR gz.zone_country_id = :zoneCountryID)
+                           AND (gz.zone_id IS NULL OR gz.zone_id = 0 OR gz.zone_id = :zoneID)
+                     GROUP BY tr.tax_class_id
+                ) AS tr2 ON tr2.tax_class_id = p.products_tax_class_id ";
             $from_str = $db->bindVars($from_str, ':zoneCountryID', $_SESSION['customer_country_id'], 'integer');
             $from_str = $db->bindVars($from_str, ':zoneID', $_SESSION['customer_zone_id'], 'integer');
         }
@@ -379,13 +383,13 @@ class Search extends \base
             }
         }
 
-        if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true') {
+        if ($displaying_prices_with_tax) {
             if (!empty($this->searchOptions->pfrom)) {
-                $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS NULL, 1, 1 + (tr.tax_rate / 100)) >= :price)";
+                $where_str .= " AND (p.products_price_sorter * IF(tr2.tax_rate IS NULL, 1, 1 + (tr2.tax_rate / 100)) >= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pfrom, 'float');
             }
             if (!empty($this->searchOptions->pto)) {
-                $where_str .= " AND (p.products_price_sorter * IF(gz.geo_zone_id IS NULL, 1, 1 + (tr.tax_rate / 100)) <= :price)";
+                $where_str .= " AND (p.products_price_sorter * IF(tr2.tax_rate IS NULL, 1, 1 + (tr2.tax_rate / 100)) <= :price)";
                 $where_str = $db->bindVars($where_str, ':price', $this->searchOptions->pto, 'float');
             }
         } else {
@@ -403,11 +407,6 @@ class Search extends \base
 
         // Notifier Point
         $this->notify('NOTIFY_SEARCH_WHERE_STRING', $this->searchOptions->keywords, $where_str, $keyword_search_fields);
-
-
-        if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true' && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
-            $where_str .= " GROUP BY p.products_id, tr.tax_priority";
-        }
 
         // -----
         // If the customer has chosen a product display-order, then the ordering of the listing
