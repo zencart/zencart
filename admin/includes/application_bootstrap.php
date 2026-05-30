@@ -192,3 +192,8 @@ foreach ($installedPlugins as $plugin) {
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }
+
+/**
+ * tell any proxies to store both the compressed and uncompressed versions of content, so output doesn't get served mangled
+ */
+header("Vary: Accept-Encoding");

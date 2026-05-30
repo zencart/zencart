@@ -88,7 +88,6 @@ $define = [
     'BOX_CONFIGURATION_EZPAGES_SETTINGS' => 'EZ-Pages Settings',
     'BOX_CONFIGURATION_FEATURED_LISTING' => 'Featured Listing',
     'BOX_CONFIGURATION_GV_COUPONS' => 'GV Coupons',
-    'BOX_CONFIGURATION_GZIP_COMPRESSION' => 'GZip Compression',
     'BOX_CONFIGURATION_IMAGES' => 'Images',
     'BOX_CONFIGURATION_INDEX_LISTING' => 'Index Listing',
     'BOX_CONFIGURATION_LAYOUT_SETTINGS' => 'Layout Settings',
