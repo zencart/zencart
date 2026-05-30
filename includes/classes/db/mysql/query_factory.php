@@ -323,7 +323,7 @@ class queryFactory extends base
             $query_time = $time_end - $time_start;
             $this->total_query_time += $query_time;
             $this->count_queries++;
-            $this->notifyQueryExecuted($obj, 'Execute', $query_time, $zp_db_resource !== false, [
+            $this->notifyQueryExecuted($obj, __FUNCTION__, $query_time, $zp_db_resource !== false, [
                 'cache_seconds' => $cacheSeconds,
                 'enable_caching' => $enableCaching,
                 'remove_from_query_cache' => $removeFromQueryCache,
@@ -351,7 +351,7 @@ class queryFactory extends base
         $query_time = $time_end - $time_start;
         $this->total_query_time += $query_time;
         $this->count_queries++;
-        $this->notifyQueryExecuted($obj, 'Execute', $query_time, $zp_db_resource !== false, [
+        $this->notifyQueryExecuted($obj, __FUNCTION__, $query_time, $zp_db_resource !== false, [
             'cache_seconds' => $cacheSeconds,
             'enable_caching' => $enableCaching,
             'remove_from_query_cache' => $removeFromQueryCache,
@@ -431,7 +431,7 @@ class queryFactory extends base
         $query_time = $time_end - $time_start;
         $this->total_query_time += $query_time;
         $this->count_queries++;
-        $this->notifyQueryExecuted($obj, 'ExecuteRandomMulti', $query_time, $zp_db_resource !== false, [
+        $this->notifyQueryExecuted($obj, __FUNCTION__, $query_time, $zp_db_resource !== false, [
             'enable_caching' => false,
             'remove_from_query_cache' => true,
         ]);
