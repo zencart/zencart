@@ -281,6 +281,11 @@ class queryFactory extends base
                     $obj->EOF = false;
                     $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
                 }
+                $this->notifyQueryExecuted($obj, __FUNCTION__, 0.0, true, [
+                    'cache_seconds' => $cacheSeconds,
+                    'enable_caching' => $enableCaching,
+                    'remove_from_query_cache' => $removeFromQueryCache,
+                ]);
                 return $obj;
             }
         }
