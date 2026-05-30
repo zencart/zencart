@@ -520,7 +520,7 @@ class queryFactory extends base
     protected function notifyQueryExecuted(queryFactoryResult $obj, string $method, float $queryTime, bool $success, array $extra = []): void
     {
         $recordCount = 0;
-        if (isset($obj->result) && is_array($obj->result)) {
+        if (!empty($obj->result) && is_array($obj->result)) {
             $recordCount = count($obj->result);
         } elseif (isset($obj->resource) && $obj->resource instanceof mysqli_result) {
             $recordCount = mysqli_num_rows($obj->resource);
