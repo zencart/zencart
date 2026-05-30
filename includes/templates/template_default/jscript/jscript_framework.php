@@ -115,14 +115,7 @@ zcJS.ajax = function (options) {
                 }
                 break;
             default:
-                if (jqXHR.status === 200) {
-                    if (contentType.toLowerCase().indexOf("text/html") >= 0) {
-                        document.open();
-                        document.write(responseHtml);
-                        document.close();
-                    }
-                    break;
-                } else if (jqXHR.status === 418) {
+                if (jqXHR.status === 418) {
                     window.location.href = '<?= zen_href_link((IS_ADMIN_FLAG === true) ? FILENAME_DENIED : FILENAME_TIME_OUT, '', 'SSL') ?>';
                 }
                 break;
