@@ -517,10 +517,17 @@ class queryFactory extends base
         return (float)$this->total_query_time;
     }
 
+    /**
+     * Notify observers that a query execution has completed.
+     *
+     * @param queryFactoryResult $obj Result object for the executed query.
+     * @param string $method Calling method name (e.g. Execute, ExecuteRandomMulti).
+     * @param float $queryTime Elapsed seconds for the query (including processing).
+     * @param bool $success Whether the query execution succeeded.
+     * @param array $extra Additional payload fields (e.g. caching options).
+     */
     protected function notifyQueryExecuted(queryFactoryResult $obj, string $method, float $queryTime, bool $success, array $extra = []): void
     {
-        $recordCount = $obj->RecordCount();
-
         $payload = array_merge([
             'sql' => $obj->sql_query,
             'method' => $method,
@@ -528,12 +535,16 @@ class queryFactory extends base
             'query_time' => $queryTime,
             'query_count' => $this->count_queries,
             'total_query_time' => (float)$this->total_query_time,
-            'is_cached' => $obj->is_cached ?? false,
+            'is_cached' => $obj->is_cached,
             'error_number' => $success ? 0 : $this->error_number,
             'error_text' => $success ? '' : $this->error_text,
-            'record_count' => $recordCount,
-            'affected_rows' => $this->affectedRows(),
+            'enable_caching' => false,
+            'cache_seconds' => 0,
+            'remove_from_query_cache' => false,
         ], $extra);
+
+        $payload['record_count'] ??= $obj->RecordCount();
+        $payload['affected_rows'] ??= $this->affectedRows();
 
         $this->notify('NOTIFY_QUERY_FACTORY_EXECUTE_END', $payload);
     }
