@@ -135,7 +135,7 @@ function doPayPalIPNFsockopenPostback($web, $postback)
         $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     }
     if (!$fp) {
-        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again without any specified protocol, using port 80 ...");
+        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again without any specified protocol, using port 80 ...", false);
         $ssl = '';
         $web['port'] = '80';
         $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
