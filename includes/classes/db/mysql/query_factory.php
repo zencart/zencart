@@ -285,6 +285,7 @@ class queryFactory extends base
                     'cache_seconds' => $cacheSeconds,
                     'enable_caching' => $enableCaching,
                     'remove_from_query_cache' => $removeFromQueryCache,
+                    'affected_rows' => 0,
                 ]);
                 return $obj;
             }
