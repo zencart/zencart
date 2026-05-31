@@ -20,11 +20,11 @@ class QueryFactoryNotifierTest extends zcUnitTestCase
 
     public function testExecuteNotifiesOnCacheHit(): void
     {
-        global $zc_cache;
-        $originalCache = $zc_cache ?? null;
+        $hadCache = array_key_exists('zc_cache', $GLOBALS);
+        $originalCache = $hadCache ? $GLOBALS['zc_cache'] : null;
 
         try {
-            $zc_cache = new class {
+            $GLOBALS['zc_cache'] = new class {
                 public function sql_cache_exists(string $sqlQuery, int $cacheSeconds): bool
                 {
                     return true;
@@ -80,7 +80,11 @@ class QueryFactoryNotifierTest extends zcUnitTestCase
                 'record_count' => 1,
             ], $db->notifications[0][1]);
         } finally {
-            $zc_cache = $originalCache;
+            if ($hadCache) {
+                $GLOBALS['zc_cache'] = $originalCache;
+            } else {
+                unset($GLOBALS['zc_cache']);
+            }
         }
     }
 
