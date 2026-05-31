@@ -903,7 +903,7 @@ if (!empty($action)) {
             <div class="col-sm-12 text-danger"><strong><?php echo TEXT_QUERY_RESULTS; ?></strong></div>
           </div>
           <div class="row">
-            <div class="col-sm-12 text-danger"><?php echo nl2br(zen_output_string_protected(preg_replace('~<br[ /]*>~', "\n", $query_results['string']))); ?></div>
+            <div class="col-sm-12 text-danger"><?php echo nl2br(zen_output_string_protected(preg_replace('~<br[ /]*>~', "\n", $query_results['string'])), false); ?></div>
           </div>
           <?php
         }

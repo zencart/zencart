@@ -241,11 +241,11 @@ if (!empty($action)) {
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row">
           <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT_HTML), '', 'class="control-label"'); ?></div>
-          <div class="col-sm-9 col-md-6"><?php echo nl2br($nInfo->content_html); ?></div>
+          <div class="col-sm-9 col-md-6"><?php echo nl2br($nInfo->content_html, false); ?></div>
         </div>
         <div class="row">
           <div class="col-sm-3"><?php echo zen_draw_label(strip_tags(TEXT_NEWSLETTER_CONTENT), '', 'class="control-label"'); ?></div>
-          <div class="col-sm-9 col-md-6 tt"><?php echo nl2br($nInfo->content); ?></div>
+          <div class="col-sm-9 col-md-6 tt"><?php echo nl2br($nInfo->content, false); ?></div>
         </div>
         <div class="row"><?php echo zen_draw_separator(); ?></div>
         <div class="row text-right">

@@ -282,7 +282,7 @@ switch ($action) {
             if ($template_settings === false) {
                 $template_settings = ERROR_COULD_NOT_READ_FILE;
             }
-            $template_settings = nl2br(zen_output_string_protected($template_settings), true);
+            $template_settings = nl2br(zen_output_string_protected($template_settings), false);
             $contents[] = [
                 'text' =>
                     '<div id="view-settings" class="modal fade" role="dialog">' .

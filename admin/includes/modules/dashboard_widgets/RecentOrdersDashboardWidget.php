@@ -187,7 +187,7 @@ if ($show_status_pills) {
                     }
                     $product_details = rtrim($product_details);
                     $product_details = preg_replace('~<hr>$~', '', $product_details);
-                    $product_details = nl2br($product_details);
+                    $product_details = nl2br($product_details, false);
 
                     $inlineStyle = '';
                     $lblClass = 'label-default';
