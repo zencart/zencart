@@ -17,13 +17,15 @@ foreach ($availableNotifications as $nKey => $aNotification) {
 <?php if ($aNotification['can-forget']) { ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 <?php } ?>
-            <script><!--//<![CDATA[
-                var loc = 'https://pan.zen-cart.com/display/group/' + '<?php echo $aNotification['banner-group']; ?>'
-                var rd = Math.floor(Math.random() * 99999999999);
-                document.write("<scr" + "ipt src='" + loc);
-                document.write('?rd=' + rd);
-                document.write("'></scr" + "ipt>");
-                //]]>--></script>
+            <script>(function (d) {
+                let me = d.currentScript || (function(){let s=d.getElementsByTagName("script");return s[s.length-1];})();
+                let rd = Math.floor(Date.now()/60000) + "-" + Math.floor(Math.random()*1000);
+                let s = d.createElement("script");
+                s.src = "https://pan.zen-cart.com/display/group/" + "<?= (int)$aNotification['banner-group'] ?>" + "/?rd=" + encodeURIComponent(rd);
+                s.async = true;
+                me.parentNode.insertBefore(s, me.nextSibling);
+                })(document);
+            </script>
         </div>
 <?php
         }

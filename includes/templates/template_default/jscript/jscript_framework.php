@@ -116,10 +116,18 @@ zcJS.ajax = function (options) {
                 break;
             default:
                 if (jqXHR.status === 200) {
-                    if (contentType.toLowerCase().indexOf("text/html") >= 0) {
-                        document.open();
-                        document.write(responseHtml);
-                        document.close();
+                    if (((contentType || '')).toLowerCase().indexOf('text/html') >= 0) {
+                        if (window.console && typeof(console.error) === 'function') {
+                            console.error('AJAX expected JSON but received HTML.', jqXHR);
+                        }
+
+                        const title = document.createElement('h1');
+                        title.textContent = 'Unexpected server response';
+
+                        const details = document.createElement('pre');
+                        details.textContent = responseHtml;
+
+                        document.body.replaceChildren(title, details);
                     }
                     break;
                 } else if (jqXHR.status === 418) {
