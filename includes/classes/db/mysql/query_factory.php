@@ -281,6 +281,12 @@ class queryFactory extends base
                     $obj->EOF = false;
                     $obj->fields = array_replace($obj->fields, $zp_result_array[0]);
                 }
+                $this->notifyQueryExecuted($obj, __FUNCTION__, 0.0, true, [
+                    'cache_seconds' => $cacheSeconds,
+                    'enable_caching' => $enableCaching,
+                    'remove_from_query_cache' => $removeFromQueryCache,
+                    'affected_rows' => 0,
+                ]);
                 return $obj;
             }
         }
@@ -323,6 +329,11 @@ class queryFactory extends base
             $query_time = $time_end - $time_start;
             $this->total_query_time += $query_time;
             $this->count_queries++;
+            $this->notifyQueryExecuted($obj, __FUNCTION__, $query_time, $zp_db_resource !== false, [
+                'cache_seconds' => $cacheSeconds,
+                'enable_caching' => $enableCaching,
+                'remove_from_query_cache' => $removeFromQueryCache,
+            ]);
 
             return $obj;
         }
@@ -340,12 +351,17 @@ class queryFactory extends base
                     $obj->EOF = false;
                 }
             }
-
-            $time_end = microtime(as_float: true);
-            $query_time = $time_end - $time_start;
-            $this->total_query_time += $query_time;
-            $this->count_queries++;
         }
+
+        $time_end = microtime(as_float: true);
+        $query_time = $time_end - $time_start;
+        $this->total_query_time += $query_time;
+        $this->count_queries++;
+        $this->notifyQueryExecuted($obj, __FUNCTION__, $query_time, $zp_db_resource !== false, [
+            'cache_seconds' => $cacheSeconds,
+            'enable_caching' => $enableCaching,
+            'remove_from_query_cache' => $removeFromQueryCache,
+        ]);
 
         return $obj;
     }
@@ -421,6 +437,10 @@ class queryFactory extends base
         $query_time = $time_end - $time_start;
         $this->total_query_time += $query_time;
         $this->count_queries++;
+        $this->notifyQueryExecuted($obj, __FUNCTION__, $query_time, $zp_db_resource !== false, [
+            'enable_caching' => false,
+            'remove_from_query_cache' => true,
+        ]);
         return $obj;
     }
 
@@ -501,6 +521,70 @@ class queryFactory extends base
     public function queryTime(): float
     {
         return (float)$this->total_query_time;
+    }
+
+    /**
+     * Notify observers that a query execution has completed.
+     *
+     * @param queryFactoryResult $obj Result object for the executed query.
+     * @param string $method Calling method name (e.g. Execute, ExecuteRandomMulti).
+     * @param float $queryTime Elapsed seconds for the query (including processing).
+     * @param bool $success Whether the query execution succeeded.
+     * @param array $extra Additional payload fields (e.g. caching options).
+     */
+    protected function notifyQueryExecuted(queryFactoryResult $obj, string $method, float $queryTime, bool $success, array $extra = []): void
+    {
+        $payload = array_merge([
+            'sql' => $obj->sql_query,
+            'method' => $method,
+            'success' => $success,
+            'query_time' => $queryTime,
+            'query_count' => $this->count_queries,
+            'total_query_time' => (float)$this->total_query_time,
+            'is_cached' => $this->notifiedIsCached($obj, $success),
+            'error_number' => $success ? 0 : $this->error_number,
+            'error_text' => $success ? '' : $this->error_text,
+            'enable_caching' => false,
+            'cache_seconds' => 0,
+            'remove_from_query_cache' => false,
+        ], $extra);
+
+        $payload['record_count'] ??= $this->notifiedRecordCount($obj, $method);
+        $payload['affected_rows'] ??= $this->notifiedAffectedRows($obj, $success);
+
+        $this->notify('NOTIFY_QUERY_FACTORY_EXECUTE_END', $payload);
+    }
+
+    /**
+     * Determine the cached-state flag to include in query execution notifications.
+     */
+    protected function notifiedIsCached(queryFactoryResult $obj, bool $success): bool
+    {
+        return $success && $obj->is_cached;
+    }
+
+    /**
+     * Determine the record count to include in query execution notifications.
+     */
+    protected function notifiedRecordCount(queryFactoryResult $obj, string $method): int
+    {
+        if ($method === 'ExecuteRandomMulti' && count($obj->result) > 0) {
+            return count($obj->result);
+        }
+
+        return $obj->RecordCount();
+    }
+
+    /**
+     * Determine the affected-row count to include in query execution notifications.
+     */
+    protected function notifiedAffectedRows(queryFactoryResult $obj, bool $success): int
+    {
+        if (!$success || !isset($obj->resource) || $obj->resource !== true) {
+            return 0;
+        }
+
+        return $this->affectedRows();
     }
 
     /**
