@@ -541,7 +541,7 @@ class queryFactory extends base
             'query_time' => $queryTime,
             'query_count' => $this->count_queries,
             'total_query_time' => (float)$this->total_query_time,
-            'is_cached' => $obj->is_cached,
+            'is_cached' => $this->notifiedIsCached($obj, $success),
             'error_number' => $success ? 0 : $this->error_number,
             'error_text' => $success ? '' : $this->error_text,
             'enable_caching' => false,
@@ -549,10 +549,42 @@ class queryFactory extends base
             'remove_from_query_cache' => false,
         ], $extra);
 
-        $payload['record_count'] ??= $obj->RecordCount();
-        $payload['affected_rows'] ??= $this->affectedRows();
+        $payload['record_count'] ??= $this->notifiedRecordCount($obj, $method);
+        $payload['affected_rows'] ??= $this->notifiedAffectedRows($obj, $success);
 
         $this->notify('NOTIFY_QUERY_FACTORY_EXECUTE_END', $payload);
+    }
+
+    /**
+     * Determine the cached-state flag to include in query execution notifications.
+     */
+    protected function notifiedIsCached(queryFactoryResult $obj, bool $success): bool
+    {
+        return $success && $obj->is_cached;
+    }
+
+    /**
+     * Determine the record count to include in query execution notifications.
+     */
+    protected function notifiedRecordCount(queryFactoryResult $obj, string $method): int
+    {
+        if ($method === 'ExecuteRandomMulti' && count($obj->result) > 0) {
+            return count($obj->result);
+        }
+
+        return $obj->RecordCount();
+    }
+
+    /**
+     * Determine the affected-row count to include in query execution notifications.
+     */
+    protected function notifiedAffectedRows(queryFactoryResult $obj, bool $success): int
+    {
+        if (!$success || !isset($obj->resource) || $obj->resource !== true) {
+            return 0;
+        }
+
+        return $this->affectedRows();
     }
 
     /**

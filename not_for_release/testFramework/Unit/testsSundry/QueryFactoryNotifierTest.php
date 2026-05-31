@@ -84,10 +84,15 @@ class QueryFactoryNotifierTest extends zcUnitTestCase
         }
     }
 
-    public function testExecuteNotifiesOnFailure(): void
+    public function testNotifyQueryExecutedDerivesSuccessPayloadFields(): void
     {
         $db = new class extends \queryFactory {
             public array $notifications = [];
+
+            public function affectedRows(): int
+            {
+                return 9;
+            }
 
             public function notify(
                 string $eventID,
@@ -105,111 +110,39 @@ class QueryFactoryNotifierTest extends zcUnitTestCase
                 $this->notifications[] = [$eventID, $param1];
             }
 
-            public function notifyFailure(string $sqlQuery, string $method, int $errorNumber, string $errorText, array $extra = []): void
+            public function probeNotification(string $sqlQuery, bool $success, bool|\mysqli_result $resource): array
             {
                 $result = new \queryFactoryResult($this->link);
                 $result->sql_query = $sqlQuery;
-                $result->is_cached = false;
-                $this->countFailure();
-                $this->error_number = $errorNumber;
-                $this->error_text = $errorText;
-                $this->notifyQueryExecuted($result, $method, 0.0, false, $extra);
+                $result->resource = $resource;
+                $this->notifyQueryExecuted($result, 'Execute', 0.0, $success);
+
+                return $this->notifications[array_key_last($this->notifications)][1];
             }
 
-            protected function countFailure(): void
+            public function probeRandomMultiNotification(array $rows): array
             {
-                $reflection = new \ReflectionClass(\queryFactory::class);
-                $countQueries = $reflection->getProperty('count_queries');
-                $countQueries->setAccessible(true);
-                $countQueries->setValue($this, 1);
+                $result = new \queryFactoryResult($this->link);
+                $result->sql_query = 'SELECT products_id FROM products';
+                $result->result = $rows;
+                $this->notifyQueryExecuted($result, 'ExecuteRandomMulti', 0.0, true, ['affected_rows' => 0]);
+
+                return $this->notifications[array_key_last($this->notifications)][1];
             }
         };
         $db->link = mysqli_init();
 
-        $db->notifyFailure('SELECT broken FROM imaginary_table', 'Execute', 1234, 'forced execute failure');
-
-        $this->assertCount(1, $db->notifications);
-        $this->assertSame([
-            'sql' => 'SELECT broken FROM imaginary_table',
-            'method' => 'Execute',
-            'success' => false,
-            'query_time' => 0.0,
-            'query_count' => 1,
-            'total_query_time' => 0.0,
-            'is_cached' => false,
-            'error_number' => 1234,
-            'error_text' => 'forced execute failure',
-            'enable_caching' => false,
-            'cache_seconds' => 0,
-            'remove_from_query_cache' => false,
-            'record_count' => 0,
-            'affected_rows' => 0,
-        ], $db->notifications[0][1]);
-    }
-
-    public function testExecuteRandomMultiNotifiesOnFailure(): void
-    {
-        $db = new class extends \queryFactory {
-            public array $notifications = [];
-
-            public function notify(
-                string $eventID,
-                mixed $param1 = [],
-                mixed &$param2 = null,
-                mixed &$param3 = null,
-                mixed &$param4 = null,
-                mixed &$param5 = null,
-                mixed &$param6 = null,
-                mixed &$param7 = null,
-                mixed &$param8 = null,
-                mixed &$param9 = null
-            ): void
-            {
-                $this->notifications[] = [$eventID, $param1];
-            }
-
-            public function notifyFailure(string $sqlQuery, string $method, int $errorNumber, string $errorText, array $extra = []): void
-            {
-                $result = new \queryFactoryResult($this->link);
-                $result->sql_query = $sqlQuery;
-                $result->is_cached = false;
-                $this->countFailure();
-                $this->error_number = $errorNumber;
-                $this->error_text = $errorText;
-                $this->notifyQueryExecuted($result, $method, 0.0, false, $extra);
-            }
-
-            protected function countFailure(): void
-            {
-                $reflection = new \ReflectionClass(\queryFactory::class);
-                $countQueries = $reflection->getProperty('count_queries');
-                $countQueries->setAccessible(true);
-                $countQueries->setValue($this, 1);
-            }
-        };
-        $db->link = mysqli_init();
-
-        $db->notifyFailure('SELECT broken FROM imaginary_table', 'ExecuteRandomMulti', 4321, 'forced random failure', [
-            'enable_caching' => false,
-            'remove_from_query_cache' => true,
+        $writePayload = $db->probeNotification('/* observer-safe comment */ UPDATE products SET products_status = 1', true, true);
+        $readPayload = $db->probeNotification('SELECT products_id FROM products', true, false);
+        $failurePayload = $db->probeNotification('DELETE FROM products WHERE products_id = 1', false, false);
+        $randomMultiPayload = $db->probeRandomMultiNotification([
+            ['products_id' => 1],
+            ['products_id' => 2],
         ]);
 
-        $this->assertCount(1, $db->notifications);
-        $this->assertSame([
-            'sql' => 'SELECT broken FROM imaginary_table',
-            'method' => 'ExecuteRandomMulti',
-            'success' => false,
-            'query_time' => 0.0,
-            'query_count' => 1,
-            'total_query_time' => 0.0,
-            'is_cached' => false,
-            'error_number' => 4321,
-            'error_text' => 'forced random failure',
-            'enable_caching' => false,
-            'cache_seconds' => 0,
-            'remove_from_query_cache' => true,
-            'record_count' => 0,
-            'affected_rows' => 0,
-        ], $db->notifications[0][1]);
+        $this->assertSame(9, $writePayload['affected_rows']);
+        $this->assertSame(0, $readPayload['affected_rows']);
+        $this->assertSame(0, $failurePayload['affected_rows']);
+        $this->assertSame(2, $randomMultiPayload['record_count']);
     }
 }
