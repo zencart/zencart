@@ -4,8 +4,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
-namespace Tests\Unit\testsSundry;
+declare(strict_types=1);
 
+namespace Tests\Unit\testsSundry;
 use Tests\Support\zcUnitTestCase;
 
 class QueryFactoryNotifierTest extends zcUnitTestCase
