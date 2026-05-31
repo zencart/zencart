@@ -216,7 +216,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             </tr>
             <tr>
               <td class="text-right"><b><?php echo TEXT_AMOUNT; ?></b></td>
-              <td><?php echo $currencies->format(nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, true))) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : ''); ?>
+              <td><?php echo $currencies->format(nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, true), false)) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : ''); ?>
               </td>
             </tr>
             <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
@@ -227,7 +227,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             <?php } ?>
             <tr>
               <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b></td>
-              <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true)); ?></td>
+              <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), false); ?></td>
             </tr>
           </table>
           <div class="form-group">

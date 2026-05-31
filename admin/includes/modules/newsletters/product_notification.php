@@ -184,13 +184,13 @@ function selectAll(FormName, SelectBox) {
     $confirm_string .= zen_draw_separator() . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
-    $confirm_string .= '<div class="col-sm-12">' . nl2br($this->content_html) . '</div>' . PHP_EOL;
+    $confirm_string .= '<div class="col-sm-12">' . nl2br($this->content_html, false) . '</div>' . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
     $confirm_string .= zen_draw_separator() . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
-    $confirm_string .= '<div class="col-sm-12 tt">' . nl2br($this->content) . '</div>' . PHP_EOL;
+    $confirm_string .= '<div class="col-sm-12 tt">' . nl2br($this->content, false) . '</div>' . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
     $confirm_string .= zen_draw_separator() . PHP_EOL;

@@ -259,7 +259,7 @@ if ($action === 'edit') {
                         <p class="control-label"><?= ENTRY_REVIEW ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= nl2br(zen_output_string_protected(zen_trunc_string($rInfo->reviews_text, 15))) ?></span>
+                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= nl2br(zen_output_string_protected(zen_trunc_string($rInfo->reviews_text, 15)), false) ?></span>
                     </div>
                 </div>
                 <div class="form-group">

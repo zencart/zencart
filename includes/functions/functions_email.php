@@ -540,7 +540,7 @@
 
         $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_ALL_SPECIFIED_ADDRESSES');
 
-        return isset($ErrorInfo) ? nl2br($ErrorInfo) : '';
+        return isset($ErrorInfo) ? nl2br($ErrorInfo, false) : '';
     }  // end function
 
     /**

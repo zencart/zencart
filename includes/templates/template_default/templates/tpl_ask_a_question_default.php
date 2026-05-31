@@ -10,7 +10,7 @@
 <?php echo zen_draw_form('ask_a_question', zen_href_link(FILENAME_ASK_A_QUESTION, 'action=send&pID=' . (int)$pid, 'SSL')); ?>
 
 <?php if (CONTACT_US_STORE_NAME_ADDRESS== '1') { ?>
-<address><?php echo nl2br(STORE_NAME_ADDRESS); ?></address>
+<address><?php echo nl2br(STORE_NAME_ADDRESS, false); ?></address>
 <?php } ?>
 <h1><?php echo $heading_title . $product_details['products_name']; ?></h1>
 

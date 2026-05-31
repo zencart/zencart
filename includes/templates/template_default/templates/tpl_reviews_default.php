@@ -43,7 +43,7 @@
     <?php if(!empty($reviews->fields['reviews_title'])) { ?>
         <h6><?php echo zen_output_string_protected(stripslashes($reviews->fields['reviews_title'])); ?></h6>
     <?php } ?>
-    <?php echo zen_trunc_string(nl2br(zen_output_string_protected(stripslashes($reviews->fields['reviews_text']))), (int)MAX_PREVIEW); ?>
+    <?php echo zen_trunc_string(nl2br(zen_output_string_protected(stripslashes($reviews->fields['reviews_text'])), false), (int)MAX_PREVIEW); ?>
 </div>
 
 <div class="bold"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($reviews->fields['date_added'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($reviews->fields['customers_name'])); ?></div>

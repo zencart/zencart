@@ -282,7 +282,7 @@ if ($max_log_file_size < 1) {
                                                         $heading[] = array(
                                                             'text' => '<strong>' . TEXT_HEADING_INFO . '( ' . $curFile['name'] . ')</strong>'
                                                         );
-                                                        $fileContent = str_replace(DIR_FS_CATALOG, '/', nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false)));
+                                                        $fileContent = str_replace(DIR_FS_CATALOG, '/', nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false), false));
                                                         $contents[] = array(
                                                             'align' => 'left',
                                                             'text' => '<div id="fContents">' . $fileContent . '</div>'

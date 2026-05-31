@@ -911,7 +911,7 @@ if ($show_product_tax) { ?>
                                         if (isset($order->products[$i]['attributes']) && (count($order->products[$i]['attributes']) > 0)) {
                                                 for ($j = 0, $k = count($order->products[$i]['attributes']); $j < $k; $j++) {
                                                         echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ';
-                                                        echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                                                        echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']), false);
                                                         if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) {
                                                                 $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']);
                                                                 echo ' ' . '<a href="' . zen_href_link(FILENAME_ORDERS, 'action=download&oID=' . $oID . '&filename=' .    $upload_name) . '">' . TEXT_DOWNLOAD . '</a>' . ' ';
@@ -1128,10 +1128,10 @@ if ($show_orders_weights === true) {
                                         <td>
 <?php
                                                 if ($first) {
-                                                     echo nl2br(zen_output_string_protected($item['comments'] ?? ''));
+                                                     echo nl2br(zen_output_string_protected($item['comments'] ?? ''), false);
                                                      $first = false;
                                                 } else {
-                                                     echo nl2br($item['comments'] ?? '');
+                                                     echo nl2br($item['comments'] ?? '', false);
                                                 }
 ?>
                                         </td>
@@ -1479,7 +1479,7 @@ if ($show_orders_weights === true) {
                                                 }
                                                 $product_details = rtrim($product_details);
                                                 $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
-                                                $product_details = nl2br($product_details);
+                                                $product_details = nl2br($product_details, false);
                                         }
                                         ?>
                                 <td class="dataTableContent text-center"><?= $show_difference . $orders->fields['orders_id'] ?></td>
@@ -1679,7 +1679,7 @@ if ($show_orders_weights === true) {
                                             // by an admin or 'known' process so it's OK.
                                             //
                                             $protected = $orders_history_query->fields['updated_by'] === '';
-                                            $contents[] = ['text' => nl2br(zen_output_string($orders_history_query->fields['comments'], false, $protected))];
+                                            $contents[] = ['text' => nl2br(zen_output_string($orders_history_query->fields['comments'], false, $protected), false)];
                                         }
 
                                         $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
@@ -1690,7 +1690,7 @@ if ($show_orders_weights === true) {
 
                                             if (!empty($order->products[$i]['attributes'])) {
                                                 for ($j = 0, $nn=count($order->products[$i]['attributes']); $j < $nn; $j++) {
-                                                    $contents[] = ['text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i>'];
+                                                    $contents[] = ['text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']), false) . '</i>'];
                                                 }
                                             }
                                             if ($i > zen_config('MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING') && zen_config('MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING') != 0) {

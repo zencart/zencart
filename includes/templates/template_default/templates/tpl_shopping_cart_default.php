@@ -107,7 +107,7 @@
 
 <li>
     <?php
-    echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name']);
+    echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name'], false);
     ?>
 </li>
 
