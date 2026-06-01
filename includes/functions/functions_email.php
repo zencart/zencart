@@ -54,7 +54,7 @@
      * @param string $email_reply_to_name Name of the "reply-to" header (defaults to store name if not specified, except for contact-us and order-confirmation)
      * @param string $email_reply_to_address Email address for reply-to header (defaults to store email address if not specified, except for contact-us and order-confirmation)
      * @since ZC v1.0.3
-     **/
+     */
     function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block = [], $module = 'default', $attachments_list = '', $email_reply_to_name = '', $email_reply_to_address = '')
     {
         global $db, $messageStack, $zco_notifier;
@@ -251,13 +251,7 @@
             $mail->XMailer = 'Self-Hosted Zen Cart merchant';
 
             $lang_code = strtolower(($_SESSION['languages_code'] === '' ? 'en' : $_SESSION['languages_code']));
-            if (is_callable([get_class($mail), 'setLanguage'])) {
-                // Static method (PHPMailer v7+)
-                $mail::setLanguage($lang_code);
-            } else {
-                // Instance method (PHPMailer v6 and older)
-                $mail->setLanguage($lang_code);
-            }
+            $mail::setLanguage($lang_code);
 
             $mail->CharSet = (defined('CHARSET')) ? CHARSET : 'iso-8859-1';
             if (defined('EMAIL_ENCODING_METHOD') && EMAIL_ENCODING_METHOD !== '') {
@@ -289,7 +283,7 @@
             }
 
             switch ($email_transport) {
-                case ('Gmail'):
+                case 'Gmail':
                     $mail->isSMTP();
                     $mail->SMTPAuth = true;
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
@@ -619,7 +613,7 @@
      * finally, build full html content as "return" output from class
      * @since ZC v1.2.0d
      **/
-    function zen_build_html_email_from_template($module = 'default', $content = '')
+    function zen_build_html_email_from_template($module = 'default', array|string $content = '')
     {
         global $messageStack, $current_page_base;
         if (null === $current_page_base) {
@@ -764,7 +758,7 @@
         if (!isset($block['EXTRA_INFO'])) {
             $block['EXTRA_INFO'] = '';
         }
-        if (substr($module, -6) !== '_extra' && $module !== 'contact_us' && $module !== 'ask_a_question') {
+        if (!str_ends_with($module, '_extra') && $module !== 'contact_us' && $module !== 'ask_a_question') {
             $block['EXTRA_INFO'] = '';
         }
 
