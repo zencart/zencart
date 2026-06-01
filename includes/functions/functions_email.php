@@ -58,7 +58,7 @@
     function zen_mail($to_name, $to_address, $email_subject, $email_text, $from_email_name, $from_email_address, $block = [], $module = 'default', $attachments_list = '', $email_reply_to_name = '', $email_reply_to_address = '')
     {
         global $db, $messageStack, $zco_notifier;
-        if (SEND_EMAILS !== 'true') {
+        if (zen_config('SEND_EMAILS') !== 'true') {
             return false;
         }  // if sending email is disabled in Admin, just exit
 
@@ -164,10 +164,10 @@
             }
 
             if (zen_is_non_transactional_email($module)) {
-                if (defined('EMAIL_DISCLAIMER') && EMAIL_DISCLAIMER !== '' && !strstr($email_text, sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS)) && $to_email_address !== STORE_OWNER_EMAIL_ADDRESS && !defined('EMAIL_DISCLAIMER_NEW_CUSTOMER')) {
-                    $email_text .= "\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS);
+                if (defined('EMAIL_DISCLAIMER') && EMAIL_DISCLAIMER !== '' && !strstr($email_text, sprintf(EMAIL_DISCLAIMER, zen_config('STORE_OWNER_EMAIL_ADDRESS'))) && $to_email_address !== zen_config('STORE_OWNER_EMAIL_ADDRESS') && !defined('EMAIL_DISCLAIMER_NEW_CUSTOMER')) {
+                    $email_text .= "\n" . sprintf(EMAIL_DISCLAIMER, zen_config('STORE_OWNER_EMAIL_ADDRESS'));
                 }
-                if (defined('EMAIL_SPAM_DISCLAIMER') && EMAIL_SPAM_DISCLAIMER !== '' && !strstr($email_text, EMAIL_SPAM_DISCLAIMER) && $to_email_address !== STORE_OWNER_EMAIL_ADDRESS) {
+                if (defined('EMAIL_SPAM_DISCLAIMER') && EMAIL_SPAM_DISCLAIMER !== '' && !strstr($email_text, EMAIL_SPAM_DISCLAIMER) && $to_email_address !== zen_config('STORE_OWNER_EMAIL_ADDRESS')) {
                     $email_text .= "\n\n" . EMAIL_SPAM_DISCLAIMER;
                 }
             }
@@ -177,8 +177,8 @@
             $email_text = preg_replace('/((&amp;)|&)+/', '&', $email_text);
 
             // clean up currencies for text emails
-            if (defined('CURRENCIES_TRANSLATIONS') && !empty(CURRENCIES_TRANSLATIONS)) {
-                $zen_fix_currencies = preg_split("/[:,]/", str_replace(' ', '', CURRENCIES_TRANSLATIONS));
+            if (!empty(zen_config('CURRENCIES_TRANSLATIONS'))) {
+                $zen_fix_currencies = preg_split("/[:,]/", str_replace(' ', '', zen_config('CURRENCIES_TRANSLATIONS')));
                 $size = count($zen_fix_currencies);
                 for ($i = 0, $n = $size; $i < $n; $i += 2) {
                     if (empty($zen_fix_currencies[$i + 1])) {
@@ -229,11 +229,11 @@
             } //if requested no mail, then don't send, but continue processing others.
 
             // handling admin/"extra"/copy emails:
-            if (ADMIN_EXTRA_EMAIL_FORMAT === 'TEXT' && substr($module, -6) == '_extra') {
+            if (zen_config('ADMIN_EXTRA_EMAIL_FORMAT') === 'TEXT' && str_ends_with($module, '_extra')) {
                 $email_html = '';  // just blank out the html portion if admin has selected text-only
             }
             //determine what format to send messages in if this is an admin email for newsletters:
-            if ($customers_email_format === '' && ADMIN_EXTRA_EMAIL_FORMAT === 'HTML' && in_array($module, ['newsletters', 'product_notification']) && isset($_SESSION['admin_id'])) {
+            if ($customers_email_format === '' && zen_config('ADMIN_EXTRA_EMAIL_FORMAT') === 'HTML' && in_array($module, ['newsletters', 'product_notification']) && isset($_SESSION['admin_id'])) {
                 $customers_email_format = 'HTML';
             }
 
@@ -265,20 +265,20 @@
             }
 
             $sending_newsletter = false;
-            $email_transport = EMAIL_TRANSPORT;
-            $email_mailbox = EMAIL_SMTPAUTH_MAILBOX;
-            $email_password = EMAIL_SMTPAUTH_PASSWORD;
-            $email_mail_server = EMAIL_SMTPAUTH_MAIL_SERVER;
-            $email_mail_server_port = (int)EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
-            if (defined('NEWSLETTER_MODULES') && !empty(NEWSLETTER_MODULES) && defined('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER') && !empty(NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER)) {
-                $modules = explode(',', str_replace(' ', '', NEWSLETTER_MODULES));
+            $email_transport = zen_config('EMAIL_TRANSPORT');
+            $email_mailbox = zen_config('EMAIL_SMTPAUTH_MAILBOX');
+            $email_password = zen_config('EMAIL_SMTPAUTH_PASSWORD');
+            $email_mail_server = zen_config('EMAIL_SMTPAUTH_MAIL_SERVER');
+            $email_mail_server_port = (int)zen_config('EMAIL_SMTPAUTH_MAIL_SERVER_PORT');
+            if (!empty(zen_config('NEWSLETTER_MODULES')) && !empty(zen_config('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER'))) {
+                $modules = explode(',', str_replace(' ', '', zen_config('NEWSLETTER_MODULES')));
                 if (in_array($module, $modules)) {
                     $sending_newsletter = true;
                     $email_transport = 'smtpauth';
-                    $email_mailbox = NEWSLETTER_EMAIL_SMTPAUTH_MAILBOX;
-                    $email_password = NEWSLETTER_EMAIL_SMTPAUTH_PASSWORD;
-                    $email_mail_server = NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER;
-                    $email_mail_server_port = (int)NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT;
+                    $email_mailbox = zen_config('NEWSLETTER_EMAIL_SMTPAUTH_MAILBOX');
+                    $email_password = zen_config('NEWSLETTER_EMAIL_SMTPAUTH_PASSWORD');
+                    $email_mail_server = zen_config('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER');
+                    $email_mail_server_port = (int)zen_config('NEWSLETTER_EMAIL_SMTPAUTH_MAIL_SERVER_PORT');
                 }
             }
 
@@ -289,7 +289,7 @@
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port = 587;
                     $mail->Host = 'smtp.gmail.com';
-                    $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : EMAIL_FROM;
+                    $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : zen_config('EMAIL_FROM');
                     if (trim($email_password) !== '') {
                         $mail->Password = trim($email_password);
                     }
@@ -297,7 +297,7 @@
                 case 'smtpauth':
                     $mail->isSMTP();
                     $mail->SMTPAuth = true;
-                    $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : EMAIL_FROM;
+                    $mail->Username = (!empty(trim($email_mailbox))) ? trim($email_mailbox) : zen_config('EMAIL_FROM');
                     if (trim($email_password) !== '') {
                         $mail->Password = trim($email_password);
                     }
@@ -349,8 +349,8 @@
 
             $mail->Subject = $email_subject;
 
-            if ($email_transport === 'sendmail-f' || EMAIL_SEND_MUST_BE_STORE === 'Yes') {
-                $mail->Sender = EMAIL_FROM;
+            if ($email_transport === 'sendmail-f' || zen_config('EMAIL_SEND_MUST_BE_STORE') === 'Yes') {
+                $mail->Sender = zen_config('EMAIL_FROM');
             }
 
             // if a Reply-To override is configured, use that
@@ -360,14 +360,14 @@
 
             // set the reply-to address.  If none set yet, then use Store's default email name/address.
             // If sending from checkout or contact-us, use the supplied info
-            $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : EMAIL_FROM);
+            $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : zen_config('EMAIL_FROM'));
             $email_reply_to_name = (!empty($email_reply_to_name)) ? $email_reply_to_name : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_name : STORE_NAME);
             $mail->addReplyTo($email_reply_to_address, $email_reply_to_name);
 
             $mail->setFrom($from_email_address, $from_email_name);
             // if mailserver requires that all outgoing mail must go "from" an email address matching domain on server, set it to store address
-            if (EMAIL_SEND_MUST_BE_STORE === 'Yes') {
-                $mail->From = EMAIL_FROM;
+            if (zen_config('EMAIL_SEND_MUST_BE_STORE') === 'Yes') {
+                $mail->From = zen_config('EMAIL_FROM');
             }
             // override to developer email address if set
             if (defined('DEVELOPER_OVERRIDE_EMAIL_ADDRESS') && DEVELOPER_OVERRIDE_EMAIL_ADDRESS !== '') {
@@ -381,10 +381,10 @@
 
             $mail->addAddress($to_email_address, $to_name);
             //$mail->addAddress($to_email_address);    // (alternate format if no name, since name is optional)
-            //$mail->addBCC(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME);
+            //$mail->addBCC(zen_config('STORE_OWNER_EMAIL_ADDRESS'), STORE_NAME);
             //$mail->addCC(email_address);
 
-            if (EMAIL_USE_HTML === 'true') {
+            if (zen_config('EMAIL_USE_HTML') === 'true') {
                 $email_html = processEmbeddedImages($email_html, $mail);
             }
 
@@ -437,8 +437,8 @@
             $zco_notifier->notify('NOTIFY_EMAIL_AFTER_PROCESS_ATTACHMENTS', count($attachments_list));
 
             // prepare content sections:
-            if (EMAIL_USE_HTML === 'true' && trim($email_html) !== '' &&
-                ($customers_email_format === 'HTML' || (ADMIN_EXTRA_EMAIL_FORMAT !== 'TEXT' && substr($module, -6) == '_extra'))) {
+            if (zen_config('EMAIL_USE_HTML') === 'true' && trim($email_html) !== '' &&
+                ($customers_email_format === 'HTML' || (zen_config('ADMIN_EXTRA_EMAIL_FORMAT') !== 'TEXT' && str_ends_with($module, '_extra')))) {
                 // Prepare HTML message
                 $mail->msgHTML($email_html);
                 if ($text !== '') {
@@ -509,7 +509,7 @@
             $zco_notifier->notify('NOTIFY_EMAIL_AFTER_SEND_WITH_ALL_PARAMS', [$to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo]);
             // Archive this message to storage log
             // don't archive pwd-resets and CC numbers
-            if (EMAIL_ARCHIVE === 'true' && $module !== 'password_forgotten_admin' && $module !== 'cc_middle_digs' && $module !== 'no_archive') {
+            if (zen_config('EMAIL_ARCHIVE') === 'true' && $module !== 'password_forgotten_admin' && $module !== 'cc_middle_digs' && $module !== 'no_archive') {
                 zen_mail_archive_write($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject, $email_html, $text, $module, $ErrorInfo);
             } // endif archiving
 
@@ -519,7 +519,7 @@
             //
             if ($ErrorInfo !== '') {
                 $mail_langs = $mail->getTranslations();
-                if (strpos($ErrorInfo, $mail_langs['recipients_failed']) === false) {
+                if (!str_contains($ErrorInfo, $mail_langs['recipients_failed'])) {
                    // Don't log SMTP rejected spam; log others
                    if (!str_contains($ErrorInfo, 'spam content')) {
                        trigger_error('Email Error: ' . $ErrorInfo);
@@ -563,7 +563,7 @@
         $from_email_name = zen_db_prepare_input($from_email_name);
         $from_email_address = zen_db_prepare_input($from_email_address);
         $email_subject = zen_db_prepare_input($email_subject);
-        $email_html = (EMAIL_USE_HTML == 'true') ? zen_db_prepare_input_html_safe($email_html) : zen_db_prepare_input('HTML disabled in admin');
+        $email_html = (zen_config('EMAIL_USE_HTML') === 'true') ? zen_db_prepare_input_html_safe($email_html) : zen_db_prepare_input('HTML disabled in admin');
         $email_text = zen_db_prepare_input($email_text);
         $module = zen_db_prepare_input($module);
         $error_msgs = empty($error_msgs) ? 'NULL' : zen_db_prepare_input($error_msgs);
@@ -724,19 +724,19 @@
         }
         //check for some specifics that need to be included with all messages
         if (empty($block['EMAIL_STORE_NAME'])) {
-            $block['EMAIL_STORE_NAME'] = STORE_NAME;
+            $block['EMAIL_STORE_NAME'] = zen_config('STORE_NAME');
         }
         if (empty($block['EMAIL_STORE_URL'])) {
-            $block['EMAIL_STORE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a>';
+            $block['EMAIL_STORE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . zen_config('STORE_NAME') . '</a>';
         }
         if (empty($block['EMAIL_STORE_OWNER'])) {
-            $block['EMAIL_STORE_OWNER'] = STORE_OWNER;
+            $block['EMAIL_STORE_OWNER'] = zen_config('STORE_OWNER');
         }
         if (empty($block['EMAIL_FOOTER_COPYRIGHT']) ) {
             $block['EMAIL_FOOTER_COPYRIGHT'] = EMAIL_FOOTER_COPYRIGHT;
         }
         if (empty($block['EMAIL_DISCLAIMER'])) {
-            $block['EMAIL_DISCLAIMER'] = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">' . STORE_OWNER_EMAIL_ADDRESS . '</a>');
+            $block['EMAIL_DISCLAIMER'] = sprintf(EMAIL_DISCLAIMER, '<a href="mailto:' . zen_config('STORE_OWNER_EMAIL_ADDRESS') . '">' . zen_config('STORE_OWNER_EMAIL_ADDRESS') . '</a>');
         }
         if (empty($block['EMAIL_SPAM_DISCLAIMER'])) {
             $block['EMAIL_SPAM_DISCLAIMER'] = EMAIL_SPAM_DISCLAIMER;
@@ -809,7 +809,7 @@
         $email_host_address = '';
         // get host_address from either session or one time for both email types to save server load
         if (empty($_SESSION['customers_host_address'])) {
-            if (SESSION_IP_TO_HOST_ADDRESS === 'true' && !empty(trim($_SERVER['REMOTE_ADDR'], '.'))) {
+            if (zen_config('SESSION_IP_TO_HOST_ADDRESS') === 'true' && !empty(trim($_SERVER['REMOTE_ADDR'], '.'))) {
                 $email_host_address = gethostbyaddr($_SERVER['REMOTE_ADDR']);
             }
         } else {
