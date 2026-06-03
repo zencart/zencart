@@ -22,7 +22,7 @@ define('HTTP_CATALOG_SERVER', '%%_CATALOG_HTTP_SERVER_%%');
 
 /**
  * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
- * This values gets appended to the HTTP_CATALOG_SERVER to form the complete URL to your storefront.
+ * This value gets appended to HTTP_CATALOG_SERVER to form the complete URL to your storefront.
  * They should always start and end with a slash ... ie: '/' or '/foldername/'
  */
 define('DIR_WS_CATALOG', '%%_DIR_WS_CATALOG_%%');

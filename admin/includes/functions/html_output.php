@@ -98,12 +98,12 @@ function zen_href_link($page = '', $parameters = '', $connection = 'deprecated',
 /**
  * @since ZC v1.5.7
  */
-function zen_catalog_base_link(string $conn = 'deprecated')
+function zen_catalog_base_link(string $connection = 'deprecated')
 {
     global $zco_notifier;
 
     $link = null;
-    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHOME', [], $link);
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHOME', [], $link, $connection);
     if ($link !== null) {
         return $link;
     }
@@ -363,7 +363,7 @@ function zen_draw_form($name, $action, $parameters = '', $method = 'post', $para
     if (!empty($parameters)) {
         $form .= zen_href_link($action, $parameters);
     } else {
-        $form .= zen_href_link($action, '');
+        $form .= zen_href_link($action);
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (!empty($params)) {
