@@ -31,6 +31,6 @@ if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'dow
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 
-//catchall for deprecated constants:
-if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
-if (!defined('ENABLE_SSL')) define('ENABLE_SSL', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');
+//@TODO catchall for deprecated constants:
+//if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
+//if (!defined('ENABLE_SSL')) define('ENABLE_SSL', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');
