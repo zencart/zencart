@@ -77,7 +77,7 @@ if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 //catchall for deprecated constants:
 if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
 if (!defined('DIR_WS_HTTPS_ADMIN')) define('DIR_WS_HTTPS_ADMIN', DIR_WS_ADMIN);
-if (!defined('ENABLE_SSL_ADMIN')) define('ENABLE_SSL_ADMIN', 'false');
+if (!defined('ENABLE_SSL_ADMIN')) define('ENABLE_SSL_ADMIN', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');
 if (!defined('HTTPS_CATALOG_SERVER')) define('HTTPS_CATALOG_SERVER', HTTP_SERVER);
 if (!defined('DIR_WS_HTTPS_CATALOG')) define('DIR_WS_HTTPS_CATALOG', DIR_WS_ADMIN . '/../');
-if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', 'false');
+if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');
