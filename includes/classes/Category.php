@@ -140,14 +140,6 @@ class Category
     /**
      * @since ZC v2.1.0
      */
-    public function getInfoPage(): string
-    {
-        return $this->getTypeHandler() . '_info';
-    }
-
-    /**
-     * @since ZC v2.1.0
-     */
     public function __get(string $name)
     {
         return $this->get($name);
