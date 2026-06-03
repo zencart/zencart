@@ -290,8 +290,7 @@ class ScriptedInstaller
     }
 
     /**
-     * Removes, if they exist, a list of files from either the 'admin' or
-     * 'catalog' side.
+     * Removes, if they exist, a list of files from either the 'admin' or 'catalog' side.
      *
      * The $files_to_remove input is an associative array with each key being
      * an admin/catalog sub-directory and the value(s) being an array of files
@@ -309,6 +308,8 @@ class ScriptedInstaller
             $this->errorContainer->addError(0, $error_message, true, $error_message);
             return false;
         }
+
+        $errorOccurred = false;
 
         $base_dir = ($context === 'admin') ? DIR_FS_ADMIN : DIR_FS_CATALOG;
         foreach ($files_to_remove as $dir => $files) {
