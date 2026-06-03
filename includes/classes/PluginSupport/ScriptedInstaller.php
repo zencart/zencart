@@ -317,7 +317,7 @@ class ScriptedInstaller
             foreach ($files as $next_file) {
                 $current_file = $current_dir . $next_file;
                 if (str_ends_with($current_file, '*.*')) {
-                    if ($this->removeDirectoryAndFiles(str_replace('/*.*', '', $current_file)) === false) {
+                    if ($this->removeDirectoryAndFilesRecursive(str_replace('/*.*', '', $current_file)) === false) {
                         $errorOccurred = true;
                     }
                     continue;
@@ -378,7 +378,7 @@ class ScriptedInstaller
                         sprintf(ERROR_REMOVE_FILES_CANT_DELETE, str_replace([DIR_FS_ADMIN, DIR_FS_CATALOG], ['[admin_directory]/', ''], $next_entry))
                     );
                 }
-            } elseif ($this->removeDirectoryAndFiles($next_entry) === false) {
+            } elseif ($this->removeDirectoryAndFilesRecursive($next_entry) === false) {
                 $errorOccurred = true;
             }
         }
