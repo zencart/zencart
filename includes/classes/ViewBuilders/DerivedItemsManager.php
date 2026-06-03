@@ -42,6 +42,7 @@ class DerivedItemsManager
                 return $result;
                 break;
         }
+        return '';
     }
 
     /**
