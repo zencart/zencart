@@ -59,10 +59,9 @@ function zen_groups_customer_belongs_to($customer_id)
 /**
  * @param int $customer_id
  * @param array $groups
- * @return bool
  * @since ZC v1.5.8
  */
-function zen_sync_customer_group_assignments($customer_id, $groups)
+function zen_sync_customer_group_assignments($customer_id, $groups): bool
 {
     if (empty($customer_id)) return false;
 
@@ -79,15 +78,15 @@ function zen_sync_customer_group_assignments($customer_id, $groups)
             zen_remove_customer_from_group($customer_id, $group_id);
         }
     }
+    return true;
 }
 
 /**
  * @param int $customer_id
  * @param int $group_id
- * @return bool
  * @since ZC v1.5.8
  */
-function zen_assign_customer_to_group($customer_id, $group_id)
+function zen_assign_customer_to_group($customer_id, $group_id): bool
 {
     if (zen_customer_belongs_to_group($customer_id, $group_id, true)) {
         return false; // already in group
