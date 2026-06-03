@@ -275,9 +275,9 @@ function zen_get_products_display_price($product_id)
                 'product_is_free' => $product_check->fields['product_is_free']
             ],
             $pricing_handled,
-            $show_normal_price,
-            $show_special_price,
-            $show_sale_price
+            $show_normal_price = '',
+            $show_special_price = '',
+            $show_sale_price = ''
         );
         if (!$pricing_handled) {
             $show_normal_price =
@@ -345,9 +345,9 @@ function zen_get_products_display_price($product_id)
                 'has_wholesale_price' => $has_wholesale_price,
             ],
             $pricing_handled,
-            $show_normal_price,
-            $show_special_price,
-            $show_sale_price
+            $show_normal_price = '',
+            $show_special_price = '',
+            $show_sale_price = ''
         );
         if (!$pricing_handled) {
             if ($display_sale_price) {
