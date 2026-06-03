@@ -303,6 +303,7 @@ define('BUILT_IN_PAYMENTS', [
     'cod.php',
     'freecharger.php',
     'moneyorder.php',
+    'paypalr.php',
     'paypal.php',
     'paypaldp.php',
     'paypalwpp.php',
