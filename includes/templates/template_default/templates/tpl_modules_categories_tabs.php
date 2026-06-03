@@ -12,7 +12,9 @@
 
 include DIR_WS_MODULES . zen_get_module_directory(FILENAME_CATEGORIES_TABS);
 
-if (CATEGORIES_TABS_STATUS === '1' && (!empty($links_list) || !empty($links_list_by_category))) {
+if ((int)zen_config('CATEGORIES_TABS_STATUS') !== 1 || (empty($links_list) && empty($links_list_by_category))) {
+    return;
+}
 ?>
 
 <div id="navCatTabsWrapper">
@@ -26,10 +28,9 @@ if (CATEGORIES_TABS_STATUS === '1' && (!empty($links_list) || !empty($links_list
     // ... which can then be used to query alternate details about the category or its products
     // ... and therefore can be used inside this loop to do more things with this menu
     ?>
-    <li><?php echo $link_val;?></li>
+    <li><?= $link_val ?></li>
 <?php } ?>
 </ul>
 </div>
 </div>
-<?php } ?>
 
