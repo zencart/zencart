@@ -35,7 +35,7 @@ trait Singleton
      */
     public function __wakeup()
     {
-        throw new Exception("Cannot unserialize singleton");
+        throw new \Exception("Cannot unserialize singleton");
     }
 
     /**

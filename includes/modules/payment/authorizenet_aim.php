@@ -351,7 +351,6 @@ class authorizenet_aim extends base {
     $this->include_x_type = TRUE;
 
     // DATA PREPARATION SECTION
-    unset($submit_data);  // Cleans out any previous data stored in the variable
 
     // Create a string that contains a listing of products ordered for the description field
     $description = '';
@@ -845,7 +844,6 @@ class authorizenet_aim extends base {
                 'x_amount' => round($refundAmt, 2),
                 'x_trans_id' => trim($_POST['trans_id'])
             ];
-            unset($response);
             $response = $this->_sendRequest($submit_data);
             $response_code = $response[0];
             $response_text = $response[3];
