@@ -88,6 +88,11 @@ Short Summary:
 - Discovery: `includes/application_top.php` uses `PluginManager` + `PluginControlRepository` to produce `$installedPlugins`; `FileSystem->loadFilesFromPluginsDirectory()` is used to pull in all the files related to the plugin.
 - PSR-4: To expose plugin classes via the app autoloader, runtime PSR-4 prefixes are added in `application_top.php` using `$psr4Autoloader->addPrefix()` for `Zencart\Plugins\Catalog\<UniqueKey>` and `Zencart\Plugins\Admin\<UniqueKey>`.
 - Installer Scripts: To run installation scripts, create a `zc_plugins/<unique_key>/<version>/install/` folder and build your installer instructions there (see dev docs). Installer scripts should be idempotent, ie: self-upgrading across missing updates from prior versions.
+- If a plugin uses composer-managed packages, the vendor/ folder for that plugin should be placed under `zc_plugins/<unique_key>/<version>/vendor/`. An .htaccess file should be placed in that vendor directory to block web access.
+- If a plugin needs to load a stylesheet or javascript on storefront pages, an observer can attach to `NOTIFY_HTML_HEAD_END` and use `linkCatalogStylesheet()` from `InteractsWithPlugins` trait, to output the `<link>` tag for the plugin's CSS file.
+- When creating a new plugin, ideally the `unique_key` should be Capitalized.
+- When creating or converting a plugin, any filename constants that were previously in "extra_datafiles" should go into a `filenames.php` file in the plugin root. And any database tablename constants that were previously in "extra_datafiles" should go into a `database_tables.php` file in the plugin root.
+- If you create an admin page which requires a custom `.js` file, name it the same name as your PHP file name to make it automatically load. For example `admin/rewards.php`, will load `admin/includes/javascript/rewards.js` and also `admin/includes/javascript/rewards_*.js` as additional files, if present.
 
 Minimal example manifest.php
 ```php
