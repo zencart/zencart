@@ -16,13 +16,13 @@ class Request
 {
     use Singleton;
 
-    protected $paramBag;
+    protected array $paramBag;
 
     /**
      * @return mixed|Request
      * @since ZC v1.5.8
      */
-    static function capture()
+    public static function capture(): mixed
     {
         $self = self::getInstance();
         $self->paramBag = $_REQUEST;
@@ -35,9 +35,9 @@ class Request
      * @return mixed|null
      * @since ZC v1.5.8
      */
-    public function input($key, $default = null)
+    public function input($key, $default = null): mixed
     {
-        return (isset($this->paramBag[$key]) ? $this->paramBag[$key] : $default);
+        return $this->paramBag[$key] ?? $default;
     }
 
     /**
@@ -45,8 +45,8 @@ class Request
      * @return bool
      * @since ZC v1.5.8
      */
-    public function has($key)
+    public function has($key): bool
     {
-        return (isset($this->paramBag[$key]));
+        return isset($this->paramBag[$key]);
     }
 }
