@@ -14,7 +14,7 @@
  *
  * @since ZC v1.0.3
  */
-  function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
+  function zen_href_link(string $page = '', string $parameters = '', string $connection = 'deprecated', bool $add_session_id = true, bool $search_engine_safe = true, bool $static = false, bool $use_dir_ws_catalog = true) {
     global $session_started, $zco_notifier;
     $link = null;
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
@@ -89,7 +89,7 @@
  * link.
  * @since ZC v1.5.6
  */
-function zen_catalog_href_link($page = '', $parameters = '')
+function zen_catalog_href_link(string $page = '', string $parameters = '', $connection = 'deprecated')
 {
     return zen_href_link($page, $parameters, '', false);
 }

@@ -11,7 +11,7 @@
  *
  * @since ZC v1.0.3
  */
-function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
+function zen_href_link($page = '', $parameters = '', $connection = 'deprecated', $add_session_id = true) {
     global $zco_notifier, $session_started;
 
     // Notify any observers listening for href_link calls
@@ -71,7 +71,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
 /**
  * @since ZC v1.0.3
  */
-  function zen_catalog_href_link(string $page = '', string $parameters = '') {
+  function zen_catalog_href_link(string $page = '', string $parameters = '', string $connection = 'deprecated') {
     global $zco_notifier;
     $link = null;
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters);
@@ -98,7 +98,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
 /**
  * @since ZC v1.5.7
  */
-function zen_catalog_base_link()
+function zen_catalog_base_link(string $conn = 'deprecated')
 {
     global $zco_notifier;
 
@@ -361,9 +361,9 @@ function zen_draw_form($name, $action, $parameters = '', $method = 'post', $para
 {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (!empty($parameters)) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
+        $form .= zen_href_link($action, $parameters);
     } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
+        $form .= zen_href_link($action, '');
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (!empty($params)) {
