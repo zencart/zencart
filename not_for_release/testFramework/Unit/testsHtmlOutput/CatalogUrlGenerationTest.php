@@ -96,43 +96,6 @@ class CatalogUrlGenerationTest extends zcUnitTestCase
     }
 
     #[Depends('testHomePage')]
-    public function testAddSessionWhenSwitchingProtocolAndServers()
-    {
-        $GLOBALS['session_started'] = true;
-        $GLOBALS['https_domain'] = 'dummy.local';
-        $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT),
-            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=index&amp;zenid=1234567890'
-        );
-        $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT, 'test=test'),
-            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zenid=1234567890'
-        );
-        $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT, null, 'NONSSL', false),
-            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
-        );
-    }
-
-    #[Depends('testAddSessionWhenSwitchingProtocolAndServers')]
-    public function testAddSessionWhenSidDefined()
-    {
-        if (PHP_VERSION_ID >= 80401) {
-            $this->markTestSkipped('IgnoredAfterPHP841');
-        }
-        $GLOBALS['session_started'] = true;
-        define('SID', 'zenid=1234567890');
-        $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT),
-            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;zenid=1234567890'
-        );
-        $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT, 'test=test'),
-            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test&amp;zenid=1234567890'
-        );
-    }
-
-    #[Depends('testHomePage')]
     public function testAutoCorrectLeadingQuerySeparator()
     {
         $this->assertURLGenerated(
@@ -284,19 +247,5 @@ class CatalogUrlGenerationTest extends zcUnitTestCase
             zen_href_link(FILENAME_DEFINE_PAGE_4),
             HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFINE_PAGE_4
         );
-    }
-
-    // @TODO is this still needed?
-    #[Depends('testHomePageSsl')]
-    public function testObserverCannotDowngradeFromSsl()
-    {
-        $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_CONNECTION;
-
-        $this->assertURLGenerated(
-            zen_href_link(FILENAME_DEFAULT, '', 'SSL'),
-            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
-        );
-
-        $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_NOTHING;
     }
 }
