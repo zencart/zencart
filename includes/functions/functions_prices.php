@@ -133,6 +133,9 @@ function zen_get_products_display_price($product_id)
 
     $free_tag = '';
     $call_tag = '';
+    $show_normal_price = '';
+    $show_special_price = '';
+    $show_sale_price = '';
 
     // if in catalog, check whether customer should see prices
     if (IS_ADMIN_FLAG === false) {
@@ -275,9 +278,9 @@ function zen_get_products_display_price($product_id)
                 'product_is_free' => $product_check->fields['product_is_free']
             ],
             $pricing_handled,
-            $show_normal_price = '',
-            $show_special_price = '',
-            $show_sale_price = ''
+            $show_normal_price,
+            $show_special_price,
+            $show_sale_price
         );
         if (!$pricing_handled) {
             $show_normal_price =
@@ -321,7 +324,7 @@ function zen_get_products_display_price($product_id)
                     $show_special_price =
                         '&nbsp;' .
                         '<span class="productSpecialPrice">' .
-                            $show_special_price .= $currencies->display_price($display_special_price, $products_tax_rate) .
+                            $currencies->display_price($display_special_price, $products_tax_rate) .
                         '</span>';
                 }
                 $show_sale_price = '';
@@ -345,9 +348,9 @@ function zen_get_products_display_price($product_id)
                 'has_wholesale_price' => $has_wholesale_price,
             ],
             $pricing_handled,
-            $show_normal_price = '',
-            $show_special_price = '',
-            $show_sale_price = ''
+            $show_normal_price,
+            $show_special_price,
+            $show_sale_price
         );
         if (!$pricing_handled) {
             if ($display_sale_price) {
