@@ -1,6 +1,3 @@
-![](https://github.com/zencart/zencart/workflows/Zen%20Cart%20Unit%20Tests/badge.svg?branch=2.2)
-
-
 Zen Cart&reg; - The Art of E-Commerce
 ===============
 
