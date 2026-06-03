@@ -91,7 +91,7 @@
  */
 function zen_catalog_href_link(string $page = '', string $parameters = '', $connection = 'deprecated')
 {
-    return zen_href_link($page, $parameters, '', false);
+    return zen_href_link($page, $parameters, 'deprecated', false);
 }
 
 /**

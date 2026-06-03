@@ -74,7 +74,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'deprecated',
   function zen_catalog_href_link(string $page = '', string $parameters = '', string $connection = 'deprecated') {
     global $zco_notifier;
     $link = null;
-    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters);
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters, $connection);
     if ($link !== null) {
         return $link;
     }
