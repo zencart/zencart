@@ -9,11 +9,9 @@
 
 /**
  * Redirect to another page or site
- * @param $url
- * @param int $httpResponseCode
  * @since ZC v1.0.3
  */
-function zen_redirect($url, $httpResponseCode = null)
+function zen_redirect(string $url, int|string $httpResponseCode = null): void
 {
     // -----
     // Enable an observer to override the redirect.  For instance, an AJAX
@@ -45,12 +43,9 @@ function zen_redirect($url, $httpResponseCode = null)
 
 /**
  * Normalize URL ampersand parameters to prevent duplicates and re-encodings
- * @param string $url
- * @param bool $for_redirect
- * @return string
  * @since ZC v1.5.8
  */
-function zen_cleanup_url_params($url, $for_redirect = false)
+function zen_cleanup_url_params(string $url, bool $for_redirect = false): string
 {
     // clean up URL before executing it
     $url = preg_replace('/&{2,}/', '&', $url);
@@ -67,11 +62,9 @@ function zen_cleanup_url_params($url, $for_redirect = false)
 /**
  * Close session and set headers for page-redirect
  *
- * @param string $url
- * @param int $httpResponseCode
  * @since ZC v1.5.8
  */
-function zen_set_redirect_http_headers($url, $httpResponseCode = null)
+function zen_set_redirect_http_headers(string $url, int|string $httpResponseCode = null): void
 {
     session_write_close();
     if (empty($httpResponseCode)) {
@@ -110,7 +103,7 @@ function zen_get_site_url_for_request($url)
 /**
  * @since ZC v1.0.3
  */
-function zen_get_top_level_domain(string $url)
+function zen_get_top_level_domain(string $url): string|false
 {
     if (strpos($url, '://')) {
         $url = parse_url($url);
@@ -127,7 +120,7 @@ function zen_get_top_level_domain(string $url)
         $tld = "";
         foreach ($domain_array as $dPart)
         {
-            if ($dPart != "www") $tld = $tld . "." . $dPart;
+            if ($dPart !== "www") $tld = $tld . "." . $dPart;
         }
         return substr($tld, 1);
     }
@@ -156,7 +149,7 @@ function zen_back_link(bool $link_only = false, string $parameters = ''): string
 
     if ($link_only) {
         return $link;
-    } else {
-        return '<a href="' . $link . '"' . $parameters . '>';
     }
+
+    return '<a href="' . $link . '"' . $parameters . '>';
 }

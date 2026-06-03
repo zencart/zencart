@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Session functions
  *
@@ -79,7 +80,9 @@ function zen_session_name($name = ''): bool|string
 {
     if (!empty($name)) {
         $tempName = $name;
-        if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) == '') return session_name($name);
+        if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) === '') {
+            return session_name($name);
+        }
 
         return false;
     }
@@ -90,7 +93,7 @@ function zen_session_name($name = ''): bool|string
 /**
  * @since ZC v1.5.2
  */
-function zen_session_write_close()
+function zen_session_write_close(): void
 {
     session_write_close();
 }
@@ -98,7 +101,7 @@ function zen_session_write_close()
 /**
  * @since ZC v1.0.3
  */
-function zen_session_destroy()
+function zen_session_destroy(): bool
 {
     return session_destroy();
 }
@@ -106,7 +109,7 @@ function zen_session_destroy()
 /**
  * @since ZC v1.0.3
  */
-function zen_session_save_path($path = '')
+function zen_session_save_path(string $path = ''): false|string
 {
     if (!empty($path)) {
         return session_save_path($path);
