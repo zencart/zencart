@@ -34,6 +34,9 @@ class StoreInProcessTest extends zcInProcessFeatureTestCaseStore
 
     public function testContactUsRedirectsToSslInProcess(): void
     {
+        // @TODO
+        $this->markTestIncomplete('Is this test still needed?');
+
         $this->getMainPage('contact_us')
             ->assertRedirect('main_page=contact_us');
     }

@@ -39,11 +39,10 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
     {
         $this->assertTrue(function_exists('zen_catalog_href_link'), 'zen_catalog_href_link() did not exist');
         $reflect = new ReflectionFunction('zen_catalog_href_link');
-        $this->assertEquals(3, $reflect->getNumberOfParameters());
+        $this->assertEquals(2, $reflect->getNumberOfParameters());
         $params = array(
             'page',
             'parameters',
-            'connection',
         );
         foreach ($reflect->getParameters() as $param) {
             $this->assertTrue(in_array($param->getName(), $params));

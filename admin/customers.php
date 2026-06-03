@@ -1713,7 +1713,7 @@ if ($action === 'edit' || $action === 'update') {
                         zen_catalog_href_link(FILENAME_LOGIN, '', 'SSL') .
                         '" method="post">';
                     $hiddenFields = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
-                    if (zen_config('EMP_LOGIN_AUTOMATIC') === 'true' && str_starts_with(HTTP_SERVER, 'https') {
+                    if (zen_config('EMP_LOGIN_AUTOMATIC') === 'true' && str_starts_with(HTTP_SERVER, 'https')) {
                         $secret = zen_update_customers_secret($cInfo->customers_id);
                         $timestamp = time();
                         $hmacpostdata = [

@@ -89,9 +89,9 @@
  * link.
  * @since ZC v1.5.6
  */
-function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL')
+function zen_catalog_href_link($page = '', $parameters = '')
 {
-    return zen_href_link($page, $parameters, $connection, false);
+    return zen_href_link($page, $parameters, '', false);
 }
 
 /**
