@@ -210,10 +210,9 @@ function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST
  * Recursively go through the categories and retrieve all parent categories IDs
  * @param  array  $categories passed by reference
  * @param int $category_id
- * @return bool
  * @since ZC v1.0.3
  */
-function zen_get_parent_categories(array &$categories, $category_id)
+function zen_get_parent_categories(array &$categories, $category_id): void
 {
     global $db;
     $sql = "SELECT parent_id
@@ -224,7 +223,7 @@ function zen_get_parent_categories(array &$categories, $category_id)
 
     foreach ($results as $result) {
 
-        if ($result['parent_id'] == TOPMOST_CATEGORY_PARENT_ID) return true;
+        if ($result['parent_id'] == TOPMOST_CATEGORY_PARENT_ID) return;
 
         $categories[] = $result['parent_id'];
         if ($result['parent_id'] != $category_id) {
