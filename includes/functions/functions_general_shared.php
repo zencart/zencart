@@ -646,6 +646,7 @@ function zen_update_modules_cache(string $module_type_filter = ''): void
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_products() instead
  */
 function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
 {
@@ -655,6 +656,7 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_products_having_attributes() instead
  */
 function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
 {
@@ -664,6 +666,7 @@ function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_categories_having_products() instead
  */
 function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false) {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
@@ -672,6 +675,7 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_categories_having_products_with_attributes() instead
  */
 function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null){
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
@@ -680,6 +684,7 @@ function zen_draw_products_pull_down_categories_attributes($field_name, $paramet
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_get_orders_status_pulldown_array() instead
  */
 function zen_get_orders_status()
 {
