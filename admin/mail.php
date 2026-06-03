@@ -321,7 +321,7 @@ if ($action == 'preview') {
         }
         ?>
         <div class="row text-right">
-          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : ''), $request_type); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
+          <button type="submit" class="btn btn-primary"><?php echo IMAGE_PREVIEW; ?></button> <a href="<?php echo zen_href_link($origin, (!empty($_GET['cID']) ? 'cID=' . (int)$_GET['cID'] : '')); ?>" class="btn btn-default"><?php echo IMAGE_CANCEL; ?></a>
         </div>
         <?php
       }

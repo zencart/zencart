@@ -168,7 +168,7 @@ class VersionServer
             'currentVersionMajor' => PROJECT_VERSION_MAJOR,
             'currentVersionMinor' => PROJECT_VERSION_MINOR,
             'httpServer' => HTTP_SERVER,
-            'httpsServer' => HTTPS_SERVER,
+            'httpsServer' => '',
             'storeCountry' => $country_iso,
             'systemInfo' => $systemInfo,
             'moduleInfo' => $moduleInfo,

@@ -54,7 +54,6 @@ class UnitTestBootstrap
         $adminInfo = zc_test_config_admin_directory(DIR_FS_CATALOG);
         self::defineIfMissing('DIR_WS_ADMIN', '/' . $adminInfo['basename'] . '/');
         self::defineIfMissing('DIR_FS_ADMIN', $adminInfo['path']);
-        self::defineIfMissing('DIR_WS_HTTPS_CATALOG', '/ssl/');
     }
 
     private static function loadCoreFiles(): void
@@ -78,9 +77,7 @@ class UnitTestBootstrap
     private static function defineServerConstants(): void
     {
         self::defineIfMissing('HTTP_SERVER', 'http://zencart-git.local');
-        self::defineIfMissing('HTTPS_SERVER', 'https://zencart-git.local');
         self::defineIfMissing('HTTP_CATALOG_SERVER', 'http://zencart-git.local');
-        self::defineIfMissing('HTTPS_CATALOG_SERVER', 'https://zencart-git.local');
     }
 
     private static function defineSessionConstants(): void

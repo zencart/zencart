@@ -7,7 +7,7 @@
  * @copyright Copyright 2003-2018 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
-$zc_settings = array();
+$zc_settings = [];
 
 /**
  * Custom settings for CLI installer can be set here
@@ -25,25 +25,6 @@ $zc_settings['installer_method'] = 'Automated Install';
 $zc_settings['http_server_catalog'] = 'http://example.com';
 
 /**
- * Set the SSL domain name to use for accessing this store. A VALID FUNCTIONAL SSL CERTIFICATE must be operational on the site.
- * NOTE: In the case of a shared-SSL certificate, enter the entire URL and designator needed to point to the document-root of the domain when in SSL mode.
- * ie: https://www.example.com  (in the case of a dedicated certificate)
- * ie: https://www.shared_site.com/~username
- * ie: https://www.shared_site.com/~username/example.com
- * ie: https://www.shared_site.com/www.example.com/secure
- */
-$zc_settings['https_server_catalog'] = 'https://example.com';
-
-/**
- * Set whether to tell Zen Cart to expect that SSL is active and fully functional on the site, and therefore to generate https URLs on relevant pages.
- * NOTE: If this is set to true and the https URL supplied above doesn't point to a site where SSL is already fully functional, the store will be broken.
- * So be sure to properly set up SSL on the domain before telling Zen Cart to use SSL.
- *
- * Accepted values:  'true' or 'false'.  Lowercase. Note these are strings, not booleans.
- */
-$zc_settings['enable_ssl_catalog'] = 'true';
-
-/**
  * Provide the URI path of the Zen Cart site relative to the Document-Root.
  * ie: '/' means the store is in the document-root. Most real sites will use this.
  * ie: '/store/' means the store is located in DOCUMENTROOT/store/ (ie: public_html/store)
@@ -51,14 +32,6 @@ $zc_settings['enable_ssl_catalog'] = 'true';
  *  Always start and end with a '/'.
  */
 $zc_settings['dir_ws_http_catalog'] = '/';
-
-/**
- * URI path to the document-root for the SSL domain.
- * IN MOST CASES THIS SHOULD BE THE SAME AS dir_ws_http_catalog
- *
- * Always start and end with a '/'.
- */
-$zc_settings['dir_ws_https_catalog'] = '/';
 
 /**
  * Provide the complete physical path to the store's files, as per the filesystem.

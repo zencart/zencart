@@ -57,7 +57,7 @@ if ((isset($_GET['action']) || isset($_POST['action']) || isset($_GET['act'], $_
                 //
                 ajaxAbort(418);
             }
-            zen_redirect(zen_href_link(FILENAME_TIME_OUT, '', $request_type));
+            zen_redirect(zen_href_link(FILENAME_TIME_OUT));
         }
     }
 }

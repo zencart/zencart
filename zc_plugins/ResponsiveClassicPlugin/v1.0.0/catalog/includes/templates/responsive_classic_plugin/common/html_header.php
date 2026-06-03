@@ -71,8 +71,8 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
   <link rel="shortcut icon" href="<?php echo FAVICON; ?>" type="image/x-icon">
 <?php } //endif FAVICON ?>
 
-  <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>">
-<?php if (isset($canonicalLink) && $canonicalLink != '') { ?>
+  <base href="<?= HTTP_SERVER . DIR_WS_CATALOG ?>">
+<?php if (isset($canonicalLink) && $canonicalLink !== '') { ?>
   <link rel="canonical" href="<?php echo $canonicalLink; ?>">
 <?php } ?>
 <?php

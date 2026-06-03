@@ -123,15 +123,12 @@ function zen_session_save_path(string $path = ''): false|string
  */
 function zen_session_recreate(): void
 {
-    global $http_domain, $https_domain;
-    if ($http_domain === $https_domain) {
-        $saveSession = $_SESSION;
-        $oldSessID = session_id();
-        session_regenerate_id();
-        $newSessID = session_id();
-        $_SESSION = $saveSession;
-        if (IS_ADMIN_FLAG !== true) {
-            whos_online_session_recreate($oldSessID, $newSessID);
-        }
+    $saveSession = $_SESSION;
+    $oldSessID = session_id();
+    session_regenerate_id();
+    $newSessID = session_id();
+    $_SESSION = $saveSession;
+    if (IS_ADMIN_FLAG !== true) {
+        whos_online_session_recreate($oldSessID, $newSessID);
     }
 }

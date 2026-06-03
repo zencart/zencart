@@ -443,5 +443,5 @@ $zco_notifier->notify('NOTIFY_PRODUCT_LISTING_END', $current_page_base, $list_bo
 
 if ($how_many > 0 && PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit && $num_products_count > 0) {
     // bof: multiple products
-    echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_DEFAULT, zen_get_all_get_params(['action']) . 'action=multiple_products_add_product', $request_type), 'post', 'enctype="multipart/form-data"');
+    echo zen_draw_form('multiple_products_cart_quantity', zen_href_link(FILENAME_DEFAULT, zen_get_all_get_params(['action']) . 'action=multiple_products_add_product'), 'post', 'enctype="multipart/form-data"');
 }

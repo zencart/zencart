@@ -618,7 +618,6 @@ class authorizenet_aim extends base {
    * @since ZC v1.3.8
    */
   function _sendRequest($submit_data) {
-    global $request_type;
 
     // Populate an array that contains all of the data to be sent to Authorize.net
     $submit_data = array_merge(array(
@@ -687,7 +686,7 @@ class authorizenet_aim extends base {
     // Send CURL communication
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_REFERER, ($request_type == 'SSL' ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ));
+    curl_setopt($ch, CURLOPT_REFERER, HTTP_SERVER . DIR_WS_CATALOG );
     curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_VERBOSE, 0);

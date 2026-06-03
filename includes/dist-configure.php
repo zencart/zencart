@@ -14,23 +14,16 @@
 
 /**
  * Enter the domain for your store
- * If you have SSL, enter the correct https address in BOTH the HTTP_SERVER and HTTPS_SERVER settings, instead of just an http address.
+ * If you have SSL, enter the correct https address instead of just an http address.
  */
 define('HTTP_SERVER', 'http://localhost');
-define('HTTPS_SERVER', 'https://localhost');
-
-/**
- * If you have https enabled on your website, set this to 'true'
- */
-define('ENABLE_SSL', 'true');
 
 /**
  * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
- * These values get added to the HTTP_CATALOG_SERVER and HTTPS_CATALOG_SERVER values to form the complete URLs to your storefront.
+ * This value gets appended to HTTP_CATALOG_SERVER to form the complete URL to your storefront.
  * They should always start and end with a slash ... ie: '/' or '/foldername/'
  */
 define('DIR_WS_CATALOG', '/');
-define('DIR_WS_HTTPS_CATALOG', '/');
 
 /**
  * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
@@ -56,18 +49,3 @@ define('DB_DATABASE', '');
  */
 define('SQL_CACHE_METHOD', 'none');
 
-/**
- * Reserved for future use
- */
-define('SESSION_STORAGE', 'temporary value added by zc_install');
-
-/**
- * Advanced use only:
- * The following are OPTIONAL, and should NOT be set unless you intend to change their normal use. Most sites will leave these untouched.
- * To use them, uncomment AND add a proper defined value to them.
- */
-// define('DIR_FS_SQL_CACHE' ...
-// define('DIR_FS_DOWNLOAD' ...
-// define('DIR_FS_LOGS' ...
-
-// End Of File

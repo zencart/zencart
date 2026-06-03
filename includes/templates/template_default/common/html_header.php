@@ -49,7 +49,7 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
 <?php } ?>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes"/>
 
-<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_SERVER . DIR_WS_CATALOG ); ?>"/>
+<base href="<?= HTTP_SERVER . DIR_WS_CATALOG ?>"/>
 <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 <link rel="dns-prefetch" href="https://code.jquery.com">
 <?php if (isset($canonicalLink) && $canonicalLink != '') { ?>

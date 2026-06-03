@@ -33,7 +33,7 @@ if (basename($PHP_SELF) === FILENAME_AJAX . '.php') {
 // admin folder rename required
 if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE === '') && !defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     if (basename($PHP_SELF) !== FILENAME_ALERT_PAGE . '.php') {
-        if (str_ends_with(DIR_WS_ADMIN, '/admin/') || str_ends_with(DIR_WS_HTTPS_ADMIN, '/admin/')) {
+        if (str_ends_with(DIR_WS_ADMIN, '/admin/')) {
             zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
         }
         $check_path = dirname($PHP_SELF) . '/../zc_install';

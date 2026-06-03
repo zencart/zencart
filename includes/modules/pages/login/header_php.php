@@ -136,7 +136,7 @@ if (($_GET['action'] ?? '') === 'process') {
                 $_SESSION['navigation']->clear_snapshot();
                 zen_redirect($origin_href);
             } else {
-                zen_redirect(zen_href_link(FILENAME_DEFAULT, '', $request_type));
+                zen_redirect(zen_href_link(FILENAME_DEFAULT));
             }
         }
     }

@@ -11,23 +11,16 @@
 
 /**
  * Enter the domain for your store
- * If you have SSL, enter the correct https address in BOTH the HTTP_SERVER and HTTPS_SERVER settings, instead of just an http address.
+ * If you have SSL, enter the correct https address instead of just an http address.
  */
 define('HTTP_SERVER', '%%_CATALOG_HTTP_SERVER_%%');
-define('HTTPS_SERVER', '%%_CATALOG_HTTPS_SERVER_%%');
-
-/**
- * If you have https enabled on your website, set this to 'true'
- */
-define('ENABLE_SSL', '%%_ENABLE_SSL_CATALOG_%%');
 
 /**
  * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
- * These values get added to the HTTP_CATALOG_SERVER and HTTPS_CATALOG_SERVER values to form the complete URLs to your storefront.
+ * This value gets appended to the HTTP_CATALOG_SERVER to form the complete URL to your storefront.
  * They should always start and end with a slash ... ie: '/' or '/foldername/'
  */
 define('DIR_WS_CATALOG', '%%_DIR_WS_CATALOG_%%');
-define('DIR_WS_HTTPS_CATALOG', '%%_DIR_WS_HTTPS_CATALOG_%%');
 
 /**
  * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
@@ -53,18 +46,3 @@ define('DB_DATABASE', '%%_DB_DATABASE_%%');
  */
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
 
-/**
- * Reserved for future use
- */
-define('SESSION_STORAGE', '%%_SESSION_STORAGE_%%');
-
-/**
- * Advanced use only:
- * The following are OPTIONAL, and should NOT be set unless you intend to change their normal use. Most sites will leave these untouched.
- * To use them, uncomment AND add a proper defined value to them.
- */
-// define('DIR_FS_SQL_CACHE' ...
-// define('DIR_FS_DOWNLOAD' ...
-// define('DIR_FS_LOGS' ...
-
-// End Of File

@@ -139,10 +139,7 @@ class zcConfigureFileReader
     {
         $mapper = [
             'HTTP_SERVER' => 'http_server_catalog',
-            'HTTPS_SERVER' => 'https_server_catalog',
-            'ENABLE_SSL' => 'enable_ssl_catalog',
             'DIR_WS_CATALOG' => 'dir_ws_http_catalog',
-            'DIR_WS_HTTPS_CATALOG' => 'dir_ws_https_catalog',
             'DIR_FS_CATALOG' => 'physical_path',
             'DB_TYPE' => 'db_type',
             'DB_PREFIX' => 'db_prefix',

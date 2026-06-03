@@ -13,7 +13,7 @@ $content .= '<div id="' . str_replace('_', '-', $box_id . 'Content') . '" class=
 
 $lng_cnt = 0;
 foreach ($lng->get_languages_by_code() as $key => $value) {
-    $content .= '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(['language', 'currency']) . 'language=' . $key, $request_type) . '">'
+    $content .= '<a href="' . zen_href_link($_GET['main_page'], zen_get_all_get_params(['language', 'currency']) . 'language=' . $key) . '">'
         . zen_image(DIR_WS_LANGUAGES . $value['directory'] . '/images/' . $value['image'], $value['name'])
         . '</a>&nbsp;&nbsp;';
     $lng_cnt++;
