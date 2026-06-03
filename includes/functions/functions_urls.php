@@ -11,7 +11,7 @@
  * Redirect to another page or site
  * @since ZC v1.0.3
  */
-function zen_redirect(string $url, int|string $httpResponseCode = null): void
+function zen_redirect(string $url, int|string|null $httpResponseCode = null): void
 {
     // -----
     // Enable an observer to override the redirect.  For instance, an AJAX
@@ -64,7 +64,7 @@ function zen_cleanup_url_params(string $url, bool $for_redirect = false): string
  *
  * @since ZC v1.5.8
  */
-function zen_set_redirect_http_headers(string $url, int|string $httpResponseCode = null): void
+function zen_set_redirect_http_headers(string $url, int|string|null $httpResponseCode = null): void
 {
     session_write_close();
     if (empty($httpResponseCode)) {
