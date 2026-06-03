@@ -97,10 +97,9 @@ class shoppingCart extends base
      * Note also that if the customer already has some items in their cart before they login,
      * these are merged with the stored contents.
      *
-     * @return bool
      * @since ZC v1.0.3
      */
-    public function restore_contents()
+    public function restore_contents(): bool
     {
         global $db;
         if (!zen_is_logged_in() || zen_in_guest_checkout()) {
@@ -193,6 +192,7 @@ class shoppingCart extends base
         $this->cartID = $this->generate_cart_id();
         $this->notify('NOTIFIER_CART_RESTORE_CONTENTS_END');
         $this->cleanup();
+        return true;
     }
 
     /**
@@ -393,10 +393,9 @@ class shoppingCart extends base
      * @param mixed $uprid product 'uprid' of item to update
      * @param int|float $quantity the quantity to update the item to
      * @param array $attributes product attributes attached to the item
-     * @return bool
      * @since ZC v1.0.3
      */
-    function update_quantity($uprid, $quantity = 0, $attributes = [])
+    function update_quantity($uprid, $quantity = 0, $attributes = []): ?bool
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) {
@@ -414,7 +413,7 @@ class shoppingCart extends base
         }
         $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_START', null, $uprid, $quantity, $attributes);
         if (empty($quantity)) {
-            return true; // nothing needs to be updated if theres no quantity, so we return true.
+            return true; // nothing needs to be updated if there is no quantity, so we return true.
         }
 
         // ensure quantity added to cart is never more than what is in-stock
@@ -496,6 +495,7 @@ class shoppingCart extends base
         }
         $this->cartID = $this->generate_cart_id();
         $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_END');
+        return true;
     }
 
     /**
@@ -659,10 +659,9 @@ class shoppingCart extends base
     /**
      * Calculate cart totals(price and weight)
      *
-     * @return int
      * @since ZC v1.0.3
      */
-    public function calculate()
+    public function calculate(): int
     {
         global $db, $currencies;
         $this->total = 0;
@@ -1001,6 +1000,7 @@ class shoppingCart extends base
             $total_before_discounts += $totalOnetimeChargeNoDiscount;
             $this->total_before_discounts += $total_before_discounts;
         }
+        return 1;
     }
 
     /**
@@ -1839,7 +1839,7 @@ class shoppingCart extends base
                                 );
                             }
                         }
-                        unset($prod_num, $prod_id, $attributes, $this_curr_qty, $this_new_qty);
+                        unset($prod_id, $attributes, $this_curr_qty, $this_new_qty);
                     }
                 }
                 $cart_qty = $this->in_cart_mixed($products_id); // total currently in cart
