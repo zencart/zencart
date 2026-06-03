@@ -1,0 +1,31 @@
+includes:
+    - phpstan.neon.dist
+
+parameters:
+    paths:
+        - admin
+    scanFiles:
+        - phpstan-constants-admin.php
+    bootstrapFiles:
+        - phpstan-bootstrap-admin.php
+
+    excludePaths:
+        analyse:
+            - includes/configure.php
+            - includes/dist-configure.php
+            - admin/includes/configure.php
+            - admin/includes/dist-configure.php
+            - includes/classes/vendors/*
+
+    scanDirectories:
+        - includes/functions
+        - includes/classes/
+        - includes/classes/vendors
+
+    ignoreErrors:
+        -
+            identifier: class.notFound
+            message: '#Instantiated class Com\\Tecnick\\Barcode\\Barcode not found#'
+        -
+            identifier: require.fileNotFound
+            message: '#Path in require\(\) "includes/css/site-specific-styles\.php" is not a file or it does not exist\.#'
