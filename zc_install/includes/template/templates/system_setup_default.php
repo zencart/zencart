@@ -62,7 +62,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_server_catalog" class="form-control" type="url" value="<?= $catalogHttpServer ?>" name="http_server_catalog" tabindex="4" placeholder="ie: https:/www.your_domain.com" required>
+                <input id="http_server_catalog" class="form-control" type="url" value="<?= $catalogHttpServer ?>" name="http_server_catalog" tabindex="4" placeholder="ie: https://www.your_domain.com" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPSERVERCATALOG ?></div>
             </div>
         </div>
@@ -75,7 +75,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_url_catalog" class="form-control" type="url" value="<?= $catalogHttpUrl ?>" name="http_url_catalog" tabindex="5" placeholder="ie: https:/www.your_domain.com">
+                <input id="http_url_catalog" class="form-control" type="url" value="<?= $catalogHttpUrl ?>" name="http_url_catalog" tabindex="5" placeholder="ie: https://www.your_domain.com">
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPURLCATALOG ?></div>
             </div>
         </div>
