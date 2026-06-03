@@ -1,4 +1,8 @@
-Purpose
+## Related files
+- `CONVENTIONS.md` — coding standards, PSR-12 rules, naming conventions, legacy exceptions
+- `CLAUDE.md` — Claude-specific behavioral layer (references this file)
+
+# Purpose
 -------
 Concise guidance for automated AI coding agents (and humans) to become productive in this Zen Cart v2.2 PHP codebase. Focus is on immediately actionable facts: where to look, how the app boots, test & dev commands, conventions, and integration points.
 
@@ -17,7 +21,7 @@ Quick orientation (high-value entry points)
 Big-picture architecture
 ------------------------
 - Procedural, page-per-file entrypoints. Each visible page is a thin entry that includes `application_top.php`, then pulls per-page header PHP modules from `includes/modules/pages/PAGE_NAME/` and template fragments.
-- Bootstrapping Init System: `includes/application_top.php` constructs an InitSystem that reads configurations from `includes/auto_loaders/` and then runs them from `includes/init_includes/` and plugin-provided loaders.
+- Bootstrapping Init System: `includes/application_top.php` constructs an InitSystem that reads configurations from `includes/auto_loaders/` and then runs them from `includes/init_includes/` and plugin-provided loaders. 
 - Plugin namespaces are mapped into PSR-4 prefixes during bootstrap.
 - Plugin model: `zc_plugins/<unique_key>/<version>/catalog|admin/...`. PluginManager registers installed plugins and the FileSystem helper loads files from plugin directories. Plugins can supply `extra_configures`, `extra_datafiles`, `classes`, and `pages`.
 - Templates: Template selection is handled by the `$template` object and `includes/templates/*` paths; template-specific overrides live under `includes/templates/TEMPLATE/`.
@@ -43,19 +47,38 @@ Project-specific conventions and patterns
 ---------------------------------------
 - Entrypoints are procedural files that require `application_top.php` and later `application_bottom.php` (see `index.php` flow comments).
 - File/constant mapping: many filenames are registered via `includes/init_includes/init_file_db_names.php` (calling `/filenames.php`) and plugin `filenames.php` — search for `FILENAME_` constants.
-- Autoloading: PSR-4 for core application and plugins. During runtime, `Aura\\Autoload` plus `includes/psr4Autoload.php` register autoload prefixes (see `application_top.php`). (For test suite, `composer.json` uses classmap for `includes/classes` and `includes/modules`).
+- Autoloading: PSR-4 for core application and plugins. During runtime, `Aura\\Autoload` plus `includes/psr4Autoload.php` register autoload prefixes (see `application_top.php`). (For test suite, `composer.json` uses classmap for `includes/classes` and `includes/modules`). 
 - Plugin registration: PluginManager + PluginControlRepository provide installed plugin list; FileSystem helper loads plugin-supplied files. Plugins have `unique_key` and `version` used in paths: `zc_plugins/<unique_key>/<version>/...`, and a `manifest.php` file which provides descriptions that get registered in the database.
 - Security & input sanitation: `application_top.php` includes early request-sanitizing logic (rejects suspicious query strings, parameter pollution, and crawler `buy_now` attempts). Automated changes to routing/inputs should preserve these checks. Call `zen_output_string_protected()` on any output that includes user input, for XSS protection. The admin-side applies aggressive input-sanitization rules, but new fields that require relaxed sanitization will need proper whitelisting: see https://docs.zen-cart.com/dev/code/admin_sanitization/.
-- These same patterns apply to the admin side.
+- These same patterns apply to the admin side. 
 - Template overrides: The non-admin side supports template-specific overrides for modules and classes. For example, if the active template is `my_template`, the system will look for files in `includes/templates/my_template/` before falling back to the `template_default` paths. This allows for customization without modifying core files.
 - `index.php` flow: includes application_top.php, loops over `header_php` files from PageLoader->listModulePagesFiles('header_php', '.php'), then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
 
 Integration points and external dependencies
 -------------------------------------------
 - Plugins: `zc_plugins/` is the place for third-party extensions and versioned code; new automations should inspect existing plugins for common structure. For very deep code inspection, reference `PluginManager` and `FileSystem` usage in `includes/application_top.php`.
-- Composer-managed dev deps: phpunit, symfony components, guzzle. No production PHP libraries are required in composer.json aside from PHP extensions. (The app uses its own autoloading for core classes and modules, and plugins manage their own dependencies if needed.)
+- Composer-managed dev deps: phpunit, symfony components, guzzle. No production PHP libraries are required in composer.json aside from PHP extensions. (The app uses its own autoloading for core classes and modules, and plugins manage their own dependencies if needed.) 
 - (There are some 3rd-party libraries included directly in `includes/classes/vendors/` that are not managed by composer; these are bundled directly to avoid end-users needing to use composer.)
 - Payment/webhook listeners at repo root: The following PayPal-related listeners are processor-specific: `ipn_main_handler.php`, `ppr_listener.php`, `ppr_webhook.php`.
+
+Creating a New Storefront Page
+-----------------------------------
+1. Create filename constant in `includes/extra_datafiles/my_filenames.php` (or for a plugin, use its `filenames.php` file):
+   ```php
+   define('FILENAME_MY_PAGE', 'my_page.php');
+    ```
+2. Create page module files under `includes/modules/pages/my_page/`:
+   - `header_php.php` (for backend logic to run before output is generated)
+   - `main_template_vars.php` (for creating output data and passing those variables to the template)
+   - `jscript_mypage.js` (for standalone javascript specific to this page)
+   - `jscript_mypage.php` (for PHP-generated javascript specific to this page)
+3. Create template file under `includes/templates/template_default/` (or preferably in your active template dir) named `tpl_my_page.php` that will be used to render the page content.
+   - Remember to use `zen_output_string_protected()` for any user-generated content that is output on the page, to ensure XSS protection.
+4. Test the new page by navigating to it in the storefront and ensuring it loads correctly.
+5. Add a link to the new page from an existing page, using `zen_href_link(FILENAME_MY_PAGE)` to generate the URL.
+6. If the page requires new database tables or configuration, consider creating a plugin to encapsulate that functionality, following the plugin development patterns. The installer script for plugins can handle database insertions and system configuration-entries during installation.
+
+To create an Admin page, make a plugin, as described below. It's easier to contain an admin page within a plugin.
 
 Plugin development (quick reference)
 -----------------------------------
@@ -63,8 +86,29 @@ Short Summary:
 - Directory layout: `zc_plugins/<unique_key>/<version>/catalog/...` and `zc_plugins/<unique_key>/<version>/admin/...`.
 - Minimal files: `manifest.php` at the plugin root (describes unique_key/version and human metadata) and the plugin-provided `catalog/includes/` or `admin/includes/` folders for `classes`, `extra_configures`, `extra_datafiles`, and `modules/pages/`.
 - Discovery: `includes/application_top.php` uses `PluginManager` + `PluginControlRepository` to produce `$installedPlugins`; `FileSystem->loadFilesFromPluginsDirectory()` is used to pull in all the files related to the plugin.
-- PSR-4: To expose plugin classes via the app autoloader, runtime PSR-4 prefixes are added in `application_top.php` using `$psr4Autoloader->addPrefix()` for `Zencart\Plugins\Catalog\<UniqueKey>` and `Zencart\Plugins\Admin\<UniqueKey>`.
-- Installer Scripts: To run installation scripts, create a `zc_plugins/<unique_key>/<version>/install/` folder and build your installer instructions there (see dev docs). Installer scripts should be idempotent, ie: self-upgrading across missing updates from prior versions.
+- PSR-4: Namespaced plugin classes are assigned at runtime: PSR-4 namespace prefixes are added in `application_top.php` using `$psr4Autoloader->addPrefix()` for `Zencart\Plugins\Catalog\<UniqueKey>` and `Zencart\Plugins\Admin\<UniqueKey>`.
+- Additional PSR-4 autoloading that's not auto-detected can be provided via a `psr4Autoload.php` file in the plugin root that registers additional namespaces or includes the plugin's composer autoloader if using composer for dependencies (composer example code shown below).
+- Installer Scripts: To run installation scripts, create a `zc_plugins/<unique_key>/<version>/Installer/` folder and build your installer instructions there (see dev docs). Installer scripts should be idempotent, ie: self-upgrading across missing updates from prior versions.
+- If a plugin needs to load a stylesheet or javascript on storefront pages, an observer can attach to `NOTIFY_HTML_HEAD_END` and use `linkCatalogStylesheet()` from `InteractsWithPlugins` trait, to output the `<link>` tag for the plugin's CSS file. The observer constructor must call `$this->detectZcPluginDetails(__DIR__)` before `linkCatalogStylesheet()` will work. CSS file goes in `catalog/includes/templates/template_default/css/`.
+- When creating a new plugin, ideally the `unique_key` should be Capitalized.
+- When creating or converting a plugin, any filename constants that were previously in "extra_datafiles" should go into a `filenames.php` file in the plugin root. And any database tablename constants that were previously in "extra_datafiles" should go into a `database_tables.php` file in the plugin root.
+- If you create an admin page which requires a custom `.js` file, name it the same name as your PHP file name to make it automatically load. For example `admin/rewards.php`, will load `admin/includes/javascript/rewards.js` and also `admin/includes/javascript/rewards_*.js` as additional files, if present.
+
+Composer packages in plugins:
+- If a plugin needs external dependencies, those should be managed within the plugin directory, for example by including a `composer.json` in the plugin root and running `composer install` there to create a `vendor/` directory within the plugin. 
+- An .htaccess file should be placed in the plugin's `vendor/` directory to block web access. 
+- The main application's composer autoloader will not automatically load classes from the plugin's `vendor/` directory, so the plugin's own autoloader (generated by composer) should be included in the plugin's initialization code if needed. For example, the plugin's main class or an observer could include the plugin's `vendor/autoload.php` to ensure its dependencies are available.
+- To register the composer packages at runtime, add a `psr4Autoload.php` file to your plugin root directory (same place as `vendor/` and `composer.json`) which loads the composer autoloader:
+```php
+// psr4Autoload.php in your plugin folder:
+<?php
+// Load composer autoloader for this plugin's dependencies
+require __DIR__ . '/vendor/autoload.php';
+
+// Alternatively, register specific PSR-4 namespaces for this plugin for classes not following the prescribed pattern. (Should rarely be needed.)
+/** @var \Aura\Autoload\Loader $psr4Autoloader */
+//$psr4Autoloader->addPrefix('Foo', __DIR__ . '/vendor/foo/foobar/src');
+``` 
 
 Minimal example manifest.php
 ```php
@@ -83,17 +127,24 @@ Minimal plugin file structure layout (example)
 - zc_plugins/myplugin/1.0.0/filenames.php
 - zc_plugins/myplugin/1.0.0/Installer/ScriptedInstaller.php
 - zc_plugins/myplugin/1.0.0/Installer/languages/english/main.php
+# for catalog-side pages, use the following:
 - zc_plugins/myplugin/1.0.0/catalog/includes/classes/observers/auto_MyClass.php
 - zc_plugins/myplugin/1.0.0/catalog/includes/languages/english/lang.my_page.php
 - zc_plugins/myplugin/1.0.0/catalog/includes/modules/pages/my_page/header_php.php
 - zc_plugins/myplugin/1.0.0/catalog/includes/templates/template_default/tpl_my_page.php
+# for admin pages, use the following: 
 - zc_plugins/myplugin/1.0.0/admin/admin_page_name.php
 - zc_plugins/myplugin/1.0.0/admin/includes/languages/english/lang.admin_page_name.php
+- zc_plugins/myplugin/1.0.0/admin/includes/classes/observers/auto_MyAdminClass.php
 ```
+
 Quick tips for agents that create plugins
 - Add any filename constants via a plugin's `filenames.php` if you need new FILENAME_* constants — `FileSystem` loader will include plugin `filenames.php` files during bootstrap.
-- If you add PSR-4 namespaced classes, follow the `Zencart\Plugins\Catalog\<UniqueKey>` namespace root so runtime autoloader registration in `application_top.php` points to your plugin `catalog/includes/classes/` path.
+- If you add PSR-4 namespaced classes, note that `Zencart\Plugins\Catalog\<UniqueKey>` namespace will be auto-applied when plugin classes are enumerated and registered for autoloading.
 - Test by enabling the plugin via admin `Plugin Manager` (or insert a `plugin_control` DB record in tests), then exercise plugin pages (storefront/admin) and run relevant PHPUnit feature tests.
+- `zc_plugins/.gitignore` uses a blanket deny-all (`*`) with an explicit allowlist. When adding a new plugin, append `!PluginName/` and `!PluginName/**` to that file, or the plugin's files will be invisible to git.
+
+A payment/shipping plugin may have `install()` and `remove()` methods, but those should only handle configuration entries and not database schema changes. For any database schema changes, use `ScriptedInstaller` methods for install/upgrade/remove, and ensure they are idempotent.
 
 Official docs
 -------------
@@ -138,8 +189,8 @@ If your plugin introduces new page entrypoints, add a `filenames.php` under the 
 Similarly, if your plugin introduces new constants that need to be defined early, add them in an `includes/extra_configures/some_filename.php` file, under either the `admin/` or `catalog/` directory as needed.
 
 
-Where to find tests & how the test bootstrap works
---------------------------------------------------
+Test Suite: Where to find tests & how the test bootstrap works
+--------------------------------------------------------------
 - PHPUnit configuration: `phpunit.xml` uses `vendor/autoload.php` and sets APP_ENV=testing and reduced bcrypt rounds.
 - Tests live in `not_for_release/testFramework/` grouped into Unit, FeatureStore, FeatureAdmin. The test autoloading is configured in `composer.json` under `autoload-dev`.
 - There is a test-support bootstrap at `not_for_release/testFramework/Support/application_testing.php` that will be loaded if present by `application_top.php`.
@@ -148,7 +199,7 @@ Where to find tests & how the test bootstrap works
     - composer run-script feature-tests
 - Developer documentation for tests: https://docs.zen-cart.com/dev/testframework/testing/
 
-Actionable examples for agents (copy-paste)
+Actionable examples for agents
 -----------------------------------------
 - Install deps and run unit tests:
     - composer install
@@ -158,17 +209,28 @@ Actionable examples for agents (copy-paste)
     - composer run-script feature-tests-store
 - Run feature tests for only the Admin side:
     - composer run-script feature-tests-admin
-- Quick bootstrap for ad-hoc PHP scripts/tests (but the app doesn't have any intended CLI entrypoints.):
-    - <?php
-      require 'includes/application_top.php';
-      // ... run logic that depends on DB and bootstrapped services
-      require DIR_WS_INCLUDES . 'application_bottom.php';
+
+NOTE: the app doesn't have any intended CLI entrypoints. 
+
+However, if you need to run ad-hoc PHP scripts that require the app bootstrap (for example, for debugging or one-off data fixes), you can use the following pattern to leverage the existing bootstrap and service container:
+
+Quick bootstrap for ad-hoc PHP scripts/tests:
+  - <?php
+    require 'includes/application_top.php';
+    // ... run logic that depends on DB and bootstrapped services
+    require DIR_WS_INCLUDES . 'application_bottom.php'; // required to properly close session and do any necessary cleanup
 
 Quick pointers for common tasks
 ------------------------------
 - Adding a new page/module: create files under `includes/modules/pages/<page_name>/` (`header_php.php`, optional `main_template_vars.php`, optional jscript-related files) and register any new filename constants via `filenames.php` pattern.
 - Adding plugin code: place under `zc_plugins/<unique_key>/<version>/` with relevant `/catalog` and/or `/admin` folders, and ensure PluginControl entries reflect installation; use PluginManager FileSystem helpers to mirror existing patterns.
-- Debugging: enable `STRICT_ERROR_REPORTING` which turns `display_errors` on, or `DEBUG_AUTOLOAD` (for troubleshooting autoload config array load-order) in a local `includes/local/configure.php`. Logs are in `logs/`.
+
+Troubleshooting & debugging
+---------------------------
+- Debugging: 
+  - Enable `STRICT_ERROR_REPORTING` which turns `display_errors` on.
+  - Logs are in `logs/`.
+  - For troubleshooting autoload config array load-order, set `DEBUG_AUTOLOAD=true` in a local `includes/local/configure.php`. This will display a lot of debug information to the screen to help trace an issue.
 
 Files to inspect next (for humans and automated extractors)
 ------------------------------------------------------
@@ -197,8 +259,8 @@ Test suite:
 - not_for_release/testFramework/Support/application_testing.php
 ```
 
-Contacts & references
----------------------
+References
+----------
 - Developer docs: https://docs.zen-cart.com/dev/
 - Project README: `README.md`
 
