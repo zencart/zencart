@@ -26,7 +26,7 @@ class QueryCache
      *
      * @since ZC v1.5.1
      */
-    public function cache(string $query, mysqli_result $valueToStore): bool
+    public function cache(string $query, mixed $valueToStore): bool
     {
         if ($this->isSelectStatement($query) === true) {
             $this->queries[$query] = $valueToStore;
