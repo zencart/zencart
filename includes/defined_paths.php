@@ -30,6 +30,3 @@ if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs'); // 
 if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
-if (!defined('DIR_CATALOG_LIBRARY')) {
-    define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
-}
