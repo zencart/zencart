@@ -53,8 +53,7 @@ class Request
     public static function isSecure(): bool
     {
         /**
-         * Detect the type of request (secure or not)
-         * Currently only used as a helper when generating protocol-matched URLs for forms, templates, etc.
+         * Detect the type of request received (secure or not)
          */
         return ((isset($_SERVER['HTTPS']) && (strtolower((string)$_SERVER['HTTPS']) !== 'off' || $_SERVER['HTTPS'] == '1'))) ||
             (isset($_SERVER['HTTP_X_FORWARDED_BY']) && str_contains(strtoupper((string)$_SERVER['HTTP_X_FORWARDED_BY']), 'SSL')) ||
