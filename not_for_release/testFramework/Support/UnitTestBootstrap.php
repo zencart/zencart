@@ -8,13 +8,13 @@ class UnitTestBootstrap
 {
     public static function initialize(): void
     {
+        self::defineServerConstants();
         self::defineBaseConstants();
         self::configureEnvironment();
         self::loadLocalSetup();
         self::definePathConstants();
         self::loadCoreFiles();
         self::initializeNotifier();
-        self::defineServerConstants();
         self::defineSessionConstants();
         self::defineMiscConstants();
         self::loadSessionStubs();
