@@ -134,6 +134,8 @@ foreach (glob(DIR_FS_INSTALL . 'includes/extra_configures/*.php') ?? [] as $file
 
 require DIR_FS_ROOT . 'includes/classes/traits/ObserverManager.php';
 require DIR_FS_ROOT . 'includes/classes/traits/NotifierManager.php';
+require DIR_FS_ROOT . 'includes/classes/traits/Singleton.php';
+require DIR_FS_ROOT . 'includes/classes/EventDto.php';
 require DIR_FS_ROOT . 'includes/classes/class.base.php';
 require DIR_FS_ROOT . 'includes/classes/class.notifier.php';
 require DIR_FS_INSTALL . 'includes/functions/general.php';
