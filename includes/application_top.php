@@ -398,11 +398,9 @@ foreach ($installedPlugins as $plugin) {
     $filePathCatalog = $filePath . 'catalog/includes/classes/';
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
-    // Load registered psr4Autoload in the plugin's root directory
-    if (file_exists($filePath . 'psr4Autoload.php')) {
-        require $filePath . 'psr4Autoload.php';
-    }
 }
+// Load registered psr4Autoload in plugin directories
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^psr4Autoload\.php$~i');
 
 if (isset($loaderPrefix)) {
     $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
