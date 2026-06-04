@@ -60,7 +60,6 @@ if (count($adminDirectoryList) > 1) {
 [
     $adminDir,
     $documentRoot,
-    $adminServer,
     $catalogHttpServer,
     $catalogHttpUrl,
     $dir_ws_http_catalog,

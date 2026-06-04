@@ -32,6 +32,7 @@ class TestConfigResolver
         $pathsTried = [];
 
         foreach ($candidates as $candidate) {
+            // @TODO: is this $context needed anymore?
             $candidatePath = $basePath . $candidate . '.' . $context . '.configure.php';
             $pathsTried[] = $candidatePath;
 

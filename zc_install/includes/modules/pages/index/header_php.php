@@ -35,15 +35,7 @@ if (isset($_POST['updateConfigure'])) {
         }
         $storeConfigureFileReader = new zcConfigureFileReader($configFile);
 
-        $admConfigFile = DIR_FS_ROOT . $selectedAdminDir . '/includes/configure.php';
-        $admConfigFileLocal = DIR_FS_ROOT . $selectedAdminDir . '/includes/local/configure.php';
-        if (file_exists($admConfigFileLocal)) {
-            $admConfigFile = $admConfigFileLocal;
-        }
-        $adminConfigureFileReader = new zcConfigureFileReader($admConfigFile);
-
         $configureInputs = $storeConfigureFileReader->getStoreInputsFromLegacy();
-        $configureInputs['http_server_admin'] = trim($adminConfigureFileReader->getRawDefine('HTTP_SERVER'), "'");
         $configureInputs['adminDir'] = $selectedAdminDir;
         $storeConfigureFileWriter = new zcConfigureFileWriter($configureInputs);
     }

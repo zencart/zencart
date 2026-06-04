@@ -220,7 +220,6 @@ class systemChecker
 
     public function configFileExists(): bool
     {
-        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
         $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
         return $this->getServerConfig()->fileExists();
     }

@@ -77,15 +77,6 @@ if (PHP_VERSION_ID < 80300) {
     require 'includes/application_top.php';
     exit(0);
 }
-/**
- * Set the local configuration parameters - mainly for developers
- */
-if (file_exists('includes/local/configure.php')) {
-    /**
-     * load any local(user created) configure file.
-     */
-    include('includes/local/configure.php');
-}
 
 if (file_exists('../not_for_release/testFramework/Support/application_testing.php')) {
     require('../not_for_release/testFramework/Support/application_testing.php');
@@ -94,22 +85,26 @@ if (file_exists('../not_for_release/testFramework/Support/application_testing.ph
  * check for and load application configuration parameters
  */
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
+    if (file_exists('includes/local/configure.php')) {
+        include('includes/local/configure.php');
+    } elseif (file_exists('../includes/local/configure.php')) {
+        include('../includes/local/configure.php');
+    }
     if (file_exists('includes/configure.php')) {
-        /**
-         * load the main configure file.
-         */
         include('includes/configure.php');
+    } elseif (file_exists('../includes/configure.php')) {
+        include('../includes/configure.php');
     }
 }
 
-if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
+if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE === '') {
     if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
         require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
         exit;
     } elseif (file_exists('../zc_install/index.php')) {
-        echo 'ERROR: Admin configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
+        echo 'ERROR: configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
     } else {
-        die('ERROR: admin/includes/configure.php file not found. Suggest running zc_install/index.php?');
+        die('ERROR: includes/configure.php file not found. Suggest running zc_install/index.php?');
     }
 }
 /**
@@ -127,18 +122,6 @@ if (file_exists('includes/defined_paths.php')) {
 
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
-
-/**
- * ignore version-check if INI file setting has been set
- */
-$file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
-if (file_exists($file) && $lines = @file($file)) {
-    if (is_array($lines)) {
-        foreach($lines as $line) {
-            if (substr($line,0,14)=='admin_configure_php_check=') $check_cfg=substr(trim(strtolower(str_replace('admin_configure_php_check=','',$line))),0,3);
-        }
-    }
-}
 
 /**
  * Register error-handling functions

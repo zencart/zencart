@@ -34,23 +34,6 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         </div>
     </fieldset>
     <fieldset class="border rounded p-3 mt-2">
-        <legend><?= TEXT_SYSTEM_SETUP_ADMIN_SETTINGS ?></legend>
-        <div class="row mb-2">
-            <div class="col-xs-5 col-md-4 col-lg-3">
-                <label class="col-form-label" for="http_server_admin">
-                    <a href="#" class="hasHelpText icon-link" id="ADMINSERVERDOMAIN">
-                        <?= TEXT_SYSTEM_SETUP_ADMIN_SERVER_DOMAIN ?>
-                        <i class="bi-question-circle"></i>
-                    </a>
-                </label>
-            </div>
-            <div class="col-7">
-                <input id="http_server_admin" class="form-control" type="url" value="<?= $adminServer ?>" name="http_server_admin" tabindex="2" placeholder="ie: https:/www.your_domain.com" required>
-                <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_ADMINSERVERDOMAIN ?></div>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset class="border rounded p-3 mt-2">
         <legend><?= TEXT_SYSTEM_SETUP_CATALOG_SETTINGS ?></legend>
         <div class="row mb-2">
             <div class="col-xs-5 col-md-4 col-lg-3">

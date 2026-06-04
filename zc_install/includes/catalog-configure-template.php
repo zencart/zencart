@@ -1,22 +1,19 @@
 <?php
 /**
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * File Built by %%_INSTALLER_METHOD_%% on %%_DATE_NOW_%%
  */
 
-/*************** NOTE: This file is VERY similar to, but DIFFERENT from the "admin" version of configure.php. ***********/
-/***************       The 2 files should be kept separate and not used to overwrite each other.              ***********/
-
 /**
- * Enter the domain for your store
+ * Enter the domain URL for your store
  * If you have SSL, enter the correct https address instead of just an http address.
  */
 define('HTTP_SERVER', '%%_CATALOG_HTTP_SERVER_%%');
 
 /**
- * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
+ * The DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
  * This value gets appended to HTTP_SERVER to form the complete URL to your storefront.
  * They should always start and end with a slash ... ie: '/' or '/foldername/'
  */
@@ -30,7 +27,6 @@ define('DIR_FS_CATALOG', '%%_DIR_FS_CATALOG_%%');
 
 /**
  * The following settings define your database connection.
- * These must be the SAME as you're using in your admin copy of configure.php
  */
 define('DB_TYPE', '%%_DB_TYPE_%%'); // always 'mysql'
 define('DB_PREFIX', '%%_DB_PREFIX_%%'); // prefix for database table names -- preferred to be left empty
