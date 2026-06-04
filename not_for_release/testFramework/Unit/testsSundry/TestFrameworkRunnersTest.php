@@ -1262,6 +1262,7 @@ BASH
         $tempRoot = $this->createMinimalCliRoot(
             <<<'PHP'
 <?php
+define('HTTP_SERVER', 'must be defined but is not used in this test');
 define('DB_TYPE', 'mysql');
 define('DB_SERVER', 'invalid-host-for-cli-tests');
 define('DB_SERVER_USERNAME', 'root');
