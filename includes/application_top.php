@@ -411,7 +411,7 @@ if (isset($loaderPrefix)) {
 }
 $initSystem = new InitSystem('catalog', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
-if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) {
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) {
     $initSystem->setDebug(true);
 }
 

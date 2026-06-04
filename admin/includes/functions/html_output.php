@@ -69,7 +69,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
 }
 
 /**
-   * @since ZC v1.0.3
+ * @since ZC v1.0.3
  */
   function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
     global $zco_notifier;
@@ -95,7 +95,7 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
       $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
     }
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+    while ( (substr($link, -1) === '&') || (substr($link, -1) === '?') ) $link = substr($link, 0, -1);
       $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
 
       // Convert any remaining '&' into '&amp;' (valid URL for href)
