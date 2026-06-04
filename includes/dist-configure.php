@@ -49,3 +49,7 @@ define('DB_DATABASE', '');
  */
 define('SQL_CACHE_METHOD', 'none');
 
+/**
+ * Reserved for future use
+ */
+define('SESSION_STORAGE', 'set by zc_install');

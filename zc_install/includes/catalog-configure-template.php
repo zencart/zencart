@@ -46,3 +46,7 @@ define('DB_DATABASE', '%%_DB_DATABASE_%%');
  */
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
 
+/**
+ * Reserved for future use
+ */
+define('SESSION_STORAGE', 'set by zc_install');

@@ -50,3 +50,8 @@ define('DB_DATABASE', '%%_DB_DATABASE_%%');
  * Options are 'none' (which is the default) and 'file' and 'database'.
  */
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
+
+/**
+ * Reserved for future use
+ */
+define('SESSION_STORAGE', 'set by zc_install');
