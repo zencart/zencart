@@ -49,4 +49,22 @@ class Request
     {
         return isset($this->paramBag[$key]);
     }
+
+    public static function isSecure(): bool
+    {
+        /**
+         * Detect the type of request (secure or not)
+         * Currently only used as a helper when generating protocol-matched URLs for forms, templates, etc.
+         */
+        return (((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) !== 'off' || $_SERVER['HTTPS'] == '1'))) ||
+            (isset($_SERVER['HTTP_X_FORWARDED_BY']) && str_contains(strtoupper($_SERVER['HTTP_X_FORWARDED_BY']), 'SSL')) ||
+            (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (str_contains(strtoupper($_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL') || str_contains(strtolower($_SERVER['HTTP_X_FORWARDED_HOST']), str_replace('https://', '', HTTPS_SERVER)))) ||
+            (isset($_SERVER['HTTP_X_FORWARDED_SERVER']) && str_contains(strtolower($_SERVER['HTTP_X_FORWARDED_SERVER']), str_replace('https://', '', HTTP_SERVER))) ||
+            (isset($_SERVER['SCRIPT_URI']) && stripos($_SERVER['SCRIPT_URI'], 'https:') === 0) ||
+            (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) === 'on')) ||
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')) ||
+            (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] !== '') ||
+            (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] == '443') ||
+            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
+    }
 }

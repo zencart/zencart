@@ -7,6 +7,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 30 Modified in v2.2.0 $
  */
+
+use Zencart\Request\Request;
+
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
@@ -62,7 +65,7 @@ session_set_cookie_params([
  */
 if (isset($_POST[zen_session_name()])) {
     zen_session_id($_POST[zen_session_name()]);
-} elseif (isset($_GET[zen_session_name()])) {
+} elseif (Request::isSecure() && isset($_GET[zen_session_name()])) {
     zen_session_id($_GET[zen_session_name()]);
 }
 
