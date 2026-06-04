@@ -57,6 +57,7 @@ foreach (zen_get_files_in_directory(DIR_WS_FUNCTIONS . 'extra_functions') as $fi
     require $file;
 }
 
+// brief pre-sanitize
 if (isset($_GET) & sizeof($_GET) > 0 ) {
   foreach ($_GET as $key=>$value) {
     $_GET[$key] = strip_tags($value);
@@ -70,10 +71,10 @@ if (zen_config('SSLPWSTATUSCHECK') === '') {
   $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '".$e.':'.$e."', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
   $db->Execute($sql);
   header('Location: ' . $_SERVER['REQUEST_URI']);
-  die('<meta http-equiv="refresh" content="0; url=' . $_SERVER['REQUEST_URI'] . '">One-time auto-configuration completed. Please refresh the page.');}
+  die('<meta http-equiv="refresh" content="0; url=' . $_SERVER['REQUEST_URI'] . '">One-time auto-configuration completed. Please refresh the page.');
+}
 [$a, $c] = explode(':', zen_config('SSLPWSTATUSCHECK')); $a = (int)$a; $c = (int)$c;
 if ($a === 0) {
-    // @TODO
   if ($c === 0 && (int)$e === 1) { // was nonSSL but now is SSL, so need to exp pwds
     $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
