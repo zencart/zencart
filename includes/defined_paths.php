@@ -30,3 +30,9 @@ if (!defined('DIR_FS_LOGS')) define('DIR_FS_LOGS', DIR_FS_CATALOG . 'logs'); // 
 if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
+
+// catchall for deprecated constants:
+if (defined('HTTP_SERVER')) {
+    if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
+    if (!defined('ENABLE_SSL')) define('ENABLE_SSL', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');
+}

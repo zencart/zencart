@@ -63,10 +63,7 @@ if (count($adminDirectoryList) > 1) {
     $adminServer,
     $catalogHttpServer,
     $catalogHttpUrl,
-    $catalogHttpsServer,
-    $catalogHttpsUrl,
     $dir_ws_http_catalog,
-    $dir_ws_https_catalog,
 ] = getDetectedURIs();
 $db_type = 'mysql';
 $db_charset = 'utf8mb4';

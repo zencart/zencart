@@ -39,7 +39,7 @@ if (empty($canonicalLink)) {
 
 foreach($languages as $key) {
     if ($this_is_home_page) {
-        $link = zen_href_link(FILENAME_DEFAULT, 'language=' . $key, $request_type, false);
+        $link = zen_href_link(FILENAME_DEFAULT, 'language=' . $key, '', false);
     } else {
         $link = $canonicalLink . (str_contains($canonicalLink, '?') ? '&amp;' : '?') . 'language=' . $key;
     }

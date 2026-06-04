@@ -70,6 +70,6 @@ if (!isset($flag_disable_footer) || !$flag_disable_footer) {
 
 if (false || !empty($showValidatorLink)) {
 ?>
-<a href="https://validator.w3.org/nu/?doc=<?= urlencode('http' . ($request_type == 'SSL' ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . (strstr($_SERVER['REQUEST_URI'], '?') ? '&' : '?') . zen_session_name() . '=' . zen_session_id()) ?>" rel="noopener" target="_blank">VALIDATOR</a>
+<a href="https://validator.w3.org/nu/?doc=<?= urlencode('http' . (str_starts_with(HTTP_SERVER, 'https') ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'] . (strstr($_SERVER['REQUEST_URI'], '?') ? '&' : '?') . zen_session_name() . '=' . zen_session_id()) ?>" rel="noopener" target="_blank">VALIDATOR</a>
 <?php
 }

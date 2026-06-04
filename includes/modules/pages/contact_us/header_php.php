@@ -115,11 +115,6 @@ if (isset($_GET['action']) && ($_GET['action'] === 'send')) {
     }
 } // end action==send
 
-
-if (ENABLE_SSL === 'true' && $request_type !== 'SSL') {
-    zen_redirect(zen_href_link(FILENAME_CONTACT_US, '', 'SSL'));
-}
-
 $name = $name ?? '';
 $email_address = $email_address ?? '';
 

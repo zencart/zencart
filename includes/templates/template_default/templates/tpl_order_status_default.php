@@ -173,7 +173,7 @@ if (isset($order)) {
 <?php
 }
 
-echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, 'action=status', $request_type), 'post');
+echo zen_draw_form('order_status', zen_href_link(FILENAME_ORDER_STATUS, 'action=status'), 'post');
 ?>
     <fieldset>
         <legend><?= HEADING_TITLE ?></legend>

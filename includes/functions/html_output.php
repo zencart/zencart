@@ -14,8 +14,8 @@
  *
  * @since ZC v1.0.3
  */
-  function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
-    global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
+  function zen_href_link(string $page = '', string $parameters = '', string $connection = 'deprecated', bool $add_session_id = true, bool $search_engine_safe = true, bool $static = false, bool $use_dir_ws_catalog = true) {
+    global $session_started, $zco_notifier;
     $link = null;
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
     if($link !== null) return $link;
@@ -25,25 +25,10 @@
         $page = FILENAME_DEFAULT;
     }
 
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER;
-    } elseif ($connection == 'SSL' || $connection == '') {
-      if (ENABLE_SSL == 'true') {
-        $link = HTTPS_SERVER ;
-      } else {
-        $link = HTTP_SERVER;
-      }
-    } else {
-      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL");
-      $link = HTTP_SERVER;
-    }
+    $link = HTTP_SERVER;
 
     if ($use_dir_ws_catalog) {
-      if ($connection == 'SSL' && ENABLE_SSL == 'true') {
-        $link .= DIR_WS_HTTPS_CATALOG;
-      } else {
         $link .= DIR_WS_CATALOG;
-      }
     }
 
     if (!$static) {
@@ -68,10 +53,6 @@
     if ($add_session_id === true && $session_started === true && SESSION_FORCE_COOKIE_USE === 'False') {
         if (PHP_VERSION_ID < 80401 && defined('SID') && !empty(constant('SID'))) {
             $sid = constant('SID');
-        } elseif ( ($request_type === 'NONSSL' && $connection === 'SSL' && ENABLE_SSL === 'true') || ($request_type === 'SSL' && $connection === 'NONSSL') ) {
-            if ($http_domain !== $https_domain) {
-                $sid = zen_session_name() . '=' . zen_session_id();
-            }
         }
     }
 
@@ -108,7 +89,7 @@
  * link.
  * @since ZC v1.5.6
  */
-function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL')
+function zen_catalog_href_link(string $page = '', string $parameters = '', $connection = 'deprecated')
 {
     return zen_href_link($page, $parameters, $connection, false);
 }

@@ -148,7 +148,7 @@ class zcObserverNonCaptchaObserver extends base
             return;
         }
 
-        $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
+        $test_string = str_ireplace(HTTP_SERVER, '', $test_string);
 
         // inspect
         if (preg_match($regexPattern, $test_string)) {

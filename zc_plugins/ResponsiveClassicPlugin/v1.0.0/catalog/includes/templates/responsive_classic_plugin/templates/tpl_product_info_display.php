@@ -20,7 +20,7 @@ $product_info_class = $product_info_class ?? 'productGeneral';
 <div class="centerColumn" id="<?= $product_info_html_id ?>">
 
 <!--bof Form start-->
-<?= zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(['action']) . 'action=add_product', $request_type), 'post', 'enctype="multipart/form-data" id="addToCartForm"') . "\n" ?>
+<?= zen_draw_form('cart_quantity', zen_href_link(zen_get_info_page($_GET['products_id']), zen_get_all_get_params(['action']) . 'action=add_product'), 'post', 'enctype="multipart/form-data" id="addToCartForm"') . "\n" ?>
 <!--eof Form start-->
 <?php
 if ($messageStack->size('product_info') > 0) {

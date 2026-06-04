@@ -57,6 +57,7 @@ foreach (zen_get_files_in_directory(DIR_WS_FUNCTIONS . 'extra_functions') as $fi
     require $file;
 }
 
+// brief pre-sanitize
 if (isset($_GET) & sizeof($_GET) > 0 ) {
   foreach ($_GET as $key=>$value) {
     $_GET[$key] = strip_tags($value);
@@ -65,30 +66,31 @@ if (isset($_GET) & sizeof($_GET) > 0 ) {
 
 // check for SSL configuration changes:
 if (!defined('SSLPWSTATUSCHECK')) die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
-$e = (substr(HTTP_SERVER, 0, 5) == 'https') ? '1' : '0';
+$e = (str_starts_with(HTTP_SERVER, 'https')) ? '1' : '0';
 if (zen_config('SSLPWSTATUSCHECK') === '') {
   $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '".$e.':'.$e."', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
   $db->Execute($sql);
-  die('<meta http-equiv="Refresh" content="0">One-time auto-configuration completed. Please refresh the page.');
+  header('Location: ' . $_SERVER['REQUEST_URI']);
+  die('<meta http-equiv="refresh" content="0; url=' . $_SERVER['REQUEST_URI'] . '">One-time auto-configuration completed. Please refresh the page.');
 }
-list($a, $c) = explode(':', zen_config('SSLPWSTATUSCHECK')); $a = (int)$a; $c = (int)$c;
-if ($a == 0) {
-  if ($c == 0 && $e == 1) { // was nonSSL but now is SSL, so need to exp pwds
+[$a, $c] = explode(':', zen_config('SSLPWSTATUSCHECK')); $a = (int)$a; $c = (int)$c;
+if ($a === 0) {
+  if ($c === 0 && (int)$e === 1) { // was nonSSL but now is SSL, so need to exp pwds
     $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
     $sql = "UPDATE " . TABLE_ADMIN . " set pwd_last_change_date = '1990-01-01 14:02:22'";
     $db->Execute($sql);
   }
-  if ($c == 1 && $e == 0) { // was nonSSL then SSL and now nonSSL again, so recording that we're now nonSSL
+  if ($c === 1 && (int)$e === 0) { // was nonSSL then SSL and now nonSSL again, so recording that we're now nonSSL
     $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0:". $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
-} else if ($a == 1) {  // == 1
-  if ($c == 1 && $e == 0) {  // was SSL, but is now nonSSL, so recording the change
+} else if ($a === 1) {  // == 1
+  if ($c === 1 && (int)$e === 0) {  // was SSL, but is now nonSSL, so recording the change
     $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '0:". $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }
-  if ($c == 0 && $e == 1) {  // was changed to SSL last time checked, so recording that is all SSL now
+  if ($c === 0 && (int)$e === 1) {  // was changed to SSL last time checked, so recording that is all SSL now
     $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";
     $db->Execute($sql);
   }

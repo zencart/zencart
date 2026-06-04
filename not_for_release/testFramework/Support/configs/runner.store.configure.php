@@ -13,28 +13,10 @@ require_once __DIR__ . '/runtime_config.php';
 
 /**
  * Enter the domain for your store
- * If you have SSL, enter the correct https address in BOTH the HTTP_SERVER and HTTPS_SERVER settings, instead of just an http address.
  */
 define('HTTP_SERVER', 'http://127.0.0.1');
-define('HTTPS_SERVER', 'https://127.0.0.1');
 
-/**
- * If you have https enabled on your website, set this to 'true'
- */
-define('ENABLE_SSL', 'true');
-
-/**
- * These DIR_WS_xxxx values refer to the name of any subdirectory in which your store is located.
- * These values get added to the HTTP_CATALOG_SERVER and HTTPS_CATALOG_SERVER values to form the complete URLs to your storefront.
- * They should always start and end with a slash ... ie: '/' or '/foldername/'
- */
 define('DIR_WS_CATALOG', '/');
-define('DIR_WS_HTTPS_CATALOG', '/');
-
-/**
- * This is the complete physical path to your store's files.  eg: /var/www/vhost/accountname/public_html/store/
- * Should have a closing / on it.
- */
 define('DIR_FS_CATALOG', zc_test_config_catalog_path());
 
 /**
@@ -55,19 +37,3 @@ define('DIR_FS_LOGS', zc_test_config_log_directory(DIR_FS_CATALOG));
  * Options are 'none' (which is the default) and 'file' and 'database'.
  */
 define('SQL_CACHE_METHOD', 'none');
-
-/**
- * Reserved for future use
- */
-define('SESSION_STORAGE', 'reserved for future use');
-
-/**
- * Advanced use only:
- * The following are OPTIONAL, and should NOT be set unless you intend to change their normal use. Most sites will leave these untouched.
- * To use them, uncomment AND add a proper defined value to them.
- */
-// define('DIR_FS_SQL_CACHE' ...
-// define('DIR_FS_DOWNLOAD' ...
-// define('DIR_FS_LOGS' ...
-
-// End Of File

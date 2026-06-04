@@ -1710,10 +1710,10 @@ if ($action === 'edit' || $action === 'update') {
                 if ($place_order_override === false && zen_admin_authorized_to_place_order()) {
                     $login_form_start =
                         '<form rel="noopener" target="_blank" name="login" action="' .
-                        zen_catalog_href_link(FILENAME_LOGIN, '', 'SSL') .
+                        zen_catalog_href_link(FILENAME_LOGIN) .
                         '" method="post">';
                     $hiddenFields = zen_draw_hidden_field('email_address', $cInfo->customers_email_address);
-                    if (zen_config('EMP_LOGIN_AUTOMATIC') === 'true' && ENABLE_SSL_CATALOG === 'true') {
+                    if (zen_config('EMP_LOGIN_AUTOMATIC') === 'true' && str_starts_with(HTTP_CATALOG_SERVER, 'https')) {
                         $secret = zen_update_customers_secret($cInfo->customers_id);
                         $timestamp = time();
                         $hmacpostdata = [

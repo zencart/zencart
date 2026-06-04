@@ -1323,6 +1323,7 @@ PHP
         copy($this->rootPath . '/includes/functions/zen_define_default.php', $root . '/includes/functions/zen_define_default.php');
         copy($this->rootPath . '/includes/classes/class.base.php', $root . '/includes/classes/class.base.php');
         copy($this->rootPath . '/includes/classes/EventDto.php', $root . '/includes/classes/EventDto.php');
+        copy($this->rootPath . '/includes/classes/traits/Singleton.php', $root . '/includes/classes/traits/Singleton.php');
         copy($this->rootPath . '/includes/classes/traits/NotifierManager.php', $root . '/includes/classes/traits/NotifierManager.php');
         copy($this->rootPath . '/includes/classes/traits/ObserverManager.php', $root . '/includes/classes/traits/ObserverManager.php');
         copy($this->rootPath . '/includes/classes/vendors/AuraAutoload/src/Loader.php', $root . '/includes/classes/vendors/AuraAutoload/src/Loader.php');

@@ -8,13 +8,13 @@ class UnitTestBootstrap
 {
     public static function initialize(): void
     {
+        self::defineServerConstants();
         self::defineBaseConstants();
         self::configureEnvironment();
         self::loadLocalSetup();
         self::definePathConstants();
         self::loadCoreFiles();
         self::initializeNotifier();
-        self::defineServerConstants();
         self::defineSessionConstants();
         self::defineMiscConstants();
         self::loadSessionStubs();
@@ -54,7 +54,6 @@ class UnitTestBootstrap
         $adminInfo = zc_test_config_admin_directory(DIR_FS_CATALOG);
         self::defineIfMissing('DIR_WS_ADMIN', '/' . $adminInfo['basename'] . '/');
         self::defineIfMissing('DIR_FS_ADMIN', $adminInfo['path']);
-        self::defineIfMissing('DIR_WS_HTTPS_CATALOG', '/ssl/');
     }
 
     private static function loadCoreFiles(): void
@@ -62,6 +61,8 @@ class UnitTestBootstrap
         require_once DIR_FS_INCLUDES . 'defined_paths.php';
         require_once DIR_FS_INCLUDES . 'database_tables.php';
         require_once DIR_FS_INCLUDES . 'filenames.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/Singleton.php';
+        require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'EventDto.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/NotifierManager.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/ObserverManager.php';
         require_once DIR_FS_CATALOG . 'includes/functions/php_polyfills.php';
@@ -78,9 +79,7 @@ class UnitTestBootstrap
     private static function defineServerConstants(): void
     {
         self::defineIfMissing('HTTP_SERVER', 'http://zencart-git.local');
-        self::defineIfMissing('HTTPS_SERVER', 'https://zencart-git.local');
         self::defineIfMissing('HTTP_CATALOG_SERVER', 'http://zencart-git.local');
-        self::defineIfMissing('HTTPS_CATALOG_SERVER', 'https://zencart-git.local');
     }
 
     private static function defineSessionConstants(): void

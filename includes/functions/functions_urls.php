@@ -25,11 +25,6 @@ function zen_redirect(string $url, int|string|null $httpResponseCode = null): vo
         return;
     }
 
-    // @TODO - rework admin so this exclusion isn't necessary
-    if (IS_ADMIN_FLAG !== true) {
-        $url = zen_get_site_url_for_request($url);
-    }
-
     $url = zen_cleanup_url_params($url, $for_redirect = true);
 
     if (defined('ZENCART_INPROCESS_REDIRECT_CAPTURE') && ZENCART_INPROCESS_REDIRECT_CAPTURE === true) {
@@ -75,27 +70,17 @@ function zen_set_redirect_http_headers(string $url, int|string|null $httpRespons
 }
 
 /**
- * Get appropriate HTTPS_SERVER vs HTTP_SERVER and subdirs based on $request_type of current page
+ * Get appropriate site URL based on current page
  * Typically used within zen_redirect function
+ * Legacy use was to switch between http/https when ssl was optional.
  *
- * @TODO - rework catalog and admin so this can be simplified ... perhaps offering https only?
- *
- * @param string $url
- * @return string
  * @since ZC v1.5.8
+ * 
+ * @deprecated v3.0.0 Just use the URL directly.
  */
-function zen_get_site_url_for_request($url)
+function zen_get_site_url_for_request(string $url): string
 {
-    global $request_type;
-    // Are we loading an SSL page?
-    if ((ENABLE_SSL == 'true') && ($request_type == 'SSL')) {
-        // yes, but a NONSSL url was supplied
-        if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_CATALOG)) == HTTP_SERVER . DIR_WS_CATALOG) {
-            // So, change it to SSL, based on site's configuration for SSL
-            $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_CATALOG));
-        }
-    }
-
+    // Passthru for legacy support.
     return $url;
 }
 
