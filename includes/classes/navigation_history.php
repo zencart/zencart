@@ -62,7 +62,7 @@ class navigationHistory extends base
 
         $this->checkProperties();
 
-        global $cPath;
+        global $request_type, $cPath;
         $get_vars = $_GET;
         unset($get_vars['main_page']);
 
@@ -107,7 +107,7 @@ class navigationHistory extends base
             $page = (isset($_GET['main_page'])) ? $_GET['main_page'] : FILENAME_DEFAULT;
              $this->path[] = [
                 'page' => $page,
-                'mode' => '',
+                'mode' => $request_type,
                 'get' => $get_vars,
                 'post' => [] /*$_POST*/
             ];
@@ -132,6 +132,7 @@ class navigationHistory extends base
      */
     public function set_snapshot($page = '')
     {
+        global $request_type;
         if (is_array($page)) {
             $this->snapshot = array_merge(['get' => [], 'post' => []], $page);
         } else {
@@ -140,7 +141,7 @@ class navigationHistory extends base
             $page = (isset($_GET['main_page'])) ? $_GET['main_page'] : FILENAME_DEFAULT;
             $this->snapshot = [
                 'page' => $page,
-                'mode' => '',
+                'mode' => $request_type,
                 'get' => $get_vars,
                 'post' => [] /*$_POST*/
             ];
