@@ -16,10 +16,6 @@ class RequestSecurityTest extends zcUnitTestCase
         parent::setUp();
         require_once DIR_FS_CATALOG . 'includes/classes/Request.php';
 
-        if (!defined('HTTPS_SERVER')) {
-            define('HTTPS_SERVER', 'https://zencart-git.local');
-        }
-
         $_SERVER = [];
     }
 
