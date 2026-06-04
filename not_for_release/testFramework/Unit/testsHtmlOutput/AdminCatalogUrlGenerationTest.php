@@ -60,6 +60,19 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
     }
 
     #[Depends('testHomePage')]
+    public function testExplicitSslConnectionUsesCatalogServer()
+    {
+        $this->assertURLGenerated(
+            zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL'),
+            HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
+        );
+        $this->assertURLGenerated(
+            zen_catalog_href_link(FILENAME_DEFAULT, 'test=test', 'SSL'),
+            HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
+        );
+    }
+
+    #[Depends('testExplicitSslConnectionUsesCatalogServer')]
     public function testNoAddSessionWhenSwitchingProtocolAndServers()
     {
         $GLOBALS['session_started'] = true;

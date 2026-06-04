@@ -96,6 +96,19 @@ class CatalogUrlGenerationTest extends zcUnitTestCase
     }
 
     #[Depends('testHomePage')]
+    public function testExplicitSslConnectionUsesCurrentServer()
+    {
+        $this->assertURLGenerated(
+            zen_href_link(FILENAME_DEFAULT, '', 'SSL'),
+            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
+        );
+        $this->assertURLGenerated(
+            zen_href_link(FILENAME_DEFAULT, 'test=test', 'SSL'),
+            HTTP_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
+        );
+    }
+
+    #[Depends('testExplicitSslConnectionUsesCurrentServer')]
     public function testAutoCorrectLeadingQuerySeparator()
     {
         $this->assertURLGenerated(
@@ -180,7 +193,7 @@ class CatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    #[Depends('testHomePage')]
+    #[Depends('testExplicitSslConnectionUsesCurrentServer')]
     public function testStaticUrlGeneration()
     {
         $this->assertURLGenerated(
