@@ -781,7 +781,7 @@ class queryFactory extends base
         }
         // @ suppression is intentional here
         @mysqli_close($this->link);
-        unset($this->link);
+        $this->link = false;
     }
 
     /**
@@ -1058,7 +1058,7 @@ class queryFactoryResult implements Countable, Iterator
         $this->fields = array_replace($this->fields, $zp_result_array);
         if (!$zp_result_array) {
             $this->EOF = true;
-            unset($this->fields);
+            $this->fields = [];
         }
     }
 

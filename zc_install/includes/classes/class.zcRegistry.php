@@ -38,7 +38,7 @@ class zcRegistry extends base
             return self::$values[$keyName];
         }
 
-        throw new zcGeneralException('zcRegistry key not set ' . $keyName, 0);
+        throw new \InvalidArgumentException('zcRegistry key not set ' . $keyName, 0);
     }
 
     public static function getValueDefault(string $keyName, mixed $default = ''): mixed
@@ -71,7 +71,7 @@ class zcRegistry extends base
         if (isset(self::$values[$keyName])) {
             unset(self::$values[$keyName]);
         } else {
-            throw new zcGeneralException('zcRegistry key not set ' . $keyName, 0);
+            throw new InvalidArgumentException('zcRegistry key not set ' . $keyName, 0);
         }
     }
 
