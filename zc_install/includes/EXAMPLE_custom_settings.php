@@ -14,7 +14,7 @@ $zc_settings = [];
  */
 
 /**
- * If you are building a 1-click install, set your vendor name in the installer_method setting.  This will be stamped in the generated configure.php files for reference and future troubleshooting.
+ * If you are building a 1-click install, set your vendor name in the installer_method setting.  This will be stamped in the generated configure.php file for reference and future troubleshooting.
  */
 $zc_settings['installer_method'] = 'Automated Install';
 
@@ -97,12 +97,6 @@ $zc_settings['db_name'] = '';
  * Other choices: 'database' or 'file'
  */
 $zc_settings['sql_cache_method'] = 'none';
-
-/**
- * Provide the Domain URL to use for accessing the Admin.
- * Ideally this will be the SAME as the https_catalog value. (Yes, the SSL URL, as long as SSL is fully functional on the domain already.)
- */
-$zc_settings['http_server_admin'] = 'https://www.example.com';
 
 /**
  * If you've already renamed the 'admin' folder to something else, specify that here.

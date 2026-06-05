@@ -16,7 +16,7 @@ if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
 require_once __DIR__ . '/TestConfigResolver.php';
 
 $prefix = (IS_ADMIN_FLAG === true) ? '..' : '.';
-$context = (IS_ADMIN_FLAG === true) ? 'admin' : 'store';
+$context = 'configure';
 $basePath = $prefix . '/not_for_release/testFramework/Support/configs/';
 $config = \Tests\Support\TestConfigResolver::resolveConfigPath($context, $basePath);
 if (!defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE')) {

@@ -139,7 +139,7 @@ function zen_get_install_languages_list(string $lng): string
 
 /**
  * helper function to detect current site URI info
- * @return array($adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $dir_ws_http_catalog)
+ * @return array($adminDir, $documentRoot, $catalogHttpServer, $catalogHttpUrl, $dir_ws_http_catalog)
  */
 function getDetectedURIs($adminDir = 'admin'): array
 {
@@ -150,13 +150,11 @@ function getDetectedURIs($adminDir = 'admin'): array
     $documentRoot = zen_get_document_root();
     $url = ($request_type === 'SSL' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace('/zc_install/index.php', '', $_SERVER['SCRIPT_NAME']);
     $httpServer = zen_parse_url($url, 'host', true);
-    $adminServer = 'https://';
-    $adminServer .= $httpServer;
     $catalogHttpServer = 'https://' . $httpServer;
     $catalogHttpUrl = 'https://' . $httpServer . '/' . zen_parse_url($url, 'path', true);
     $dir_ws_http_catalog = str_replace($catalogHttpServer, '', $catalogHttpUrl) . '/';
 
-    return [$adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $dir_ws_http_catalog];
+    return [$adminDir, $documentRoot, $catalogHttpServer, $catalogHttpUrl, $dir_ws_http_catalog];
 }
 
 

@@ -1150,10 +1150,8 @@ BASH
         $this->assertContains('Detected shell user: runner', $output);
         $this->assertContains('Main config profile: runner', $output);
         $this->assertContains('Main config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.main.configure.php', $output);
-        $this->assertContains('Store config profile: runner', $output);
-        $this->assertContains('Store config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.store.configure.php', $output);
-        $this->assertContains('Admin config profile: runner', $output);
-        $this->assertContains('Admin config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.admin.configure.php', $output);
+        $this->assertContains('App config profile: runner', $output);
+        $this->assertContains('App config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.configure.php', $output);
         $this->assertContains('Worker token: (none)', $output);
         $this->assertContains('Database: db_testing', $output);
         $this->assertContains('Progress file: ' . $this->rootPath . '/progress.json', $output);
@@ -1179,8 +1177,7 @@ BASH
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('Detected shell user: runner', $output);
         $this->assertContains('Main config profile: runner', $output);
-        $this->assertContains('Store config profile: runner', $output);
-        $this->assertContains('Admin config profile: runner', $output);
+        $this->assertContains('App config profile: runner', $output);
         $this->assertContains('Worker token: 2', $output);
         $this->assertContains('Database: db_ci_2', $output);
         $this->assertContains('Progress file: /tmp/zc-runtime/progress_2.json', $output);

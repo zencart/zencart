@@ -2,18 +2,15 @@
 /**
  * dist-configure.php - SAMPLE FILE!
  *
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: Scott Wilson 2025 Apr 27 Modified in v2.2.0 $
+ * @version $Id: Scott Wilson 2025 Apr 27 Modified in v3.0.0 $
  * @private
  */
 
-/*************** NOTE: This file is VERY similar to, but DIFFERENT from the "admin" version of configure.php. ***********/
-/***************       The 2 files should be kept separate and not used to overwrite each other.              ***********/
-
 /**
- * Enter the domain for your store
+ * Enter the domain URL for your store
  * If you have SSL, enter the correct https address instead of just an http address.
  */
 define('HTTP_SERVER', 'http://localhost');
@@ -33,7 +30,6 @@ define('DIR_FS_CATALOG', '/var/www/vhost/accountname/public_html/store/');
 
 /**
  * The following settings define your database connection.
- * These must be the SAME as you're using in your admin copy of configure.php
  */
 define('DB_TYPE', 'mysql'); // always 'mysql'
 define('DB_PREFIX', ''); // prefix for database table names -- preferred to be left empty

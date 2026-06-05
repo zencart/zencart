@@ -7,8 +7,8 @@
 /**
  * System check for valid SESSION_WRITE_DIRECTORY value
  * (This value is server-dependent, and when a store is moved to another server this value must be updated for admin sessions to work correctly.
- *  The following uses the DIR_FS_SQL_CACHE from the admin/includes/configure.php (or the /local/ one if it exists) if it points to a valid folder,
- *  else it uses the /cache/ directory located in the catalog area.)
+ *  The following uses the DIR_FS_SQL_CACHE from configure.php if it points to a valid folder,
+ *  else it uses the /cache/ directory.)
  */
 
 if (!file_exists(zen_config('SESSION_WRITE_DIRECTORY')) || !is_writable(zen_config('SESSION_WRITE_DIRECTORY'))) {
@@ -39,7 +39,7 @@ if (!file_exists(zen_config('SESSION_WRITE_DIRECTORY')) || !is_writable(zen_conf
   $conf_count = $db->Execute($sql);
 
   if (empty($conf_count->RecordCount())) {
-    $sql = "INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Session Directory', 'SESSION_WRITE_DIRECTORY', '/tmp', 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php files.', '15', '1', now())";
+    $sql = "INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Session Directory', 'SESSION_WRITE_DIRECTORY', '/tmp', 'This should point to the folder specified in your DIR_FS_SQL_CACHE setting in your configure.php file.', '15', '1', now())";
     $db->Execute($sql);
   }
   $sql = "UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . $db->prepare_input(trim($selected_dir)) . "' WHERE configuration_key = 'SESSION_WRITE_DIRECTORY'";

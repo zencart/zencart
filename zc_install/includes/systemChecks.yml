@@ -5,12 +5,6 @@
 #
 
 systemChecks:
-  backupConfigureFiles:
-    runLevel: always
-    errorLevel: FAIL
-    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
-    methods:
-      backupConfigureFiles:
   checkStoreConfigureFile:
     runLevel: always
     errorLevel: FAIL
@@ -19,16 +13,6 @@ systemChecks:
       CheckWriteableFile:
         parameters:
           fileDir: <?php echo DIR_FS_ROOT . 'includes/configure.php' . PHP_EOL; ?>
-          changePerms: '0664'
-          createFile: TRUE
-  checkAdminConfigureFile:
-    runLevel: always
-    errorLevel: FAIL
-    mainErrorText: <?php echo TEXT_ERROR_ADMIN_CONFIGURE .PHP_EOL; ?>
-    methods:
-      CheckWriteableAdminFile:
-        parameters:
-          fileDir: <?php echo 'includes/configure.php' . PHP_EOL; ?>
           changePerms: '0664'
           createFile: TRUE
   checkPhpVersion:

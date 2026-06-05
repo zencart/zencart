@@ -13,8 +13,6 @@ parameters:
         analyse:
             - includes/configure.php
             - includes/dist-configure.php
-            - admin/includes/configure.php
-            - admin/includes/dist-configure.php
             - includes/classes/vendors/*
 
     scanDirectories:

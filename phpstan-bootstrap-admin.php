@@ -10,7 +10,7 @@ set_include_path(
 	$root . 'admin' . PATH_SEPARATOR . $root . 'admin/includes' . PATH_SEPARATOR . $root . PATH_SEPARATOR . get_include_path()
 );
 
-// Skip loading admin/includes/configure.php during static analysis.
+// Skip loading includes/configure.php during static analysis.
 defined('ZENCART_TESTFRAMEWORK_RUNNING') || define('ZENCART_TESTFRAMEWORK_RUNNING', true);
 
 defined('DIR_FS_CATALOG') || define('DIR_FS_CATALOG', $root);

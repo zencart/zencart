@@ -38,7 +38,7 @@ function zen_parse_url($url, $element = 'array')
   }
 }
 
-// make guesses in case the essentials from admin configure.php are missing (such as when someone uses a non-admin configure.php in their admin)
+// make guesses in case the essentials from configure.php are missing
 if (!defined('HTTP_CATALOG_SERVER')) define('HTTP_CATALOG_SERVER', HTTP_SERVER);
 if (!defined('DIR_WS_CATALOG')) define('DIR_WS_CATALOG', DIR_WS_ADMIN . '/../');
 if (!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(DIR_FS_ADMIN . '/../') . '/');

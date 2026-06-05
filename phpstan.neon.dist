@@ -6,8 +6,6 @@ parameters:
         analyse:
             - includes/configure.php
             - includes/dist-configure.php
-            - admin/includes/configure.php
-            - admin/includes/dist-configure.php
             - includes/classes/vendors/*
 
     scanDirectories:
@@ -16,6 +14,6 @@ parameters:
     ignoreErrors:
         -
             identifier: include.fileNotFound
-            message: '#Path in include\(\) "includes/local/configure\.php" is not a file or it does not exist\.#'
+            message: '#Path in include\(\) "(\.\./)?includes/local/configure\.php" is not a file or it does not exist\.#'
 
 

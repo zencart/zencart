@@ -77,7 +77,7 @@ if (WARN_INSTALL_EXISTENCE === 'true') {
     }
 }
 
-// check if the configure.php file is writeable
+// warn if the configure.php file is writeable
 if (WARN_CONFIG_WRITEABLE === 'true') {
     $check_path = realpath(DIR_FS_CATALOG . '/includes/configure.php');
     if (file_exists($check_path) && is__writeable($check_path)) {
