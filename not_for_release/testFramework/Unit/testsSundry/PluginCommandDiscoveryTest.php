@@ -89,6 +89,122 @@ class PluginCommandDiscoveryTest extends TestCase
         $this->assertStringNotContainsString($this->catalogPath, $discovery->getErrors()[0]);
     }
 
+    public function testLoadsPluginRootAutoloaderBeforeResolvingCommands(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        mkdir($pluginRoot . '/vendor/ZenTestVendor/src', 0777, true);
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            <<<'PHP'
+<?php
+/** @var \Aura\Autoload\Loader $psr4Autoloader */
+$psr4Autoloader->addPrefix('ZenTestVendor', __DIR__ . '/vendor/ZenTestVendor/src');
+PHP
+        );
+
+        file_put_contents(
+            $pluginRoot . '/vendor/ZenTestVendor/src/Dependency.php',
+            <<<'PHP'
+<?php
+
+namespace ZenTestVendor;
+
+class Dependency
+{
+    public static function label(): string
+    {
+        return 'vendor-backed';
+    }
+}
+PHP
+        );
+
+        file_put_contents(
+            $pluginRoot . '/Console/Commands/VendorBackedCommand.php',
+            <<<'PHP'
+<?php
+
+namespace Zencart\Plugins\Console\ZenTestPlugin\Commands;
+
+use ZenTestVendor\Dependency;
+use Zencart\Console\ConsoleCommand;
+use Zencart\Console\ConsoleInput;
+use Zencart\Console\ConsoleOutput;
+
+class VendorBackedCommand extends ConsoleCommand
+{
+    public function __construct()
+    {
+        Dependency::label();
+    }
+
+    public function getName(): string
+    {
+        return 'zen-test:vendor';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Loads through the plugin root autoloader.';
+    }
+
+    public function handle(ConsoleInput $input, ConsoleOutput $output): int
+    {
+        $output->writeln(Dependency::label());
+        return 0;
+    }
+}
+PHP
+        );
+
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    \Zencart\Plugins\Console\ZenTestPlugin\Commands\VendorBackedCommand::class,
+];
+PHP
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertCount(1, $commands);
+        $this->assertSame('zen-test:vendor', $commands[0]->getName());
+        $this->assertSame([], $discovery->getErrors());
+    }
+
+    public function testDoesNotLoadPluginRootAutoloaderForUntrustedPlugin(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $markerFile = $this->basePath . '/plugin-autoloader-marker.txt';
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nfile_put_contents(" . var_export($markerFile, true) . ", 'loaded');\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['someOtherPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertFileDoesNotExist($markerFile);
+        $this->assertSame([], $discovery->getErrors());
+    }
+
     private function removeDirectory(string $path): void
     {
         if (!is_dir($path)) {

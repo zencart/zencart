@@ -60,6 +60,13 @@ class PluginCommandDiscovery
                 }
 
                 $this->registerPluginConsoleNamespace($pluginDirectory->getFilename(), $versionPath);
+                if (!$this->loadPluginRootAutoloader(
+                    $pluginDirectory->getFilename(),
+                    $versionDirectory->getFilename(),
+                    $versionPath
+                )) {
+                    continue;
+                }
                 $commands = array_merge(
                     $commands,
                     $this->loadCommandsFromVersion(
@@ -100,6 +107,32 @@ class PluginCommandDiscovery
 
         $namespace = 'Zencart\\Plugins\\Console\\' . $this->normalizePluginNamespace($pluginKey);
         $this->autoloader->addPrefix($namespace, $consolePath);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function loadPluginRootAutoloader(string $pluginKey, string $pluginVersion, string $versionPath): bool
+    {
+        $autoloadFile = $versionPath . '/psr4Autoload.php';
+        if (!file_exists($autoloadFile)) {
+            return true;
+        }
+
+        try {
+            /** @var \Aura\Autoload\Loader|null $psr4Autoloader */
+            $psr4Autoloader = $this->autoloader;
+            require $autoloadFile;
+        } catch (Throwable $exception) {
+            $this->errors[] = sprintf(
+                'Failed loading plugin autoloader from %s: %s',
+                $pluginKey . '/' . $pluginVersion . '/psr4Autoload.php',
+                $exception->getMessage()
+            );
+            return false;
+        }
+
+        return true;
     }
 
     /**
