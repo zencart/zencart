@@ -51,11 +51,16 @@ class PluginCommandDiscovery
                 }
 
                 $versionPath = $versionDirectory->getPathname();
+                $commandFile = $versionPath . '/Console/commands.php';
                 if (!file_exists($versionPath . '/manifest.php')) {
                     continue;
                 }
 
                 if (!$this->isAllowedPluginVersion($pluginDirectory->getFilename(), $versionDirectory->getFilename())) {
+                    continue;
+                }
+
+                if (!file_exists($commandFile)) {
                     continue;
                 }
 
@@ -72,7 +77,8 @@ class PluginCommandDiscovery
                     $this->loadCommandsFromVersion(
                         $pluginDirectory->getFilename(),
                         $versionDirectory->getFilename(),
-                        $versionPath
+                        $versionPath,
+                        $commandFile
                     )
                 );
             }
@@ -140,9 +146,14 @@ class PluginCommandDiscovery
      *
      * @return ConsoleCommand[]
      */
-    private function loadCommandsFromVersion(string $pluginKey, string $pluginVersion, string $versionPath): array
+    private function loadCommandsFromVersion(
+        string $pluginKey,
+        string $pluginVersion,
+        string $versionPath,
+        ?string $commandFile = null
+    ): array
     {
-        $commandFile = $versionPath . '/Console/commands.php';
+        $commandFile ??= $versionPath . '/Console/commands.php';
         if (!file_exists($commandFile)) {
             return [];
         }

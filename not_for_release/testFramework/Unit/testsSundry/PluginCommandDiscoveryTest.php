@@ -205,6 +205,30 @@ PHP
         $this->assertSame([], $discovery->getErrors());
     }
 
+    public function testDoesNotLoadPluginRootAutoloaderWithoutConsoleCommandsFile(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $markerFile = $this->basePath . '/plugin-autoloader-marker.txt';
+
+        unlink($pluginRoot . '/Console/commands.php');
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nfile_put_contents(" . var_export($markerFile, true) . ", 'loaded');\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertFileDoesNotExist($markerFile);
+        $this->assertSame([], $discovery->getErrors());
+    }
+
     private function removeDirectory(string $path): void
     {
         if (!is_dir($path)) {
