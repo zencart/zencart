@@ -6,6 +6,8 @@ use RuntimeException;
 
 class TestConfigResolver
 {
+    private const SHARED_CONFIG_CONTEXTS = ['store', 'admin', 'configure'];
+
     public static function detectShellUser(?array $server = null): string
     {
         $server ??= $_SERVER;
@@ -27,13 +29,14 @@ class TestConfigResolver
     public static function resolveConfigPath(string $context, ?string $basePath = null, ?array $server = null): string
     {
         $basePath = rtrim($basePath ?? self::defaultBasePath(), '/') . '/';
+        $normalizedContext = self::normalizeContext($context);
         $user = self::detectUser($server);
         $candidates = array_unique([$user, 'ddev', 'runner']);
         $pathsTried = [];
 
         foreach ($candidates as $candidate) {
-            // @TODO: is this $context needed anymore?
-            $candidatePath = $basePath . $candidate . '.' . $context . '.configure.php';
+            $contextSuffix = $normalizedContext === 'configure' ? '' : '.' . $normalizedContext;
+            $candidatePath = $basePath . $candidate . $contextSuffix . '.configure.php';
             $pathsTried[] = $candidatePath;
 
             if (file_exists($candidatePath)) {
@@ -54,7 +57,8 @@ class TestConfigResolver
     {
         $configPath = self::resolveConfigPath($context, $basePath, $server);
         $filename = basename($configPath);
-        $suffix = '.' . $context . '.configure.php';
+        $normalizedContext = self::normalizeContext($context);
+        $suffix = ($normalizedContext === 'configure' ? '' : '.' . $normalizedContext) . '.configure.php';
 
         if (str_ends_with($filename, $suffix)) {
             return substr($filename, 0, -strlen($suffix));
@@ -71,6 +75,11 @@ class TestConfigResolver
     private static function defaultBasePath(): string
     {
         return __DIR__ . '/configs';
+    }
+
+    private static function normalizeContext(string $context): string
+    {
+        return in_array($context, self::SHARED_CONFIG_CONTEXTS, true) ? 'configure' : $context;
     }
 
     private static function isTruthy(mixed $value): bool

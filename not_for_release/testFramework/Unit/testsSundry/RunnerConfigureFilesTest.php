@@ -33,7 +33,7 @@ class RunnerConfigureFilesTest extends TestCase
     {
         putenv('GITHUB_WORKSPACE=/tmp/zc-runner-config');
 
-        require dirname(__DIR__, 2) . '/Support/configs/runner.store.configure.php';
+        require dirname(__DIR__, 2) . '/Support/configs/runner.configure.php';
 
         $this->assertSame('/tmp/zc-runner-config/', DIR_FS_CATALOG);
         $this->assertSame('db', DB_DATABASE);
@@ -42,7 +42,7 @@ class RunnerConfigureFilesTest extends TestCase
 
     public function testStoreRunnerConfigureUsesWorkerScopedDatabaseAndLogDirectory(): void
     {
-        $config = dirname(__DIR__, 2) . '/Support/configs/runner.store.configure.php';
+        $config = dirname(__DIR__, 2) . '/Support/configs/runner.configure.php';
         $command = sprintf(
             'GITHUB_WORKSPACE=%s ZC_TEST_DB_BASE_NAME=%s ZC_TEST_WORKER=%s php -r %s',
             escapeshellarg('/tmp/zc-runner-config'),
@@ -60,9 +60,9 @@ class RunnerConfigureFilesTest extends TestCase
         $this->assertSame(['zencarttests_2', '/tmp/zc-runner-config/logs/2'], $output);
     }
 
-    public function testAdminRunnerConfigureFallsBackToTestTokenForWorkerScopedPaths(): void
+    public function testSharedRunnerConfigureFallsBackToTestTokenForWorkerScopedPaths(): void
     {
-        $config = dirname(__DIR__, 2) . '/Support/configs/runner.admin.configure.php';
+        $config = dirname(__DIR__, 2) . '/Support/configs/runner.configure.php';
         $command = sprintf(
             'GITHUB_WORKSPACE=%s ZC_TEST_DB_BASE_NAME=%s TEST_TOKEN=%s php -r %s',
             escapeshellarg('/tmp/zc-runner-config'),
