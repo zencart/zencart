@@ -89,8 +89,7 @@ if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
         include('includes/local/configure.php');
     } elseif (file_exists('../includes/local/configure.php')) {
         include('../includes/local/configure.php');
-    }
-    if (file_exists('includes/configure.php')) {
+    } elseif (file_exists('includes/configure.php')) {
         include('includes/configure.php');
     } elseif (file_exists('../includes/configure.php')) {
         include('../includes/configure.php');
