@@ -251,16 +251,6 @@ if (PHP_VERSION_ID < 80300) {
 }
 
 /**
- * Set the local configuration parameters - mainly for developers
- */
-if (file_exists('includes/local/configure.php')) {
-    /**
-     * load any local(user created) configure file.
-     */
-    include 'includes/local/configure.php';
-}
-
-/**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
 define('DEBUG_AUTOLOAD', false);
@@ -297,7 +287,15 @@ if (file_exists('./not_for_release/testFramework/Support/application_testing.php
  * check for and include load application parameters
  */
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
-    if (file_exists('includes/configure.php')) {
+    /**
+     * Set the local configuration parameters - mainly for developers
+     */
+    if (file_exists('includes/local/configure.php')) {
+        /**
+         * load any local(user created) configure file.
+         */
+        include 'includes/local/configure.php';
+    } elseif (file_exists('includes/configure.php')) {
         /**
          * load the main configure file.
          */
