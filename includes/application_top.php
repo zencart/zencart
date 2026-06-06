@@ -250,24 +250,6 @@ if (PHP_VERSION_ID < 80300) {
     exit(0);
 }
 
-/**
- * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
- */
-define('DEBUG_AUTOLOAD', false);
-
-/**
- * set the level of error reporting
- *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
- * It is mainly there to show php warnings during testing/bug fixing phases.
- */
-if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
-    @ini_set('display_errors', true);
-    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
-} else {
-    error_reporting(0);
-}
-
 date_default_timezone_set(date_default_timezone_get());
 
 /*
@@ -314,6 +296,24 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
     $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
     require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
     exit;
+}
+
+/**
+ * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
+ */
+define('DEBUG_AUTOLOAD', false);
+
+/**
+ * set the level of error reporting
+ *
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
+ */
+if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
+    @ini_set('display_errors', true);
+    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
+} else {
+    error_reporting(0);
 }
 
 /**
