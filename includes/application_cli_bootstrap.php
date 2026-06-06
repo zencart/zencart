@@ -55,6 +55,10 @@ if (!defined('DIR_WS_ADMIN')) {
 require_once DIR_FS_INCLUDES . 'defined_paths.php';
 require_once DIR_FS_INCLUDES . 'functions/php_polyfills.php';
 require_once DIR_FS_INCLUDES . 'functions/zen_define_default.php';
+
+require_once DIR_FS_INCLUDES . 'functions/functions_error_handling.php';
+require_once DIR_FS_INCLUDES . 'extra_configures/set_time_zone.php';
+
 require_once DIR_FS_INCLUDES . 'classes/vendors/AuraAutoload/src/Loader.php';
 
 $psr4Autoloader = new \Aura\Autoload\Loader();
