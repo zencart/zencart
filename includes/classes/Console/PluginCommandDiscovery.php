@@ -133,7 +133,7 @@ class PluginCommandDiscovery
             $this->errors[] = sprintf(
                 'Failed loading plugin autoloader from %s: %s',
                 $pluginKey . '/' . $pluginVersion . '/psr4Autoload.php',
-                $exception->getMessage()
+                $this->sanitizeErrorMessage($exception->getMessage(), $autoloadFile, $pluginKey . '/' . $pluginVersion . '/psr4Autoload.php')
             );
             return false;
         }
@@ -166,7 +166,7 @@ class PluginCommandDiscovery
             $this->errors[] = sprintf(
                 'Failed loading plugin commands from %s: %s',
                 $definitionReference,
-                $exception->getMessage()
+                $this->sanitizeErrorMessage($exception->getMessage(), $commandFile, $definitionReference)
             );
             return [];
         }
@@ -202,6 +202,14 @@ class PluginCommandDiscovery
         }
 
         return ($this->allowedPluginVersions[$pluginKey] ?? null) === $pluginVersion;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string
+    {
+        return str_replace($absolutePath, $relativePath, $message);
     }
 
     /**

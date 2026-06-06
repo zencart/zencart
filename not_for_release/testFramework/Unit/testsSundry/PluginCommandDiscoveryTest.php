@@ -229,6 +229,47 @@ PHP
         $this->assertSame([], $discovery->getErrors());
     }
 
+    public function testAutoloaderErrorsDoNotLeakAbsoluteFilesystemPaths(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $autoloadFile = $pluginRoot . '/psr4Autoload.php';
+
+        file_put_contents($autoloadFile, "<?php\nif (\n");
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/psr4Autoload.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($autoloadFile, $discovery->getErrors()[0]);
+    }
+
+    public function testCommandFileErrorsDoNotLeakAbsoluteFilesystemPaths(): void
+    {
+        $commandFile = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0/Console/commands.php';
+
+        file_put_contents($commandFile, "<?php\nif (\n");
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/Console/commands.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($commandFile, $discovery->getErrors()[0]);
+    }
+
     private function removeDirectory(string $path): void
     {
         if (!is_dir($path)) {
