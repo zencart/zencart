@@ -1318,6 +1318,8 @@ PHP
         copy($this->rootPath . '/includes/database_tables.php', $root . '/includes/database_tables.php');
         copy($this->rootPath . '/includes/functions/php_polyfills.php', $root . '/includes/functions/php_polyfills.php');
         copy($this->rootPath . '/includes/functions/zen_define_default.php', $root . '/includes/functions/zen_define_default.php');
+        copy($this->rootPath . '/includes/functions/functions_error_handling.php', $root . '/includes/functions/functions_error_handling.php');
+        copy($this->rootPath . '/includes/extra_configures/set_time_zone.php', $root . '/includes/extra_configures/set_time_zone.php');
         copy($this->rootPath . '/includes/classes/class.base.php', $root . '/includes/classes/class.base.php');
         copy($this->rootPath . '/includes/classes/EventDto.php', $root . '/includes/classes/EventDto.php');
         copy($this->rootPath . '/includes/classes/traits/Singleton.php', $root . '/includes/classes/traits/Singleton.php');
