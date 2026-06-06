@@ -32,10 +32,10 @@ if (isset($current_category_id) && ($current_category_id > 0)) {
           ORDER BY p.products_ordered desc, pd.products_name";
 }
 
-$limit = (trim(MAX_DISPLAY_BESTSELLERS) === '') ? '' : (' LIMIT ' . (int)MAX_DISPLAY_BESTSELLERS);
+$limit = (trim(zen_config('MAX_DISPLAY_BESTSELLERS')) === '') ? '' : (' LIMIT ' . (int)zen_config('MAX_DISPLAY_BESTSELLERS'));
 $best_sellers_query .= $limit;
 $best_sellers = $db->Execute($best_sellers_query);
-if ($best_sellers->RecordCount() >= MIN_DISPLAY_BESTSELLERS) {
+if ($best_sellers->RecordCount() >= zen_config('MIN_DISPLAY_BESTSELLERS')) {
     $rows = 0;
     $bestsellers_list = [];
     foreach ($best_sellers as $bestseller) {
@@ -46,7 +46,7 @@ if ($best_sellers->RecordCount() >= MIN_DISPLAY_BESTSELLERS) {
         $bestsellers_list[$rows] = [
             'id' => $best_products_id,
             'name'  => $bestseller['products_name'],
-            'image' => zen_image(DIR_WS_IMAGES . $bestseller['products_image'], $bestseller['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT),
+            'image' => zen_image(DIR_WS_IMAGES . $bestseller['products_image'], $bestseller['products_name'], zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT')),
             'href' => zen_href_link(zen_get_info_page($best_products_id), 'cPath=' . zen_get_generated_category_path_rev($bestseller['master_categories_id']) . '&products_id=' . $best_products_id),
             'price' => zen_get_products_display_price((int)$bestseller['products_id']),
             'model'  => $bestseller['products_model'],
