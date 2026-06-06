@@ -1304,6 +1304,7 @@ PHP
         mkdir($root, 0777, true);
         mkdir($root . '/bin', 0777, true);
         mkdir($root . '/includes/functions', 0777, true);
+        mkdir($root . '/includes/extra_configures', 0777, true);
         mkdir($root . '/includes/classes/traits', 0777, true);
         mkdir($root . '/includes/classes/vendors/AuraAutoload/src', 0777, true);
         mkdir($root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata', 0777, true);
