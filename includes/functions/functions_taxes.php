@@ -52,8 +52,8 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
         }
     }
 
-    if (STORE_PRODUCT_TAX_BASIS == 'Store') {
-        if ($zone_id != STORE_ZONE) return 0;
+    if (zen_config('STORE_PRODUCT_TAX_BASIS') === 'Store') {
+        if ($zone_id != zen_config('STORE_ZONE')) return 0;
     }
 
     $tax_query = "SELECT sum(tax_rate) AS tax_rate
@@ -249,13 +249,13 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
 function zen_add_tax($price, $tax_percentage = 0, $force = false)
 {
     if (IS_ADMIN_FLAG) {
-        if ((DISPLAY_PRICE_WITH_TAX_ADMIN == 'true' && $tax_percentage > 0) || $force) {
+        if ((zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true' && $tax_percentage > 0) || $force) {
             return $price + zen_calculate_tax($price, $tax_percentage);
         }
         return $price;
     }
 
-    if ((DISPLAY_PRICE_WITH_TAX == 'true' && $tax_percentage > 0)) {
+    if ((zen_config('DISPLAY_PRICE_WITH_TAX') === 'true' && $tax_percentage > 0)) {
         return $price + zen_calculate_tax($price, $tax_percentage);
     }
     return $price;
@@ -390,11 +390,11 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
     // If we're just starting the checkout process via the PPEC button, there's
     // no customer or shipping-address currently defined.  Use the store values for tax calculation.
     if (!zen_is_logged_in())  {
-        $tax_address['zone_id'] = (int)STORE_ZONE;
-        $tax_address['country_id'] = (int)STORE_COUNTRY;
+        $tax_address['zone_id'] = (int)zen_config('STORE_ZONE');
+        $tax_address['country_id'] = (int)zen_config('STORE_COUNTRY');
         return $tax_address;
     }
-    switch (STORE_PRODUCT_TAX_BASIS) {
+    switch (zen_config('STORE_PRODUCT_TAX_BASIS')) {
         case 'Shipping':
             $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
                                   FROM " . TABLE_ADDRESS_BOOK . " ab
@@ -420,7 +420,7 @@ function zen_get_tax_locations($store_country = -1, $store_zone = -1)
                                   AND ab.address_book_id = " . (int)$_SESSION['billto'];
             $tax_address_result = $db->Execute($tax_address_query);
 
-            if ($tax_address_result->fields['entry_zone_id'] !== STORE_ZONE && (!empty($_SESSION['sendto']))) {
+            if ($tax_address_result->fields['entry_zone_id'] !== zen_config('STORE_ZONE') && (!empty($_SESSION['sendto']))) {
                 $tax_address_query = "SELECT ab.entry_country_id, ab.entry_zone_id
                                       FROM " . TABLE_ADDRESS_BOOK . " ab
                                       LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)

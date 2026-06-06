@@ -118,7 +118,7 @@ class upload
             return false;
         }
 
-        if (!empty($file['size']) && $file['size'] > MAX_FILE_UPLOAD_SIZE) {
+        if (!empty($file['size']) && $file['size'] > zen_config('MAX_FILE_UPLOAD_SIZE')) {
             $this->message_stack(ERROR_FILE_TOO_BIG, 'error');
             return false;
         }

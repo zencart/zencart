@@ -69,8 +69,8 @@ class zcAjaxPayment extends base
     }
     if (isset ($_SESSION['shipping']['id']) && $_SESSION['shipping']['id']=='free_free'
       && $_SESSION['cart']->get_content_type () != 'virtual'
-      && defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
-      && defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total () < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+      && zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') === 'true'
+      && defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total () < zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) {
       zen_redirect (zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
 
@@ -78,7 +78,7 @@ class zcAjaxPayment extends base
 
     $_SESSION['comments'] = $_POST['comments'];
 
-    if (DISPLAY_CONDITIONS_ON_CHECKOUT=='true') {
+    if (zen_config('DISPLAY_CONDITIONS_ON_CHECKOUT') === 'true') {
         $_SESSION['conditions'] = $_POST['conditions'] ?? NULL;
     }
     // load the selected payment module
@@ -118,14 +118,14 @@ class zcAjaxPayment extends base
     // Stock Check
     $flagAnyOutOfStock = false;
     $stock_check = array();
-    if (STOCK_CHECK=='true') {
+    if (zen_config('STOCK_CHECK') === 'true') {
       for($i = 0, $n = sizeof ($order->products); $i<$n; $i++) {
         if ($stock_check[$i] = zen_check_stock ($order->products[$i]['id'], $order->products[$i]['qty'])) {
           $flagAnyOutOfStock = true;
         }
       }
       // Out of Stock
-      if ((STOCK_ALLOW_CHECKOUT!='true')&&($flagAnyOutOfStock==true)) {
+      if ((zen_config('STOCK_ALLOW_CHECKOUT') !== 'true') && ($flagAnyOutOfStock==true)) {
         zen_redirect (zen_href_link (FILENAME_SHOPPING_CART));
       }
     }
@@ -147,7 +147,7 @@ class zcAjaxPayment extends base
       $customers_referral = $db->Execute ($customers_referral_query);
 
       // only use discount coupon if set by coupon
-      if ($customers_referral->fields['customers_referral']=='' and CUSTOMERS_REFERRAL_STATUS==1) {
+      if ($customers_referral->fields['customers_referral']=='' && (int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 1) {
         $sql = "UPDATE ".TABLE_CUSTOMERS."
             SET customers_referral = :customersReferral
             WHERE customers_id = :customersID";
@@ -190,7 +190,7 @@ class zcAjaxPayment extends base
     $breadcrumb->add (NAVBAR_TITLE_1, zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     $breadcrumb->add (NAVBAR_TITLE_2);
 
-    $breadCrumbHtml = $breadcrumb->trail (BREAD_CRUMBS_SEPARATOR);
+    $breadCrumbHtml = $breadcrumb->trail (zen_config('BREAD_CRUMBS_SEPARATOR'));
     $body_code = DIR_FS_CATALOG.$template->get_template_dir ('tpl_ajax_checkout_confirmation_default.php', DIR_WS_TEMPLATE, $current_page_base, 'templates').'/tpl_ajax_checkout_confirmation_default.php';
     ob_start ();
     require_once ($body_code);

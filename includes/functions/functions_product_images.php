@@ -52,7 +52,7 @@ function zen_lookup_additional_images_from_filesystem(string $products_image): a
     $images_array = [];
 
     // parse the products_image into its components
-    [$products_image_base, $file_extension, $products_image_directory] = zen_get_image_lookup_filename_components($products_image, false, defined('ADDITIONAL_IMAGES_MODE') && ADDITIONAL_IMAGES_MODE !== 'legacy');
+    [$products_image_base, $file_extension, $products_image_directory] = zen_get_image_lookup_filename_components($products_image, false, zen_config('ADDITIONAL_IMAGES_MODE') !== 'legacy');
 
     // Scan directory for additional matching images using the base name and extension as pattern. Ignoring larger sizes/suffixes at this point.
     if ($dir = @dir($products_image_directory)) {

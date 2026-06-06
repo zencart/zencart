@@ -191,32 +191,32 @@ function zen_run_normal(): bool
             // down for maintenance not for ADMIN
             $zc_run = true;
             break;
-        case (DOWN_FOR_MAINTENANCE == 'true'):
+        case (zen_config('DOWN_FOR_MAINTENANCE') === 'true'):
             // down for maintenance
             $zc_run = false;
             break;
-        case (STORE_STATUS >= 1):
+        case (zen_config('STORE_STATUS') >= 1):
             // showcase no prices
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()):
             // customer must be logged in to browse
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') === '2' && !zen_is_logged_in()):
             // show room only
             // customer may browse but no prices
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL == '3'):
+        case (zen_config('CUSTOMERS_APPROVAL') === '3'):
             // show room only
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && !zen_is_logged_in()):
             // customer must be logged in to browse
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
             // customer must be logged in to browse
             $zc_run = false;
             break;
@@ -242,13 +242,13 @@ function zen_run_normal(): bool
  */
 function zen_check_show_prices(): bool
 {
-    if (STORE_STATUS === '1') {
+    if (zen_config('STORE_STATUS') === '1') {
         return false;
     }
-    if (CUSTOMERS_APPROVAL === '2' && zen_is_logged_in() === false) {
+    if (zen_config('CUSTOMERS_APPROVAL') === '2' && zen_is_logged_in() === false) {
         return false;
     }
-    if (CUSTOMERS_APPROVAL_AUTHORIZATION !== '1' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '2') {
+    if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '1' && zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '2') {
         return true;
     }
     if (zen_is_logged_in() === false || ((int)$_SESSION['customers_authorization'] !== 0 && (int)$_SESSION['customers_authorization'] !== 3)) {

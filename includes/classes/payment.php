@@ -57,8 +57,8 @@ class payment
 
         $this->doesCollectsCardDataOnsite = false;
 
-        if (defined('MODULE_PAYMENT_INSTALLED') && !empty(MODULE_PAYMENT_INSTALLED)) {
-            $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
+        if (!empty(zen_config('MODULE_PAYMENT_INSTALLED'))) {
+            $this->modules = explode(';', zen_config('MODULE_PAYMENT_INSTALLED'));
         }
         $this->notify('NOTIFY_PAYMENT_CLASS_GET_INSTALLED_MODULES', $module);
 
@@ -82,7 +82,7 @@ class payment
             $include_modules[] = ['class' => $module, 'file' => $module . '.php'];
         } else {
             // Free Payment Only shows
-            $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS === 'True' && isset($modules_found['freecharger.php']));
+            $freecharger_enabled = (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') === 'True' && isset($modules_found['freecharger.php']));
             if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
                 $this->selected_module = $module;
                 $include_modules[] = ['class'=> 'freecharger', 'file' => 'freecharger.php'];
@@ -250,7 +250,7 @@ class payment
         $js .=  '    return false;' . "\n";
         $js .=  '  } else {' . "\n";
         $js .=  ' var result = true; '  . "\n";
-        if ($this->doesCollectsCardDataOnsite === true && PADSS_AJAX_CHECKOUT === '1') {
+        if ($this->doesCollectsCardDataOnsite === true && zen_config('PADSS_AJAX_CHECKOUT') === '1') {
             $js .= '      result = !(doesCollectsCardDataOnsite(payment_value));' . "\n";
         }
         $js .=  ' if (result == false) doCollectsCardDataOnsite();' . "\n";

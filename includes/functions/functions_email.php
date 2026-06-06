@@ -361,7 +361,7 @@
             // set the reply-to address.  If none set yet, then use Store's default email name/address.
             // If sending from checkout or contact-us, use the supplied info
             $email_reply_to_address = (!empty($email_reply_to_address)) ? $email_reply_to_address : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_address : zen_config('EMAIL_FROM'));
-            $email_reply_to_name = (!empty($email_reply_to_name)) ? $email_reply_to_name : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_name : STORE_NAME);
+            $email_reply_to_name = (!empty($email_reply_to_name)) ? $email_reply_to_name : (in_array($module, ['contact_us', 'ask_a_question', 'checkout_extra']) ? $from_email_name : zen_config('STORE_NAME'));
             $mail->addReplyTo($email_reply_to_address, $email_reply_to_name);
 
             $mail->setFrom($from_email_address, $from_email_name);
@@ -381,7 +381,7 @@
 
             $mail->addAddress($to_email_address, $to_name);
             //$mail->addAddress($to_email_address);    // (alternate format if no name, since name is optional)
-            //$mail->addBCC(zen_config('STORE_OWNER_EMAIL_ADDRESS'), STORE_NAME);
+            //$mail->addBCC(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME);
             //$mail->addCC(email_address);
 
             if (zen_config('EMAIL_USE_HTML') === 'true') {
@@ -724,7 +724,7 @@
         }
         //check for some specifics that need to be included with all messages
         if (empty($block['EMAIL_STORE_NAME'])) {
-            $block['EMAIL_STORE_NAME'] = zen_config('STORE_NAME');
+            $block['EMAIL_STORE_NAME'] = STORE_NAME;
         }
         if (empty($block['EMAIL_STORE_URL'])) {
             $block['EMAIL_STORE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . zen_config('STORE_NAME') . '</a>';

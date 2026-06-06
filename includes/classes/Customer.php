@@ -412,7 +412,7 @@ class Customer extends base
      */
     public static function getAuthTokenMinutesValid(): int
     {
-        $token_valid_minutes = (int)CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID;
+        $token_valid_minutes = (int)zen_config('CUSTOMERS_ACTIVATION_TOKEN_MINUTES_VALID');
         if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
             $token_valid_minutes = 60;
         }
