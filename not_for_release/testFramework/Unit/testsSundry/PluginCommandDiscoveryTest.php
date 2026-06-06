@@ -274,6 +274,31 @@ PHP
         $this->assertStringNotContainsString($autoloadFile, $discovery->getErrors()[0]);
     }
 
+    public function testUnreadablePluginRootAutoloaderIsReportedWithoutAbortingDiscovery(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $autoloadFile = $pluginRoot . '/psr4Autoload.php';
+
+        file_put_contents($autoloadFile, "<?php\n");
+        chmod($autoloadFile, 0000);
+        if (is_readable($autoloadFile)) {
+            $this->markTestSkipped('Unable to make psr4Autoload.php unreadable on this platform.');
+        }
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/psr4Autoload.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($autoloadFile, $discovery->getErrors()[0]);
+    }
+
     public function testAutoloaderErrorsSanitizeNestedPluginPaths(): void
     {
         $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
@@ -333,6 +358,29 @@ PHP
         $commandFile = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0/Console/commands.php';
 
         file_put_contents($commandFile, "<?php\nif (\n");
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/Console/commands.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($commandFile, $discovery->getErrors()[0]);
+    }
+
+    public function testUnreadableCommandFileIsReportedWithoutAbortingDiscovery(): void
+    {
+        $commandFile = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0/Console/commands.php';
+
+        chmod($commandFile, 0000);
+        if (is_readable($commandFile)) {
+            $this->markTestSkipped('Unable to make Console/commands.php unreadable on this platform.');
+        }
 
         $discovery = new PluginCommandDiscovery(
             $this->catalogPath . '/zc_plugins',
@@ -422,6 +470,7 @@ PHP
                 continue;
             }
 
+            chmod($currentPath, 0666);
             unlink($currentPath);
         }
 

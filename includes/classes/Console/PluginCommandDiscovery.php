@@ -126,9 +126,7 @@ class PluginCommandDiscovery
         }
 
         try {
-            /** @var \Aura\Autoload\Loader|null $psr4Autoloader */
-            $psr4Autoloader = $this->autoloader;
-            require $autoloadFile;
+            $this->includePhpFile($autoloadFile, ['psr4Autoloader' => $this->autoloader]);
         } catch (Throwable $exception) {
             $pluginReference = $pluginKey . '/' . $pluginVersion;
             $this->errors[] = sprintf(
@@ -162,7 +160,7 @@ class PluginCommandDiscovery
         $definitionReference = $pluginKey . '/' . $pluginVersion . '/Console/commands.php';
 
         try {
-            $definitions = require $commandFile;
+            $definitions = $this->includePhpFile($commandFile);
         } catch (Throwable $exception) {
             $this->errors[] = sprintf(
                 'Failed loading plugin commands from %s: %s',
@@ -203,6 +201,25 @@ class PluginCommandDiscovery
         }
 
         return ($this->allowedPluginVersions[$pluginKey] ?? null) === $pluginVersion;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function includePhpFile(string $file, array $scopeVariables = []): mixed
+    {
+        extract($scopeVariables, EXTR_SKIP);
+
+        if (!is_file($file) || !is_readable($file)) {
+            throw new \RuntimeException('PHP file is not readable: ' . $file);
+        }
+
+        $result = include $file;
+        if ($result === false) {
+            throw new \RuntimeException('PHP file failed to include: ' . $file);
+        }
+
+        return $result;
     }
 
     /**

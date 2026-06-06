@@ -132,7 +132,7 @@ Implementation notes:
 
 - discovery currently requires `manifest.php` to be present for the plugin version directory before it will attempt to load `Console/commands.php`
 - discovery is now filtered to the enabled plugin/version pairs returned by `TrustedPluginVersionResolver`
-- for trusted plugin versions that provide `Console/commands.php`, discovery also loads the plugin root `psr4Autoload.php` before requiring that command-definition file
+- for trusted plugin versions that provide `Console/commands.php`, discovery also loads the plugin root `psr4Autoload.php` before including that command-definition file
 - CLI discovery automatically registers only the plugin's `Zencart\Plugins\Console\...` namespace; any additional namespaces needed by console commands should be registered by the plugin's `psr4Autoload.php`
 - one broken plugin definition does not abort discovery; discovery collects errors and the kernel surfaces them as warnings on stderr during boot
 
