@@ -130,10 +130,11 @@ class PluginCommandDiscovery
             $psr4Autoloader = $this->autoloader;
             require $autoloadFile;
         } catch (Throwable $exception) {
+            $pluginReference = $pluginKey . '/' . $pluginVersion;
             $this->errors[] = sprintf(
                 'Failed loading plugin autoloader from %s: %s',
-                $pluginKey . '/' . $pluginVersion . '/psr4Autoload.php',
-                $this->sanitizeErrorMessage($exception->getMessage(), $autoloadFile, $pluginKey . '/' . $pluginVersion . '/psr4Autoload.php')
+                $pluginReference . '/psr4Autoload.php',
+                $this->sanitizeErrorMessage($exception->getMessage(), $versionPath, $pluginReference)
             );
             return false;
         }
@@ -166,7 +167,7 @@ class PluginCommandDiscovery
             $this->errors[] = sprintf(
                 'Failed loading plugin commands from %s: %s',
                 $definitionReference,
-                $this->sanitizeErrorMessage($exception->getMessage(), $commandFile, $definitionReference)
+                $this->sanitizeErrorMessage($exception->getMessage(), $versionPath, $pluginKey . '/' . $pluginVersion)
             );
             return [];
         }
@@ -209,7 +210,14 @@ class PluginCommandDiscovery
      */
     private function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string
     {
-        return str_replace($absolutePath, $relativePath, $message);
+        $absolutePath = rtrim($absolutePath, '/\\');
+        $relativePath = rtrim($relativePath, '/\\');
+
+        return str_replace(
+            [$absolutePath . '/', $absolutePath],
+            [$relativePath . '/', $relativePath],
+            $message
+        );
     }
 
     /**

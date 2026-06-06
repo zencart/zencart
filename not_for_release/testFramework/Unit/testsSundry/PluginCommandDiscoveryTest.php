@@ -250,6 +250,35 @@ PHP
         $this->assertStringNotContainsString($autoloadFile, $discovery->getErrors()[0]);
     }
 
+    public function testAutoloaderErrorsSanitizeNestedPluginPaths(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $nestedFile = $pluginRoot . '/vendor/bootstrap.php';
+
+        mkdir($pluginRoot . '/vendor', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nrequire __DIR__ . '/vendor/bootstrap.php';\n"
+        );
+        file_put_contents(
+            $nestedFile,
+            "<?php\nthrow new RuntimeException(__FILE__);\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/vendor/bootstrap.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($nestedFile, $discovery->getErrors()[0]);
+    }
+
     public function testCommandFileErrorsDoNotLeakAbsoluteFilesystemPaths(): void
     {
         $commandFile = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0/Console/commands.php';
@@ -268,6 +297,34 @@ PHP
         $this->assertCount(1, $discovery->getErrors());
         $this->assertStringContainsString('zenTestPlugin/v1.0.0/Console/commands.php', $discovery->getErrors()[0]);
         $this->assertStringNotContainsString($commandFile, $discovery->getErrors()[0]);
+    }
+
+    public function testCommandFileErrorsSanitizeNestedPluginPaths(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $nestedFile = $pluginRoot . '/Console/bootstrap.php';
+
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            "<?php\nrequire __DIR__ . '/bootstrap.php';\n"
+        );
+        file_put_contents(
+            $nestedFile,
+            "<?php\nthrow new RuntimeException(__FILE__);\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/Console/bootstrap.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($nestedFile, $discovery->getErrors()[0]);
     }
 
     private function removeDirectory(string $path): void

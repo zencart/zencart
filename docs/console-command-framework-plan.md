@@ -152,7 +152,7 @@ Example:
 
 ```php
 <?php
-// zc_plugins/MyPlugin/1.0.0/psr4Autoload.php
+// zc_plugins/MyPlugin/v1.0.0/psr4Autoload.php
 require __DIR__ . '/vendor/autoload.php';
 ```
 
