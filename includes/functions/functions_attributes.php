@@ -273,7 +273,7 @@ function zen_has_product_attributes_values($product_id)
  */
 function zen_has_product_attributes_downloads_status($product_id)
 {
-    if (zen_config('DOWNLOAD_ENABLED') !== 'true') {
+    if (DOWNLOAD_ENABLED !== 'true') {
         return false;
     }
 
