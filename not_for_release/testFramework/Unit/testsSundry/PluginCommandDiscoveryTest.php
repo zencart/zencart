@@ -229,6 +229,30 @@ PHP
         $this->assertSame([], $discovery->getErrors());
     }
 
+    public function testSkipsPluginRootAutoloaderWhenNoAutoloaderIsAvailable(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $markerFile = $this->basePath . '/plugin-autoloader-marker.txt';
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nfile_put_contents(" . var_export($markerFile, true) . ", 'loaded');\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            null,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertCount(1, $commands);
+        $this->assertSame('zen-test:demo', $commands[0]->getName());
+        $this->assertFileDoesNotExist($markerFile);
+        $this->assertSame([], $discovery->getErrors());
+    }
+
     public function testAutoloaderErrorsDoNotLeakAbsoluteFilesystemPaths(): void
     {
         $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
@@ -279,6 +303,31 @@ PHP
         $this->assertStringNotContainsString($nestedFile, $discovery->getErrors()[0]);
     }
 
+    public function testAutoloaderErrorsSanitizeWindowsStyleNestedPluginPaths(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $windowsNestedFile = str_replace('/', '\\', $pluginRoot . '/vendor/bootstrap.php');
+
+        mkdir($pluginRoot . '/vendor', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nthrow new RuntimeException(" . var_export($windowsNestedFile, true) . ");\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/vendor/bootstrap.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($windowsNestedFile, $discovery->getErrors()[0]);
+    }
+
     public function testCommandFileErrorsDoNotLeakAbsoluteFilesystemPaths(): void
     {
         $commandFile = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0/Console/commands.php';
@@ -325,6 +374,30 @@ PHP
         $this->assertCount(1, $discovery->getErrors());
         $this->assertStringContainsString('zenTestPlugin/v1.0.0/Console/bootstrap.php', $discovery->getErrors()[0]);
         $this->assertStringNotContainsString($nestedFile, $discovery->getErrors()[0]);
+    }
+
+    public function testCommandFileErrorsSanitizeWindowsStyleNestedPluginPaths(): void
+    {
+        $pluginRoot = $this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0';
+        $windowsNestedFile = str_replace('/', '\\', $pluginRoot . '/Console/bootstrap.php');
+
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            "<?php\nthrow new RuntimeException(" . var_export($windowsNestedFile, true) . ");\n"
+        );
+
+        $discovery = new PluginCommandDiscovery(
+            $this->catalogPath . '/zc_plugins',
+            $this->autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertCount(1, $discovery->getErrors());
+        $this->assertStringContainsString('zenTestPlugin/v1.0.0/Console/bootstrap.php', $discovery->getErrors()[0]);
+        $this->assertStringNotContainsString($windowsNestedFile, $discovery->getErrors()[0]);
     }
 
     private function removeDirectory(string $path): void

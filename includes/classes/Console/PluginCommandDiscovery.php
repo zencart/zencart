@@ -121,7 +121,7 @@ class PluginCommandDiscovery
     private function loadPluginRootAutoloader(string $pluginKey, string $pluginVersion, string $versionPath): bool
     {
         $autoloadFile = $versionPath . '/psr4Autoload.php';
-        if (!file_exists($autoloadFile)) {
+        if (!file_exists($autoloadFile) || $this->autoloader === null) {
             return true;
         }
 
@@ -210,12 +210,22 @@ class PluginCommandDiscovery
      */
     private function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string
     {
-        $absolutePath = rtrim($absolutePath, '/\\');
-        $relativePath = rtrim($relativePath, '/\\');
+        $normalizedAbsolutePath = rtrim(str_replace('\\', '/', $absolutePath), '/');
+        $normalizedRelativePath = rtrim(str_replace('\\', '/', $relativePath), '/');
+        $absolutePathPattern = implode(
+            '[\\\\/]',
+            array_map(
+                static fn (string $segment): string => preg_quote($segment, '~'),
+                explode('/', $normalizedAbsolutePath)
+            )
+        );
 
-        return str_replace(
-            [$absolutePath . '/', $absolutePath],
-            [$relativePath . '/', $relativePath],
+        return (string) preg_replace_callback(
+            '~' . $absolutePathPattern . '(?:[\\\\/][^\s\'":]+)*~',
+            static function (array $matches) use ($normalizedAbsolutePath, $normalizedRelativePath): string {
+                $path = str_replace('\\', '/', $matches[0]);
+                return str_replace($normalizedAbsolutePath, $normalizedRelativePath, $path);
+            },
             $message
         );
     }
