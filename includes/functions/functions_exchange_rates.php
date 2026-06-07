@@ -44,7 +44,7 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
         }
         if (!empty($rate)) {
             /* Add currency uplift, because exchange rates quoted aren't always the same as what your own bank gives you */
-            $multiplier = (!empty(zen_config('CURRENCY_UPLIFT_RATIO')) ? zen_config('CURRENCY_UPLIFT_RATIO') : 0;
+            $multiplier = !empty(zen_config('CURRENCY_UPLIFT_RATIO')) ? zen_config('CURRENCY_UPLIFT_RATIO') : 0;
             $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_MULTIPLIER', $result['code'], $multiplier, $rate);
 
             if ($rate != 1 && $multiplier > 0) {
