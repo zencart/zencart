@@ -167,7 +167,10 @@ class order extends base
 
         $totals = $db->Execute($totals_query);
 
-        $precision = QUANTITY_DECIMALS > 0 ? (int)zen_config('QUANTITY_DECIMALS') : 0;
+        $precision = (int)zen_config('QUANTITY_DECIMALS');
+        if ($precision < 0) {
+            $precision = 0;
+        }
 
         while (!$totals->EOF) {
             if ($totals->fields['class'] === 'ot_coupon') {
