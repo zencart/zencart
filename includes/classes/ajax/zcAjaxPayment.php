@@ -70,7 +70,7 @@ class zcAjaxPayment extends base
     if (isset ($_SESSION['shipping']['id']) && $_SESSION['shipping']['id']=='free_free'
       && $_SESSION['cart']->get_content_type () != 'virtual'
       && zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') === 'true'
-      && defined ('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total () < zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) {
+      && zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total () < zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) {
       zen_redirect (zen_href_link (FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
 

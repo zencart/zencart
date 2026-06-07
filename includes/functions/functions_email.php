@@ -381,7 +381,7 @@
 
             $mail->addAddress($to_email_address, $to_name);
             //$mail->addAddress($to_email_address);    // (alternate format if no name, since name is optional)
-            //$mail->addBCC(STORE_OWNER_EMAIL_ADDRESS, STORE_NAME);
+            //$mail->addBCC(zen_config('STORE_OWNER_EMAIL_ADDRESS'), STORE_NAME);
             //$mail->addCC(email_address);
 
             if (zen_config('EMAIL_USE_HTML') === 'true') {
@@ -724,7 +724,7 @@
         }
         //check for some specifics that need to be included with all messages
         if (empty($block['EMAIL_STORE_NAME'])) {
-            $block['EMAIL_STORE_NAME'] = STORE_NAME;
+            $block['EMAIL_STORE_NAME'] = zen_config('STORE_NAME');
         }
         if (empty($block['EMAIL_STORE_URL'])) {
             $block['EMAIL_STORE_URL'] = '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . zen_config('STORE_NAME') . '</a>';

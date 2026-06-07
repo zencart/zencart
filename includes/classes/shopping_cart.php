@@ -1400,8 +1400,8 @@ class shoppingCart extends base
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
 
                 // units as defined in Admin, optionally overridden by what might be defined in products table from older shipping modules
-                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (defined('SHIPPING_WEIGHT_UNITS') ? (string)zen_config('SHIPPING_WEIGHT_UNITS') : null),
-                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (defined('SHIPPING_DIMENSION_UNITS') ? (string)zen_config('SHIPPING_DIMENSION_UNITS') : null),
+                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (zen_config('SHIPPING_WEIGHT_UNITS') ? (string)zen_config('SHIPPING_WEIGHT_UNITS') : null),
+                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (zen_config('SHIPPING_DIMENSION_UNITS') ? (string)zen_config('SHIPPING_DIMENSION_UNITS') : null),
 
                 'length' => $product['products_length'] ?? null, // float
                 'width' => $product['products_width'] ?? null, // float

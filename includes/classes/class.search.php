@@ -422,7 +422,7 @@ class Search extends \base
         } else {
             // set the default sort order setting from the Admin when not defined by customer
             if (empty($this->searchOptions->sort) && zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER') !== '') {
-                $this->searchOptions->sort = PRODUCT_LISTING_DEFAULT_SORT_ORDER;
+                $this->searchOptions->sort = zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER');
             }
             if (empty($this->searchOptions->sort) ||
                 !preg_match('/[1-8][ad]/', $this->searchOptions->sort) ||
