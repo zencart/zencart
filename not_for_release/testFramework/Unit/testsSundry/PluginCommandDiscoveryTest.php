@@ -238,6 +238,34 @@ PHP
             $pluginRoot . '/psr4Autoload.php',
             "<?php\nfile_put_contents(" . var_export($markerFile, true) . ", 'loaded');\n"
         );
+        require_once DIR_FS_CATALOG . 'includes/classes/Console/ConsoleCommand.php';
+        require_once DIR_FS_CATALOG . 'includes/classes/Console/ConsoleInput.php';
+        require_once DIR_FS_CATALOG . 'includes/classes/Console/ConsoleOutput.php';
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    new class extends \Zencart\Console\ConsoleCommand {
+        public function getName(): string
+        {
+            return 'zen-test:demo';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Self-contained test command.';
+        }
+
+        public function handle(\Zencart\Console\ConsoleInput $input, \Zencart\Console\ConsoleOutput $output): int
+        {
+            return 0;
+        }
+    },
+];
+PHP
+        );
 
         $discovery = new PluginCommandDiscovery(
             $this->catalogPath . '/zc_plugins',
