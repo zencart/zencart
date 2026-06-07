@@ -53,7 +53,7 @@ Project-specific conventions and patterns
 - These same patterns apply to the admin side. 
 - Template overrides: The non-admin side supports template-specific overrides for modules and classes. For example, if the active template is `my_template`, the system will look for files in `includes/templates/my_template/` before falling back to the `template_default` paths. This allows for customization without modifying core files.
 - `index.php` flow: includes application_top.php, loops over `header_php` files from PageLoader->listModulePagesFiles('header_php', '.php'), then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
-- Language files: lang.foo.php files return an array of 'CONSTANT_NAME' => 'value' pairs. These get merged across load layers (core → plugin, English → active language) and converted to real constants via define(). Values may reference other keys in the same array via %%OTHER_KEY%% placeholders.
+- Language files: `lang.foo.php` files return an array of `'CONSTANT_NAME' => 'value'` pairs. These get merged across load layers (core → plugin, English → active language) and converted to real constants via `define()`. Values may reference other keys in the same array via `%%OTHER_KEY%%` placeholders.
 
 Integration points and external dependencies
 -------------------------------------------
@@ -145,7 +145,13 @@ Quick tips for agents that create plugins
 - Test by enabling the plugin via admin `Plugin Manager` (or insert a `plugin_control` DB record in tests), then exercise plugin pages (storefront/admin) and run relevant PHPUnit feature tests.
 - `zc_plugins/.gitignore` uses a blanket deny-all (`*`) with an explicit allowlist. When adding a new plugin, append `!PluginName/` and `!PluginName/**` to that file, or the plugin's files will be invisible to git.
 
-A payment/shipping plugin may have `install()` and `remove()` methods, but those should only handle configuration entries and not database schema changes. For any database schema changes, use `ScriptedInstaller` methods for install/upgrade/remove, and ensure they are idempotent.
+A payment/shipping/order-total plugin may keep `install()`, `remove()`, and `keys()` methods on its module class to manage its own `configuration`-table records (these are invoked from the admin Modules pages independently of Plugin Manager). Those methods should only handle configuration entries, never database schema changes; for schema changes use `ScriptedInstaller` methods for install/upgrade/remove, and ensure they are idempotent.
+
+Notes on `Installer/ScriptedInstaller.php`:
+- In rare cases (such as for some payment/shipping/order-total module-style plugins it's optional. If `Installer/ScriptedInstaller.php` doesn't exist, `BasePluginInstaller` simply registers/deregisters the `plugin_control` entry and the install returns are treated as a no-op success.
+- When converting a previously-unencapsulated module, set `'removesUnencapsulatedVersion' => true` in `manifest.php` and implement `executeInstall()` in `ScriptedInstaller` to purge the old dropped-in files — use the inherited `removeFiles($files_to_remove, $context)` helper — before calling `parent::executeInstall()`.
+- If the module class's own `remove()` deletes its `configuration` records, call it from `ScriptedInstaller::executeUninstall()` (guarded by `defined('MODULE_..._STATUS')`) so a full Plugin Manager uninstall also cleans up the module's configuration.
+- `PayPalRestful`'s `Installer/ScriptedInstaller.php` is a working example of both patterns above.
 
 Official docs
 -------------

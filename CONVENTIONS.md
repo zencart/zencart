@@ -68,6 +68,7 @@ endforeach;
 Add `declare(strict_types=1)` to all **new** class files, placed after the opening `<?php` tag
 and the file's docblock comment, before the namespace declaration.
 Do not add it retroactively to existing files unless they are being substantially rewritten.
+Do add it to new class files that have been copied or patterned from an existing file that lacks it.
 
 ---
 
