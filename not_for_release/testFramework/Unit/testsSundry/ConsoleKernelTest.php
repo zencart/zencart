@@ -57,6 +57,7 @@ class ConsoleKernelTest extends TestCase
         $stdoutOutput = stream_get_contents($stdout, -1, 0);
         $this->assertStringContainsString('Available commands:', $stdoutOutput);
         $this->assertStringContainsString('config:get', $stdoutOutput);
+        $this->assertStringContainsString('currency-rates:update', $stdoutOutput);
         $this->assertStringContainsString('plugin:list', $stdoutOutput);
         $this->assertStringContainsString('version:show', $stdoutOutput);
         $this->assertSame('', stream_get_contents($stderr, -1, 0));
