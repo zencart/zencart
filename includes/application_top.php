@@ -301,7 +301,7 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
-define('DEBUG_AUTOLOAD', false);
+if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
 
 /**
  * set the level of error reporting
