@@ -53,6 +53,7 @@ Project-specific conventions and patterns
 - These same patterns apply to the admin side. 
 - Template overrides: The non-admin side supports template-specific overrides for modules and classes. For example, if the active template is `my_template`, the system will look for files in `includes/templates/my_template/` before falling back to the `template_default` paths. This allows for customization without modifying core files.
 - `index.php` flow: includes application_top.php, loops over `header_php` files from PageLoader->listModulePagesFiles('header_php', '.php'), then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
+- Language files: lang.foo.php files return an array of 'CONSTANT_NAME' => 'value' pairs. These get merged across load layers (core → plugin, English → active language) and converted to real constants via define(). Values may reference other keys in the same array via %%OTHER_KEY%% placeholders.
 
 Integration points and external dependencies
 -------------------------------------------
@@ -126,7 +127,7 @@ Minimal plugin file structure layout (example)
 - zc_plugins/myplugin/1.0.0/manifest.php
 - zc_plugins/myplugin/1.0.0/filenames.php
 - zc_plugins/myplugin/1.0.0/Installer/ScriptedInstaller.php
-- zc_plugins/myplugin/1.0.0/Installer/languages/english/main.php
+- zc_plugins/myplugin/1.0.0/Installer/languages/english/main.php (optional, skip if no strings added)
 # for catalog-side pages, use the following:
 - zc_plugins/myplugin/1.0.0/catalog/includes/classes/observers/auto_MyClass.php
 - zc_plugins/myplugin/1.0.0/catalog/includes/languages/english/lang.my_page.php
