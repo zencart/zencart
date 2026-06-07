@@ -132,13 +132,35 @@ Implementation notes:
 
 - discovery currently requires `manifest.php` to be present for the plugin version directory before it will attempt to load `Console/commands.php`
 - discovery is now filtered to the enabled plugin/version pairs returned by `TrustedPluginVersionResolver`
+- for trusted plugin versions that provide `Console/commands.php`, discovery also loads the plugin root `psr4Autoload.php` before including that command-definition file
+- CLI discovery automatically registers only the plugin's `Zencart\Plugins\Console\...` namespace; any additional namespaces needed by console commands should be registered by the plugin's `psr4Autoload.php`
 - one broken plugin definition does not abort discovery; discovery collects errors and the kernel surfaces them as warnings on stderr during boot
 
 ## Plugin Integration
 
 - core loads installed plugins
+- for each trusted plugin version that exposes `Console/commands.php`, CLI discovery may load `<plugin root>/psr4Autoload.php`
 - discovery checks for `Console/commands.php`
 - any commands found there are registered
+
+Practical consequence:
+
+- a plugin can keep its own `composer.json` and install dependencies into its own `vendor/` directory
+- the plugin's `psr4Autoload.php` can then require that plugin-local Composer autoloader
+
+Example:
+
+```php
+<?php
+// zc_plugins/MyPlugin/v1.0.0/psr4Autoload.php
+require __DIR__ . '/vendor/autoload.php';
+```
+
+That means Composer dependencies used by plugin console commands are available in CLI mode, provided that:
+
+- Composer has been run inside the plugin directory so `vendor/autoload.php` exists
+- the plugin version is trusted/enabled for console discovery
+- the plugin root `psr4Autoload.php` loads the Composer autoloader or registers any extra namespaces it needs
 
 Possible future metadata additions, if needed:
 

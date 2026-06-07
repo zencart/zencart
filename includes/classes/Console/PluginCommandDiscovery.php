@@ -51,6 +51,7 @@ class PluginCommandDiscovery
                 }
 
                 $versionPath = $versionDirectory->getPathname();
+                $commandFile = $versionPath . '/Console/commands.php';
                 if (!file_exists($versionPath . '/manifest.php')) {
                     continue;
                 }
@@ -59,13 +60,25 @@ class PluginCommandDiscovery
                     continue;
                 }
 
+                if (!file_exists($commandFile)) {
+                    continue;
+                }
+
                 $this->registerPluginConsoleNamespace($pluginDirectory->getFilename(), $versionPath);
+                if (!$this->loadPluginRootAutoloader(
+                    $pluginDirectory->getFilename(),
+                    $versionDirectory->getFilename(),
+                    $versionPath
+                )) {
+                    continue;
+                }
                 $commands = array_merge(
                     $commands,
                     $this->loadCommandsFromVersion(
                         $pluginDirectory->getFilename(),
                         $versionDirectory->getFilename(),
-                        $versionPath
+                        $versionPath,
+                        $commandFile
                     )
                 );
             }
@@ -104,12 +117,42 @@ class PluginCommandDiscovery
 
     /**
      * @since ZC v3.0.0
+     */
+    private function loadPluginRootAutoloader(string $pluginKey, string $pluginVersion, string $versionPath): bool
+    {
+        $autoloadFile = $versionPath . '/psr4Autoload.php';
+        if (!file_exists($autoloadFile) || $this->autoloader === null) {
+            return true;
+        }
+
+        try {
+            $this->includePhpFile($autoloadFile, ['psr4Autoloader' => $this->autoloader]);
+        } catch (Throwable $exception) {
+            $pluginReference = $pluginKey . '/' . $pluginVersion;
+            $this->errors[] = sprintf(
+                'Failed loading plugin autoloader from %s: %s',
+                $pluginReference . '/psr4Autoload.php',
+                $this->sanitizeErrorMessage($exception->getMessage(), $versionPath, $pluginReference)
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @since ZC v3.0.0
      *
      * @return ConsoleCommand[]
      */
-    private function loadCommandsFromVersion(string $pluginKey, string $pluginVersion, string $versionPath): array
+    private function loadCommandsFromVersion(
+        string $pluginKey,
+        string $pluginVersion,
+        string $versionPath,
+        ?string $commandFile = null
+    ): array
     {
-        $commandFile = $versionPath . '/Console/commands.php';
+        $commandFile ??= $versionPath . '/Console/commands.php';
         if (!file_exists($commandFile)) {
             return [];
         }
@@ -117,12 +160,12 @@ class PluginCommandDiscovery
         $definitionReference = $pluginKey . '/' . $pluginVersion . '/Console/commands.php';
 
         try {
-            $definitions = require $commandFile;
+            $definitions = $this->includePhpFile($commandFile);
         } catch (Throwable $exception) {
             $this->errors[] = sprintf(
                 'Failed loading plugin commands from %s: %s',
                 $definitionReference,
-                $exception->getMessage()
+                $this->sanitizeErrorMessage($exception->getMessage(), $versionPath, $pluginKey . '/' . $pluginVersion)
             );
             return [];
         }
@@ -158,6 +201,50 @@ class PluginCommandDiscovery
         }
 
         return ($this->allowedPluginVersions[$pluginKey] ?? null) === $pluginVersion;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function includePhpFile(string $file, array $scopeVariables = []): mixed
+    {
+        extract($scopeVariables, EXTR_SKIP);
+
+        if (!is_file($file) || !is_readable($file)) {
+            throw new \RuntimeException('PHP file is not readable: ' . $file);
+        }
+
+        $result = include $file;
+        if ($result === false) {
+            throw new \RuntimeException('PHP file failed to include: ' . $file);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string
+    {
+        $normalizedAbsolutePath = rtrim(str_replace('\\', '/', $absolutePath), '/');
+        $normalizedRelativePath = rtrim(str_replace('\\', '/', $relativePath), '/');
+        $absolutePathPattern = implode(
+            '[\\\\/]',
+            array_map(
+                static fn (string $segment): string => preg_quote($segment, '~'),
+                explode('/', $normalizedAbsolutePath)
+            )
+        );
+
+        return (string) preg_replace_callback(
+            '~' . $absolutePathPattern . '(?:[\\\\/][^\s\'":]+)*~',
+            static function (array $matches) use ($normalizedAbsolutePath, $normalizedRelativePath): string {
+                $path = str_replace('\\', '/', $matches[0]);
+                return str_replace($normalizedAbsolutePath, $normalizedRelativePath, $path);
+            },
+            $message
+        );
     }
 
     /**
