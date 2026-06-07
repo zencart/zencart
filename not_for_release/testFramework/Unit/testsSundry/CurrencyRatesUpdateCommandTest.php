@@ -7,6 +7,7 @@
 namespace Tests\Unit\testsSundry;
 
 use PHPUnit\Framework\TestCase;
+use Tests\Support\TestFrameworkFilesystem;
 use Tests\Support\UnitTestBootstrap;
 use Zencart\Console\Commands\CurrencyRatesUpdateCommand;
 use Zencart\Console\ConsoleInput;
@@ -15,7 +16,6 @@ use Zencart\Console\ConsoleOutput;
 class CurrencyRatesUpdateCommandTest extends TestCase
 {
     protected $preserveGlobalState = false;
-    private ?string $providerFixturePath = null;
 
     public static function setUpBeforeClass(): void
     {
@@ -28,9 +28,7 @@ class CurrencyRatesUpdateCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        if ($this->providerFixturePath !== null && file_exists($this->providerFixturePath)) {
-            unlink($this->providerFixturePath);
-        }
+        (new TestFrameworkFilesystem())->removePlugin('zenTestCurrencyPlugin', 'v1.0.0', DIR_FS_CATALOG);
 
         parent::tearDown();
     }
@@ -38,28 +36,17 @@ class CurrencyRatesUpdateCommandTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testCurrencyRatesUpdateLoadsLegacyAdminExtraFunctionProviders(): void
+    public function testCurrencyRatesUpdateLoadsLegacyPluginCurrencyProvider(): void
     {
-        $this->providerFixturePath = DIR_FS_ADMIN . 'includes/functions/extra_functions/zz_test_cli_currency_provider.php';
-        file_put_contents(
-            $this->providerFixturePath,
-            <<<'PHP'
-<?php
-function quote_zztestcli_currency(string $currencyCode = '', string $base = DEFAULT_CURRENCY): string
-{
-    return '1.25';
-}
-PHP
-        );
-
         $this->installCurrencyUpdateStubs();
+        (new TestFrameworkFilesystem())->installPlugin('zenTestCurrencyPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
         [$stdout, $stderr, $output] = $this->makeOutput();
         $command = new CurrencyRatesUpdateCommand($this->makeConfigurationProvider([
             'DEFAULT_CURRENCY' => 'USD',
             'CURRENCY_SERVER_PRIMARY' => 'zztestcli',
             'CURRENCY_SERVER_BACKUP' => '',
             'CURRENCY_UPLIFT_RATIO' => '0',
-        ]));
+        ]), null, static fn(): array => ['zenTestCurrencyPlugin' => 'v1.0.0']);
 
         $exitCode = $command->handle(new ConsoleInput(['zc_cli.php', 'currency-rates:update']), $output);
 
@@ -75,24 +62,14 @@ PHP
     public function testCurrencyRatesUpdateAllowsBackupProviderWhenPrimaryFunctionIsMissing(): void
     {
         $this->installCurrencyUpdateStubs();
-        if (!function_exists('quote_zztestbackup_currency')) {
-            eval(<<<'PHP'
-namespace {
-    function quote_zztestbackup_currency(string $currencyCode = '', string $base = DEFAULT_CURRENCY): string
-    {
-        return '1.15';
-    }
-}
-PHP);
-        }
-
+        (new TestFrameworkFilesystem())->installPlugin('zenTestCurrencyPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
         [$stdout, $stderr, $output] = $this->makeOutput();
         $command = new CurrencyRatesUpdateCommand($this->makeConfigurationProvider([
             'DEFAULT_CURRENCY' => 'USD',
             'CURRENCY_SERVER_PRIMARY' => 'missingprimary',
             'CURRENCY_SERVER_BACKUP' => 'zztestbackup',
             'CURRENCY_UPLIFT_RATIO' => '0',
-        ]));
+        ]), null, static fn(): array => ['zenTestCurrencyPlugin' => 'v1.0.0']);
 
         $exitCode = $command->handle(new ConsoleInput(['zc_cli.php', 'currency-rates:update']), $output);
 
