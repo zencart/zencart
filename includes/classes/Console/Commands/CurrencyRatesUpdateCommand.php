@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace Zencart\Console\Commands;
 
 use notifier;
-use queryFactory;
 use Zencart\Console\ConsoleCommand;
 use Zencart\Console\ConsoleInput;
 use Zencart\Console\ConsoleOutput;
+use Zencart\Console\LegacyAdminFunctionLoader;
 
 class CurrencyRatesUpdateCommand extends ConsoleCommand
 {
@@ -20,9 +20,13 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
      * @since ZC v3.0.0
      *
      * @param null|callable(string): ?array<string, mixed> $configurationProvider
+     * @param null|callable(): array<string, string> $trustedPluginResolver
      */
-    public function __construct(private $configurationProvider = null)
-    {
+    public function __construct(
+        private $configurationProvider = null,
+        private ?LegacyAdminFunctionLoader $legacyAdminFunctionLoader = null,
+        private $trustedPluginResolver = null
+    ) {
     }
 
     /**
@@ -117,17 +121,19 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
             }
         }
 
+        $trustedPlugins = [];
+        if ($this->trustedPluginResolver !== null) {
+            $trustedPlugins = ($this->trustedPluginResolver)();
+        } elseif (\function_exists('zc_cli_resolve_trusted_plugin_versions')) {
+            $trustedPluginContext = zc_cli_resolve_trusted_plugin_versions();
+            $trustedPlugins = $trustedPluginContext['plugins'] ?? [];
+        }
+
+        ($this->legacyAdminFunctionLoader ?? new LegacyAdminFunctionLoader())->loadExtraFunctions($trustedPlugins);
+
         // NOTE: This isn't necessarily going to work since it's not running in a normal Admin context the way the legacy implementation did.
         global $zco_notifier;
         $zco_notifier = new notifier;
-
-        // Check whether defined exchange rate server functions are available.
-        // @TODO: might need to scan zc_plugins for additional servers; Legacy mode would have them in the /admin/includes/functions/extra_functions directory, which also isn't processed here yet.
-        $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
-        if (!function_exists($quote_function)) {
-            $output->errorln(sprintf('Unable to find exchange rate function %s() for primary server %s.', $quote_function, CURRENCY_SERVER_PRIMARY));
-            return 1;
-        }
 
         if ($input->isVerboseRequested()) {
             $output->writeln('Starting currency rates update...');
