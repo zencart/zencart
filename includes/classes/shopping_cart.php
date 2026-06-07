@@ -317,11 +317,11 @@ class shoppingCart extends base
                     //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                     $attr_value = null;
                     $blank_value = false;
-                    if (is_string($option) && str_starts_with($option, TEXT_PREFIX)) {
+                    if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX'))) {
                         if (trim($value) === '') {
                             $blank_value = true;
                         } else {
-                            $option = substr((string)$option, strlen(TEXT_PREFIX));
+                            $option = substr((string)$option, strlen(zen_config('TEXT_PREFIX')));
                             $attr_value = stripslashes($value);
                             $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
 
@@ -418,7 +418,7 @@ class shoppingCart extends base
 
         // ensure quantity added to cart is never more than what is in-stock
         $chk_current_qty = zen_get_products_stock($uprid);
-        if (STOCK_ALLOW_CHECKOUT === 'false' && $quantity > $chk_current_qty) {
+        if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && $quantity > $chk_current_qty) {
             $quantity = $chk_current_qty;
             if (!$this->flag_duplicate_msgs_set) {
                 $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($uprid), 'caution');
@@ -445,11 +445,11 @@ class shoppingCart extends base
                 //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                 $attr_value = null;
                 $blank_value = false;
-                if (is_string($option) && str_starts_with($option, TEXT_PREFIX)) {
+                if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX'))) {
                     if (trim($value) === '') {
                         $blank_value = true;
                     } else {
-                        $option = substr($option, strlen(TEXT_PREFIX));
+                        $option = substr($option, strlen(zen_config('TEXT_PREFIX')));
                         $attr_value = stripslashes($value);
                         $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
                         $this->contents[$uprid]['attributes_values'][$option] = $attr_value;
@@ -838,7 +838,7 @@ class shoppingCart extends base
                     $chk_price = zen_get_products_base_price($uprid);
                     $chk_special = zen_get_products_special_price($uprid, false);
                     // products_options_value_text
-                    if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && (string)zen_get_attributes_type($attributes_id) === (string)PRODUCTS_OPTIONS_TYPE_TEXT) {
+                    if (zen_config('ATTRIBUTES_ENABLED_TEXT_PRICES') === 'true' && (string)zen_get_attributes_type($attributes_id) === (string)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT')) {
                         $text_words = zen_get_word_count_price(
                             $this->contents[$uprid]['attributes_values'][$attribute_price->fields['options_id']],
                             $attribute_price->fields['attributes_price_words_free'],
@@ -981,7 +981,7 @@ class shoppingCart extends base
             // uncomment for odd shipping requirements needing this:
 
                   // if 0 weight defined as free shipping adjust for functions free_shipping_price and free_shipping_item
-                  if ($product['products_weight'] == 0 && ORDER_WEIGHT_ZERO_STATUS === '1' && $is_free_shipping === false) {
+                  if ($product['products_weight'] == 0 && zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && $is_free_shipping === false) {
                     $freeShippingTotal += $products_price;
                     $this->free_shipping_item += $qty;
                   }
@@ -1074,7 +1074,7 @@ class shoppingCart extends base
                 //////////////////////////////////////////////////
                 // calculate additional charges
                 // products_options_value_text
-                if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && (string)zen_get_attributes_type($attribute_price['products_attributes_id']) === (string)PRODUCTS_OPTIONS_TYPE_TEXT) {
+                if (zen_config('ATTRIBUTES_ENABLED_TEXT_PRICES') === 'true' && (string)zen_get_attributes_type($attribute_price['products_attributes_id']) === (string)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT')) {
                     $text_words = zen_get_word_count_price(
                         $this->contents[$uprid]['attributes_values'][$attribute_price['options_id']],
                         $attribute_price['attributes_price_words_free'],
@@ -1377,7 +1377,7 @@ class shoppingCart extends base
             }
 
             // convert quantity to proper decimals
-            $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+            $precision = QUANTITY_DECIMALS > 0 ? (int)zen_config('QUANTITY_DECIMALS') : 0;
             if ($precision === 0 || !str_contains($data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
@@ -1400,8 +1400,8 @@ class shoppingCart extends base
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
 
                 // units as defined in Admin, optionally overridden by what might be defined in products table from older shipping modules
-                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (defined('SHIPPING_WEIGHT_UNITS') ? (string)SHIPPING_WEIGHT_UNITS : null),
-                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (defined('SHIPPING_DIMENSION_UNITS') ? (string)SHIPPING_DIMENSION_UNITS : null),
+                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (zen_config('SHIPPING_WEIGHT_UNITS') ? (string)zen_config('SHIPPING_WEIGHT_UNITS') : null),
+                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (zen_config('SHIPPING_DIMENSION_UNITS') ? (string)zen_config('SHIPPING_DIMENSION_UNITS') : null),
 
                 'length' => $product['products_length'] ?? null, // float
                 'width' => $product['products_width'] ?? null, // float
@@ -1855,7 +1855,7 @@ class shoppingCart extends base
                 // Adjust new quantity to be the same as what's in stock.
                 //
                 $chk_current_qty = zen_get_products_stock($products_id);
-                if (STOCK_ALLOW_CHECKOUT === 'false' && $new_qty > $chk_current_qty) {
+                if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && $new_qty > $chk_current_qty) {
                     $new_qty = $chk_current_qty;
                     $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
                 }
@@ -1912,7 +1912,7 @@ class shoppingCart extends base
                 } else {
                     // display message if all is good and not on shopping_cart page
                     if ($_GET['main_page'] !== FILENAME_SHOPPING_CART) {
-                        if (DISPLAY_CART === 'false' && $messageStack->size('shopping_cart') === 0) {
+                        if (zen_config('DISPLAY_CART') === 'false' && $messageStack->size('shopping_cart') === 0) {
                             $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
                             $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_UPDATED_CART', $_POST, $goto, $parameters);
                         } else {
@@ -1955,7 +1955,7 @@ class shoppingCart extends base
                 //
                 foreach ($_POST['id'] as $key => $value) {
                     if (zen_get_attributes_valid($_POST['products_id'], $key, $value) === false) {
-                        if (str_starts_with($key, TEXT_PREFIX) === true && $value === '') {
+                        if (str_starts_with($key, zen_config('TEXT_PREFIX')) === true && $value === '') {
                             $selection_text = '';
                             $value_text = ' ' . ltrim(TEXT_INVALID_USER_INPUT, ' ');
                         } else {
@@ -2011,7 +2011,7 @@ class shoppingCart extends base
             // adjust new quantity to be no more than current in stock
             $chk_current_qty = zen_get_products_stock($_POST['products_id']);
             $this->flag_duplicate_msgs_set = false;
-            if (STOCK_ALLOW_CHECKOUT === 'false' && ($cart_qty + $new_qty) > $chk_current_qty) {
+            if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && ($cart_qty + $new_qty) > $chk_current_qty) {
                 $new_qty = $chk_current_qty;
                 $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'C: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
                 $this->flag_duplicate_msgs_set = true;
@@ -2022,7 +2022,7 @@ class shoppingCart extends base
                 $new_qty = 0;
                 $adjust_max = 'true';
             } else {
-                if (STOCK_ALLOW_CHECKOUT === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
+                if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
                     // adjust new quantity to be no more than current in stock
                     $adjust_new_qty = 'true';
                     $alter_qty = $chk_current_qty - $cart_qty;
@@ -2120,7 +2120,7 @@ class shoppingCart extends base
         }
         if (empty($the_list)) { // no errors
             // display message if all is good and not on shopping_cart page
-            if (DISPLAY_CART === 'false' && $_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
+            if (zen_config('DISPLAY_CART') === 'false' && $_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
                 if (!isset($_POST['shopping_cart_zero_or_less']) || $_POST['shopping_cart_zero_or_less'] !== true) {
                     $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
                     $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_PRODUCT_ADDED_TO_CART', $_POST, $goto, $parameters);
@@ -2186,7 +2186,7 @@ class shoppingCart extends base
         }
 
         // display message if all is good and not on shopping_cart page
-        if (DISPLAY_CART === 'false') {
+        if (zen_config('DISPLAY_CART') === 'false') {
             if ($_GET['main_page'] !== FILENAME_SHOPPING_CART && $allow_into_cart === 'Y' && $messageStack->size('shopping_cart') === 0) {
                 $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
                 $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_BUYNOW_ADDED_TO_CART', $_GET, $goto, $parameters);
@@ -2232,7 +2232,7 @@ class shoppingCart extends base
 
                     // adjust new quantity to be no more than current in stock
                     $chk_current_qty = zen_get_products_stock($prodId);
-                    if (STOCK_ALLOW_CHECKOUT === 'false' && $new_qty > $chk_current_qty) {
+                    if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && $new_qty > $chk_current_qty) {
                         $new_qty = $chk_current_qty;
                         $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($prodId), 'caution');
                     }
@@ -2242,7 +2242,7 @@ class shoppingCart extends base
                         $adjust_max = 'true';
                     } else {
                         // adjust new quantity to be no more than current in stock
-                        if (STOCK_ALLOW_CHECKOUT === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
+                        if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
                             $adjust_new_qty = 'true';
                             $alter_qty = $chk_current_qty - $cart_qty;
                             $new_qty = ($alter_qty > 0) ? $alter_qty : 0;
@@ -2276,7 +2276,7 @@ class shoppingCart extends base
             }
 
             // display message if all is good and not on shopping_cart page
-            if (DISPLAY_CART === 'false') {
+            if (zen_config('DISPLAY_CART') === 'false') {
                 if ($addCount && $_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
                     $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
                     $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_MULTIPLE_ADDED_TO_CART', $products_list, $goto, $parameters);
@@ -2372,7 +2372,7 @@ class shoppingCart extends base
             }
         }
         // display message if all is good and not on shopping_cart page
-        if (DISPLAY_CART === 'false') {
+        if (zen_config('DISPLAY_CART') === 'false') {
             if ($_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
                 $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
             } else {
@@ -2428,7 +2428,7 @@ class shoppingCart extends base
             $messageStackPosition = 'shopping_cart';
         }
 
-        $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+        $precision = QUANTITY_DECIMALS > 0 ? (int)zen_config('QUANTITY_DECIMALS') : 0;
 
         if ($precision !== 0) {
             if (!str_contains((string)$check_qty, '.')) {

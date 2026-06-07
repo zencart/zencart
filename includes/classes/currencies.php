@@ -127,7 +127,7 @@ class currencies extends base
         $currency_info = $this->getCurrencyInfo($currency_code);
 
         if ($calculate_using_exchange_rate === true) {
-            $multiplier = ($currency_code === DEFAULT_CURRENCY) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
+            $multiplier = ($currency_code === zen_config('DEFAULT_CURRENCY')) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
             $rate = !empty($currency_value) ? $currency_value : $multiplier;
             $number = $number * $rate;
         }

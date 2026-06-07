@@ -218,7 +218,7 @@ class Search extends \base
         }
         /*
         // always add quantity regardless of whether or not it is in the listing for add to cart buttons
-        if (PRODUCT_LIST_QUANTITY < 1) {
+        if (zen_config('PRODUCT_LIST_QUANTITY') < 1) {
         $select_column_list .= ', p.products_quantity ';
         }
         */
@@ -421,7 +421,7 @@ class Search extends \base
         //
         } else {
             // set the default sort order setting from the Admin when not defined by customer
-            if (empty($this->searchOptions->sort) && zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER') != '') {
+            if (empty($this->searchOptions->sort) && zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER') !== '') {
                 $this->searchOptions->sort = zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER');
             }
             if (empty($this->searchOptions->sort) ||
@@ -441,7 +441,7 @@ class Search extends \base
                     }
                 }
                 // if set to nothing use products_sort_order and PRODUCTS_LIST_NAME is off
-                if (zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER') == '') {
+                if (zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER') === '') {
                     $this->searchOptions->sort = '20a';
                 }
             } else {

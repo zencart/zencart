@@ -23,20 +23,20 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
     foreach ($results as $result) {
         $server_used = CURRENCY_SERVER_PRIMARY;
         $rate = '';
-        $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
+        $quote_function = 'quote_' . zen_config('CURRENCY_SERVER_PRIMARY') . '_currency';
         if (function_exists($quote_function)) {
             $rate = $quote_function($result['code']);
         }
 
-        if (empty($rate) && !empty(CURRENCY_SERVER_BACKUP)) {
+        if (empty($rate) && !empty(zen_config('CURRENCY_SERVER_BACKUP'))) {
             // failed to get currency quote from primary server - attempting to use backup server instead
-            $msg = sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $result['title'], $result['code']);
+            $msg = sprintf(WARNING_PRIMARY_SERVER_FAILED, zen_config('CURRENCY_SERVER_PRIMARY'), $result['title'], $result['code']);
             if (is_object($messageStack)) {
                 $messageStack->add_session($msg, 'warning');
             } elseif ($outputMessagesToCommandLine) {
                 echo "$msg\n";
             }
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
+            $quote_function = 'quote_' . zen_config('CURRENCY_SERVER_BACKUP') . '_currency';
             if (function_exists($quote_function)) {
                 $rate = $quote_function($result['code']);
             }
@@ -44,7 +44,7 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
         }
         if (!empty($rate)) {
             /* Add currency uplift, because exchange rates quoted aren't always the same as what your own bank gives you */
-            $multiplier = (defined('CURRENCY_UPLIFT_RATIO') && (int)CURRENCY_UPLIFT_RATIO != 0) ? CURRENCY_UPLIFT_RATIO : 0;
+            $multiplier = !empty(zen_config('CURRENCY_UPLIFT_RATIO')) ? zen_config('CURRENCY_UPLIFT_RATIO') : 0;
             $zco_notifier->notify('ADMIN_CURRENCY_EXCHANGE_RATE_MULTIPLIER', $result['code'], $multiplier, $rate);
 
             if ($rate != 1 && $multiplier > 0) {

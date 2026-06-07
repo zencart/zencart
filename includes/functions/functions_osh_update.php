@@ -126,7 +126,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 //send emails
                 $email_text =
                     EMAIL_SALUTATION . ' ' . $osh_info->fields['customers_name'] . ', ' . "\n\n" .
-                    STORE_NAME . ' ' . OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id . "\n\n" .
+                    zen_config('STORE_NAME') . ' ' . OSH_EMAIL_TEXT_ORDER_NUMBER . ' ' . $orders_id . "\n\n" .
                     OSH_EMAIL_TEXT_INVOICE_URL . ' ' . zen_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, "order_id=$orders_id", 'SSL') . "\n\n" .
                     OSH_EMAIL_TEXT_DATE_ORDERED . ' ' . zen_date_long($osh_info->fields['date_purchased']) . "\n\n" .
                     strip_tags($email_message) .
@@ -166,7 +166,7 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 $GLOBALS['zco_notifier']->notify('ZEN_UPDATE_ORDERS_HISTORY_BEFORE_SENDING_CUSTOMER_EMAIL', $orders_id, $email_subject, $email_text, $html_msg, $notify_customer);
 
                 if ($notify_customer == 1) {
-                    zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status', $filename);
+                    zen_mail($osh_info->fields['customers_name'], $osh_info->fields['customers_email_address'], $email_subject, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'order_status', $filename);
                 }
 
                 if (!empty($paypal['txn_id'])) {
@@ -175,11 +175,11 @@ function zen_update_orders_history($orders_id, $message = '', $updated_by = null
                 }
 
                 //send extra emails
-                if (empty($send_extra_emails_to) && (int)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS === 1) {
-                    $send_extra_emails_to = (string)SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO;
+                if (empty($send_extra_emails_to) && (int)zen_config('SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_STATUS') === 1) {
+                    $send_extra_emails_to = (string)zen_config('SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO');
                 }
                 if (!empty($send_extra_emails_to)) {
-                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'order_status_extra', $filename);
+                    zen_mail('', $send_extra_emails_to, SEND_EXTRA_ORDERS_STATUS_ADMIN_EMAILS_TO_SUBJECT . ' ' . $email_subject, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'order_status_extra', $filename);
                 }
             }
 

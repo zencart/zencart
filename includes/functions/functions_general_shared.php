@@ -37,7 +37,7 @@ function zen_is_whitelisted_admin_ip($ip = null)
     if (empty($ip)) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    return strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $ip) !== false;
+    return strpos(zen_config('EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'), $ip) !== false;
 }
 
 
@@ -402,12 +402,12 @@ function zen_get_shipping_enabled(string $shipping_module): bool
     $check_cart_weight = $_SESSION['cart']->show_weight();
 
     // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module === 'freeshipper') {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && $check_cart_weight == 0 && $shipping_module === 'freeshipper') {
         return true;
     }
 
     // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') == '1' && $check_cart_weight == 0 && $shipping_module !== 'freeshipper') {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && $check_cart_weight == 0 && $shipping_module !== 'freeshipper') {
         return false;
     }
 
