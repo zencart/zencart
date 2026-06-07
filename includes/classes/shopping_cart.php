@@ -1377,7 +1377,10 @@ class shoppingCart extends base
             }
 
             // convert quantity to proper decimals
-            $precision = QUANTITY_DECIMALS > 0 ? (int)zen_config('QUANTITY_DECIMALS') : 0;
+            $precision = (int)zen_config('QUANTITY_DECIMALS');
+            if ($precision < 0) {
+                $precision = 0;
+            }
             if ($precision === 0 || !str_contains($data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
@@ -1400,8 +1403,8 @@ class shoppingCart extends base
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
 
                 // units as defined in Admin, optionally overridden by what might be defined in products table from older shipping modules
-                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (zen_config('SHIPPING_WEIGHT_UNITS') ? (string)zen_config('SHIPPING_WEIGHT_UNITS') : null),
-                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (zen_config('SHIPPING_DIMENSION_UNITS') ? (string)zen_config('SHIPPING_DIMENSION_UNITS') : null),
+                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? zen_config('SHIPPING_WEIGHT_UNITS'),
+                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? zen_config('SHIPPING_DIMENSION_UNITS'),
 
                 'length' => $product['products_length'] ?? null, // float
                 'width' => $product['products_width'] ?? null, // float
@@ -2428,7 +2431,10 @@ class shoppingCart extends base
             $messageStackPosition = 'shopping_cart';
         }
 
-        $precision = QUANTITY_DECIMALS > 0 ? (int)zen_config('QUANTITY_DECIMALS') : 0;
+        $precision = (int)zen_config('QUANTITY_DECIMALS');
+        if ($precision < 0) {
+            $precision = 0;
+        }
 
         if ($precision !== 0) {
             if (!str_contains((string)$check_qty, '.')) {
