@@ -256,4 +256,5 @@ ppr_webhook.php
 
 # local per-dev control
 CLAUDE.local.md
+settings.local.json
 

@@ -11,6 +11,8 @@
 /CLAUDE.local.md.example export-ignore
 /CONVENTIONS.md   export-ignore
 /phpstan*         export-ignore
+/.claude          export-ignore
+/docs/*.md        export-ignore
 
 # Auto detect text files and perform LF normalization
 * text=auto
