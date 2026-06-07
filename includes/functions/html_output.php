@@ -961,7 +961,7 @@ function zen_get_country_list($name, $selected = '', $parameters = '')
 
     // Set some default entries at top of list:
     if (zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY') !== '' && zen_config('STORE_COUNTRY') !== zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY')) $countriesAtTopOfList[] = SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
-    $countriesAtTopOfList[] = STORE_COUNTRY;
+    $countriesAtTopOfList[] = zen_config('STORE_COUNTRY');
     // IF YOU WANT TO ADD MORE DEFAULTS TO THE TOP OF THIS LIST, SIMPLY ENTER THEIR NUMBERS HERE.
     // Duplicate more lines as needed
     // Example: Canada is 38, so use 38 as shown:
