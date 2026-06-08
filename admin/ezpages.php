@@ -101,26 +101,33 @@ if (!empty($action)) {
             // If the observer sets the $page_error (i.e. $p2) value to (bool)true, it is the observer's
             // responsibility to add a message for display to the current admin.
             //
+            // If the observer adds fields to the $sql_data_array, they'll be merged with the
+            // 'base' values, with the observer's values overriding.
+            //
+            $sql_data_array = [];
             $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array);
 
             if ($page_error === false) {
-                $sql_data_array = [
-                    'page_open_new_window' => $page_open_new_window,
-                    'alt_url' => $alt_url,
-                    'alt_url_external' => $alt_url_external,
-                    'status_mobile' => $status_mobile,
-                    'status_header' => $status_header,
-                    'status_sidebox' => $status_sidebox,
-                    'status_footer' => $status_footer,
-                    'status_toc' => $status_toc,
-                    'status_visible' => $status_visible,
-                    'mobile_sort_order' => $pages_mobile_sort_order,
-                    'header_sort_order' => $pages_header_sort_order,
-                    'sidebox_sort_order' => $pages_sidebox_sort_order,
-                    'footer_sort_order' => $pages_footer_sort_order,
-                    'toc_sort_order' => $pages_toc_sort_order,
-                    'toc_chapter' => $toc_chapter,
-                ];
+                $sql_data_array = array_merge(
+                    [
+                        'page_open_new_window' => $page_open_new_window,
+                        'alt_url' => $alt_url,
+                        'alt_url_external' => $alt_url_external,
+                        'status_mobile' => $status_mobile,
+                        'status_header' => $status_header,
+                        'status_sidebox' => $status_sidebox,
+                        'status_footer' => $status_footer,
+                        'status_toc' => $status_toc,
+                        'status_visible' => $status_visible,
+                        'mobile_sort_order' => $pages_mobile_sort_order,
+                        'header_sort_order' => $pages_header_sort_order,
+                        'sidebox_sort_order' => $pages_sidebox_sort_order,
+                        'footer_sort_order' => $pages_footer_sort_order,
+                        'toc_sort_order' => $pages_toc_sort_order,
+                        'toc_chapter' => $toc_chapter,
+                    ],
+                    $sql_data_array
+                );
 
                 if ($action === 'insert') {
                     zen_db_perform(TABLE_EZPAGES, $sql_data_array);
