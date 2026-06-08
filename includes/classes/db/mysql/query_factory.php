@@ -24,7 +24,7 @@ if (!defined('DB_ERROR_NOT_CONNECTED')) {
  */
 class queryFactory extends base
 {
-    public mysqli|false $link; // mysqli object
+    public mysqli|false $link = false; // mysqli object
     private int $count_queries = 0;
     private float|int $total_query_time = 0;
     public bool $dieOnErrors = false;
@@ -100,11 +100,11 @@ class queryFactory extends base
         mysqli_report(MYSQLI_REPORT_OFF);
 
         $connectionRetry = 10;
-        while (!isset($this->link) || ($this->link == false && $connectionRetry > 0)) {
+        while ($this->link === false && $connectionRetry > 0) {
             $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
 
             // handle MySQL connection errors/failures
-            if (in_array(mysqli_connect_errno(), $this->ignored_error_codes)) {
+            if (in_array(mysqli_connect_errno(), $this->ignored_error_codes, true)) {
                 if ($connectionRetry > 1) {
                     // if service is down, try only one more time
                     $connectionRetry = 1;

@@ -598,6 +598,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
 
+        if (empty($dbServerVal) || empty($dbNameVal) || empty($dbUserVal)) {
+            return false;
+        }
+
         $db = new queryFactory();
         $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if ((int)$db->error_number !== 2002) {
