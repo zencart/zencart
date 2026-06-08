@@ -217,6 +217,7 @@ class queryFactory extends base
         if (!$zp_db_resource) {
             if (in_array(mysqli_errno($this->link), [2006, 4031])) {
                 $this->link = false;
+                $this->db_connected = false;
                 // reconnect and set new $this->link if successful
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
                 if ($this->link === false) {
@@ -303,13 +304,16 @@ class queryFactory extends base
 
         // Get MySQL query result
         $zp_db_resource = $this->runQuery($sqlQuery, $removeFromQueryCache);
+        $obj->link = $this->link !== false ? $this->link : null;
 
         // iterate over query results and cache it before returning it
         if ($enableCaching) {
             $zc_cache->sql_cache_expire_now($sqlQuery);
 
             if (false === $zp_db_resource) {
-                $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+                if ($this->link !== false) {
+                    $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+                }
             } else {
                 $obj->resource = $zp_db_resource;
                 $zp_rows = $obj->RecordCount();
@@ -348,7 +352,9 @@ class queryFactory extends base
         // process query results without caching them
 
         if (false === $zp_db_resource) {
-            $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+            if ($this->link !== false) {
+                $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+            }
         } else {
             $obj->resource = $zp_db_resource;
             if ($obj->RecordCount() > 0) {
@@ -399,9 +405,12 @@ class queryFactory extends base
         $obj->limit = $limit;
 
         $zp_db_resource = $this->runQuery($sqlQuery, true);
+        $obj->link = $this->link !== false ? $this->link : null;
 
         if (false === $zp_db_resource) {
-            $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+            if ($this->link !== false) {
+                $this->set_error(mysqli_errno($this->link), mysqli_error($this->link), $this->dieOnErrors);
+            }
         } else {
             $obj->resource = $zp_db_resource;
 

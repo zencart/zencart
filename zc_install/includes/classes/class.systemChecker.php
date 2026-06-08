@@ -253,6 +253,10 @@ class systemChecker
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
 
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -574,6 +578,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
 
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -598,7 +606,7 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
 
-        if (empty($dbServerVal) || empty($dbNameVal) || empty($dbUserVal)) {
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
             return false;
         }
 
@@ -707,6 +715,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -821,6 +833,10 @@ class systemChecker
             $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
             $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
 
+            if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+                return;
+            }
+
             $db = new queryFactory();
             $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
             $db->selectdb($dbNameVal);
@@ -852,6 +868,10 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return true;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
