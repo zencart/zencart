@@ -206,6 +206,10 @@ class queryFactory extends base
                 $this->set_error(0, DB_ERROR_NOT_CONNECTED, $this->dieOnErrors);
             }
         }
+        // bail out if there's still no connection, rather than passing an invalid $link to mysqli_*
+        if ($this->link === false) {
+            return false;
+        }
         // run the query
         $zp_db_resource = $this->query($this->link, $sqlQuery, $removeFromQueryCache);
 
@@ -215,6 +219,9 @@ class queryFactory extends base
                 $this->link = false;
                 // reconnect and set new $this->link if successful
                 $this->connect($this->host, $this->user, $this->password, $this->database, null, $this->dieOnErrors);
+                if ($this->link === false) {
+                    return false;
+                }
                 // run the query directly, bypassing the queryCache
                 $zp_db_resource = mysqli_query($this->link, $sqlQuery);
             }
