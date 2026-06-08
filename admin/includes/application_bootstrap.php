@@ -90,7 +90,9 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') ||
 /**
  * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
  */
-if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
+if (!defined('DEBUG_AUTOLOAD')) {
+    define('DEBUG_AUTOLOAD', false);
+}
 
 /**
  * set the level of error reporting
@@ -165,7 +167,6 @@ $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_conf
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^filenames\.php$~i');
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
