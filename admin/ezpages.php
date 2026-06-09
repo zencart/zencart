@@ -120,9 +120,9 @@ if (!empty($action)) {
             // responsibility to add a message for display to the current admin.
             //
             // The observer may update the $sql_data_array.
+            //
             // The $page_id is passed as extra information in the case of action=update 
             // so the observer knows which page is affected, but the observer cannot change the page ID.
-            //
         
             // Pass the page ID as a separate variable so that an observer cannot change it.
             $page_id = (int)$pages_id;
