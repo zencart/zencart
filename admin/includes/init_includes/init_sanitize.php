@@ -237,7 +237,7 @@ $sanitizer->addSimpleSanitization('FILE_PATH_OR_URL', $group);
 $group = ['coupon_min_order'];
 $sanitizer->addSimpleSanitization('CURRENCY_VALUE_REGEX', $group);
 
-$group = ['categories_name', 'products_name', 'orders_status_name', 'configuration', 'original'];
+$group = ['categories_name', 'products_name', 'orders_status_name', 'configuration'];
 $sanitizer->addSimpleSanitization('PRODUCT_NAME_DEEP_REGEX', $group);
 
 $group = ['configuration_key', 'query_string'];
