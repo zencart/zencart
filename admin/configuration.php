@@ -191,7 +191,7 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
     if (isset($_GET['cID']) && $_GET['cID'] === $item['configuration_id']) {
-        $focusField = $fieldName;
+        $focusField = 'configuration[' . $fieldName . ']';
     }
 
     if (defined('CFGTITLE_' . $item['configuration_key'])) {
@@ -252,7 +252,11 @@ if (isset($focusField)) {
 ?>
 <script id="config-focus">
 $(window).on('load', function() {
-    $('input[name="<?= $focusField ?>"], input[name="configuration[<?= $focusField ?>]"]:checked, select[name="configuration[<?= $focusField ?>]"]').focus();
+    if ($('input[name="<?= $focusField ?>"]').is(':checked')) {
+        $('input[name="<?= $focusField ?>"]:checked').trigger('focus');
+    } else {
+        $('input[name="<?= $focusField ?>"], select[name="<?= $focusField ?>"]').trigger('focus');
+    }
 });
 </script>
 <?php
