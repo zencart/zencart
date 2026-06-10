@@ -43,13 +43,13 @@ class AttributeLookupsTest extends zcUnitTestCase
             ->getMock();
         $result->expects($this->once())
             ->method('RecordCount')
-            ->will($this->returnValue(1));
+            ->willReturn(1);
 
         global $db;
         $db = $this->getMockBuilder('queryFactory')->getMock();
         $db->expects($this->once())
             ->method('Execute')
-            ->will($this->returnValue($result));
+            ->willReturn($result);
 
         $this->assertTrue(zen_has_product_attributes_downloads_status(1));
     }
