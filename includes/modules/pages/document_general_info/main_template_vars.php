@@ -20,7 +20,7 @@ if (!isset($product_info) || get_class($product_info) !== 'Product' || $product_
 
 $product_not_found = !$product_info->exists();
 
-if (zen_config('DISABLED_PRODUCTS_TRIGGER_HTTP200', 'true') !== 'true') {
+if (zen_config('DISABLED_PRODUCTS_TRIGGER_HTTP200', 'false') !== 'true') {
     if (!$product_not_found && $product_info->status() !== 1) {
         $product_not_found = true;
     }

@@ -135,7 +135,7 @@ if (!empty($_SESSION['cc_id'])) {
   $customers_referral = $db->Execute($customers_referral_query);
 
   // only use discount coupon if set by coupon
-  if ($customers_referral->fields['customers_referral'] == '' && zen_config('CUSTOMERS_REFERRAL_STATUS') === 1) {
+  if ($customers_referral->fields['customers_referral'] == '' && (int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 1) {
     $sql = "UPDATE " . TABLE_CUSTOMERS . "
             SET customers_referral = :customersReferral
             WHERE customers_id = :customersID";
