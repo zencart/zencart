@@ -93,6 +93,24 @@ if (!empty($action)) {
                 $page_error = true;
             }
 
+            $sql_data_array = [
+                'page_open_new_window' => $page_open_new_window,
+                'alt_url' => $alt_url,
+                'alt_url_external' => $alt_url_external,
+                'status_mobile' => $status_mobile,
+                'status_header' => $status_header,
+                'status_sidebox' => $status_sidebox,
+                'status_footer' => $status_footer,
+                'status_toc' => $status_toc,
+                'status_visible' => $status_visible,
+                'mobile_sort_order' => $pages_mobile_sort_order,
+                'header_sort_order' => $pages_header_sort_order,
+                'sidebox_sort_order' => $pages_sidebox_sort_order,
+                'footer_sort_order' => $pages_footer_sort_order,
+                'toc_sort_order' => $pages_toc_sort_order,
+                'toc_chapter' => $toc_chapter,
+            ];
+
             // -----
             // Let a watching observer know that the EZ-Page's data is about to be recorded in the
             // database, giving it the opportunity to perform its checks on any additional data and
@@ -101,27 +119,16 @@ if (!empty($action)) {
             // If the observer sets the $page_error (i.e. $p2) value to (bool)true, it is the observer's
             // responsibility to add a message for display to the current admin.
             //
-            $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array);
+            // The observer may update the $sql_data_array.
+            //
+            // The $page_id is passed as extra information in the case of action=update 
+            // so the observer knows which page is affected, but the observer cannot change the page ID.
+        
+            // Pass the page ID as a separate variable so that an observer cannot change it.
+            $page_id = (int)($pages_id ?? 0);
+            $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array, $page_id);
 
             if ($page_error === false) {
-                $sql_data_array = [
-                    'page_open_new_window' => $page_open_new_window,
-                    'alt_url' => $alt_url,
-                    'alt_url_external' => $alt_url_external,
-                    'status_mobile' => $status_mobile,
-                    'status_header' => $status_header,
-                    'status_sidebox' => $status_sidebox,
-                    'status_footer' => $status_footer,
-                    'status_toc' => $status_toc,
-                    'status_visible' => $status_visible,
-                    'mobile_sort_order' => $pages_mobile_sort_order,
-                    'header_sort_order' => $pages_header_sort_order,
-                    'sidebox_sort_order' => $pages_sidebox_sort_order,
-                    'footer_sort_order' => $pages_footer_sort_order,
-                    'toc_sort_order' => $pages_toc_sort_order,
-                    'toc_chapter' => $toc_chapter,
-                ];
-
                 if ($action === 'insert') {
                     zen_db_perform(TABLE_EZPAGES, $sql_data_array);
                     $pages_id = $db->insert_ID();
