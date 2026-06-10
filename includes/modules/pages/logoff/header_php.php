@@ -17,7 +17,7 @@ $breadcrumb->add(NAVBAR_TITLE);
 /**
  * Check what language should be used on the logoff screen
  */
-  $logoff_lang = ($_SESSION['languages_code'] != DEFAULT_LANGUAGE) ? 'language=' . $_SESSION['languages_code'] : '';
+  $logoff_lang = ($_SESSION['languages_code'] != zen_config('DEFAULT_LANGUAGE')) ? 'language=' . $_SESSION['languages_code'] : '';
 
 /**
   * Check if there is still a customer_id

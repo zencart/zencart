@@ -40,7 +40,7 @@ if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
 if (!isset($_SESSION['shipping'])) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
-if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') === 'true' && $_SESSION['cart']->show_total() < zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
@@ -52,7 +52,7 @@ $_SESSION['comments'] = !empty($_POST['comments']) ? $_POST['comments'] : '';
 //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
 
-if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+if (zen_config('DISPLAY_CONDITIONS_ON_CHECKOUT') === 'true') {
   if (!isset($_POST['conditions']) || ($_POST['conditions'] != '1')) {
     $messageStack->add_session('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
   }
@@ -106,14 +106,14 @@ if ($messageStack->size('checkout_payment') > 0) {
 // Stock Check
 $flagAnyOutOfStock = false;
 $stock_check = array();
-if (STOCK_CHECK == 'true') {
+if (zen_config('STOCK_CHECK') === 'true') {
   for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
     if ($stock_check[$i] = zen_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
       $flagAnyOutOfStock = true;
     }
   }
   // Out of Stock
-  if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($flagAnyOutOfStock == true) ) {
+  if ( (zen_config('STOCK_ALLOW_CHECKOUT') !== 'true') && ($flagAnyOutOfStock == true) ) {
     zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
   }
 }
@@ -135,7 +135,7 @@ if (!empty($_SESSION['cc_id'])) {
   $customers_referral = $db->Execute($customers_referral_query);
 
   // only use discount coupon if set by coupon
-  if ($customers_referral->fields['customers_referral'] == '' and CUSTOMERS_REFERRAL_STATUS == 1) {
+  if ($customers_referral->fields['customers_referral'] == '' && zen_config('CUSTOMERS_REFERRAL_STATUS') === 1) {
     $sql = "UPDATE " . TABLE_CUSTOMERS . "
             SET customers_referral = :customersReferral
             WHERE customers_id = :customersID";
