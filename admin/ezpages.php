@@ -125,7 +125,7 @@ if (!empty($action)) {
             // so the observer knows which page is affected, but the observer cannot change the page ID.
         
             // Pass the page ID as a separate variable so that an observer cannot change it.
-            $page_id = (int)$pages_id;
+            $page_id = (int)($pages_id ?? 0);
             $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array, $page_id);
 
             if ($page_error === false) {
