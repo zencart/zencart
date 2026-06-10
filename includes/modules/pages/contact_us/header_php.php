@@ -69,7 +69,7 @@ if (isset($_GET['action']) && ($_GET['action'] === 'send')) {
                 }
             }
 
-            $send_to_email = trim(zen_config('EMAIL_FROM')); // default to EMAIL_FROM
+            $send_to_email = trim(zen_config('STORE_OWNER_EMAIL_ADDRESS')); // default to STORE_OWNER_EMAIL_ADDRESS
             $send_to_name  = trim(zen_config('STORE_NAME'));  // default to STORE_NAME
 
             // Assign email destination from array
