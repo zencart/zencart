@@ -252,7 +252,11 @@ if (isset($focusField)) {
 ?>
 <script id="config-focus">
 $(window).on('load', function() {
-    $('input[name="<?= $focusField ?>"], input[name="configuration[<?= $focusField ?>]"]:checked, select[name="configuration[<?= $focusField ?>]"]').focus();
+    if ($('input[name="<?= $focusField ?>"]').is(':checked')) {
+        $('input[name="<?= $focusField ?>"]:checked').trigger('focus');
+    } else {
+        $('input[name="<?= $focusField ?>"], select[name="<?= $focusField ?>"]').trigger('focus');
+    }
 });
 </script>
 <?php
