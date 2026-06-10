@@ -8,11 +8,9 @@ namespace Tests\FeatureAdmin\PluginTests;
 
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group serial
- * @group custom-seeder
- * @group plugin-filesystem
- */
+#[\PHPUnit\Framework\Attributes\Group('serial')]
+#[\PHPUnit\Framework\Attributes\Group('custom-seeder')]
+#[\PHPUnit\Framework\Attributes\Group('plugin-filesystem')]
 class BasicPluginInstallTest extends zcInProcessFeatureTestCaseAdmin
 {
     public const TEST_PLUGIN_NAME = 'zenTestPlugin';

@@ -103,7 +103,7 @@ class QueryBuilder extends \base
     protected function setFinalQuery($listingQuery)
     {
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_START');
-        $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .  $this->query ['joins'] .  $this->query ['where'] . $this->query ['groupBy'] . $this->query ['orderBy']; 
+        $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .  $this->query ['joins'] .  $this->query ['where'] . $this->query ['groupBy'] . $this->query ['orderBy'];
         if (!isset($this->query['countSql'])) {
             $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
                 $this->parts ['mainTableName'] . "." . $this->parts ['countField'] . ")

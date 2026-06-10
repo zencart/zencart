@@ -18,7 +18,7 @@ class SelectWhereFilter extends baseFilter implements RequestFilter
     protected $filterDefinition = [];
     protected $options = [];
     protected $parameters =[];
-    
+
     /**
      * @since ZC v1.5.8
      */

@@ -87,10 +87,7 @@ trait PluginLocalTestConcerns
 
         if ($db === null) {
             $db = new \queryFactory();
-            if (!defined('USE_PCONNECT')) {
-                define('USE_PCONNECT', 'false');
-            }
-            $db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false);
+            $db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'unused', false);
         }
 
         require_once ROOTCWD . 'includes/functions/database.php';
@@ -106,6 +103,11 @@ trait PluginLocalTestConcerns
 
         $this->definePluginInstallerConstant('PLUGIN_INSTALL_SQL_FAILURE', 'one or more database errors occurred');
         $this->definePluginInstallerConstant('ERROR_REMOVE_FILES_CONTEXT', 'Invalid context supplied (%s), it must be either "catalog" or "admin".');
+        $this->definePluginInstallerConstant('ERROR_UNKNOWN_FAILURE_INSTALL', 'install');
+        $this->definePluginInstallerConstant('ERROR_UNKNOWN_FAILURE_UNINSTALL', 'un-install');
+        $this->definePluginInstallerConstant('ERROR_UNKNOWN_FAILURE_UPGRADE', 'upgrade');
+        $this->definePluginInstallerConstant('ERROR_UNKNOWN_FAILURE_DISABLE', 'disable');
+        $this->definePluginInstallerConstant('ERROR_UNKNOWN_FAILURE_ENABLE', 'enable');
     }
 
     protected function definePluginInstallerConstant(string $name, string $value): void

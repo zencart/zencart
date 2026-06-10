@@ -11,7 +11,7 @@
  *
  * @since ZC v1.0.3
  */
-function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
+function zen_href_link($page = '', $parameters = '', $connection = 'deprecated', $add_session_id = true) {
     global $zco_notifier, $session_started;
 
     // Notify any observers listening for href_link calls
@@ -69,33 +69,24 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
 }
 
 /**
-   * @since ZC v1.0.3
+ * @since ZC v1.0.3
  */
-  function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+  function zen_catalog_href_link(string $page = '', string $parameters = '', string $connection = 'deprecated') {
     global $zco_notifier;
     $link = null;
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHREF', array(), $link, $page, $parameters, $connection);
-    if($link !== null) return $link;
-
-    if ($connection == 'NONSSL') {
-      $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL_CATALOG == 'true') {
-        $link = HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG;
-      } else {
-        $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-      }
-    } else {
-      trigger_error("FATAL ERROR: zen_catalog_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL", E_USER_WARNING);
-      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine connection method on a link!<br><br>Known methods: NONSSL SSL<br><br>Function used:<br><br>zen_catalog_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
+    if ($link !== null) {
+        return $link;
     }
-    if ($parameters == '') {
+
+    $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
+    if ($parameters === '') {
       $link .= 'index.php?main_page='. $page;
     } else {
       $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
     }
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+    while ( (substr($link, -1) === '&') || (substr($link, -1) === '?') ) $link = substr($link, 0, -1);
       $link = preg_replace('/(&{2,}|(&amp;)+)/', '&', $link);
 
       // Convert any remaining '&' into '&amp;' (valid URL for href)
@@ -107,33 +98,17 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
 /**
  * @since ZC v1.5.7
  */
-function zen_catalog_base_link($connection = '')
+function zen_catalog_base_link(string $connection = 'deprecated')
 {
-    global $zco_notifier, $request_type;
-
-    if (empty($connection)) {
-        $connection = $request_type;
-    }
+    global $zco_notifier;
 
     $link = null;
-    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHOME', array(), $link, $connection);
-    if ($link !== null) return $link;
-
-    switch ($connection) {
-        case 'NONSSL':
-            $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-            break;
-
-        case 'SSL':
-        default:
-            if (ENABLE_SSL_CATALOG == 'true') {
-                $link = HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG;
-            } else {
-                $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-            }
+    $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT_ADMCATHOME', [], $link, $connection);
+    if ($link !== null) {
+        return $link;
     }
 
-    return $link;
+    return HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
 }
 
 /**
@@ -142,6 +117,13 @@ function zen_catalog_base_link($connection = '')
  */
 if (!function_exists('zen_image')) {
   function zen_image($src, $alt = '', $width = '', $height = '', $params = '') {
+    // off-site images hook
+    $image_html = '';
+    $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_ZEN_IMAGE_OVERRIDE', compact('src', 'alt', 'width', 'height', 'params'), $image_html);
+    if ($image_html !== '') {
+        return $image_html;
+    }
+    // end hook
     if ($src === DIR_WS_CATALOG_IMAGES) {
       return '';
     }
@@ -251,6 +233,7 @@ $iconMap = [
   'unlocked' => 'fa-lock-open',
   'loading' => 'fa-gear fa-spin',
   'eye' => 'fa-eye',
+  'maximize' => 'fa-maximize',
 ];
 
 /**
@@ -309,14 +292,14 @@ function zen_icon(string $icon, ?string $tooltip = null, string $size = '', bool
  * @since ZC v1.0.3
  */
   function zen_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-	if (!empty($width)) {
-		if (substr(rtrim($width), -1) !== '%') {
+    if (!empty($width)) {
+        if (substr(rtrim($width), -1) !== '%') {
             $width = $width . 'px';
         }
-		$param = 'style="width:' . $width . ';"';
-	} else {
-		$param = '';
-	}
+        $param = 'style="width:' . $width . ';"';
+    } else {
+        $param = '';
+    }
     return zen_image(DIR_WS_IMAGES . $image, '', '', $height, $param);
   }
 /**
@@ -378,9 +361,9 @@ function zen_draw_form($name, $action, $parameters = '', $method = 'post', $para
 {
     $form = '<form name="' . zen_output_string($name) . '" action="';
     if (!empty($parameters)) {
-        $form .= zen_href_link($action, $parameters, 'NONSSL');
+        $form .= zen_href_link($action, $parameters);
     } else {
-        $form .= zen_href_link($action, '', 'NONSSL');
+        $form .= zen_href_link($action);
     }
     $form .= '" method="' . zen_output_string($method) . '"';
     if (!empty($params)) {

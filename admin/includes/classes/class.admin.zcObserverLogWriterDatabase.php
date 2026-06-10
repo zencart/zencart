@@ -97,7 +97,7 @@ class zcObserverLogWriterDatabase
             $sql = "ALTER TABLE " . TABLE_ADMIN_ACTIVITY_LOG . " ADD COLUMN logmessage mediumtext NOT NULL";
             $db->Execute($sql);
         }
- 
+
         // add 'severity' field of type varchar(9), if not already present
         if ($sniffer->field_exists(TABLE_ADMIN_ACTIVITY_LOG, 'severity') === true) {
             return;
@@ -143,7 +143,7 @@ class zcObserverLogWriterDatabase
         global $db;
 
         $db->Execute("TRUNCATE TABLE " . TABLE_ADMIN_ACTIVITY_LOG);
-        
+
         $admin_id = $_SESSION['admin_id'] ?? 0;
         $admname = '{' . preg_replace('/[^\w]/', '*', zen_get_admin_name() ?? '[Unknown/NotLoggedIn]') . '[' . $admin_id . ']}';
 

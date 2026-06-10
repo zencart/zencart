@@ -27,7 +27,7 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
 // (for whatever reason) can never be set!  The customer, in this case, **will** receive
 // that "Session Timeout" message.
 //
-if (SESSION_FORCE_COOKIE_USE === 'True' && !isset($_COOKIE['cookie_test']) && !isset($_SESSION['order_status_redirected'])) {
+if (zen_config('SESSION_FORCE_COOKIE_USE') === 'True' && !isset($_COOKIE['cookie_test']) && !isset($_SESSION['order_status_redirected'])) {
     $_SESSION['order_status_redirected'] = true;
     zen_redirect(zen_href_link(FILENAME_ORDER_STATUS, '', 'SSL'));
 }
@@ -43,7 +43,12 @@ $query_email_address = '';
 // -----
 // Create the store-specific name of the spam "honeypot" by hashing the store's defined name.
 //
-$spam_input_name = hash('md5', STORE_NAME);
+$spam_input_name = hash('md5', zen_config('STORE_NAME'));
+
+// Normalize the posted order-id in place so downstream templates don't see raw input.
+if (isset($_POST['order_id'])) {
+    $_POST['order_id'] = (int) $_POST['order_id'];
+}
 
 if (isset($_GET['action']) && $_GET['action'] === 'status') {
     $error = false;
@@ -136,7 +141,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'status') {
         // observer to identify (and remove) the value when the customer navigates off
         // the order_status/download pages.
         //
-        if (DOWNLOAD_ENABLED === 'true') {
+        if (zen_config('DOWNLOAD_ENABLED') === 'true') {
             $_SESSION['email_address'] = $query_email_address;
             $_SESSION['email_is_os'] = true;
         }

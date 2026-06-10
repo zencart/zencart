@@ -140,14 +140,6 @@ class Category
     /**
      * @since ZC v2.1.0
      */
-    public function getInfoPage(): string
-    {
-        return $this->getTypeHandler() . '_info';
-    }
-
-    /**
-     * @since ZC v2.1.0
-     */
     public function __get(string $name)
     {
         return $this->get($name);
@@ -161,7 +153,7 @@ class Category
         global $db;
 
         $sql = "SELECT c.*, pt.product_type_id
-                FROM " . TABLE_CATEGORIES . " c 
+                FROM " . TABLE_CATEGORIES . " c
                 LEFT JOIN " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " pt ON (c.categories_id = pt.category_id)
                 WHERE categories_id = " . (int)$category_id;
         $category = $db->Execute($sql, 1, true, 900);

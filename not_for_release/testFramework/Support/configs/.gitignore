@@ -2,6 +2,6 @@
 *.configure.php.example
 *.db_configure.php
 
-!runner.admin.configure.php
-!runner.store.configure.php
+!configure.php.example
+!runner.configure.php
 !runner.main.configure.php

@@ -9,9 +9,7 @@ namespace Tests\FeatureAdmin\AdminEndpoints;
 use Tests\Support\Database\TestDb;
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AdminAuthLifecycleTest extends zcInProcessFeatureTestCaseAdmin
 {
     protected $runTestInSeparateProcess = true;
@@ -116,29 +114,5 @@ class AdminAuthLifecycleTest extends zcInProcessFeatureTestCaseAdmin
         );
 
         $this->assertTrue(password_verify('Adminpass123', (string) $hashedPassword));
-    }
-
-    protected function completeInitialAdminSetup(): void
-    {
-        $this->visitAdminHome()
-            ->assertOk()
-            ->assertSee('Admin Login');
-
-        $this->submitAdminLogin([
-            'admin_name' => 'Admin',
-            'admin_pass' => 'password',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-        ])->assertOk()
-            ->assertSee('Initial Setup Wizard');
-
-        $this->submitAdminSetupWizard([
-            'store_name' => 'Zencart Store',
-            'store_owner' => 'Store Owner',
-        ])->assertOk()
-            ->assertSee('Admin Home');
     }
 }

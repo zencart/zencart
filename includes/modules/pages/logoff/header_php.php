@@ -1,6 +1,6 @@
 <?php
 /**
- * logoff header_php.php 
+ * logoff header_php.php
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -17,7 +17,7 @@ $breadcrumb->add(NAVBAR_TITLE);
 /**
  * Check what language should be used on the logoff screen
  */
-  $logoff_lang = ($_SESSION['languages_code'] != DEFAULT_LANGUAGE) ? 'language=' . $_SESSION['languages_code'] : '';
+  $logoff_lang = ($_SESSION['languages_code'] != zen_config('DEFAULT_LANGUAGE')) ? 'language=' . $_SESSION['languages_code'] : '';
 
 /**
   * Check if there is still a customer_id

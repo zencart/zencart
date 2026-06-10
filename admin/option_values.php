@@ -124,8 +124,8 @@ switch ($_GET['action']) {
                                   ON po.products_options_id = povtpo.products_options_id
                                   WHERE po.language_id = ' . (int)$_SESSION['languages_id'] . '
                                   AND po.products_options_name != ""
-                                  AND po.products_options_type != ' . (int)PRODUCTS_OPTIONS_TYPE_TEXT . '
-                                  AND po.products_options_type != ' . (int)PRODUCTS_OPTIONS_TYPE_FILE . '
+                                  AND po.products_options_type != ' . (int)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') . '
+                                  AND po.products_options_type != ' . (int)zen_config('PRODUCTS_OPTIONS_TYPE_FILE') . '
                                   ORDER BY po.products_options_name');
                 $optionsValuesArray = [];
                 foreach ($options_values as $options_value) {

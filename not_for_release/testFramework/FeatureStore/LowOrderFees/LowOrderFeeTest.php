@@ -7,9 +7,7 @@ use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\LowOrderFeeConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
@@ -19,9 +17,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     protected $preserveGlobalState = false;
 
     /**
-     * @test
      * scenario LOF 1
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_a_simple_loworderfee(): void
     {
         $this->switchLowOrderFee('on');
@@ -39,9 +37,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 2
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_test_a_loworderfee_with_almost_full_GV(): void
     {
         $this->switchLowOrderFee('on');
@@ -65,9 +63,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 3
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_lowOrderFee_with_full_GV(): void
     {
         $this->switchLowOrderFee('on');
@@ -91,9 +89,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 4
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_loworderfee_with_almost_full_GV_and_shippingTax(): void
     {
         $this->switchLowOrderFee('on');
@@ -119,9 +117,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 5
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_loworderfee_with_full_GV_and_shipping_tax(): void
     {
         $this->switchLowOrderFee('on');
@@ -154,9 +152,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 6
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_loworderfee_with_full_GV_shipping_tax_inclusive(): void
     {
         $this->switchToTaxInclusive();
@@ -181,9 +179,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 7
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_loworderfee_with_group_discount(): void
     {
         $this->switchLowOrderFee('on');
@@ -207,9 +205,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 8
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_loworderfee_with_group_discount_and_insufficient_GV(): void
     {
         $this->switchLowOrderFee('on');
@@ -236,9 +234,9 @@ class LowOrderFeeTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario LOF 9
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_tests_loworderfee_with_group_discount_and_full_GV(): void
     {
         $this->switchLowOrderFee('on');

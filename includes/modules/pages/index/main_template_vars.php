@@ -124,7 +124,7 @@ if ($category_depth == 'nested')
 
   //  } elseif ($category_depth == 'products' || isset($_GET['manufacturers_id']) || isset($_GET['music_genre_id'])) {
 } elseif ($category_depth == 'products' || zen_check_url_get_terms()) {
-  if (SHOW_PRODUCT_INFO_ALL_PRODUCTS == '1') {
+  if (zen_config('SHOW_PRODUCT_INFO_ALL_PRODUCTS') === '1') {
     // set a category filter
     $new_products_category_id = $cPath;
   } else {
@@ -132,13 +132,13 @@ if ($category_depth == 'nested')
   }
   // create column list
   $define_list = [
-      'PRODUCT_LIST_MODEL' => PRODUCT_LIST_MODEL,
-      'PRODUCT_LIST_NAME' => PRODUCT_LIST_NAME,
-      'PRODUCT_LIST_MANUFACTURER' => PRODUCT_LIST_MANUFACTURER,
-      'PRODUCT_LIST_PRICE' => PRODUCT_LIST_PRICE,
-      'PRODUCT_LIST_QUANTITY' => PRODUCT_LIST_QUANTITY,
-      'PRODUCT_LIST_WEIGHT' => PRODUCT_LIST_WEIGHT,
-      'PRODUCT_LIST_IMAGE' => PRODUCT_LIST_IMAGE,
+      'PRODUCT_LIST_MODEL' => zen_config('PRODUCT_LIST_MODEL'),
+      'PRODUCT_LIST_NAME' => zen_config('PRODUCT_LIST_NAME'),
+      'PRODUCT_LIST_MANUFACTURER' => zen_config('PRODUCT_LIST_MANUFACTURER'),
+      'PRODUCT_LIST_PRICE' => zen_config('PRODUCT_LIST_PRICE'),
+      'PRODUCT_LIST_QUANTITY' => zen_config('PRODUCT_LIST_QUANTITY'),
+      'PRODUCT_LIST_WEIGHT' => zen_config('PRODUCT_LIST_WEIGHT'),
+      'PRODUCT_LIST_IMAGE' => zen_config('PRODUCT_LIST_IMAGE'),
 //      'PRODUCT_LIST_BUY_NOW' => PRODUCT_LIST_BUY_NOW,
   ];
 
@@ -178,14 +178,19 @@ if ($category_depth == 'nested')
     }
   }
   // always add quantity regardless of whether or not it is in the listing for add to cart buttons
-  if (PRODUCT_LIST_QUANTITY < 1) {
+  if (zen_config('PRODUCT_LIST_QUANTITY') < 1) {
     $select_column_list .= 'p.products_quantity, ';
   }
 
-  // set the product filters according to selected product type
-  $typefilter = $_GET['typefilter'] ?? 'default';
-  require(zen_get_index_filters_directory($typefilter . '_filter.php'));
-
+    // set the product filters according to selected product type
+    if (!empty($_GET['record_company_id'])) {
+        $typefilter = 'record_company';
+    } elseif (!empty($_GET['music_genre_id'])) {
+        $typefilter = 'music_genre';
+    } else {
+        $typefilter = $_GET['typefilter'] ?? 'default';
+    }
+    require zen_get_index_filters_directory($typefilter . '_filter.php');
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -11,6 +11,11 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+// if already loaded, bypass. This helps prevent double-loading since config.canonical is moved into config.core.
+if (isset($canonicalLink)) {
+    return;
+}
+
 // cPath is excluded by default
 $includeCPath = false;
 

@@ -7,9 +7,7 @@ use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\Traits\DiscountCouponConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
@@ -19,9 +17,9 @@ class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
     protected $preserveGlobalState = false;
 
     /**
-     * @test
      * scenario GD 1
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGroupDiscountsSimple(): void
     {
         $profile = ProfileManager::getProfile('florida-basic1');
@@ -39,9 +37,9 @@ class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GD 2
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGroupDiscountsWithDiscountCoupon(): void
     {
         $profile = ProfileManager::getProfile('florida-basic1');
@@ -61,9 +59,9 @@ class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GD 3
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGroupDiscountsSimpleTaxInclusive(): void
     {
         $this->switchToTaxInclusive();
@@ -83,9 +81,9 @@ class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GD 4
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGroupDiscountsSimpleTaxInclusiveShippingTax(): void
     {
         $this->switchToTaxInclusive();
@@ -107,9 +105,9 @@ class GroupDiscountTest extends zcInProcessFeatureTestCaseStore
     }
 
     /**
-     * @test
      * scenario GD 5
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGroupDiscountsSimpleTaxInclusiveShippingTaxSplitMode(): void
     {
         $this->switchToTaxInclusive();

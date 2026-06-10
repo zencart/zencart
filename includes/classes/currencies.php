@@ -60,7 +60,7 @@ class currencies extends base
      */
     public function format(mixed $number, bool $calculate_using_exchange_rate = true, string $currency_code = '', mixed $currency_value = ''): string
     {
-        if (IS_ADMIN_FLAG === false && DOWN_FOR_MAINTENANCE === 'true' && DOWN_FOR_MAINTENANCE_PRICES_OFF === 'true' && !zen_is_whitelisted_admin_ip()) {
+        if (IS_ADMIN_FLAG === false && zen_config('DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE_PRICES_OFF') === 'true' && !zen_is_whitelisted_admin_ip()) {
             return '';
         }
 
@@ -81,7 +81,7 @@ class currencies extends base
         if ($calculate_using_exchange_rate === true) {
             // Special Case: if the selected currency is in the european euro-conversion and the default currency is euro,
             // then the currency will displayed in both the national currency and euro currency
-            if (DEFAULT_CURRENCY === 'EUR' && in_array($currency_code, ['DEM', 'BEF', 'LUF', 'ESP', 'FRF', 'IEP', 'ITL', 'NLG', 'ATS', 'PTE', 'FIM', 'GRD'])) {
+            if (zen_config('DEFAULT_CURRENCY') === 'EUR' && in_array($currency_code, ['DEM', 'BEF', 'LUF', 'ESP', 'FRF', 'IEP', 'ITL', 'NLG', 'ATS', 'PTE', 'FIM', 'GRD'])) {
                 $formatted_string .= ' <small>[' . $this->format($number, true, 'EUR') . ']</small>';
             }
         }
@@ -127,7 +127,7 @@ class currencies extends base
         $currency_info = $this->getCurrencyInfo($currency_code);
 
         if ($calculate_using_exchange_rate === true) {
-            $multiplier = ($currency_code === DEFAULT_CURRENCY) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
+            $multiplier = ($currency_code === zen_config('DEFAULT_CURRENCY')) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
             $rate = !empty($currency_value) ? $currency_value : $multiplier;
             $number = $number * $rate;
         }
@@ -215,7 +215,7 @@ class currencies extends base
         // default otherwise.
         //
         if (empty($currency_code)) {
-            $currency_code = $_SESSION['currency'] ?? DEFAULT_CURRENCY;
+            $currency_code = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
         }
 
         // -----
@@ -229,11 +229,11 @@ class currencies extends base
         // An amount for this case would be formatted similar to 'EUR 20.00'.
         //
         if (empty($this->currencies[$currency_code])) {
-            $this->currencies[$currency_code] = $this->currencies[DEFAULT_CURRENCY];
+            $this->currencies[$currency_code] = $this->currencies[zen_config('DEFAULT_CURRENCY')];
             $this->currencies[$currency_code]['symbol_left'] = $currency_code . ' ';
             $this->currencies[$currency_code]['symbol_right'] = '';
             if ($this->debug === true) {
-                trigger_error("Creating currency settings for $currency_code, based on " . DEFAULT_CURRENCY . " settings.", E_USER_NOTICE);
+                trigger_error("Creating currency settings for $currency_code, based on " . zen_config('DEFAULT_CURRENCY') . " settings.", E_USER_NOTICE);
             }
         }
 

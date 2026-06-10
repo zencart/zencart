@@ -23,9 +23,9 @@ class ObserverAliasingTest extends zcUnitTestCase
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/NotifierManager.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/ObserverManager.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'EventDto.php';
-        require_once(TESTCWD . 'Support/zcObserverAliasTestObject.php');
-        require_once(TESTCWD . 'Support/zcNotifierBaseAliasTestObject.php');
-        require_once(TESTCWD . 'Support/zcNotifierTraitAliasTestObject.php');
+        require_once TESTCWD . 'Support/zcObserverAliasTestObject.php';
+        require_once TESTCWD . 'Support/zcNotifierBaseAliasTestObject.php';
+        require_once TESTCWD . 'Support/zcNotifierTraitAliasTestObject.php';
     }
 
     public function testObserverAliasing()

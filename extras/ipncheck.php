@@ -78,17 +78,17 @@ $data = '';
 if (function_exists('curl_init')) {
     $result = doPayPalIPNCurlPostback($web, $postback, $verboseMode, $headerMode);
     if (in_array($result, ['VERIFIED', 'SUCCESS', 'INVALID'])) {
-        echo nl2br('IPN TESTING - Response Received via CURL -- <strong>COMMUNICATIONS OKAY</strong>' . "\n<!--" . $data . '-->');
+        echo nl2br('IPN TESTING - Response Received via CURL -- <strong>COMMUNICATIONS OKAY</strong>' . "\n<!--" . $data . '-->', false);
         $defaultMethod = 'CURL';
         $altMethod = 'FSOCKOPEN';
     }
 } else {
-    echo nl2br('CURL not available. Will attempt to connect using fsockopen() instead.' . "\n");
+    echo nl2br('CURL not available. Will attempt to connect using fsockopen() instead.' . "\n", false);
 }
 
 if (!in_array($result, ['VERIFIED', 'SUCCESS', 'INVALID']) || $testBoth === true) {
     $result = doPayPalIPNFsockopenPostback($web, $postback);
-    echo nl2br('IPN TESTING - Confirmation/Validation response with fsockopen(): <strong>' . $result . "</strong>\n<!--" . $info . '-->');
+    echo nl2br('IPN TESTING - Confirmation/Validation response with fsockopen(): <strong>' . $result . "</strong>\n<!--" . $info . '-->', false);
     if ($defaultMethod === '' && $result !== 'FAILED') {
         $defaultMethod = 'FSOCKOPEN';
         $altMethod = 'CURL';
@@ -117,31 +117,31 @@ function doPayPalIPNFsockopenPostback($web, $postback)
     $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
 
     if (!$fp && $ssl === 'ssl://') {
-        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again with HTTPS over 443 ...");
+        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again with HTTPS over 443 ...", false);
         $ssl = 'https://';
         $web['port'] = '443';
         $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     }
     if (!$fp && $ssl === 'https://') {
-        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again directly over 443 ...");
+        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again directly over 443 ...", false);
         $ssl = '';
         $web['port'] = '443';
         $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     }
     if (!$fp) {
-        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again with HTTP over port 80 ...");
+        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again with HTTP over port 80 ...", false);
         $ssl = 'http';
         $web['port'] = '80';
         $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     }
     if (!$fp) {
-        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again without any specified protocol, using port 80 ...");
+        echo nl2br("\n" . 'IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again without any specified protocol, using port 80 ...", false);
         $ssl = '';
         $web['port'] = '80';
         $fp = fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     }
     if (!$fp) {
-        echo nl2br("\n" . 'IPN FATAL ERROR :: Could not establish fsockopen. ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n");
+        echo nl2br("\n" . 'IPN FATAL ERROR :: Could not establish fsockopen. ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n", false);
         die();
     }
 
@@ -208,9 +208,9 @@ function doPayPalIPNCurlPostback($web, $vars, $verboseMode = false, $headerMode 
 
     if (($response === '' || $errors !== '') && ($web['scheme'] !== 'http')) {
         if ($verboseMode) {
-            echo nl2br("\n\n" . 'VERBOSE output:' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, 'UTF-8', true) . "</pre>\n--------------\n");
+            echo nl2br("\n\n" . 'VERBOSE output:' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, 'UTF-8', true) . "</pre>\n--------------\n", false);
         }
-        echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'Trying direct HTTP on port 80 instead ...' . "\n");
+        echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'Trying direct HTTP on port 80 instead ...' . "\n", false);
         $web['scheme'] = 'http';
         $web['port'] = '80';
         $status = 'Attempted alternate connection on: ' . $web['scheme'] . '://' . $web['host'] . $web['path'] . "\n<br>";
@@ -224,11 +224,11 @@ function doPayPalIPNCurlPostback($web, $vars, $verboseMode = false, $headerMode 
     //die("\n\n".'data:'.$response);
 
     if ($verboseMode) {
-        echo nl2br("\n\n" . 'VERBOSE output: ' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, 'UTF-8', true) . "</pre>\n--------------\n");
+        echo nl2br("\n\n" . 'VERBOSE output: ' . "\n-------------\n<pre>" . htmlspecialchars($response, ENT_COMPAT, 'UTF-8', true) . "</pre>\n--------------\n", false);
     }
     $errors = ($commErrNo != 0 ? "\n(" . $commErrNo . ') ' . $commError : '');
     if ($errors !== '') {
-        echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'ABORTING CURL METHOD ...' . "\n\n");
+        echo nl2br('CURL ERROR: ' . $status . $errors . "\n" . 'ABORTING CURL METHOD ...' . "\n\n", false);
     }
 
     $status = (strstr($response, 'VERIFIED')) ? 'VERIFIED' : (strstr($response, 'SUCCESS') ? 'SUCCESS' : (strstr($response, 'INVALID') ? 'CURL RESPONSE RECEIVED - Communications OKAY' : 'FAILED'));

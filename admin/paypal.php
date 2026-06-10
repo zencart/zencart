@@ -107,7 +107,7 @@ $paypal_ipn_sort_order_array = [
   } else {
         $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p LEFT JOIN " .TABLE_ORDERS . " AS o ON o.orders_id = p.order_id" . $order_by;
   }
-  $ipn_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $ipn_query_raw, $ipn_query_numrows);
+  $ipn_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), $ipn_query_raw, $ipn_query_numrows);
   $ipn_trans = $db->Execute($ipn_query_raw);
   foreach ($ipn_trans as $ipn_tran) {
     if ((!isset($_GET['ipnID']) || (isset($_GET['ipnID']) && ($_GET['ipnID'] == $ipn_tran['paypal_ipn_id']))) && !isset($ipnInfo)) {
@@ -115,9 +115,9 @@ $paypal_ipn_sort_order_array = [
     }
 
     if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $ipn_tran['order_id']; ?></td>
@@ -131,8 +131,8 @@ $paypal_ipn_sort_order_array = [
   }
 ?>
               <tr>
-                    <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $_GET['page'], TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX); ?></td>
-                    <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, MAX_DISPLAY_PAGE_LINKS, isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
+                    <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), $_GET['page'], TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX); ?></td>
+                    <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), zen_config('MAX_DISPLAY_PAGE_LINKS'), isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
               </tr>
             </table>
            </div>

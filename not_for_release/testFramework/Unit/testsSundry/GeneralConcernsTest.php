@@ -19,7 +19,7 @@ class GeneralConcernsTest extends TestCase
         $basePath = sys_get_temp_dir() . '/zc-general-concerns-' . uniqid('', true);
         mkdir($basePath . '/Support/configs', 0777, true);
         file_put_contents(
-            $basePath . '/Support/configs/runner.store.configure.php',
+            $basePath . '/Support/configs/runner.configure.php',
             <<<'PHP'
 <?php
 if (!defined('DB_TYPE')) {
@@ -29,25 +29,34 @@ return ['loaded' => true];
 PHP
         );
 
-        if (!defined('TESTCWD')) {
-            define('TESTCWD', $basePath . '/');
-        }
+        $rootPath = realpath(__DIR__ . '/../../../..');
+        $command = sprintf(
+            'php -r %s',
+            escapeshellarg(<<<PHP
+require {$this->exportString($rootPath . '/vendor/autoload.php')};
+define('TESTCWD', {$this->exportString($basePath . '/')});
+define('HTTP_SERVER', 'https://already-defined.test');
+\$loader = new class {
+    use \Tests\Support\Traits\GeneralConcerns;
+};
+\$loader::loadConfigureFile('store');
+echo defined('DB_TYPE') ? DB_TYPE : 'missing';
+PHP)
+        );
 
-        define('HTTP_SERVER', 'https://already-defined.test');
-        $this->assertFalse(defined('DB_TYPE'));
+        exec($command . ' 2>&1', $output, $exitCode);
 
-        $loader = new class {
-            use GeneralConcerns;
-        };
+        $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
+        $this->assertSame(['mysql'], $output);
 
-        $loader::loadConfigureFile('store');
-
-        $this->assertTrue(defined('DB_TYPE'));
-        $this->assertSame('mysql', DB_TYPE);
-
-        unlink($basePath . '/Support/configs/runner.store.configure.php');
+        unlink($basePath . '/Support/configs/runner.configure.php');
         rmdir($basePath . '/Support/configs');
         rmdir($basePath . '/Support');
         rmdir($basePath);
+    }
+
+    private function exportString(string $value): string
+    {
+        return var_export($value, true);
     }
 }

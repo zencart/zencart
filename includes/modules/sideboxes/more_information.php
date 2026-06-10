@@ -12,13 +12,13 @@
 $more_information = [];
 
 // test if links should display
-if (DEFINE_PAGE_2_STATUS <= 1) {
+if (zen_config('DEFINE_PAGE_2_STATUS') <= 1) {
     $more_information[] = '<a href="' . zen_href_link(FILENAME_PAGE_2) . '">' . BOX_INFORMATION_PAGE_2 . '</a>';
 }
-if (DEFINE_PAGE_3_STATUS <= 1) {
+if (zen_config('DEFINE_PAGE_3_STATUS') <= 1) {
     $more_information[] = '<a href="' . zen_href_link(FILENAME_PAGE_3) . '">' . BOX_INFORMATION_PAGE_3 . '</a>';
 }
-if (DEFINE_PAGE_4_STATUS <= 1) {
+if (zen_config('DEFINE_PAGE_4_STATUS') <= 1) {
     $more_information[] = '<a href="' . zen_href_link(FILENAME_PAGE_4) . '">' . BOX_INFORMATION_PAGE_4 . '</a>';
 }
 

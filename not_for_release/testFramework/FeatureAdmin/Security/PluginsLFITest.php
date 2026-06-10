@@ -9,12 +9,10 @@ namespace Tests\FeatureAdmin\Security;
 use Tests\Support\Database\TestDb;
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group serial
- * @group custom-seeder
- * @group plugin-filesystem
- * @group shared-db-write
- */
+#[\PHPUnit\Framework\Attributes\Group('serial')]
+#[\PHPUnit\Framework\Attributes\Group('custom-seeder')]
+#[\PHPUnit\Framework\Attributes\Group('plugin-filesystem')]
+#[\PHPUnit\Framework\Attributes\Group('shared-db-write')]
 class PluginsLFITest extends zcInProcessFeatureTestCaseAdmin
 {
     protected $runTestInSeparateProcess = true;

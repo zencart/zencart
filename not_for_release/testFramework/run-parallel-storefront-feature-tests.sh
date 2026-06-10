@@ -3,6 +3,14 @@
 set -uo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+
+file_has_group() {
+    local file="$1"
+    local group="$2"
+
+    grep -Eq "^[[:space:]]*\*[[:space:]]+@group[[:space:]]+${group}([[:space:]]|$)" "$file" \
+        || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
+}
 # shellcheck source=/dev/null
 . "$ROOT_DIR/not_for_release/testFramework/load-test-environment.sh"
 load_test_framework_env "$ROOT_DIR"
@@ -15,19 +23,20 @@ DB_BASE_NAME="${ZC_TEST_DB_BASE_NAME:-db}"
 DB_HOST="${ZC_TEST_DB_HOST:-${DB_SERVER:-127.0.0.1}}"
 DB_PORT="${ZC_TEST_DB_PORT:-${MYSQL_TCP_PORT:-3306}}"
 DB_USER="${ZC_TEST_DB_USER:-${DB_SERVER_USERNAME:-root}}"
-DB_PASSWORD="${ZC_TEST_DB_PASSWORD:-${DB_SERVER_PASSWORD:-root}}"
+DB_PASSWORD="${ZC_TEST_DB_PASSWORD-${DB_SERVER_PASSWORD-root}}"
 WORK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/zc-store-feature-parallel.XXXXXX")"
 TEST_LIST_FILE="$WORK_DIR/test-files.txt"
 TEST_FILTER="${ZC_FEATURE_TEST_FILTER:-}"
 declare -a EXTRA_PHPUNIT_ARGS=()
+declare -a TEST_FILES=()
+declare -a ACTIVE_PIDS=()
+declare -a ACTIVE_FILES=()
+declare -a ACTIVE_SLUGS=()
+declare -a ACTIVE_WORKERS=()
+declare -a ACTIVE_STARTED_AT=()
 CLI_FILTER=""
 DRY_RUN=0
 PREPARE_DATABASES=0
-
-declare -A PID_TO_FILE=()
-declare -A PID_TO_SLUG=()
-declare -A PID_TO_WORKER=()
-declare -A PID_TO_STARTED_AT=()
 declare -a AVAILABLE_WORKERS=()
 ACQUIRED_WORKER=""
 TOTAL_TESTS=0
@@ -98,6 +107,14 @@ apply_filter() {
 
 cleanup() {
     rm -rf "$WORK_DIR"
+}
+
+load_test_files() {
+    TEST_FILES=()
+
+    while IFS= read -r test_file; do
+        TEST_FILES+=("$test_file")
+    done < "$TEST_LIST_FILE"
 }
 
 accumulate_phpunit_counts() {
@@ -242,7 +259,7 @@ done
 
 find "$ROOT_DIR/not_for_release/testFramework/FeatureStore" -type f -name '*Test.php' | sort > "$TEST_LIST_FILE.all"
 while IFS= read -r file; do
-    if grep -q "@group parallel-candidate" "$file"; then
+    if file_has_group "$file" "parallel-candidate"; then
         printf '%s\n' "$file" >> "$TEST_LIST_FILE"
     fi
 done < "$TEST_LIST_FILE.all"
@@ -265,7 +282,7 @@ if [ ! -s "$TEST_LIST_FILE" ]; then
     exit 1
 fi
 
-mapfile -t TEST_FILES < "$TEST_LIST_FILE"
+load_test_files
 TOTAL_FILES="${#TEST_FILES[@]}"
 
 for ((worker = 1; worker <= PROCESS_COUNT; worker++)); do
@@ -300,7 +317,7 @@ run_test_file() {
     (
         export ZC_TEST_WORKER="$worker_token"
 
-        if "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --verbose --testsuite FeatureStore --group parallel-candidate "${EXTRA_PHPUNIT_ARGS[@]}" "$file" >"$output_file" 2>&1; then
+        if "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --testsuite FeatureStore --group parallel-candidate "${EXTRA_PHPUNIT_ARGS[@]+"${EXTRA_PHPUNIT_ARGS[@]}"}" "$file" >"$output_file" 2>&1; then
             echo 0 >"$status_file"
         else
             echo $? >"$status_file"
@@ -308,21 +325,23 @@ run_test_file() {
     ) &
 
     local pid=$!
-    PID_TO_FILE["$pid"]="$relative"
-    PID_TO_SLUG["$pid"]="$slug"
-    PID_TO_WORKER["$pid"]="$worker_token"
-    PID_TO_STARTED_AT["$pid"]="$(date +%s)"
+    ACTIVE_PIDS+=("$pid")
+    ACTIVE_FILES+=("$relative")
+    ACTIVE_SLUGS+=("$slug")
+    ACTIVE_WORKERS+=("$worker_token")
+    ACTIVE_STARTED_AT+=("$(date +%s)")
 }
 
 report_active_jobs() {
     local now
     now="$(date +%s)"
     local -a details=()
+    local index=""
 
-    for pid in "${!PID_TO_FILE[@]}"; do
-        local started_at="${PID_TO_STARTED_AT[$pid]:-$now}"
+    for index in "${!ACTIVE_PIDS[@]}"; do
+        local started_at="${ACTIVE_STARTED_AT[$index]:-$now}"
         local elapsed=$((now - started_at))
-        details+=("[worker ${PID_TO_WORKER[$pid]}] ${PID_TO_FILE[$pid]} (${elapsed}s)")
+        details+=("[worker ${ACTIVE_WORKERS[$index]}] ${ACTIVE_FILES[$index]} (${elapsed}s)")
     done
 
     if [ "${#details[@]}" -eq 0 ]; then
@@ -336,16 +355,22 @@ report_active_jobs() {
 }
 
 reap_one() {
+    local finished_index=""
     local finished_pid=""
     local wait_status=0
     local waited_seconds=0
 
-    while [ -z "$finished_pid" ]; do
-        for pid in "${!PID_TO_FILE[@]}"; do
+    while [ -z "$finished_index" ]; do
+        local index=""
+        local pid=""
+
+        for index in "${!ACTIVE_PIDS[@]}"; do
+            pid="${ACTIVE_PIDS[$index]}"
             if kill -0 "$pid" 2>/dev/null; then
                 continue
             fi
 
+            finished_index="$index"
             finished_pid="$pid"
             if wait "$pid"; then
                 wait_status=0
@@ -355,7 +380,7 @@ reap_one() {
             break
         done
 
-        if [ -n "$finished_pid" ]; then
+        if [ -n "$finished_index" ]; then
             break
         fi
 
@@ -366,16 +391,17 @@ reap_one() {
         fi
     done
 
-    local relative="${PID_TO_FILE[$finished_pid]}"
-    local slug="${PID_TO_SLUG[$finished_pid]}"
-    local worker_token="${PID_TO_WORKER[$finished_pid]}"
+    local relative="${ACTIVE_FILES[$finished_index]}"
+    local slug="${ACTIVE_SLUGS[$finished_index]}"
+    local worker_token="${ACTIVE_WORKERS[$finished_index]}"
     local status_file="$WORK_DIR/$slug.status"
     local output_file="$WORK_DIR/$slug.log"
 
-    unset 'PID_TO_FILE[$finished_pid]'
-    unset 'PID_TO_SLUG[$finished_pid]'
-    unset 'PID_TO_WORKER[$finished_pid]'
-    unset 'PID_TO_STARTED_AT[$finished_pid]'
+    unset 'ACTIVE_PIDS[$finished_index]'
+    unset 'ACTIVE_FILES[$finished_index]'
+    unset 'ACTIVE_SLUGS[$finished_index]'
+    unset 'ACTIVE_WORKERS[$finished_index]'
+    unset 'ACTIVE_STARTED_AT[$finished_index]'
 
     release_worker "$worker_token"
 

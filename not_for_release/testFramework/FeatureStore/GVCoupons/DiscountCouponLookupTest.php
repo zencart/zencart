@@ -10,9 +10,7 @@ use Tests\Support\Database\TestDb;
 use Tests\Support\Traits\DiscountCouponConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class DiscountCouponLookupTest extends zcInProcessFeatureTestCaseStore
 {
     use DiscountCouponConcerns;

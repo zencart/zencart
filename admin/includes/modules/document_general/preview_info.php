@@ -79,10 +79,10 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
           $products_image_name = $_POST['img_dir'] . $_POST['products_image_manual'];
           $pInfo->products_name = $products_image_name;
         }
-        if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1')) {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . PRODUCTS_IMAGE_NO_IMAGE, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+        if ((isset($_POST['image_delete']) && $_POST['image_delete'] == '1') || ($products_image_name == '' && (int)zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === 1)) {
+          echo zen_image(DIR_WS_CATALOG_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE'), $pInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="img-thumbnail pull-right"');
         } else {
-          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right object-fit-contain"');
+          echo zen_image(DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="img-thumbnail pull-right object-fit-contain"');
         }
         echo str_replace('src="images/', 'src="' . DIR_WS_CATALOG_IMAGES, $pInfo->products_description);
 
@@ -95,7 +95,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
             if (!empty($pInfo->previous_additional_images)) {
                 foreach ($pInfo->previous_additional_images as $imgindex => $img) {
                     if (empty($pInfo->additional_image_delete) || !array_key_exists($imgindex, $pInfo->additional_image_delete)) {
-                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="img-thumbnail pull-right"');
                     }
                 }
             }
@@ -107,7 +107,7 @@ $form_action = (isset($_GET['pID'])) ? 'update_product' : 'insert_product';
                 echo '<div class="row">';
                 foreach ($pInfo->previous_additional_images as $imgindex => $img) {
                     if (!empty($pInfo->additional_image_delete) && array_key_exists($imgindex, $pInfo->additional_image_delete)) {
-                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'class="img-thumbnail pull-right"');
+                        echo zen_image(DIR_WS_CATALOG_IMAGES . $img, '', zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'), 'class="img-thumbnail pull-right"');
                     }
                 }
             }

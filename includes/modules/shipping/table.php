@@ -25,25 +25,25 @@ class table extends ZenShipping
         $this->code = 'table';
         $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION;
-        $this->sort_order = defined('MODULE_SHIPPING_TABLE_SORT_ORDER') ? MODULE_SHIPPING_TABLE_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_SHIPPING_TABLE_SORT_ORDER');
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
+        $this->sort_order = (int)$this->sort_order;
         $this->icon = '';
-        $this->tax_class = MODULE_SHIPPING_TABLE_TAX_CLASS;
-        $this->tax_basis = MODULE_SHIPPING_TABLE_TAX_BASIS;
+        $this->tax_class = zen_config('MODULE_SHIPPING_TABLE_TAX_CLASS');
+        $this->tax_basis = zen_config('MODULE_SHIPPING_TABLE_TAX_BASIS');
         // disable only when entire cart is free shipping
         if (zen_get_shipping_enabled($this->code)) {
-            $this->enabled = (MODULE_SHIPPING_TABLE_STATUS === 'True');
+            $this->enabled = (zen_config('MODULE_SHIPPING_TABLE_STATUS') === 'True');
         } else {
             $this->enabled = false;
         }
 
         if ($this->enabled) {
             // check MODULE_SHIPPING_TABLE_HANDLING_METHOD is in
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_TABLE_HANDLING_METHOD'");
-            if ($check_query->EOF) {
+            if (zen_config('MODULE_SHIPPING_TABLE_HANDLING_METHOD') === null) {
                 $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box', 'MODULE_SHIPPING_TABLE_HANDLING_METHOD', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
             }
         }
@@ -61,7 +61,7 @@ class table extends ZenShipping
             return;
         }
 
-        $this->checkEnabledForZone(MODULE_SHIPPING_TABLE_ZONE);
+        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_TABLE_ZONE'));
 
         if ($this->enabled) {
             // -----
@@ -83,7 +83,7 @@ class table extends ZenShipping
         global $order, $shipping_weight, $shipping_num_boxes, $total_count;
 
         // shipping adjustment
-        switch (MODULE_SHIPPING_TABLE_MODE) {
+        switch (zen_config('MODULE_SHIPPING_TABLE_MODE')) {
             case 'price':
                 $order_total = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
                 break;
@@ -97,7 +97,7 @@ class table extends ZenShipping
 
         $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
 
-        $table_cost = preg_split("/[:,]/", MODULE_SHIPPING_TABLE_COST);
+        $table_cost = preg_split("/[:,]/", zen_config('MODULE_SHIPPING_TABLE_COST'));
         $size = count($table_cost);
         $shipping = 0;
         for ($i = 0, $n = $size; $i < $n; $i += 2) {
@@ -138,7 +138,11 @@ class table extends ZenShipping
                 [
                     'id' => $this->code,
                     'title' => MODULE_SHIPPING_TABLE_TEXT_WAY,
-                    'cost' => $shipping + (MODULE_SHIPPING_TABLE_HANDLING_METHOD === 'Box' ? MODULE_SHIPPING_TABLE_HANDLING * $shipping_num_boxes : MODULE_SHIPPING_TABLE_HANDLING),
+                    'cost' => $shipping +
+                        (zen_config('MODULE_SHIPPING_TABLE_HANDLING_METHOD') === 'Box'
+                            ? zen_config('MODULE_SHIPPING_TABLE_HANDLING') * $shipping_num_boxes
+                            : zen_config('MODULE_SHIPPING_TABLE_HANDLING')
+                        ),
                 ],
             ],
         ];
@@ -162,10 +166,8 @@ class table extends ZenShipping
      */
     function check()
     {
-        global $db;
         if (!isset($this->_check)) {
-            $check_query = $db->Execute("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_TABLE_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)(zen_config('MODULE_SHIPPING_TABLE_STATUS') !== null);
         }
         return $this->_check;
     }

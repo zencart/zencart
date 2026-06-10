@@ -7,8 +7,17 @@ FAIL_ON_UNTAGGED=0
 SUMMARY_ONLY=0
 invalid_grouping_count=0
 
+TEST_FILES=()
 parallel_serial_conflict_files=()
 plugin_without_serial_files=()
+
+file_has_group() {
+    local file="$1"
+    local group="$2"
+
+    grep -Eq "^[[:space:]]*\*[[:space:]]+@group[[:space:]]+${group}([[:space:]]|$)" "$file" \
+        || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
+}
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -36,7 +45,9 @@ while [ "$#" -gt 0 ]; do
     shift
 done
 
-mapfile -t TEST_FILES < <(
+while IFS= read -r test_file; do
+    TEST_FILES+=("$test_file")
+done < <(
     find "$ROOT_DIR/not_for_release/testFramework/FeatureStore" "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" \
         -type f -name '*Test.php' | sort
     if [ -d "$ROOT_DIR/zc_plugins" ]; then
@@ -83,19 +94,19 @@ for file in "${TEST_FILES[@]}"; do
     has_custom_seeder=0
     has_filesystem_write=0
 
-    if grep -Eq '^[[:space:]]*\*[[:space:]]+@group[[:space:]]+serial([[:space:]]|$)' "$file"; then
+    if file_has_group "$file" "serial"; then
         has_serial=1
         serial_count=$((serial_count + 1))
         serial_files+=("$relative")
     fi
 
-    if grep -Eq '^[[:space:]]*\*[[:space:]]+@group[[:space:]]+plugin-filesystem([[:space:]]|$)' "$file"; then
+    if file_has_group "$file" "plugin-filesystem"; then
         has_plugin_fs=1
         plugin_fs_count=$((plugin_fs_count + 1))
         plugin_fs_files+=("$relative")
     fi
 
-    if grep -Eq '^[[:space:]]*\*[[:space:]]+@group[[:space:]]+parallel-candidate([[:space:]]|$)' "$file"; then
+    if file_has_group "$file" "parallel-candidate"; then
         has_parallel_candidate=1
         parallel_candidate_count=$((parallel_candidate_count + 1))
         parallel_candidate_files+=("$relative")

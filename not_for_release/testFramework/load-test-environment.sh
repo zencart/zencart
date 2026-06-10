@@ -9,18 +9,55 @@ source_test_framework_env_file() {
     set +a
 }
 
+apply_profile_db_defaults() {
+    local root_dir="$1"
+    local resolver="$root_dir/not_for_release/testFramework/resolve-profile-db-config.php"
+    local resolved
+    resolved=()
+
+    if [ ! -f "$resolver" ] || ! command -v php >/dev/null 2>&1; then
+        return 0
+    fi
+
+    while IFS= read -r line; do resolved+=("$line"); done < <(php "$resolver" "$root_dir")
+    if [ "${#resolved[@]}" -lt 5 ]; then
+        return 0
+    fi
+
+    if [ -z "${ZC_TEST_DB_HOST+x}" ] && [ -n "${resolved[0]}" ]; then
+        export ZC_TEST_DB_HOST="${resolved[0]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_PORT+x}" ] && [ -n "${resolved[1]}" ]; then
+        export ZC_TEST_DB_PORT="${resolved[1]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_USER+x}" ] && [ -n "${resolved[2]}" ]; then
+        export ZC_TEST_DB_USER="${resolved[2]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_PASSWORD+x}" ]; then
+        export ZC_TEST_DB_PASSWORD="${resolved[3]}"
+    fi
+
+    if [ -z "${ZC_TEST_DB_BASE_NAME+x}" ] && [ -n "${resolved[4]}" ]; then
+        export ZC_TEST_DB_BASE_NAME="${resolved[4]}"
+    fi
+}
+
 load_test_framework_env() {
     local root_dir="$1"
     local env_file="${ZC_TEST_ENV_FILE:-}"
-    local -a preserved_names=()
-    local -A preserved_values=()
+    local preserved_assignments
+    preserved_assignments=()
     local variable_name=""
+    local variable_value=""
 
     while IFS= read -r variable_name; do
         case "$variable_name" in
             ZC_TEST_*|ZC_FEATURE_*|ZC_PARALLEL_*)
-                preserved_names+=("$variable_name")
-                preserved_values["$variable_name"]="${!variable_name}"
+                variable_value="${!variable_name}"
+                preserved_assignments+=("$variable_name=$variable_value")
                 ;;
         esac
     done < <(compgen -v)
@@ -32,9 +69,12 @@ load_test_framework_env() {
         fi
 
         source_test_framework_env_file "$env_file"
-        for variable_name in "${preserved_names[@]}"; do
-            export "$variable_name=${preserved_values[$variable_name]}"
-        done
+        if [ "${#preserved_assignments[@]}" -gt 0 ]; then
+            for variable_name in "${preserved_assignments[@]}"; do
+                export "$variable_name"
+            done
+        fi
+        apply_profile_db_defaults "$root_dir"
         return 0
     fi
 
@@ -51,7 +91,11 @@ load_test_framework_env() {
         source_test_framework_env_file "$env_file"
     done
 
-    for variable_name in "${preserved_names[@]}"; do
-        export "$variable_name=${preserved_values[$variable_name]}"
-    done
+    if [ "${#preserved_assignments[@]}" -gt 0 ]; then
+        for variable_name in "${preserved_assignments[@]}"; do
+            export "$variable_name"
+        done
+    fi
+
+    apply_profile_db_defaults "$root_dir"
 }

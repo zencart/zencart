@@ -10,9 +10,7 @@ use Tests\Support\Database\TestDb;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class CheckoutAddressSelectionInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;

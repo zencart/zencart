@@ -38,32 +38,27 @@ function zen_parse_url($url, $element = 'array')
   }
 }
 
-// make guesses in case the essentials from admin configure.php are missing (such as when someone uses a non-admin configure.php in their admin)
+// make guesses in case the essentials from configure.php are missing
 if (!defined('HTTP_CATALOG_SERVER')) define('HTTP_CATALOG_SERVER', HTTP_SERVER);
-if (!defined('HTTPS_CATALOG_SERVER')) define('HTTPS_CATALOG_SERVER', HTTP_SERVER);
 if (!defined('DIR_WS_CATALOG')) define('DIR_WS_CATALOG', DIR_WS_ADMIN . '/../');
-if (!defined('DIR_WS_HTTPS_CATALOG')) define('DIR_WS_HTTPS_CATALOG', DIR_WS_ADMIN . '/../');
-if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', strpos(HTTPS_CATALOG_SERVER, 'tps:') ? 'true': 'false');
 if (!defined('DIR_FS_CATALOG')) define('DIR_FS_CATALOG', realpath(DIR_FS_ADMIN . '/../') . '/');
 
 
 // now define all the admin constants
-if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
-
 if (!defined('DIR_WS_ADMIN')) define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', zen_parse_url(HTTP_SERVER, '/path')) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
 
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 if (!defined('DIR_WS_IMAGES')) define('DIR_WS_IMAGES', 'images/');
 if (!defined('DIR_WS_ICONS')) define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
-if (!defined('DIR_WS_CATALOG_IMAGES')) define('DIR_WS_CATALOG_IMAGES', (ENABLE_SSL_CATALOG == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG) . 'images/');
-if (!defined('DIR_WS_CATALOG_TEMPLATE')) define('DIR_WS_CATALOG_TEMPLATE', (ENABLE_SSL_CATALOG == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG) . 'includes/templates/');
+if (!defined('DIR_WS_CATALOG_IMAGES')) define('DIR_WS_CATALOG_IMAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'images/');
+if (!defined('DIR_WS_CATALOG_TEMPLATE')) define('DIR_WS_CATALOG_TEMPLATE', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/templates/');
 if (!defined('DIR_WS_INCLUDES')) define('DIR_WS_INCLUDES', 'includes/');
 if (!defined('DIR_WS_FUNCTIONS')) define('DIR_WS_FUNCTIONS', DIR_WS_INCLUDES . 'functions/');
 if (!defined('DIR_WS_CLASSES')) define('DIR_WS_CLASSES', DIR_WS_INCLUDES . 'classes/');
 if (!defined('DIR_WS_MODULES')) define('DIR_WS_MODULES', DIR_WS_INCLUDES . 'modules/');
 if (!defined('DIR_WS_LANGUAGES')) define('DIR_WS_LANGUAGES', DIR_WS_INCLUDES . 'languages/');
-if (!defined('DIR_WS_CATALOG_LANGUAGES')) define('DIR_WS_CATALOG_LANGUAGES', (ENABLE_SSL_CATALOG == 'true' ? HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG : HTTP_CATALOG_SERVER . DIR_WS_CATALOG) . 'includes/languages/');
+if (!defined('DIR_WS_CATALOG_LANGUAGES')) define('DIR_WS_CATALOG_LANGUAGES', HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'includes/languages/');
 if (!defined('DIR_FS_CATALOG_LANGUAGES')) define('DIR_FS_CATALOG_LANGUAGES', DIR_FS_CATALOG . 'includes/languages/');
 if (!defined('DIR_FS_CATALOG_IMAGES')) define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
 if (!defined('DIR_FS_CATALOG_MODULES')) define('DIR_FS_CATALOG_MODULES', DIR_FS_CATALOG . 'includes/modules/');
@@ -79,10 +74,10 @@ if (!defined('DIR_FS_DOWNLOAD')) define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'dow
 
 if (!defined('SESSION_STORAGE')) define('SESSION_STORAGE', 'db');
 
-if (!defined('DIR_CATALOG_LIBRARY')) {
-    define('DIR_CATALOG_LIBRARY', DIR_FS_CATALOG . DIR_WS_INCLUDES . 'library/');
-}
-
-//catchall for old things that still use it ... but should be rewritten so this can be removed fully.
+//catchall for deprecated constants:
+if (!defined('HTTPS_SERVER')) define('HTTPS_SERVER', HTTP_SERVER);
 if (!defined('DIR_WS_HTTPS_ADMIN')) define('DIR_WS_HTTPS_ADMIN', DIR_WS_ADMIN);
-if (!defined('ENABLE_SSL_ADMIN')) define('ENABLE_SSL_ADMIN', substr(HTTP_SERVER, 0, 6) == 'https:' ? 'true' : 'false');
+if (!defined('ENABLE_SSL_ADMIN')) define('ENABLE_SSL_ADMIN', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');
+if (!defined('HTTPS_CATALOG_SERVER')) define('HTTPS_CATALOG_SERVER', HTTP_SERVER);
+if (!defined('DIR_WS_HTTPS_CATALOG')) define('DIR_WS_HTTPS_CATALOG', DIR_WS_ADMIN . '/../');
+if (!defined('ENABLE_SSL_CATALOG')) define('ENABLE_SSL_CATALOG', str_starts_with(HTTP_SERVER, 'https') ? 'true' : 'false');

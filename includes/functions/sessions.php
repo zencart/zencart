@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Session functions
  *
@@ -12,9 +13,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 if (IS_ADMIN_FLAG === true) {
-    $SESS_LIFE = (int)SESSION_TIMEOUT_ADMIN;
+    $SESS_LIFE = (int)zen_config('SESSION_TIMEOUT_ADMIN');
     // if strict is enabled, must be a max of 900
-    if (PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED != 0 && $SESS_LIFE > 900) {
+    if ((int)zen_config('PADSS_ADMIN_SESSION_TIMEOUT_ENFORCED') !== 0 && $SESS_LIFE > 900) {
         $SESS_LIFE = 900;
     }
 } else {
@@ -79,7 +80,9 @@ function zen_session_name($name = ''): bool|string
 {
     if (!empty($name)) {
         $tempName = $name;
-        if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) == '') return session_name($name);
+        if (preg_replace('/[a-zA-Z0-9,-]/', '', $tempName) === '') {
+            return session_name($name);
+        }
 
         return false;
     }
@@ -90,7 +93,7 @@ function zen_session_name($name = ''): bool|string
 /**
  * @since ZC v1.5.2
  */
-function zen_session_write_close()
+function zen_session_write_close(): void
 {
     session_write_close();
 }
@@ -98,7 +101,7 @@ function zen_session_write_close()
 /**
  * @since ZC v1.0.3
  */
-function zen_session_destroy()
+function zen_session_destroy(): bool
 {
     return session_destroy();
 }
@@ -106,7 +109,7 @@ function zen_session_destroy()
 /**
  * @since ZC v1.0.3
  */
-function zen_session_save_path($path = '')
+function zen_session_save_path(string $path = ''): false|string
 {
     if (!empty($path)) {
         return session_save_path($path);
@@ -120,15 +123,12 @@ function zen_session_save_path($path = '')
  */
 function zen_session_recreate(): void
 {
-    global $http_domain, $https_domain;
-    if ($http_domain === $https_domain) {
-        $saveSession = $_SESSION;
-        $oldSessID   = session_id();
-        session_regenerate_id();
-        $newSessID = session_id();
-        $_SESSION = $saveSession;
-        if (IS_ADMIN_FLAG !== true) {
-            whos_online_session_recreate($oldSessID, $newSessID);
-        }
+    $saveSession = $_SESSION;
+    $oldSessID = session_id();
+    session_regenerate_id();
+    $newSessID = session_id();
+    $_SESSION = $saveSession;
+    if (IS_ADMIN_FLAG !== true) {
+        whos_online_session_recreate($oldSessID, $newSessID);
     }
 }

@@ -28,7 +28,7 @@
 
 <?php if ($messageStack->size('shopping_cart') > 0) echo $messageStack->output('shopping_cart'); ?>
 
-<?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product' . '#cartInstructionsDisplay', $request_type), 'post', 'id="shoppingCartForm"'); ?>
+<?php echo zen_draw_form('cart_quantity', zen_href_link(FILENAME_SHOPPING_CART, 'action=update_product' . '#cartInstructionsDisplay'), 'post', 'id="shoppingCartForm"'); ?>
 <div id="cartInstructionsDisplay" class="content"><?php
 /**
  * require the html_define for the shopping_cart page
@@ -107,7 +107,7 @@
 
 <li>
     <?php
-    echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name']);
+    echo $value['products_options_name'] . TEXT_OPTION_DIVIDER . nl2br($value['products_options_values_name'], false);
     ?>
 </li>
 

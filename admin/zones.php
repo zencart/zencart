@@ -79,7 +79,7 @@ if (!empty($action)) {
                                          " . TABLE_COUNTRIES . " c
                                     where z.zone_country_id = c.countries_id
                                     order by c.countries_name, z.zone_name";
-                $zones_split = new splitPageResults($_GET['zone_page'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows, 'countries_name', zen_field_length(TABLE_COUNTRIES, 'countries_name'));
+                $zones_split = new splitPageResults($_GET['zone_page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows, 'countries_name', zen_field_length(TABLE_COUNTRIES, 'countries_name'));
                 $zones = $db->Execute($zones_query_raw);
                 foreach ($zones as $zone) {
                   if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $zone['zone_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -166,8 +166,8 @@ if (!empty($action)) {
         <div class="row">
           <table class="table">
             <tr>
-              <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zone_page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></td>
-              <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['zone_page'], '', 'zone_page'); ?></td>
+              <td><?php echo $zones_split->display_count($zones_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['zone_page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></td>
+              <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['zone_page'], '', 'zone_page'); ?></td>
             </tr>
             <?php
             if (empty($action)) {

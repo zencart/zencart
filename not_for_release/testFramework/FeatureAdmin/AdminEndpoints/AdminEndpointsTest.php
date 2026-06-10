@@ -8,9 +8,7 @@ namespace Tests\FeatureAdmin\AdminEndpoints;
 
 use Tests\Support\zcInProcessFeatureTestCaseAdmin;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AdminEndpointsTest extends zcInProcessFeatureTestCaseAdmin
 {
     protected $runTestInSeparateProcess = true;

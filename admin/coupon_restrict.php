@@ -340,7 +340,7 @@ if ($cr_list->EOF) {
 ?>
             <tr class="smallText">
                 <td colspan="2"><?php echo $cr_split->display_count($cr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, $cpage, TEXT_DISPLAY_NUMBER_OF_CATEGORIES); ?></td>
-                <td colspan="2" class="text-right"><?php echo $cr_split->display_links($cr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, MAX_DISPLAY_PAGE_LINKS, $cpage, zen_get_all_get_params(['cpage','action', 'x', 'y']), 'cpage'); ?></td>
+                <td colspan="2" class="text-right"><?php echo $cr_split->display_links($cr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, zen_config('MAX_DISPLAY_PAGE_LINKS'), $cpage, zen_get_all_get_params(['cpage','action', 'x', 'y']), 'cpage'); ?></td>
             </tr>
 <?php
 }
@@ -409,7 +409,7 @@ if ($pr_list->EOF) {
 ?>
             <tr class="smallText">
                 <td colspan="3"><?php echo $pr_split->display_count($pr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, $ppage, TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-                <td colspan="3" class="text-right"><?php echo $pr_split->display_links($pr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, MAX_DISPLAY_PAGE_LINKS, $ppage, zen_get_all_get_params(['ppage','action', 'x', 'y']), 'ppage'); ?></td>
+                <td colspan="3" class="text-right"><?php echo $pr_split->display_links($pr_query_numrows, MAX_DISPLAY_RESTRICT_ENTRIES, zen_config('MAX_DISPLAY_PAGE_LINKS'), $ppage, zen_get_all_get_params(['ppage','action', 'x', 'y']), 'ppage'); ?></td>
             </tr>
 <?php
 }

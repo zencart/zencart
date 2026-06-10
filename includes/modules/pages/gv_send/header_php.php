@@ -88,7 +88,7 @@ if ($_GET['action'] == 'send') {
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
   }
   $gv_amount = $currencies->normalizeValue($gv_amount);
-  if ( $currencies->value($gv_amount, true,DEFAULT_CURRENCY) > $customer_amount || $gv_amount == 0) {
+  if ( $currencies->value($gv_amount, true,zen_config('DEFAULT_CURRENCY')) > $customer_amount || $gv_amount == 0) {
     //echo $currencies->value($customer_amount, true,DEFAULT_CURRENCY);
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
@@ -101,8 +101,8 @@ if ($_GET['action'] == 'process') {
     // sanitize and remove non-numeric characters
     $_POST['amount'] = preg_replace('/[^0-9.,%]/', '', $_POST['amount']);
 
-    $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
-    $new_db_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY);
+    $new_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, zen_config('DEFAULT_CURRENCY'));
+    $new_db_amount = $gv_result->fields['amount'] - $currencies->value($_POST['amount'], true, zen_config('DEFAULT_CURRENCY'));
     if ($new_amount < 0) {
       $error= true;
       $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK, 'error');
@@ -120,7 +120,7 @@ if ($_GET['action'] == 'process') {
                  VALUES ('G', :couponCode, NOW(), :amount)";
 
       $gv_query = $db->bindVars($gv_query, ':couponCode', $id1, 'string');
-      $gv_query = $db->bindVars($gv_query, ':amount', $currencies->value($_POST['amount'], true, DEFAULT_CURRENCY), 'currency');
+      $gv_query = $db->bindVars($gv_query, ':amount', $currencies->value($_POST['amount'], true, zen_config('DEFAULT_CURRENCY')), 'currency');
       $gv = $db->Execute($gv_query);
 
       $insert_id = $db->insert_ID();
@@ -175,17 +175,17 @@ if ($_GET['action'] == 'process') {
       $gv_email .= "\n\n" . EMAIL_ADVISORY . "\n\n";
 
       $html_msg['EMAIL_GV_FIXED_FOOTER'] = str_replace(array("\r\n", "\n", "\r", "-----"), '', EMAIL_GV_FIXED_FOOTER);
-      $html_msg['EMAIL_GV_SHOP_FOOTER'] =	EMAIL_GV_SHOP_FOOTER;
+      $html_msg['EMAIL_GV_SHOP_FOOTER'] =    EMAIL_GV_SHOP_FOOTER;
 
       // send the email
-      zen_mail($_POST['to_name'], $_POST['email'], $gv_email_subject, nl2br($gv_email), STORE_NAME, EMAIL_FROM, $html_msg, 'gv_send');
+      zen_mail($_POST['to_name'], $_POST['email'], $gv_email_subject, nl2br($gv_email), zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'gv_send');
 
       // send additional emails
-      if (SEND_EXTRA_GV_CUSTOMER_EMAILS_TO_STATUS == '1' and SEND_EXTRA_GV_CUSTOMER_EMAILS_TO !='') {
+      if (zen_config('SEND_EXTRA_GV_CUSTOMER_EMAILS_TO_STATUS') === '1' and zen_config('SEND_EXTRA_GV_CUSTOMER_EMAILS_TO') !== '') {
         $extra_info = email_collect_extra_info(ENTRY_NAME . $_POST['to_name'], ENTRY_EMAIL . $_POST['email'], $send_name , $account->fields['customers_email_address']);
         $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
-        zen_mail('', SEND_EXTRA_GV_CUSTOMER_EMAILS_TO, SEND_EXTRA_GV_CUSTOMER_EMAILS_TO_SUBJECT . ' ' . $gv_email_subject,
-        $gv_email . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg,'gv_send_extra');
+        zen_mail('', zen_config('SEND_EXTRA_GV_CUSTOMER_EMAILS_TO'), SEND_EXTRA_GV_CUSTOMER_EMAILS_TO_SUBJECT . ' ' . $gv_email_subject,
+        $gv_email . $extra_info['TEXT'], zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg,'gv_send_extra');
       }
 
       // do a fresh calculation after sending an email

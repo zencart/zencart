@@ -194,7 +194,7 @@ foreach ($ipn->fields as $key => $value) {
           $output .= '<tr><td valign="top" class="main">'."\n";
           $output .= MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS."\n";
           $output .= '</td><td valign="top" class="main">'."\n";
-          $output .= nl2br($ipn->fields['memo'])."\n";
+          $output .= nl2br($ipn->fields['memo'], false)."\n";
           $output .= '</td></tr>'."\n";
           $output .= '</table></td>'."\n";
         }

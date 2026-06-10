@@ -67,7 +67,7 @@ if (empty($order->info)) {
       <!-- body_text //-->
       <table class="table">
         <tr>
-          <td class="pageHeading"><?php echo nl2br(STORE_NAME_ADDRESS); ?></td>
+          <td class="pageHeading"><?php echo nl2br(zen_config('STORE_NAME_ADDRESS'), false); ?></td>
           <td class="pageHeading text-right"><?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT); ?></td>
         </tr>
       </table>
@@ -240,7 +240,7 @@ if (empty($order->info)) {
                   <ul>
                   <?php
                       for ($j = 0; $j < $k; $j++) {
-                          $attribute_name = $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                          $attribute_name = $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']), false);
                           $attribute_image = zen_get_attributes_image($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['option_id'], $order->products[$i]['attributes'][$j]['value_id']);
                   ?>
                       <li>
@@ -321,7 +321,7 @@ if (empty($order->info)) {
       echo $extra_products_html;
 
       ?>
-      <?php if (ORDER_COMMENTS_PACKING_SLIP > 0) { ?>
+      <?php if (zen_config('ORDER_COMMENTS_PACKING_SLIP') > 0) { ?>
         <table class="table table-condensed">
           <thead>
             <tr>
@@ -352,7 +352,7 @@ if (empty($order->info)) {
                      echo TEXT_NONE;
                   } else {
                      if ($count_comments == 1) {
-                        echo nl2br(zen_output_string_protected($order_history['comments']));
+                        echo nl2br(zen_output_string_protected($order_history['comments']), false);
                      } else {
                         echo $order_history['comments'];
                      }
@@ -362,7 +362,7 @@ if (empty($order->info)) {
                   </td>
                 </tr>
                 <?php
-                if (ORDER_COMMENTS_PACKING_SLIP == 1 && $count_comments >= 1) {
+                if ((int)zen_config('ORDER_COMMENTS_PACKING_SLIP') === 1 && $count_comments >= 1) {
                   break;
                 }
               }
@@ -389,7 +389,7 @@ if (empty($order->info)) {
           }
       ?>
     </div>
-      
+
 <?php
 }
 ?>

@@ -5,9 +5,6 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2024 Jun 18 Modified in v2.1.0-alpha1 $
  */
-if (!defined('USE_PCONNECT')) {
-    define('USE_PCONNECT', 'false');
-}
 /**
  * autoloader array for admin application_top.php
  * Where DIR_WS_CLASSES is used alone in commented text, the file loads relative
@@ -113,15 +110,9 @@ $autoLoadConfig[27][] = [
 /**
  * Breakpoint 30.
  *
- * require 'includes/init_includes/init_gzip.php';
  * $sniffer = new sniffer();
  *
  */
-$autoLoadConfig[30][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_gzip.php',
-];
-
 //- sniffer class loaded via psr4Autoload.php
 $autoLoadConfig[30][] = [
     'autoType' => 'classInstantiate',

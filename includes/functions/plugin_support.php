@@ -57,6 +57,10 @@ function plugin_version_check_for_updates(mixed $plugin_file_id = 0, string $ver
         return false;
     }
 
+    if (!class_exists('VersionServer')) {
+        return false;
+    }
+
     $new_version_available = false;
     $versionServer = new VersionServer();
     $data = json_decode($versionServer->getPluginVersion($plugin_file_id), true);

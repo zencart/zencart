@@ -60,7 +60,7 @@ define('VERBOSE_SYSTEMCHECKER', $debug_logging);
 if (VERBOSE_SYSTEMCHECKER === 'screen' && $controller === 'cli') echo 'Verbose mode enabled.' . "\n";
 
 /**
- * read some file locations from the "store / catalog" configure.php
+ * read some file locations from configure.php
  */
 require DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php';
 $configFile = DIR_FS_ROOT . 'includes/configure.php';
@@ -69,19 +69,19 @@ if (file_exists($configFileLocal)) $configFile = $configFileLocal;
 $configReader = new zcConfigureFileReader($configFile);
 
 if (!defined('DIR_FS_LOGS')) {
-    // Use the systemChecker to see if one is defined in the store configure.php
+    // Use the systemChecker to see if one is defined in the configure.php
     $logDir = $configReader->getDefine('DIR_FS_LOGS');
     if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'logs';
     define('DIR_FS_LOGS', $logDir);
 }
 if (!defined('DIR_FS_SQL_CACHE')) {
-    // Use the systemChecker to see if one is defined in the store configure.php
+    // Use the systemChecker to see if one is defined in the configure.php
     $logDir = $configReader->getDefine('DIR_FS_SQL_CACHE');
     if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'cache';
     define('DIR_FS_SQL_CACHE', $logDir);
 }
 if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
-    // Use the systemChecker to see if one is defined in the store configure.php
+    // Use the systemChecker to see if one is defined in the configure.php
     $logDir = $configReader->getDefine('DIR_FS_DOWNLOAD_PUBLIC');
     if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'pub';
     define('DIR_FS_DOWNLOAD_PUBLIC', $logDir);
@@ -134,6 +134,8 @@ foreach (glob(DIR_FS_INSTALL . 'includes/extra_configures/*.php') ?? [] as $file
 
 require DIR_FS_ROOT . 'includes/classes/traits/ObserverManager.php';
 require DIR_FS_ROOT . 'includes/classes/traits/NotifierManager.php';
+require DIR_FS_ROOT . 'includes/classes/traits/Singleton.php';
+require DIR_FS_ROOT . 'includes/classes/EventDto.php';
 require DIR_FS_ROOT . 'includes/classes/class.base.php';
 require DIR_FS_ROOT . 'includes/classes/class.notifier.php';
 require DIR_FS_INSTALL . 'includes/functions/general.php';
@@ -144,17 +146,18 @@ $languageManager = new LanguageManager();
 
 zen_sanitize_request();
 /**
- * set the type of request (secure or not)
+ * Inspect the type of request (using SSL or not)
  */
-$request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_BY']) && stripos($_SERVER['HTTP_X_FORWARDED_BY'], 'SSL') !== false) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false)) ||
-    (isset($_SERVER['SCRIPT_URI']) && stripos($_SERVER['SCRIPT_URI'], 'https:') === 0) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) == 'on')) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https')) ||
-    (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] != '') ||
+$request_type = ((isset($_SERVER['HTTPS']) && (strtolower((string)$_SERVER['HTTPS']) !== 'off' || $_SERVER['HTTPS'] == '1'))) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_BY']) && str_contains(strtoupper((string)$_SERVER['HTTP_X_FORWARDED_BY']), 'SSL')) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (str_contains(strtoupper((string)$_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL'))) ||
+    (isset($_SERVER['SCRIPT_URI']) && stripos((string)$_SERVER['SCRIPT_URI'], 'https:') === 0) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower((string)$_SERVER['HTTP_X_FORWARDED_SSL']) === 'on')) ||
+    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'ssl' || strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')) ||
+    (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] !== '') ||
     (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] == '443') ||
-    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
+    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
+    ? 'SSL' : 'NONSSL';
 
 /*
  * debug params

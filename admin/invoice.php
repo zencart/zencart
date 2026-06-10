@@ -54,7 +54,7 @@ if (empty($order->info)) {
       <p class="text-danger text-center"><?= ERROR_ORDER_DOES_NOT_EXIST . $oID ?></p>
 <?php
 } else {
-    $show_including_tax = (DISPLAY_PRICE_WITH_TAX == 'true');
+    $show_including_tax = (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true');
 
     // prepare order-status pulldown list
     $ordersStatus = zen_getOrdersStatuses();
@@ -73,7 +73,7 @@ if (empty($order->info)) {
       <!-- body_text //-->
       <table class="table">
         <tr>
-          <td class="pageHeading"><?php echo nl2br(STORE_NAME_ADDRESS); ?></td>
+          <td class="pageHeading"><?php echo nl2br(zen_config('STORE_NAME_ADDRESS'), false); ?></td>
           <td class="pageHeading text-right"><?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT); ?></td>
         </tr>
       </table>
@@ -254,7 +254,7 @@ if (empty($order->info)) {
                     $i = $ii;
                 }
                 $product_name = $order->products[$i]['name'];
-              if (DISPLAY_PRICE_WITH_TAX_ADMIN == 'true') {
+              if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $decimals) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
               } else {
                 $priceIncTax = $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
@@ -277,7 +277,7 @@ if (empty($order->info)) {
                   <ul>
                       <?php
                       for ($j = 0; $j < $k; $j++) {
-                          $attribute_name = $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                          $attribute_name = $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']), false);
                           $attribute_image = zen_get_attributes_image($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['option_id'], $order->products[$i]['attributes'][$j]['value_id']);
                         ?>
                       <li>
@@ -448,7 +448,7 @@ if (empty($order->info)) {
         }
         ?>
         </table>
-        <?php if (ORDER_COMMENTS_INVOICE > 0) { ?>
+        <?php if ((int)zen_config('ORDER_COMMENTS_INVOICE') > 0) { ?>
         <table class="table table-condensed" style="width:100%;">
           <thead>
             <tr>
@@ -479,7 +479,7 @@ if (empty($order->info)) {
                      echo TEXT_NONE;
                   } else {
                      if ($count_comments == 1) {
-                        echo nl2br(zen_output_string_protected($order_history['comments']));
+                        echo nl2br(zen_output_string_protected($order_history['comments']), false);
                      } else {
                         echo $order_history['comments'];
                      }
@@ -489,7 +489,7 @@ if (empty($order->info)) {
                   </td>
                 </tr>
                 <?php
-                if (ORDER_COMMENTS_INVOICE == 1 && $count_comments >= 1) {
+                if ((int)zen_config('ORDER_COMMENTS_INVOICE') === 1 && $count_comments >= 1) {
                   break;
                 }
               }

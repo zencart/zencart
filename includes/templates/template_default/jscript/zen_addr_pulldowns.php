@@ -70,18 +70,24 @@ jQuery(document).ready(function() {
 // field is slightly offset from the other input fields.
 //
 ?>
-    jQuery('#stBreak').hide();
-    if (jQuery('#stateLabel').text().length === 0) {
-        jQuery('#stateLabel').hide();
-    }
     if (jQuery('#stateZone > option').length > 1) {
+        jQuery('#stateLabel').hide();
         jQuery('#state').hide();
         jQuery('#stateZone').show();
-        jQuery('#stateZone').next('span.alert').show();
+        if (jQuery('#stateZone option:selected').val() == 0) {
+            jQuery('#zoneLabel').nextAll('span.alert').first().show();
+        } else {
+            jQuery('#zoneLabel').nextAll('span.alert').first().hide();
+        }
     } else {
+        if (jQuery('#stateLabel').text().length === 0) {
+            jQuery('#stateLabel').text(jQuery('#zoneLabel').text());
+        }
         jQuery('#state').show();
+        jQuery('#zoneLabel').hide();
         jQuery('#stateZone').hide();
-        jQuery('#stateZone').next('span.alert').hide();
+        jQuery('#zoneLabel').nextAll('span.alert').first().hide();
+        jQuery('#stBreak').hide();
     }
 <?php
     // -----
@@ -108,15 +114,33 @@ jQuery(document).ready(function() {
             var split = countryZones.split('<option').filter(function(el) {return el.length != 0});
             var sorted = split.sort();
             countryZones = '<option selected="selected" value="0"><?php echo addslashes(PLEASE_SELECT); ?><' + '/option><option' + sorted.join('<option');
+            jQuery('#stateLabel').hide();
             jQuery('#state').hide();
             jQuery('#stateZone').html(countryZones);
+            jQuery('#zoneLabel').show();
             jQuery('#stateZone').show();
-            jQuery('#stateZone').next('span.alert').show();
+            jQuery('#zoneLabel').nextAll('span.alert').first().show();
+            jQuery('#stBreak').show();
         } else {
+            if (jQuery('#stateLabel').text().length === 0) {
+                jQuery('#stateLabel').text(jQuery('#zoneLabel').text());
+            }
+            jQuery('#stateLabel').show();
             jQuery('#state').show();
+            jQuery('#zoneLabel').hide();
             jQuery('#stateZone').hide();
-            jQuery('#stateZone').next('span.alert').hide();
+            jQuery('#zoneLabel').nextAll('span.alert').first().hide();
+            jQuery('#stBreak').hide();
         }
     }
+    $('#stateZone').on('change', function() {
+        // Get the updated value
+        var selectedValue = $(this).val(); 
+        if (selectedValue == 0) {
+            jQuery('#zoneLabel').nextAll('span.alert').first().show();
+        } else {
+            jQuery('#zoneLabel').nextAll('span.alert').first().hide();
+        }
+    });
 });
 </script>

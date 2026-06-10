@@ -53,7 +53,7 @@
 
 // set image
 //  $products_image = $review->fields['products_image'];
-  if ($review->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
+  if ($review->fields['products_image'] == '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
   } else {
     $products_image = $review->fields['products_image'];
@@ -70,7 +70,7 @@
 
   $reviews_query_raw = $db->bindVars($reviews_query_raw, ':productsID', $_GET['products_id'], 'integer');
   $reviews_query_raw = $db->bindVars($reviews_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
-  $reviews_split = new splitPageResults($reviews_query_raw, MAX_DISPLAY_NEW_REVIEWS);
+  $reviews_split = new splitPageResults($reviews_query_raw, zen_config('MAX_DISPLAY_NEW_REVIEWS'));
   $reviews = $db->Execute($reviews_split->sql_query);
   $reviewsArray = array();
   while (!$reviews->EOF) {

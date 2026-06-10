@@ -9,15 +9,22 @@ namespace Tests\FeatureStore\StoreEndpoints;
 use Tests\Support\Traits\CustomerAccountConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class AskAQuestionInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     use CustomerAccountConcerns;
 
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
+
+    public function testAskAQuestionPageCanBeRenderedOverHttp(): void
+    {
+        $this->get('/index.php?main_page=ask_a_question&pID=2')
+            ->assertOk()
+            ->assertHeader('X-ZC-InProcess-Runner', 'storefront')
+            ->assertSee('Ask a Question About')
+            ->assertSee('Matrox G400 32MB');
+    }
 
     public function testLoggedInCustomerSeesPrefilledAskAQuestionForm(): void
     {

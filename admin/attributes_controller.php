@@ -27,7 +27,7 @@ $chk_option_values = $db->Execute(
     "SELECT *
        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
       WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-        AND products_options_values_id != " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . "
+        AND products_options_values_id != " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') . "
       LIMIT 1"
 );
 if ($chk_option_values->EOF) {
@@ -67,7 +67,7 @@ foreach ($languages as $next_lang) {
             "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                 (products_options_values_id, language_id, products_options_values_name)
              VALUES
-                (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . (int)$next_lang['id'] . ", 'TEXT')"
+                (" . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') . ", " . (int)$next_lang['id'] . ", 'TEXT')"
         );
     }
 }
@@ -262,7 +262,7 @@ if ($action !== '') {
                           LIMIT 1"
                     );
                     $products_options_type = $products_options_array->fields['products_options_type'];
-                    $values_id = (int)(($products_options_type === PRODUCTS_OPTIONS_TYPE_TEXT || $products_options_type === PRODUCTS_OPTIONS_TYPE_FILE) ? PRODUCTS_OPTIONS_VALUES_TEXT_ID : $value_id);
+                    $values_id = (int)(($products_options_type === zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') || $products_options_type === zen_config('PRODUCTS_OPTIONS_TYPE_FILE')) ? zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') : $value_id);
 
                     $value_price = (float)$_POST['value_price'];
                     $value_price_w = $_POST['value_price_w'] ?? '0';  //- Not present if wholesale pricing isn't enabled for the site
@@ -367,7 +367,7 @@ if ($action !== '') {
 
                     $products_attributes_id = $db->insert_ID();
 
-                    if (DOWNLOAD_ENABLED === 'true') {
+                    if (zen_config('DOWNLOAD_ENABLED') === 'true') {
                         $products_attributes_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
                         $products_attributes_filename = zen_db_prepare_input($products_attributes_filename);
                         $products_attributes_maxdays = (int)$_POST['products_attributes_maxdays'];
@@ -424,9 +424,9 @@ if ($action !== '') {
                           LIMIT 1"
                     );
                     switch ($products_options_query->fields['products_options_type']) {
-                        case PRODUCTS_OPTIONS_TYPE_TEXT:
-                        case PRODUCTS_OPTIONS_TYPE_FILE:
-                            $values_id = (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID;
+                        case zen_config('PRODUCTS_OPTIONS_TYPE_TEXT'):
+                        case zen_config('PRODUCTS_OPTIONS_TYPE_FILE'):
+                            $values_id = (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID');
                             break;
                         default:
                             $values_id = (int)$_POST['values_id'];
@@ -527,7 +527,7 @@ if ($action !== '') {
                           LIMIT 1"
                     );
 
-                    if (DOWNLOAD_ENABLED === 'true') {
+                    if (zen_config('DOWNLOAD_ENABLED') === 'true') {
                         $products_attributes_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
                         $products_attributes_filename = zen_db_prepare_input($products_attributes_filename);
                         $products_attributes_maxdays = (int)$_POST['products_attributes_maxdays'];
@@ -709,7 +709,7 @@ function zen_js_option_values_list($selectedName, $fieldName)
     foreach ($attributes as $attribute) {
         $products_options_values_name = str_replace(
             ['-', '(', ')', '"', '&quot;', '&frac12;', '&amp;'],
-            ['\-', '\(', '\)', '\"', '\"', '1/2', '&'], 
+            ['\-', '\(', '\)', '\"', '\"', '1/2', '&'],
             $attribute['products_options_values_name']
         );
 
@@ -811,7 +811,7 @@ if ($products_filter !== 0 && !in_array($action, ['attribute_features_copy_to_pr
 ?>
               <li role="presentation"><a role="menuitem" href="<?= zen_href_link(FILENAME_PRODUCTS_TO_CATEGORIES, '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id) ?>"><?= IMAGE_PRODUCTS_TO_CATEGORIES ?></a></li>
 <?php
-} 
+}
 ?>
             </ul>
           </div>
@@ -980,7 +980,7 @@ if ($action === '') {
 // -----
 // Defining variables common to various display layouts.
 //
-$wholesale_pricing_enabled = (WHOLESALE_PRICING_CONFIG !== 'false');
+$wholesale_pricing_enabled = (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false');
 $wholesale_pricing_indicator = '<span class="text-danger">*</span>';
 $wholesale_pricing_heading = ($wholesale_pricing_enabled === true) ? '<br>' . $wholesale_pricing_indicator . '<small>' . TABLE_HEADING_HAS_WHOLESALE_PRICE . '</small>' : '';
 
@@ -1112,13 +1112,13 @@ if ($_GET['products_filter'] === 0) {
           ORDER BY LPAD(po.products_options_sort_order,11,'0'),
                    LPAD(pa.options_id,11,'0'),
                    LPAD(pa.products_options_sort_order,11,'0')";
-    $attributes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $attributes_query_raw, $attributes_query_numrows);
+    $attributes_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $attributes_query_raw, $attributes_query_numrows);
 ?>
         <div class="row">
           <?= zen_draw_separator('pixel_trans.gif') ?>
-          <div class="col-sm-6"><?= $attributes_split->display_count($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES) ?></div>
+          <div class="col-sm-6"><?= $attributes_split->display_count($attributes_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ATTRIBUTES) ?></div>
           <?php $exclude_array = ['page', 'attributes_id']; ?>
-          <div class="col-sm-6 text-right"><?= $attributes_split->display_links($attributes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params($exclude_array)) ?></div>
+          <div class="col-sm-6 text-right"><?= $attributes_split->display_links($attributes_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params($exclude_array)) ?></div>
         </div>
         <div class="row">
           <div class="col-sm-12">
@@ -1318,7 +1318,7 @@ if ($_GET['products_filter'] === 0) {
                       <?= zen_draw_input_field('attributes_price_onetime', $attributes_value['attributes_price_onetime'], 'size="6" class="form-control" id="attributes_price_onetime"') ?>
                     </div>
 <?php
-            if (ATTRIBUTES_ENABLED_PRICE_FACTOR === 'true') {
+            if (zen_config('ATTRIBUTES_ENABLED_PRICE_FACTOR') === 'true') {
 ?>
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                       <?= zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR, 'attributes_price_factor', 'class="control-label"') ?>
@@ -1349,7 +1349,7 @@ if ($_GET['products_filter'] === 0) {
                   </div>
                   <hr style="border: inherit; margin: 10px 0;">
 <?php
-            if (ATTRIBUTES_ENABLED_QTY_PRICES === 'true') {
+            if (zen_config('ATTRIBUTES_ENABLED_QTY_PRICES') === 'true') {
 ?>
                   <div class="row">
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -1370,7 +1370,7 @@ if ($_GET['products_filter'] === 0) {
 <?php
             } // ATTRIBUTES_ENABLED_QTY_PRICES
 
-            if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true') {
+            if (zen_config('ATTRIBUTES_ENABLED_TEXT_PRICES') === 'true') {
 ?>
                   <div class="row">
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -1503,7 +1503,7 @@ if ($_GET['products_filter'] === 0) {
                     </table>
                   </div>
 <?php
-            if (ATTRIBUTES_ENABLED_IMAGES === 'true') {
+            if (zen_config('ATTRIBUTES_ENABLED_IMAGES') === 'true') {
                 // edit
                 // attributes images
                 $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
@@ -1555,7 +1555,7 @@ if ($_GET['products_filter'] === 0) {
 <?php
             } // ATTRIBUTES_ENABLED_IMAGES
 
-            if (DOWNLOAD_ENABLED === 'true') {
+            if (zen_config('DOWNLOAD_ENABLED') === 'true') {
                 $download_query_raw =
                   "SELECT products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
                      FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
@@ -1809,7 +1809,7 @@ if ($_GET['products_filter'] === 0) {
               </tr>
 <?php
             // bof: show filename if it exists
-            if (DOWNLOAD_ENABLED === 'true') {
+            if (zen_config('DOWNLOAD_ENABLED') === 'true') {
                 $download_display_query_raw =
                   "SELECT products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
                      FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
@@ -1998,7 +1998,7 @@ if ($_GET['products_filter'] === 0) {
                       <?= zen_draw_input_field('attributes_price_onetime', '', 'size="6" class="form-control" id="attributes_price_onetime"') ?>
                     </div>
 <?php
-        if (ATTRIBUTES_ENABLED_PRICE_FACTOR === 'true') {
+        if (zen_config('ATTRIBUTES_ENABLED_PRICE_FACTOR') === 'true') {
 ?>
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                       <?= zen_draw_label(TABLE_HEADING_ATTRIBUTES_PRICE_FACTOR, 'attributes_price_factor', 'class="control-label"') ?>
@@ -2029,7 +2029,7 @@ if ($_GET['products_filter'] === 0) {
                   </div>
                   <hr style="border: inherit; margin: 10px 0;">
 <?php
-        if (ATTRIBUTES_ENABLED_QTY_PRICES === 'true') {
+        if (zen_config('ATTRIBUTES_ENABLED_QTY_PRICES') === 'true') {
 ?>
                   <div class="row">
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -2050,7 +2050,7 @@ if ($_GET['products_filter'] === 0) {
 <?php
         } // ATTRIBUTES_ENABLED_QTY_PRICES
 
-        if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true') {
+        if (zen_config('ATTRIBUTES_ENABLED_TEXT_PRICES') === 'true') {
 ?>
                   <div class="row">
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -2183,7 +2183,7 @@ if ($_GET['products_filter'] === 0) {
                     </table>
                   </div>
 <?php
-        if (ATTRIBUTES_ENABLED_IMAGES === 'true') {
+        if (zen_config('ATTRIBUTES_ENABLED_IMAGES') === 'true') {
           // add
           // attributes images
             $dir_info = zen_build_subdirectories_array(DIR_FS_CATALOG_IMAGES);
@@ -2220,10 +2220,10 @@ if ($_GET['products_filter'] === 0) {
 <?php
         } // ATTRIBUTES_ENABLED_IMAGES
 
-        if (DOWNLOAD_ENABLED === 'true') {
+        if (zen_config('DOWNLOAD_ENABLED') === 'true') {
             $products_attributes_filename = '';
-            $products_attributes_maxdays = DOWNLOAD_MAX_DAYS;
-            $products_attributes_maxcount = DOWNLOAD_MAX_COUNT;
+            $products_attributes_maxdays = zen_config('DOWNLOAD_MAX_DAYS');
+            $products_attributes_maxcount = zen_config('DOWNLOAD_MAX_COUNT');
 ?>
                   <h4><?= TABLE_HEADING_DOWNLOAD ?></h4>
                   <div class="row">

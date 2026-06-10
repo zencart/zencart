@@ -6,26 +6,37 @@ use RuntimeException;
 
 class TestConfigResolver
 {
+    private const SHARED_CONFIG_CONTEXTS = ['store', 'admin', 'configure'];
+
+    public static function detectShellUser(?array $server = null): string
+    {
+        $server ??= $_SERVER;
+
+        return $server['USER'] ?? $server['MY_USER'] ?? getenv('USER') ?: getenv('MY_USER') ?: 'runner';
+    }
+
     public static function detectUser(?array $server = null): string
     {
         $server ??= $_SERVER;
 
-        if (!empty($server['IS_DDEV_PROJECT']) || getenv('IS_DDEV_PROJECT')) {
+        if (self::isTruthy($server['IS_DDEV_PROJECT'] ?? null) || self::isTruthy(getenv('IS_DDEV_PROJECT') ?: null)) {
             return 'ddev';
         }
 
-        return $server['USER'] ?? $server['MY_USER'] ?? 'runner';
+        return self::detectShellUser($server);
     }
 
     public static function resolveConfigPath(string $context, ?string $basePath = null, ?array $server = null): string
     {
         $basePath = rtrim($basePath ?? self::defaultBasePath(), '/') . '/';
+        $normalizedContext = self::normalizeContext($context);
         $user = self::detectUser($server);
         $candidates = array_unique([$user, 'ddev', 'runner']);
         $pathsTried = [];
 
         foreach ($candidates as $candidate) {
-            $candidatePath = $basePath . $candidate . '.' . $context . '.configure.php';
+            $contextSuffix = $normalizedContext === 'configure' ? '' : '.' . $normalizedContext;
+            $candidatePath = $basePath . $candidate . $contextSuffix . '.configure.php';
             $pathsTried[] = $candidatePath;
 
             if (file_exists($candidatePath)) {
@@ -42,6 +53,20 @@ class TestConfigResolver
         );
     }
 
+    public static function resolveConfigProfile(string $context, ?string $basePath = null, ?array $server = null): string
+    {
+        $configPath = self::resolveConfigPath($context, $basePath, $server);
+        $filename = basename($configPath);
+        $normalizedContext = self::normalizeContext($context);
+        $suffix = ($normalizedContext === 'configure' ? '' : '.' . $normalizedContext) . '.configure.php';
+
+        if (str_ends_with($filename, $suffix)) {
+            return substr($filename, 0, -strlen($suffix));
+        }
+
+        return $filename;
+    }
+
     public static function loadConfig(string $context, ?string $basePath = null, ?array $server = null): mixed
     {
         return require self::resolveConfigPath($context, $basePath, $server);
@@ -50,5 +75,24 @@ class TestConfigResolver
     private static function defaultBasePath(): string
     {
         return __DIR__ . '/configs';
+    }
+
+    private static function normalizeContext(string $context): string
+    {
+        return in_array($context, self::SHARED_CONFIG_CONTEXTS, true) ? 'configure' : $context;
+    }
+
+    private static function isTruthy(mixed $value): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if ($value === null) {
+            return false;
+        }
+
+        $normalized = strtolower(trim((string)$value));
+        return in_array($normalized, ['1', 'true', 'yes', 'on'], true);
     }
 }

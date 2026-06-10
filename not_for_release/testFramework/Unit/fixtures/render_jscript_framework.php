@@ -5,7 +5,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 if (!function_exists('zen_href_link')) {
-    function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL'): string
+    function zen_href_link($page = '', $parameters = '', $connection = ''): string
     {
         return '/index.php?main_page=' . $page;
     }

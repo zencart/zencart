@@ -3,9 +3,64 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+# shellcheck source=/dev/null
+. "$ROOT_DIR/not_for_release/testFramework/load-test-environment.sh"
+load_test_framework_env "$ROOT_DIR"
 DRY_RUN=0
 declare -a FEATURE_ARGS=()
 CLI_FILTER=""
+PHPUNIT_BIN="${PHPUNIT_BIN:-$ROOT_DIR/vendor/bin/phpunit}"
+
+file_has_group() {
+    local file="$1"
+    local group="$2"
+
+    grep -Eq "^[[:space:]]*\*[[:space:]]+@group[[:space:]]+${group}([[:space:]]|$)" "$file" \
+        || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
+}
+
+matches_filter() {
+    local file="$1"
+    local requested_filter="$2"
+
+    if [ -z "$requested_filter" ]; then
+        return 0
+    fi
+
+    local name="${file##*/}"
+    local stem="${name%.php}"
+    [ "$name" = "$requested_filter" ] || [ "$stem" = "$requested_filter" ] || [[ "$file" == *"$requested_filter"* ]]
+}
+
+list_plain_serial_matches() {
+    local suite_dir="$1"
+    local requested_filter="$2"
+
+    while IFS= read -r file; do
+        if ! file_has_group "$file" "serial"; then
+            continue
+        fi
+
+        if file_has_group "$file" "plugin-filesystem"; then
+            continue
+        fi
+
+        if ! matches_filter "$file" "$requested_filter"; then
+            continue
+        fi
+
+        printf '%s\n' "$file"
+    done < <(find "$suite_dir" -type f -name '*Test.php' | sort)
+}
+
+plain_serial_suite_has_matches() {
+    local suite_dir="$1"
+    local requested_filter="$2"
+    local first_match
+
+    first_match="$(list_plain_serial_matches "$suite_dir" "$requested_filter" | sed -n '1p')"
+    [ -n "$first_match" ]
+}
 
 suite_has_matches() {
     local suite_dir="$1"
@@ -14,7 +69,7 @@ suite_has_matches() {
     local found_any=1
 
     while IFS= read -r file; do
-        if ! grep -q "@group ${required_group}" "$file"; then
+        if ! file_has_group "$file" "$required_group"; then
             continue
         fi
 
@@ -43,7 +98,7 @@ plugin_local_suite_has_matches() {
     fi
 
     while IFS= read -r file; do
-        if ! grep -q "@group plugin-filesystem" "$file"; then
+        if ! file_has_group "$file" "plugin-filesystem"; then
             continue
         fi
 
@@ -67,7 +122,8 @@ Runs the admin feature-test CI flow:
   2. strict feature test grouping report
   3. worker database preparation (or dry-run preview)
   4. admin parallel feature runner
-  5. admin plugin-filesystem serial bucket
+  5. admin serial bucket
+  6. admin plugin-filesystem serial bucket
 
 Examples:
   composer tests-feature-admin -- --filter AdminEndpointsTest
@@ -114,9 +170,27 @@ else
 fi
 
 if suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "parallel-candidate" "$CLI_FILTER"; then
-    bash "$ROOT_DIR/not_for_release/testFramework/run-parallel-admin-feature-tests.sh" "${FEATURE_ARGS[@]}"
+    bash "$ROOT_DIR/not_for_release/testFramework/run-parallel-admin-feature-tests.sh" "${FEATURE_ARGS[@]+"${FEATURE_ARGS[@]}"}"
 else
     echo "SKIP  [admin] no matching admin parallel-candidate files"
+fi
+
+if plain_serial_suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "$CLI_FILTER"; then
+    if [ "$DRY_RUN" -eq 1 ]; then
+        echo "RUN   [admin-serial] phpunit serial bucket (dry run)"
+        while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            echo "DRY   [admin-serial] ${file#$ROOT_DIR/}"
+        done < <(list_plain_serial_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "$CLI_FILTER")
+    else
+        while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            echo "RUN   [admin-serial] ${file#$ROOT_DIR/}"
+            "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --testsuite FeatureAdmin --group serial --exclude-group plugin-filesystem "${FEATURE_ARGS[@]+"${FEATURE_ARGS[@]}"}" "$file"
+        done < <(list_plain_serial_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "$CLI_FILTER")
+    fi
+else
+    echo "SKIP  [admin-serial] no matching admin serial files"
 fi
 
 if suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "plugin-filesystem" "$CLI_FILTER"; then
@@ -129,7 +203,13 @@ if suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "plu
             continue
         fi
         echo "DRY   [admin-plugin] ${file#$ROOT_DIR/}"
-    done < <(find "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" -type f -name '*Test.php' | sort | xargs grep -l "@group plugin-filesystem")
+    done < <(
+        while IFS= read -r file; do
+            if file_has_group "$file" "plugin-filesystem"; then
+                printf '%s\n' "$file"
+            fi
+        done < <(find "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" -type f -name '*Test.php' | sort)
+    )
     else
         if [ -n "$CLI_FILTER" ]; then
         composer tests-feature-admin-plugin-filesystem -- --filter "$CLI_FILTER"
@@ -143,15 +223,15 @@ fi
 
 if plugin_local_suite_has_matches "$CLI_FILTER"; then
     if [ "$DRY_RUN" -eq 1 ]; then
-        bash "$ROOT_DIR/not_for_release/testFramework/run-plugin-tests.sh" --dry-run --suite FeatureAdmin --require-group plugin-filesystem --group plugin-filesystem "${FEATURE_ARGS[@]}"
+        bash "$ROOT_DIR/not_for_release/testFramework/run-plugin-tests.sh" --dry-run --suite FeatureAdmin --require-group plugin-filesystem --group plugin-filesystem "${FEATURE_ARGS[@]+"${FEATURE_ARGS[@]}"}"
     else
-        bash "$ROOT_DIR/not_for_release/testFramework/run-plugin-tests.sh" --suite FeatureAdmin --require-group plugin-filesystem --group plugin-filesystem "${FEATURE_ARGS[@]}"
+        bash "$ROOT_DIR/not_for_release/testFramework/run-plugin-tests.sh" --suite FeatureAdmin --require-group plugin-filesystem --group plugin-filesystem "${FEATURE_ARGS[@]+"${FEATURE_ARGS[@]}"}"
     fi
 else
     echo "SKIP  [plugin-local] no matching plugin-local plugin-filesystem files"
 fi
 
-if ! suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "parallel-candidate" "$CLI_FILTER" && ! suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "plugin-filesystem" "$CLI_FILTER" && ! plugin_local_suite_has_matches "$CLI_FILTER"; then
+if ! suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "parallel-candidate" "$CLI_FILTER" && ! plain_serial_suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "$CLI_FILTER" && ! suite_has_matches "$ROOT_DIR/not_for_release/testFramework/FeatureAdmin" "plugin-filesystem" "$CLI_FILTER" && ! plugin_local_suite_has_matches "$CLI_FILTER"; then
     echo "No admin feature test files matched the requested filter." >&2
     exit 1
 fi

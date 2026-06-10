@@ -15,17 +15,17 @@ trait Singleton
 {
     private static array $instances = [];
 
-    protected function __construct() { }
+    final protected function __construct() { }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function __clone() { }
+    final protected function __clone() { }
 
     /**
      * @since ZC v2.2.0
      */
-    public function __unserialize(array $data): void
+    final public function __unserialize(array $data): void
     {
         throw new \BadMethodCallException("Cannot unserialize singleton");
     }
@@ -33,9 +33,9 @@ trait Singleton
     /**
      * @since ZC v1.5.7
      */
-    public function __wakeup()
+    final public function __wakeup()
     {
-        throw new Exception("Cannot unserialize singleton");
+        throw new \BadMethodCallException("Cannot unserialize singleton");
     }
 
     /**

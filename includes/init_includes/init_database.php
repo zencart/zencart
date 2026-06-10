@@ -16,10 +16,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 require('includes/classes/db/' .DB_TYPE . '/query_factory.php');
 $db = new queryFactory();
 
-$down_for_maint_source = FILENAME_DATABASE_TEMPORARILY_DOWN; 
+$down_for_maint_source = FILENAME_DATABASE_TEMPORARILY_DOWN;
 
-if (!defined('USE_PCONNECT')) define('USE_PCONNECT', 'false'); 
-if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, USE_PCONNECT, false)) {
+if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'unused', false)) {
   session_write_close();
   // If can't connect, send 503 Service Unavailable header and redirect to install or message page
   header("HTTP/1.1 503 Service Unavailable");
@@ -51,6 +50,6 @@ $db->dieOnErrors = FALSE;
 $result = $db->Execute($sql, FALSE, FALSE);
 if ($result->RecordCount() == 0) {
   if (defined('ERROR_DATABASE_MAINTENANCE_NEEDED')) die(ERROR_DATABASE_MAINTENANCE_NEEDED);
-    die('<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/">https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/</a>'); 
+    die('<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/">https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/</a>');
 }
 $db->dieOnErrors = TRUE;

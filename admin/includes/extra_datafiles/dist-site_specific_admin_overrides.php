@@ -14,7 +14,7 @@
  */
 // -----
 // The flags to indicate if attribute images should be displayed in invoice and packing slip.
-// Used in: admin/invoice.php, admin/packingslip.php 
+// Used in: admin/invoice.php, admin/packingslip.php
 //
 // $show_attrib_images   $show_attrib_images_pack
 // true or unset         true or unset            ...... attribute images are shown on invoice and packingslip (the default).
@@ -26,14 +26,14 @@
 
 // Set the width of the attribute image used in packingslip and invoice.
 // Used in: admin/invoice.php, admin/packingslip.php
-// 
+//
 // The default is 25. if $show_attrinb_images = false is set above then setting this value will have no effect
 // Change 25 below to the number of px you require. Do NOT remove the quotes!
 //$attr_img_width = '25';
 
 // The flags to indicate if product images should be displayed in invoice and packing slip.
-// Used in: admin/invoice.php, admin/packingslip.php 
-// 
+// Used in: admin/invoice.php, admin/packingslip.php
+//
 // $show_product_images  $show_product_images_pack
 // true or unset         true or unset            ...... product images are shown on invoice and packingslip (the default).
 // false                 false or unset           ...... product images are NOT shown on invoice or packingslip.
@@ -86,7 +86,7 @@
 
 // Flag to indicate id the Zone information is to be displayed on the Order screen.
 // Used in: admin/orders.php
-// 
+//
 // true ..... Display the zone information column (the default).
 // false .... Do NOT display the zone information column.
 //$show_zone_info = true;

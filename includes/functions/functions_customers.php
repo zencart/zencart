@@ -18,7 +18,7 @@ function zen_customer_greeting(): string
     $greeting_string = sprintf(TEXT_GREETING_GUEST, zen_href_link(FILENAME_LOGIN, '', 'SSL'));
     if (zen_is_logged_in() && !zen_in_guest_checkout() && !empty($_SESSION['customer_first_name'])) {
         $greeting_string = sprintf(TEXT_GREETING_PERSONAL, zen_output_string_protected($_SESSION['customer_first_name']), zen_href_link(FILENAME_PRODUCTS_NEW));
-    } elseif (STORE_STATUS != '0') {
+    } elseif (zen_config('STORE_STATUS') !== '0') {
         $greeting_string = TEXT_GREETING_GUEST_SHOWCASE;
     }
 
@@ -202,25 +202,25 @@ function zen_validate_storefront_admin_login($password, $email_address): bool
     // Before v1.5.7 Admin passwords might be 'sanitized', e.g. this&that becomes this&amp;that, so we'll check both versions.
     $pwd2 = htmlspecialchars($password, ENT_COMPAT, CHARSET);
 
-    if (!empty(EMP_LOGIN_ADMIN_ID)) {
+    if (!empty(zen_config('EMP_LOGIN_ADMIN_ID'))) {
         $check = $db->Execute(
             "SELECT admin_id, admin_pass
              FROM " . TABLE_ADMIN . "
-             WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
+             WHERE admin_id = " . (int)zen_config('EMP_LOGIN_ADMIN_ID') . "
              LIMIT 1"
         );
         if (!$check->EOF && (zen_validate_password($password, $check->fields['admin_pass']) || zen_validate_password($pwd2, $check->fields['admin_pass']))) {
             $admin_authorized = true;
             $_SESSION['emp_admin_login'] = true;
-            $_SESSION['emp_admin_id'] = (int)EMP_LOGIN_ADMIN_ID;
+            $_SESSION['emp_admin_id'] = (int)zen_config('EMP_LOGIN_ADMIN_ID');
         }
     }
 
-    if (!$admin_authorized && empty(EMP_LOGIN_ADMIN_PROFILE_ID)) {
+    if (!$admin_authorized && empty(zen_config('EMP_LOGIN_ADMIN_PROFILE_ID'))) {
         return false;
     }
 
-    $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+    $profile_array = explode(',', str_replace(' ', '', zen_config('EMP_LOGIN_ADMIN_PROFILE_ID')));
     foreach ($profile_array as $index => $current_id) {
         if (empty($current_id)) {
             unset($profile_array[$index]);
@@ -274,7 +274,7 @@ function zen_update_customers_secret($customerId)
  */
 function zen_create_hmac_uri($data, $secret)
 {
-    $secret = hash('sha256', $secret . GLOBAL_AUTH_KEY);
+    $secret = hash('sha256', $secret . zen_config('GLOBAL_AUTH_KEY'));
     foreach ($data as $k => $val) {
         $k = str_replace('%', '%25', $k);
         $k = str_replace('&', '%26', $k);
@@ -310,7 +310,7 @@ function zen_is_hmac_login()
 function zen_validate_hmac_login()
 {
     global $db, $zenSessionId;
-    
+
     if (!isset($_POST['aid'], $_POST['cid'], $_POST['email_address'], $_POST['timestamp'])) {
         return false;
     }
@@ -333,7 +333,7 @@ function zen_validate_hmac_login()
     $sql = $db->bindVars($sql, ':id:', $params['cid'], 'integer');
     $result = $db->Execute($sql);
     $secret = $result->fields['customers_secret'];
-    $secret = hash('sha256', $secret . GLOBAL_AUTH_KEY);
+    $secret = hash('sha256', $secret . zen_config('GLOBAL_AUTH_KEY'));
     $hmacOriginal = $data['hmac'];
     unset($params['hmac']);
     ksort($params);
@@ -360,19 +360,19 @@ function zen_validate_hmac_admin_id($adminId)
 {
     global $db;
 
-    if (!empty(EMP_LOGIN_ADMIN_ID)) {
+    if (!empty(zen_config('EMP_LOGIN_ADMIN_ID'))) {
         $check = $db->Execute(
             "SELECT admin_id
            FROM " . TABLE_ADMIN . "
-          WHERE admin_id = " . (int)EMP_LOGIN_ADMIN_ID . "
+          WHERE admin_id = " . (int)zen_config('EMP_LOGIN_ADMIN_ID') . "
           LIMIT 1"
         );
-        if ($check->RecordCount() > 0 && (int)EMP_LOGIN_ADMIN_ID == (int)$adminId) {
+        if ($check->RecordCount() > 0 && (int)zen_config('EMP_LOGIN_ADMIN_ID') == (int)$adminId) {
             return (int)$adminId;
         }
     }
 
-    $profile_array = explode(',', str_replace(' ', '', EMP_LOGIN_ADMIN_PROFILE_ID));
+    $profile_array = explode(',', str_replace(' ', '', zen_config('EMP_LOGIN_ADMIN_PROFILE_ID')));
     foreach ($profile_array as $index => $current_id) {
         if (empty($current_id)) {
             unset($profile_array[$index]);

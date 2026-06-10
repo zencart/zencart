@@ -320,7 +320,7 @@ require (DIR_WS_INCLUDES . 'header.php');
         <table class="col-sm-12" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')); ?></td>
           </tr>
         </table>
         </td>

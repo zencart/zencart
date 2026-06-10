@@ -64,12 +64,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'update') {
   }
   zen_redirect(zen_href_link(FILENAME_DEFAULT));
 } else {
-  $store_country = STORE_COUNTRY;
-  $store_zone = STORE_ZONE;
-  $store_name = STORE_NAME;
-  $store_owner = STORE_OWNER;
-  $store_owner_email = STORE_OWNER_EMAIL_ADDRESS;
-  $store_address = STORE_NAME_ADDRESS;
+  $store_country = zen_config('STORE_COUNTRY');
+  $store_zone = zen_config('STORE_ZONE');
+  $store_name = zen_config('STORE_NAME');
+  $store_owner = zen_config('STORE_OWNER');
+  $store_owner_email = zen_config('STORE_OWNER_EMAIL_ADDRESS');
+  $store_address = zen_config('STORE_NAME_ADDRESS');
 }
 
 $country_string = zen_draw_pull_down_menu('zone_country_id', zen_get_countries_for_admin_pulldown(), $store_country, 'id="zone_country_id" class="form-control" onchange="update_zone(this.form);"');

@@ -9,6 +9,15 @@ SUITE_FILTER=""
 REQUIRED_GROUP=""
 CLI_FILTER=""
 declare -a PHPUNIT_ARGS=()
+declare -a TEST_FILES=()
+
+file_has_group() {
+    local file="$1"
+    local group="$2"
+
+    grep -Eq "^[[:space:]]*\*[[:space:]]+@group[[:space:]]+${group}([[:space:]]|$)" "$file" \
+        || grep -Eq "^[[:space:]]*#\[[^]]*Group\(['\"]${group}['\"]\)\]" "$file"
+}
 
 usage() {
     cat <<EOF
@@ -61,7 +70,7 @@ matches_required_group() {
         return 0
     fi
 
-    grep -q "@group ${REQUIRED_GROUP}" "$file"
+    file_has_group "$file" "$REQUIRED_GROUP"
 }
 
 discover_suite_files() {
@@ -117,6 +126,14 @@ describe_test_file() {
     printf '%s %s %s %s' "$plugin" "$version" "$suite" "$test_file"
 }
 
+load_discovered_files() {
+    TEST_FILES=()
+
+    while IFS= read -r test_file; do
+        TEST_FILES+=("$test_file")
+    done < <(discover_files)
+}
+
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --help|-h)
@@ -168,7 +185,7 @@ case "$SUITE_FILTER" in
 esac
 
 extract_cli_filter
-mapfile -t TEST_FILES < <(discover_files)
+load_discovered_files
 
 if [ "${#TEST_FILES[@]}" -eq 0 ]; then
     echo "No plugin-local test files matched." >&2
@@ -177,13 +194,13 @@ fi
 
 if [ "$DRY_RUN" -eq 1 ]; then
     echo "RUN   [plugin-local] phpunit (dry run)"
-    for file in "${TEST_FILES[@]}"; do
+    for file in "${TEST_FILES[@]+"${TEST_FILES[@]}"}"; do
         echo "DRY   [plugin-local] $(describe_test_file "$file")"
     done
     exit 0
 fi
 
-for file in "${TEST_FILES[@]}"; do
+for file in "${TEST_FILES[@]+"${TEST_FILES[@]}"}"; do
     echo "RUN   [plugin-local] $(describe_test_file "$file")"
-    "$ROOT_DIR/vendor/bin/phpunit" --verbose "${PHPUNIT_ARGS[@]}" "$file"
+    "$ROOT_DIR/vendor/bin/phpunit" "${PHPUNIT_ARGS[@]+"${PHPUNIT_ARGS[@]}"}" "$file"
 done

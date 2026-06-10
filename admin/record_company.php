@@ -147,7 +147,7 @@ if (!empty($action)) {
                 $record_company_query_raw = "SELECT *
                                              FROM " . TABLE_RECORD_COMPANY . "
                                              ORDER BY record_company_name";
-                $record_company_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $record_company_query_raw, $record_company_query_numrows);
+                $record_company_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $record_company_query_raw, $record_company_query_numrows);
                 $record_companies = $db->Execute($record_company_query_raw);
                 $rCompany_parameter = '';
                 foreach ($record_companies as $record_company) {
@@ -271,8 +271,8 @@ if (!empty($action)) {
       </div>
       <table class="table">
         <tr>
-          <td><?php echo $record_company_split->display_count($record_company_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES); ?></td>
-          <td class="text-right"><?php echo $record_company_split->display_links($record_company_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+          <td><?php echo $record_company_split->display_count($record_company_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_RECORD_COMPANIES); ?></td>
+          <td class="text-right"><?php echo $record_company_split->display_links($record_company_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
         </tr>
         <?php if (empty($action)) { ?>
           <tr>

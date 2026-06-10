@@ -18,7 +18,7 @@ if (empty($extra)) {
 }
 ?>
 <div id="shippingEstimatorContent">
-    <?= zen_draw_form('estimator', zen_href_link($show_in . '#seView', '', $request_type), 'post') ?>
+    <?= zen_draw_form('estimator', zen_href_link($show_in . '#seView'), 'post') ?>
 <?php
 if (is_array($selected_shipping)) {
     echo zen_draw_hidden_field('scid', $selected_shipping['id']);

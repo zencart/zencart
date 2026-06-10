@@ -45,7 +45,7 @@ extract_cli_filter() {
 build_unit_args() {
     UNIT_ARGS=()
 
-    for arg in "${TEST_ARGS[@]}"; do
+    for arg in "${TEST_ARGS[@]+"${TEST_ARGS[@]}"}"; do
         if [ "$arg" = "--dry-run" ]; then
             continue
         fi
@@ -147,20 +147,20 @@ if [ -n "$CLI_FILTER" ]; then
 fi
 
 if [ "$run_unit" -eq 0 ]; then
-    bash "$ROOT_DIR/not_for_release/testFramework/run-parallel-unit-tests.sh" "${UNIT_ARGS[@]}"
+    bash "$ROOT_DIR/not_for_release/testFramework/run-parallel-unit-tests.sh" "${UNIT_ARGS[@]+"${UNIT_ARGS[@]}"}"
 else
     echo "SKIP  [unit] no matching unit test files"
 fi
 
 if [ "$DRY_RUN" -eq 1 ]; then
     if [ "$run_feature" -eq 0 ]; then
-        bash "$ROOT_DIR/not_for_release/testFramework/run-feature-tests-ci.sh" --dry-run "${TEST_ARGS[@]}"
+        bash "$ROOT_DIR/not_for_release/testFramework/run-feature-tests-ci.sh" --dry-run "${TEST_ARGS[@]+"${TEST_ARGS[@]}"}"
     else
         echo "SKIP  [feature] no matching feature test files"
     fi
 else
     if [ "$run_feature" -eq 0 ]; then
-        bash "$ROOT_DIR/not_for_release/testFramework/run-feature-tests-ci.sh" "${TEST_ARGS[@]}"
+        bash "$ROOT_DIR/not_for_release/testFramework/run-feature-tests-ci.sh" "${TEST_ARGS[@]+"${TEST_ARGS[@]}"}"
     else
         echo "SKIP  [feature] no matching feature test files"
     fi

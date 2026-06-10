@@ -221,7 +221,7 @@ switch ($action) {
             $lang_dir = $current_language['directory'];
             $lang_img = $current_language['image'];
             $lang_name = $current_language['name'];
-            $inputs_string .= 
+            $inputs_string .=
                 '<br>' .
                 zen_image(DIR_WS_CATALOG_LANGUAGES . "$lang_dir/images/$lang_img", $lang_name) .
                 '&nbsp;' .

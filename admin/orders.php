@@ -38,7 +38,7 @@ if (!isset($_GET['list_order'])) $_GET['list_order'] = '';
 if (!isset($_GET['page'])) $_GET['page'] = '';
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
-$show_including_tax = (DISPLAY_PRICE_WITH_TAX === 'true');
+$show_including_tax = (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true');
 // prepare order-status look-up list
 $ordersStatus = zen_getOrdersStatuses();
 $orders_status_array = $ordersStatus['orders_status_array'];
@@ -87,7 +87,7 @@ if (!empty($oID) && !empty($action)) {
 // setting isn't set!
 //
 if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
-switch (NOTIFY_CUSTOMER_DEFAULT) {
+switch (zen_config('NOTIFY_CUSTOMER_DEFAULT')) {
     case '0':
         $notify_email = false;
         $notify_no_email = true;
@@ -199,10 +199,10 @@ if (!empty($action) && $order_exists === true) {
                 $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
                 if ($chk_products_download_time->EOF) {
-                    $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + (int)DOWNLOAD_MAX_DAYS;
+                    $zc_max_days = (int)zen_config('DOWNLOAD_MAX_DAYS') === 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + (int)zen_config('DOWNLOAD_MAX_DAYS');
                     $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                                     SET download_maxdays = " . (int)$zc_max_days . ",
-                                                            download_count = " . (int)DOWNLOAD_MAX_COUNT . "
+                                                            download_count = " . (int)zen_config('DOWNLOAD_MAX_COUNT') . "
                                                     WHERE orders_id = " . (int)$_GET['oID'] . "
                                                     AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
                 } else {
@@ -265,7 +265,7 @@ if (!empty($action) && $order_exists === true) {
                     }
 
             if ($order_updated === true) {
-                if ($status == DOWNLOADS_ORDERS_STATUS_UPDATED_VALUE) {
+                if ($status == zen_config('DOWNLOADS_ORDERS_STATUS_UPDATED_VALUE')) {
 
                     // adjust download_maxdays based on current date
                     $chk_downloads_query = "SELECT opd.*, op.products_id
@@ -286,10 +286,10 @@ if (!empty($action) && $order_exists === true) {
                         $chk_products_download_time = $db->Execute($chk_products_download_time_query);
 
                         if ($chk_products_download_time->EOF) {
-                            $zc_max_days = DOWNLOAD_MAX_DAYS == 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + (int)DOWNLOAD_MAX_DAYS;
+                            $zc_max_days = (int)zen_config('DOWNLOAD_MAX_DAYS') === 0 ? 0 : zen_date_diff($order->info['date_purchased'], date('Y-m-d H:i:s')) + (int)zen_config('DOWNLOAD_MAX_DAYS');
                             $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
                                                             SET download_maxdays = " . (int)$zc_max_days . ",
-                                                                    download_count = " . (int)DOWNLOAD_MAX_COUNT . "
+                                                                    download_count = " . (int)zen_config('DOWNLOAD_MAX_COUNT') . "
                                                             WHERE orders_id = " . $oID . "
                                                             AND orders_products_download_id = " . (int)$_GET['download_reset_on'];
                         } else {
@@ -895,7 +895,7 @@ if ($show_product_tax) { ?>
                         <?php
                         $weight_unit = ' ' . ltrim(TEXT_PRODUCT_WEIGHT_UNIT, ' ');
                         for ($i = 0, $n = count($order->products); $i < $n; $i++) {
-                            if (DISPLAY_PRICE_WITH_TAX_ADMIN === 'true') {
+                            if (zen_config('DISPLAY_PRICE_WITH_TAX_ADMIN') === 'true') {
                                 $priceIncTax = $currencies->format(zen_round(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $currencies->get_decimal_places($order->info['currency'])) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
                             } else {
                                 $priceIncTax = $currencies->format(zen_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']);
@@ -911,7 +911,7 @@ if ($show_product_tax) { ?>
                                         if (isset($order->products[$i]['attributes']) && (count($order->products[$i]['attributes']) > 0)) {
                                                 for ($j = 0, $k = count($order->products[$i]['attributes']); $j < $k; $j++) {
                                                         echo '<br><span style="white-space:nowrap;"><small>&nbsp;<i> - ';
-                                                        echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']));
+                                                        echo $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']), false);
                                                         if (zen_is_option_file($order->products[$i]['attributes'][$j]['option_id'])) {
                                                                 $upload_name = zen_get_uploaded_file($order->products[$i]['attributes'][$j]['value']);
                                                                 echo ' ' . '<a href="' . zen_href_link(FILENAME_ORDERS, 'action=download&oID=' . $oID . '&filename=' .    $upload_name) . '">' . TEXT_DOWNLOAD . '</a>' . ' ';
@@ -1128,10 +1128,10 @@ if ($show_orders_weights === true) {
                                         <td>
 <?php
                                                 if ($first) {
-                                                     echo nl2br(zen_output_string_protected($item['comments'] ?? ''));
+                                                     echo nl2br(zen_output_string_protected($item['comments'] ?? ''), false);
                                                      $first = false;
                                                 } else {
-                                                     echo nl2br($item['comments'] ?? '');
+                                                     echo nl2br($item['comments'] ?? '', false);
                                                 }
 ?>
                                         </td>
@@ -1411,7 +1411,7 @@ if ($show_orders_weights === true) {
                                     if ((empty($_GET['page']) || $_GET['page'] <= 1) && !empty($_GET['oID'])) {
                                         $check_page = $db->Execute($orders_query_raw);
                                         $check_count = 0;
-                                        if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_ORDERS) {
+                                        if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS_ORDERS')) {
                                             while (!$check_page->EOF) {
                                                 $check_count++;
                                                 if ($check_page->fields['orders_id'] == $_GET['oID']) {
@@ -1419,14 +1419,14 @@ if ($show_orders_weights === true) {
                                                 }
                                                 $check_page->MoveNext();
                                             }
-                                            $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_ORDERS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_ORDERS) != 0 ? .5 : 0)), 0);
+                                            $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS_ORDERS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS_ORDERS')) != 0 ? .5 : 0)), 0);
                                         } else {
                                             $_GET['page'] = 1;
                                         }
                                     }
 
                                     $orders_query_numrows = $orders_query_numrows ?? 0;
-                                    $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $orders_query_raw, $orders_query_numrows);
+                                    $orders_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_ORDERS'), $orders_query_raw, $orders_query_numrows);
                                     $orders = $db->Execute($orders_query_raw);
 
                                     while (!$orders->EOF) {
@@ -1479,7 +1479,7 @@ if ($show_orders_weights === true) {
                                                 }
                                                 $product_details = rtrim($product_details);
                                                 $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
-                                                $product_details = nl2br($product_details);
+                                                $product_details = nl2br($product_details, false);
                                         }
                                         ?>
                                 <td class="dataTableContent text-center"><?= $show_difference . $orders->fields['orders_id'] ?></td>
@@ -1583,8 +1583,8 @@ if ($show_orders_weights === true) {
                         </table>
                         <table class="table">
                             <tr>
-                                    <td><?= $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ORDERS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS) ?></td>
-                                    <td class="text-right"><?= $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ORDERS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'oID', 'action'])) ?></td>
+                                    <td><?= $orders_split->display_count($orders_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_ORDERS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS) ?></td>
+                                    <td class="text-right"><?= $orders_split->display_links($orders_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_ORDERS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params(['page', 'oID', 'action'])) ?></td>
                             </tr>
                             <?php
                             if (isset($_GET['search']) && zen_not_null($_GET['search'])) {
@@ -1679,7 +1679,7 @@ if ($show_orders_weights === true) {
                                             // by an admin or 'known' process so it's OK.
                                             //
                                             $protected = $orders_history_query->fields['updated_by'] === '';
-                                            $contents[] = ['text' => nl2br(zen_output_string($orders_history_query->fields['comments'], false, $protected))];
+                                            $contents[] = ['text' => nl2br(zen_output_string($orders_history_query->fields['comments'], false, $protected), false)];
                                         }
 
                                         $contents[] = ['text' => '<br>' . zen_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '', '3', 'style="width:100%"')];
@@ -1690,10 +1690,10 @@ if ($show_orders_weights === true) {
 
                                             if (!empty($order->products[$i]['attributes'])) {
                                                 for ($j = 0, $nn=count($order->products[$i]['attributes']); $j < $nn; $j++) {
-                                                    $contents[] = ['text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value'])) . '</i>'];
+                                                    $contents[] = ['text' => '&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . nl2br(zen_output_string_protected($order->products[$i]['attributes'][$j]['value']), false) . '</i>'];
                                                 }
                                             }
-                                            if ($i > MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING && MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING != 0) {
+                                            if ($i > zen_config('MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING') && zen_config('MAX_DISPLAY_RESULTS_ORDERS_DETAILS_LISTING') != 0) {
                                                 $contents[] = ['text' => TEXT_MORE];
                                                 break;
                                             }

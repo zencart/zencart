@@ -10,9 +10,6 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if (!defined('USE_PCONNECT')) {
-    define('USE_PCONNECT', 'false');
-}
 /**
  *
  * require DIR_WS_INCLUDES . 'version.php';
@@ -102,7 +99,6 @@ $autoLoadConfig[45][] = [
  * Breakpoint 50.
  *
  * $sniffer = new sniffer();
- * require 'includes/init_includes/init_gzip.php';
  * require 'includes/init_includes/init_sefu.php';
  */
 //- sniffer class loaded via psr4Autoload.php
@@ -110,10 +106,6 @@ $autoLoadConfig[50][] = [
     'autoType' => 'classInstantiate',
     'className' => 'sniffer',
     'objectName' => 'sniffer',
-];
-$autoLoadConfig[50][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_gzip.php',
 ];
 $autoLoadConfig[50][] = [
     'autoType' => 'init_script',
@@ -333,6 +325,16 @@ $autoLoadConfig[160][] = [
 $autoLoadConfig[160][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_category_path.php',
+];
+/**
+ * Breakpoint 161.
+ *
+ * require 'includes/init_includes/init_canonical.php';
+ *
+ */
+$autoLoadConfig[161][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_canonical.php',
 ];
 /**
  * Breakpoint 170.

@@ -1180,7 +1180,7 @@ class paypaldp extends base {
     /**
      * Read data from PayPal
      */
-    $response = $doPayPal->TransactionSearch($startDate, $txnID, $email, $criteria);
+    $response = $doPayPal->TransactionSearch($startDate, $txnID, $email ?? '', $criteria);
 
     $error = $this->_errorHandler($response, 'TransactionSearch');
     if ($error === false) {
@@ -2026,13 +2026,13 @@ class paypaldp extends base {
            ((isset($_SESSION['paypal_ec_token']) && isset($response['TOKEN'])) && $_SESSION['paypal_ec_token'] != urldecode($response['TOKEN'])) ) {
             // Error, so send the store owner a complete dump of the transaction.
           if ($this->enableDebugging) {
-            $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\nDid first contact attempt return error? " . ($error_occurred ? "Yes" : "No") . " \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
+            $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . ' ' . ($response['RESULT'] ?? '') . ' <!-- ' . ($response['RESPMSG'] ?? '') . ' -->');
           if (!empty($response['RESULT']) && $response['RESULT'] == 25) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_WPP_ACCOUNT_ERROR;
           if ($response['L_ERRORCODE0'] == 10500 || $response['L_ERRORCODE0'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_US_WPP_ACCOUNT_ERROR;
-          if (!empty($response['HOSTCODE'])) { 
+          if (!empty($response['HOSTCODE'])) {
              if ($response['HOSTCODE'] == 10500 || $response['HOSTCODE'] == 10501) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_NOT_UKWPP_ACCOUNT_ERROR;
              if ($response['HOSTCODE'] == 10558) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CANNOT_USE_THIS_CURRENCY_ERROR;
           }
@@ -2161,6 +2161,7 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_GEN_API_ERROR;
+          $errorNum = $errorNum ?? '';
           $errorNum .= ' (' . urldecode($response['L_SHORTMESSAGE0'] . ' <!-- ' . $response['RESPMSG']) . ' -->) ' . $response['L_ERRORCODE0'];
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALDP_TEXT_GEN_API_ERROR || $errorText == MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ' ' . $response['CURL_ERRORS']) : '';
           $explain = "\n\nProblem occurred while customer #" . $_SESSION['customer_id'] . ' -- ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' -- was attempting checkout.' . "\n";
@@ -2785,7 +2786,7 @@ class paypaldp extends base {
 class CardinalXMLParser{
 
   var $xml_parser;
-  var $deseralizedResponse;
+  var $deserializedResponse;
   var $elementName;
   var $elementValue;
 

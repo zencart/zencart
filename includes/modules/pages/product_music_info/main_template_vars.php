@@ -20,7 +20,7 @@ if (!isset($product_info) || get_class($product_info) !== 'Product' || $product_
 
 $product_not_found = !$product_info->exists();
 
-if (!defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') || DISABLED_PRODUCTS_TRIGGER_HTTP200 !== 'true') {
+if (zen_config('DISABLED_PRODUCTS_TRIGGER_HTTP200', 'false') !== 'true') {
     if (!$product_not_found && $product_info->status() !== 1) {
         $product_not_found = true;
     }
@@ -69,10 +69,10 @@ if ($product_not_found) {
 
     // if no common markup tags in description, add line breaks for readability:
     $products_description = $product_data['products_description'] ?? '';
-    $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description) : $products_description);
+    $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description, false) : $products_description);
 
-    $products_image = (($product_not_found || $product_data['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
-    if ($product_data['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS !== '1') {
+    $products_image = (($product_not_found || $product_data['products_image'] == '') && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') ? zen_config('PRODUCTS_IMAGE_NO_IMAGE') : '';
+    if ($product_data['products_image'] != '' || zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') !== '1') {
         $products_image = $product_data['products_image'];
     }
 
@@ -131,13 +131,13 @@ if ($product_not_found) {
     $flag_show_product_info_additional_images = zen_get_show_product_switch($products_id_current, 'additional_images');
     $flag_show_product_info_free_shipping = zen_get_show_product_switch($products_id_current, 'always_free_shipping_image_switch');
     $flag_show_ask_a_question = !empty(zen_get_show_product_switch($products_id_current, 'ask_a_question'));
-  
+
     $flag_show_product_music_info_artist = zen_get_show_product_switch($products_id_current, 'artist');
     $flag_show_product_music_info_genre = zen_get_show_product_switch($products_id_current, 'genre');
     $flag_show_product_music_info_record_company = zen_get_show_product_switch($products_id_current, 'record_company');
 
     require DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCTS_QUANTITY_DISCOUNTS);
-  
+
     $zco_notifier->notify('NOTIFY_MAIN_TEMPLATE_VARS_EXTRA_PRODUCT_MUSIC_INFO');
 }
 

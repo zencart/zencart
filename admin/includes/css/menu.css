@@ -150,7 +150,14 @@
 .navbar-nav > li > .currentTime {
     color: #f9f9f9;
     font-weight: 400;
-    padding: 15px;
+    padding: 8px 10px;
+    margin: 0;
+    line-height: 1.05;
+}
+
+.navbar-inverse.top-tier #nav-current-time {
+    display: flex;
+    align-items: center;
 }
 
 .navbar-form {
@@ -270,4 +277,163 @@ li.header-info-menu {
     right: 5px;
     font-size: 10px;
     padding: 3px 6px;
+}
+
+/* Top admin bar: keep to one row on desktop so it never overlaps the second navbar */
+@media (min-width: 768px) {
+    .navbar-inverse.top-tier .container-fluid {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .navbar-inverse.top-tier .navbar-header {
+        flex: 0 0 auto;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse.navbar-collapse {
+        display: flex !important;
+        flex: 1 1 auto;
+        align-items: stretch;
+        justify-content: space-between;
+        flex-wrap: nowrap !important;
+        overflow: hidden;
+        border-top: 0;
+        box-shadow: none;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-nav {
+        float: none !important;
+        display: flex;
+        align-items: stretch;
+        flex-wrap: nowrap !important;
+        margin: 0;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-left {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-right {
+        flex: 0 0 auto;
+        margin-left: auto;
+        white-space: nowrap;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-left > li,
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-right > li {
+        float: none !important;
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-left > li > a,
+    .navbar-inverse.top-tier #top-bar-collapse .navbar-right > li > a {
+        white-space: nowrap;
+    }
+
+    /* Let all top-bar search controls shrink */
+    .navbar-inverse.top-tier #nav-search-orders,
+    .navbar-inverse.top-tier #nav-search-customers,
+    .navbar-inverse.top-tier #nav-goto-category {
+        flex: 1 1 0;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .navbar-inverse.top-tier #nav-search-orders .navbar-form,
+    .navbar-inverse.top-tier #nav-search-customers .navbar-form,
+    .navbar-inverse.top-tier #nav-goto-category .navbar-form {
+        display: block;
+        margin: 0;
+        padding: 8px 6px;
+    }
+
+    .navbar-inverse.top-tier #nav-search-orders .header-search,
+    .navbar-inverse.top-tier #nav-search-customers .header-search,
+    .navbar-inverse.top-tier #nav-goto-category .header-search {
+        min-width: 0;
+    }
+
+    .navbar-inverse.top-tier #nav-search-orders .form-control,
+    .navbar-inverse.top-tier #nav-search-customers .form-control,
+    .navbar-inverse.top-tier #nav-goto-category .form-control {
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .navbar-inverse.top-tier #top-bar-collapse.navbar-collapse {
+        min-height: 50px;
+    }
+
+    .navbar-inverse.top-tier #nav-search-orders .navbar-form,
+    .navbar-inverse.top-tier #nav-search-customers .navbar-form,
+    .navbar-inverse.top-tier #nav-goto-category .navbar-form {
+        margin: 0;
+        padding: 0 6px;
+    }
+
+    .navbar-inverse.top-tier #nav-search-orders .form-group,
+    .navbar-inverse.top-tier #nav-search-customers .form-group,
+    .navbar-inverse.top-tier #nav-goto-category .form-group {
+        margin-bottom: 0;
+    }
+
+    /* sensible preferred widths */
+    .navbar-inverse.top-tier #nav-search-orders {
+        flex-grow: 1;
+    }
+
+    .navbar-inverse.top-tier #nav-search-customers {
+        flex-grow: 1;
+    }
+
+    .navbar-inverse.top-tier #nav-goto-category {
+        flex-grow: 1;
+    }
+
+    /* keep select usable but compact */
+    .navbar-inverse.top-tier #nav-goto-category .goto-category .text-muted {
+        white-space: nowrap;
+    }
+
+    .navbar-inverse.top-tier #cPath-search {
+        min-width: 120px;
+    }
+
+    .navbar-inverse.top-tier #oIDsearch,
+    .navbar-inverse.top-tier #cIDsearch {
+        min-width: 100px;
+    }
+}
+
+/* First compression stage: hide optional text labels, keep icons */
+@media (max-width: 1200px) and (min-width: 768px) {
+    .navbar-inverse.top-tier .nav-item-label {
+        display: none;
+    }
+
+    .navbar-inverse.top-tier .navbar-nav > li > a {
+        white-space: nowrap;
+    }
+
+    .navbar-inverse.top-tier .navbar-nav > li > a .fa {
+        margin-right: 0;
+    }
+}
+@media (max-width: 1080px) and (min-width: 768px) {
+    .navbar-inverse.top-tier #nav-current-time .currentTime {
+        font-size: 10.5px;
+        line-height: 1.1;
+    }
+    .navbar-inverse.top-tier #nav-goto-category {
+        display: none !important;
+    }
+}
+@media (max-width: 940px) and (min-width: 768px) {
+    .navbar-inverse.top-tier #nav-search-customers {
+        display: none !important;
+    }
 }

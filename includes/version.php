@@ -16,10 +16,6 @@
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '3');
 define('PROJECT_VERSION_MINOR', '0.0-dev');
-define('PROJECT_VERSION_PATCH1', '');
-define('PROJECT_VERSION_PATCH2', '');
-define('PROJECT_VERSION_PATCH1_SOURCE', '');
-define('PROJECT_VERSION_PATCH2_SOURCE', '');
 define('NEW_VERSION_CHECKUP_URL','https://ping.zen-cart.com/version_id.txt');
 define('PROJECT_VERSIONSERVER_URL', 'https://ping.zen-cart.com/zcversioncheck');
 define('PLUGIN_VERSIONSERVER_URL', 'https://ping.zen-cart.com/plugincheck');

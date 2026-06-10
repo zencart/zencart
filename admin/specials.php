@@ -226,7 +226,7 @@ if (!empty($action)) {
         if ($check_product->RecordCount() < 1) {// check for valid PID
           $skip_special = true;
           $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_NO_EXIST, (int)$_POST['pre_add_products_id']), 'caution');
-        } elseif ((!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL === 'false') && (substr($check_product->fields['products_model'] ?? '', 0, 4) === 'GIFT')) { // check for PID as a gift voucher
+        } elseif ((zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'false') === 'false') && (substr($check_product->fields['products_model'] ?? '', 0, 4) === 'GIFT')) { // check for PID as a gift voucher
           $skip_special = true;
           $messageStack->add_session(sprintf(WARNING_SPECIALS_PRE_ADD_PID_GIFT, (int)$_POST['pre_add_products_id']), 'caution');
         }
@@ -338,7 +338,7 @@ if (!empty($action)) {
           }
 
 // never include Gift Vouchers for specials when set to false
-          if (!defined('MODULE_ORDER_TOTAL_GV_SPECIAL') || MODULE_ORDER_TOTAL_GV_SPECIAL === 'false') {
+          if (zen_config('MODULE_ORDER_TOTAL_GV_SPECIAL', 'false') === 'false') {
             $gift_vouchers = $db->Execute("SELECT distinct p.products_id, p.products_model
                                            FROM " . TABLE_PRODUCTS . " p,
                                                 " . TABLE_SPECIALS . " s
@@ -520,7 +520,7 @@ if (!empty($action)) {
                 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['sID'])) {
                     $check_page = $db->Execute($specials_query_raw);
-                    if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                    if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
                         $check_count = 0;
                         foreach ($check_page as $item) {
                             if ((int)$item['specials_id'] === (int)$_GET['sID']) {
@@ -528,7 +528,7 @@ if (!empty($action)) {
                             }
                             $check_count++;
                         }
-                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) !== 0 ? .5 : 0)));
+                        $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) !== 0 ? .5 : 0)));
                         $page = $_GET['page'];
                     } else {
                         $_GET['page'] = 1;
@@ -536,7 +536,7 @@ if (!empty($action)) {
                 }
 
                 // create split page control
-                $specials_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $specials_query_raw, $specials_query_numrows);
+                $specials_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $specials_query_raw, $specials_query_numrows);
                 $specials = $db->Execute($specials_query_raw);
                 foreach ($specials as $special) {
                   if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ((int)$_GET['sID'] === (int)$special['specials_id']))) && !isset($sInfo)) {
@@ -620,8 +620,8 @@ if (!empty($action)) {
               </tbody>
             </table>
             <div class="row">
-              <div class="col-sm-6"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
-              <div class="col-sm-6 text-right"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'sID'])); ?></div>
+              <div class="col-sm-6"><?php echo $specials_split->display_count($specials_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
+              <div class="col-sm-6 text-right"><?php echo $specials_split->display_links($specials_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params(['page', 'sID'])); ?></div>
             </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
@@ -678,7 +678,7 @@ if (!empty($action)) {
                             $contents[] = ['text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($sInfo->specials_date_added)];
                             $contents[] = [
                                 'align' => 'text-center',
-                                'text' => zen_info_image($sInfo->products_image, htmlspecialchars($sInfo->products_name, ENT_COMPAT, CHARSET, true), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)
+                                'text' => zen_info_image($sInfo->products_image, htmlspecialchars($sInfo->products_name, ENT_COMPAT, CHARSET, true), zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'))
                             ];
                             $contents[] = [
                                 'align' => 'text-center',

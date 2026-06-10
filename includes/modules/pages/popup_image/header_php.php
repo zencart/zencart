@@ -41,7 +41,7 @@ $pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id
   $products_image = $products_values->fields['products_image'];
 
   //auto replace with defined missing image
-  if ($products_image === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+  if ($products_image === '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
   }
 
@@ -53,8 +53,8 @@ $pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id
   } else {
       $products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
       $products_image_base = substr($products_image, 0, -strlen($products_image_extension));
-      $products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
-      $products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+      $products_image_medium = $products_image_base . zen_config('IMAGE_SUFFIX_MEDIUM') . $products_image_extension;
+      $products_image_large = $products_image_base . zen_config('IMAGE_SUFFIX_LARGE') . $products_image_extension;
   }
 
   // check for a medium image else use small

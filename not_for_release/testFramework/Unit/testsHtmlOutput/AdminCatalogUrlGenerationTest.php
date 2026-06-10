@@ -4,6 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
 
+use PHPUnit\Framework\Attributes\Depends;
 use Tests\Support\zcUnitTestCase;
 use Tests\Support\zcURLTestObserver;
 
@@ -16,18 +17,12 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
             define('IS_ADMIN_FLAG', true);
         }
         parent::setUp();
-        require DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'general.php';
-        require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';
-        require DIR_FS_ADMIN . 'includes/functions/html_output.php';
-        require_once(TESTCWD . 'Support/zcURLTestObserver.php');
+        require_once DIR_FS_ADMIN . DIR_WS_FUNCTIONS . 'general.php';
+        require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_strings.php';
+        require_once DIR_FS_ADMIN . 'includes/functions/html_output.php';
+        require_once TESTCWD . 'Support/zcURLTestObserver.php';
         $GLOBALS['zcURLTestObserver'] = new zcURLTestObserver();
 
-        if (!defined('ENABLE_SSL')) {
-            define('ENABLE_SSL', 'true');
-        }
-        if (!defined('ENABLE_SSL_CATALOG')) {
-            define('ENABLE_SSL_CATALOG', 'true');
-        }
         if (!defined('SEARCH_ENGINE_FRIENDLY_URLS')) {
             define('SEARCH_ENGINE_FRIENDLY_URLS', 'false');
         }
@@ -55,9 +50,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         }
     }
 
-    /**
-     * @depends testUrlFunctionsExist
-     */
+    #[Depends('testUrlFunctionsExist')]
     public function testHomePage()
     {
         $this->assertURLGenerated(
@@ -66,24 +59,20 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
-    public function testHomePageSsl()
+    #[Depends('testHomePage')]
+    public function testExplicitSslConnectionUsesCatalogServer()
     {
         $this->assertURLGenerated(
-            zen_catalog_href_link(FILENAME_DEFAULT, null, 'SSL'),
-            HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
+            zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL'),
+            HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
         );
         $this->assertURLGenerated(
             zen_catalog_href_link(FILENAME_DEFAULT, 'test=test', 'SSL'),
-            HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
+            HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;test=test'
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testExplicitSslConnectionUsesCatalogServer')]
     public function testNoAddSessionWhenSwitchingProtocolAndServers()
     {
         $GLOBALS['session_started'] = true;
@@ -98,9 +87,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testNoAddSessionWhenSwitchingProtocolAndServers
-     */
+    #[Depends('testNoAddSessionWhenSwitchingProtocolAndServers')]
     public function testNoAddSessionWhenSidDefined()
     {
         if (PHP_VERSION_ID >= 80401) {
@@ -118,9 +105,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testValidCategoryUrls()
     {
         $this->assertURLGenerated(
@@ -133,9 +118,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testValidCategoryUrls
-     */
+    #[Depends('testValidCategoryUrls')]
     public function testValidCategoryUrlsFilters()
     {
         $this->assertURLGenerated(
@@ -148,24 +131,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePageSsl
-     */
-    public function testValidCategoryUrlsSsl()
-    {
-        $this->assertURLGenerated(
-            zen_catalog_href_link(FILENAME_DEFAULT, 'cPath=1', 'SSL'),
-            HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1'
-        );
-        $this->assertURLGenerated(
-            zen_catalog_href_link(FILENAME_DEFAULT, 'cPath=1_8', 'SSL'),
-            HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT . '&amp;cPath=1_8'
-        );
-    }
-
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testValidEzPageUrls()
     {
         $this->assertURLGenerated(
@@ -178,9 +144,7 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
         );
     }
 
-    /**
-     * @depends testHomePage
-     */
+    #[Depends('testHomePage')]
     public function testDefinePageUrls()
     {
         $this->assertURLGenerated(
@@ -195,20 +159,5 @@ class AdminCatalogUrlGenerationTest extends zcUnitTestCase
             zen_catalog_href_link(FILENAME_DEFINE_PAGE_4),
             HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php?main_page=' . FILENAME_DEFINE_PAGE_4
         );
-    }
-
-    /**
-     * @depends testHomePageSsl
-     */
-    public function testObserverCannotDowngradeFromSsl()
-    {
-        $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_CONNECTION;
-
-        $this->assertURLGenerated(
-            zen_catalog_href_link(FILENAME_DEFAULT, '', 'SSL'),
-            HTTPS_CATALOG_SERVER . DIR_WS_HTTPS_CATALOG . 'index.php?main_page=' . FILENAME_DEFAULT
-        );
-
-        $GLOBALS['zcURLTestObserver']->mode = zcURLTestObserver::$CHANGE_NOTHING;
     }
 }

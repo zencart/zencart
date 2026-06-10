@@ -1,6 +1,6 @@
 <?php
 /**
- * page_not_found header_php.php 
+ * page_not_found header_php.php
  *
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

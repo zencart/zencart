@@ -4,10 +4,15 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
- * @since ZC v1.5.7
  */
 
-function zen_get_zcversion()
+/**
+ * Determine the Zen Cart version currently installed.
+ * @return string in format "major.minor" (eg: "2.0.0", "3.1.0")
+ *
+ * @since ZC v1.5.7
+ */
+function zen_get_zcversion(): string
 {
     return PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
 }
@@ -32,7 +37,7 @@ function zen_is_whitelisted_admin_ip($ip = null)
     if (empty($ip)) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    return strpos(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $ip) !== false;
+    return strpos(zen_config('EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'), $ip) !== false;
 }
 
 
@@ -397,35 +402,35 @@ function zen_get_shipping_enabled(string $shipping_module): bool
     $check_cart_weight = $_SESSION['cart']->show_weight();
 
     // Free Shipping when 0 weight - enable freeshipper - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (ORDER_WEIGHT_ZERO_STATUS == '1' && ($check_cart_weight == 0 && $shipping_module == 'freeshipper')) {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && $check_cart_weight == 0 && $shipping_module === 'freeshipper') {
         return true;
     }
 
     // Free Shipping when 0 weight - disable everyone - ORDER_WEIGHT_ZERO_STATUS must be on
-    if (ORDER_WEIGHT_ZERO_STATUS == '1' && ($check_cart_weight == 0 && $shipping_module != 'freeshipper')) {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && $check_cart_weight == 0 && $shipping_module !== 'freeshipper') {
         return false;
     }
 
-    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module == 'freeshipper') {
+    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module === 'freeshipper') {
         return true;
     }
 
-    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module != 'freeshipper') {
+    if ($_SESSION['cart']->free_shipping_items() == $check_cart_cnt && $shipping_module !== 'freeshipper') {
         return false;
     }
 
     // Always free shipping only true - enable freeshipper
-    if ($check_cart_free == $check_cart_cnt && $shipping_module == 'freeshipper') {
+    if ($check_cart_free == $check_cart_cnt && $shipping_module === 'freeshipper') {
         return true;
     }
 
     // Always free shipping only true - disable everyone
-    if ($check_cart_free == $check_cart_cnt && $shipping_module != 'freeshipper') {
+    if ($check_cart_free == $check_cart_cnt && $shipping_module !== 'freeshipper') {
         return false;
     }
 
     // Always free shipping only is false - disable freeshipper
-    if ($check_cart_free != $check_cart_cnt && $shipping_module == 'freeshipper') {
+    if ($check_cart_free != $check_cart_cnt && $shipping_module === 'freeshipper') {
         return false;
     }
     return true;
@@ -556,7 +561,7 @@ function zen_get_admin_name($id = null)
     $sql = "SELECT admin_name FROM " . TABLE_ADMIN . " WHERE admin_id = :adminid: LIMIT 1";
     $sql = $db->bindVars($sql, ':adminid:', $id, 'integer');
     $result = $db->Execute($sql);
-    return $result->RecordCount() ? $result->fields['admin_name'] : null;
+    return !$result->EOF ? $result->fields['admin_name'] : null;
 }
 
 /**
@@ -641,6 +646,7 @@ function zen_update_modules_cache(string $module_type_filter = ''): void
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_products() instead
  */
 function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [], $show_id = false, $set_selected = 0, $show_model = false, $show_current_category = false, $order_by = '', $filter_by_option_name = null)
 {
@@ -650,6 +656,7 @@ function zen_draw_products_pull_down($field_name, $parameters = '', $exclude = [
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_products_having_attributes() instead
  */
 function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $exclude = [], $order_by = 'name', $filter_by_option_name = null)
 {
@@ -659,6 +666,7 @@ function zen_draw_products_pull_down_attributes($field_name, $parameters = '', $
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_categories_having_products() instead
  */
 function zen_draw_products_pull_down_categories($field_name, $parameters = '', $exclude = [], $show_id = false, $show_parent = false) {
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
@@ -667,6 +675,7 @@ function zen_draw_products_pull_down_categories($field_name, $parameters = '', $
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_draw_pulldown_categories_having_products_with_attributes() instead
  */
 function zen_draw_products_pull_down_categories_attributes($field_name, $parameters = '', $exclude = [], $show_full_path = false, $filter_by_option_name = null){
    trigger_error('Call to deprecated function; please use new names', E_USER_DEPRECATED);
@@ -675,6 +684,7 @@ function zen_draw_products_pull_down_categories_attributes($field_name, $paramet
 
 /**
  * @since ZC v1.0.3
+ * @deprecated Use zen_get_orders_status_pulldown_array() instead
  */
 function zen_get_orders_status()
 {
@@ -711,4 +721,27 @@ function zen_add_filemtime(string $relative_path, ?string $absolute_path = null)
         return $relative_path;
     }
     return $relative_path . '?' . $mtime;
+}
+
+/**
+ * A helper function to retrieve a specific database constant (either in
+ * the configuration or product_type_layout tables).
+ *
+ * The 2nd parameter ($default) identifies the value to be returned if
+ * no match is found in either table. The (er) default value of null enables
+ * the use of the PHP null-coalesce operator on the returned value, e.g.
+ *
+ * $value = zen_config('CONFIG_VALUE') ?? 'value not set';
+ *
+ * That's now equivalent to
+ *
+ * $value = zen_config('CONFIG_VALUE, 'value not set');
+ *
+ * @since ZC v3.0.0
+ */
+function zen_config(string $key, mixed $default = null): mixed
+{
+    global $configurationRepository, $productTypeLayoutRepository;
+
+    return $configurationRepository->get($key) ?? $productTypeLayoutRepository->get($key) ?? $default;
 }

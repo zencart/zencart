@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer Authorization 
+ * Customer Authorization
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -105,7 +105,7 @@ if (empty($customer_data['activation_required'])) {
 
 $breadcrumb->add(NAVBAR_TITLE);
 
-$flag_disable_right ??= (CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF === 'true');
-$flag_disable_left ??= (CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF === 'true');
-$flag_disable_footer ??= (CUSTOMERS_AUTHORIZATION_FOOTER_OFF === 'true');
-$flag_disable_header ??= (CUSTOMERS_AUTHORIZATION_HEADER_OFF === 'true');
+$flag_disable_right ??= (zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF') === 'true');
+$flag_disable_left ??= (zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF') === 'true');
+$flag_disable_footer ??= (zen_config('CUSTOMERS_AUTHORIZATION_FOOTER_OFF') === 'true');
+$flag_disable_header ??= (zen_config('CUSTOMERS_AUTHORIZATION_HEADER_OFF') === 'true');

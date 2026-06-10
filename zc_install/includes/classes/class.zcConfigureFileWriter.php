@@ -20,10 +20,7 @@ class zcConfigureFileWriter
         $replaceVars['INSTALLER_METHOD'] = (isset($inputs['installer_method'])) ? trim($inputs['installer_method']) : 'Zen Cart Installer';
         $replaceVars['DATE_NOW'] = date('D M d Y H:i:s');
         $replaceVars['CATALOG_HTTP_SERVER'] = trim($inputs['http_server_catalog'], '/ ');
-        $replaceVars['CATALOG_HTTPS_SERVER'] = trim($inputs['https_server_catalog'], '/ ');
-        $replaceVars['ENABLE_SSL_CATALOG'] = !empty($inputs['enable_ssl_catalog']) ? $inputs['enable_ssl_catalog'] : 'false';
         $replaceVars['DIR_WS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_http_catalog'], ' /\\') . '/');
-        $replaceVars['DIR_WS_HTTPS_CATALOG'] = preg_replace('~//~', '/', '/' . trim($inputs['dir_ws_https_catalog'], ' /\\') . '/');
         $replaceVars['DIR_FS_CATALOG'] = rtrim($inputs['physical_path'], ' /\\') . '/';
 
         $replaceVars['DB_TYPE'] = trim($inputs['db_type']);
@@ -43,18 +40,14 @@ class zcConfigureFileWriter
         $replaceVars['DB_SERVER_PASSWORD'] = trim($inputs['db_password']);
         $replaceVars['DB_DATABASE'] = trim($inputs['db_name']);
         $replaceVars['SQL_CACHE_METHOD'] = trim($inputs['sql_cache_method']);
-        $replaceVars['HTTP_SERVER_ADMIN'] = trim($inputs['http_server_admin']);
         $replaceVars['SESSION_STORAGE'] = 'reserved for future use';
 
         $this->replaceVars = $replaceVars;
-        $adminDir = $inputs['adminDir'];
 
-// die('<pre>' . print_r($inputs, true));
-
-        $this->processAllConfigureFiles($adminDir);
+        $this->processConfigureFile();
     }
 
-    protected function processAllConfigureFiles($adminDir): int
+    protected function processConfigureFile(): int|false
     {
         $tplFile = DIR_FS_INSTALL . 'includes/catalog-configure-template.php';
         $outputFile = rtrim($this->inputs['physical_path'], '/') . '/includes/configure.php';
@@ -63,25 +56,10 @@ class zcConfigureFileWriter
             $outputFile = $outputFileLocal;
         }
 
-        $result1 = $this->transformConfigureTplFile($tplFile, $outputFile);
-        if ((int)$result1 === 0) {
-            logDetails('catalogConfig size: ' . (int)$result1 . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
-        }
+        $result = $this->transformConfigureTplFile($tplFile, $outputFile);
+        logDetails('catalogConfig size: ' . (int)$result . ' (will be greater than 0 if file was written correctly)', 'store configure.php');
 
-        $tplFile = DIR_FS_INSTALL . 'includes/admin-configure-template.php';
-        $outputFile = rtrim($this->inputs['physical_path'], '/') . '/' . $adminDir . '/includes/configure.php';
-        $outputFileLocal = rtrim($this->inputs['physical_path'], '/') . '/' . $adminDir . '/includes/local/configure.php';
-        if (file_exists($outputFileLocal)) {
-            $outputFile = $outputFileLocal;
-        }
-
-        $result2 = $this->transformConfigureTplFile($tplFile, $outputFile);
-        if ((int)$result2 === 0) {
-            logDetails('adminConfig size: ' . (int)$result2 . ' (will be greater than 0 if file was written correctly)', 'admin configure.php');
-        }
-
-        // return a result indicating whether either file failed in some way: true=success; false=one-or-both-failed (bitwise '&' operand here is intentional)
-        return $result1 & $result2;
+        return $result;
     }
 
     protected function transformConfigureTplFile($tplFile, $outputFile): int|false

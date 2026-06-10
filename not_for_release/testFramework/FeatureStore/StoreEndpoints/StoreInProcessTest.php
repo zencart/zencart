@@ -8,17 +8,13 @@ namespace Tests\FeatureStore\StoreEndpoints;
 
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class StoreInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
 
-    /**
-     * @dataProvider simpleStorePageProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('simpleStorePageProvider')]
     public function testSimpleStorePagesCanBeRenderedInProcess(string $page, string $expectedText, array $server = []): void
     {
         $this->getMainPage($page, $server)
@@ -36,10 +32,12 @@ class StoreInProcessTest extends zcInProcessFeatureTestCaseStore
         ];
     }
 
-    public function testContactUsRedirectsToSslInProcess(): void
+    public function testContactUsPageCanBeRenderedInProcessOverHttp(): void
     {
         $this->getMainPage('contact_us')
-            ->assertRedirect('main_page=contact_us');
+            ->assertOk()
+            ->assertHeader('X-ZC-InProcess-Runner', 'storefront')
+            ->assertSee('Zen Cart! : Contact Us');
     }
 
     public function testContactUsPageCanBeRenderedInProcessOverSsl(): void

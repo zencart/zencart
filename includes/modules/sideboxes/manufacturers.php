@@ -8,7 +8,7 @@
  * @version $Id: piloujp 2025 May 16 Modified in v2.2.0 $
  */
 // only check products if requested - this may slow down the processing of the manufacturers sidebox
-if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
+if ((int)zen_config('PRODUCTS_MANUFACTURERS_STATUS') === 1) {
     $manufacturer_sidebox_query =
         "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
                     FROM " . TABLE_MANUFACTURERS . " m
@@ -41,8 +41,8 @@ if (!$manufacturer_sidebox->EOF) {
 
     foreach ($manufacturer_sidebox as $sidebox_element) {
         $manufacturer_sidebox_name = $sidebox_element['manufacturers_name'];
-        if (mb_strlen($manufacturer_sidebox_name) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) {
-            $manufacturer_sidebox_name = mb_substr($manufacturer_sidebox_name, 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..';
+        if (mb_strlen($manufacturer_sidebox_name) > (int)zen_config('MAX_DISPLAY_MANUFACTURER_NAME_LEN')) {
+            $manufacturer_sidebox_name = mb_substr($manufacturer_sidebox_name, 0, (int)zen_config('MAX_DISPLAY_MANUFACTURER_NAME_LEN')) . '..';
         }
         $manufacturer_sidebox_array[] = [
             'id' => $sidebox_element['manufacturers_id'],

@@ -14,12 +14,14 @@ class RuntimeConfigTest extends TestCase
     {
         parent::setUp();
 
+        putenv('ZC_TEST_DB_BASE_NAME');
         require_once dirname(__DIR__, 2) . '/Support/configs/runtime_config.php';
     }
 
     protected function tearDown(): void
     {
         putenv('GITHUB_WORKSPACE');
+        putenv('ZC_TEST_DB_BASE_NAME');
         putenv('ZC_TEST_DB_DATABASE');
         putenv('ZC_TEST_USE_MAILSERVER');
         putenv('ZC_TEST_MAILSERVER_HOST');
@@ -57,9 +59,25 @@ class RuntimeConfigTest extends TestCase
     public function testDatabaseNameUsesExplicitOverrideWhenProvided(): void
     {
         putenv('ZC_TEST_DB_DATABASE=db_testing_override');
+        putenv('ZC_TEST_DB_BASE_NAME=db_testing_base');
         putenv('ZC_TEST_WORKER=5');
 
         $this->assertSame('db_testing_override', zc_test_config_database_name('db_testing'));
+    }
+
+    public function testDatabaseNameUsesBaseNameOverrideWhenProvided(): void
+    {
+        putenv('ZC_TEST_DB_BASE_NAME=db_testing_base');
+
+        $this->assertSame('db_testing_base', zc_test_config_database_name('db_testing'));
+    }
+
+    public function testDatabaseNameUsesBaseNameWithWorkerSuffixWhenConfigured(): void
+    {
+        putenv('ZC_TEST_DB_BASE_NAME=db_testing_base');
+        putenv('ZC_TEST_WORKER=3');
+
+        $this->assertSame('db_testing_base_3', zc_test_config_database_name('db_testing'));
     }
 
     public function testDatabaseNameUsesWorkerSuffixWhenConfigured(): void

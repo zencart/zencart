@@ -158,7 +158,7 @@ if ($show_status_pills) {
                     $statusId = (int)$order['orders_status'];
                     $customColor = $order['orders_status_color_code'] ?? '';
                     $amt = $currencies->format($order['order_value'], false);
-                    if ($order['currency'] != DEFAULT_CURRENCY) {
+                    if ($order['currency'] != zen_config('DEFAULT_CURRENCY')) {
                         $amt .= '<br><small class="text-muted">(' . $order['order_total'] . ')</small>';
                     }
 
@@ -187,7 +187,7 @@ if ($show_status_pills) {
                     }
                     $product_details = rtrim($product_details);
                     $product_details = preg_replace('~<hr>$~', '', $product_details);
-                    $product_details = nl2br($product_details);
+                    $product_details = nl2br($product_details, false);
 
                     $inlineStyle = '';
                     $lblClass = 'label-default';
@@ -215,7 +215,7 @@ if ($show_status_pills) {
                         </span>
                     </td>
 
-		            <td class="text-right">
+                    <td class="text-right">
                         <?= $date ?>
                     </td>
 

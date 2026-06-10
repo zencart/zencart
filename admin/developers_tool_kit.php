@@ -27,6 +27,26 @@ $case_sensitive = !empty($_POST['case_sensitive']);
 $include_plugins = !empty($_POST['include_plugins']);
 $q_const = $q_func = $q_class = $q_tpl = $q_all = '';
 
+function zen_developers_tool_kit_template_directories(string $templateDir, array $subdirectories): array
+{
+  return zen_get_template_search_directories($templateDir, $subdirectories);
+}
+
+function zen_developers_tool_kit_catalog_override_directories(string $templateDir, string $catalogBasePath): array
+{
+  return zen_get_template_catalog_override_directories($templateDir, $catalogBasePath);
+}
+
+function zen_developers_tool_kit_language_directories(string $templateDir, string $language, string $extraPath = ''): array
+{
+  return zen_get_template_language_override_directories($templateDir, DIR_FS_CATALOG_LANGUAGES, $language, $extraPath);
+}
+
+function zen_developers_tool_kit_template_first_language_directories(string $templateDir): array
+{
+  return zen_get_template_first_language_directories($templateDir, DIR_FS_CATALOG_LANGUAGES);
+}
+
 /**
  * @since ZC v1.2.0d
  */
@@ -408,10 +428,10 @@ switch ($action) {
             $check_directory = [];
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES;
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/';
-            $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $template_dir . '/' . $_SESSION['language'] . '/';
-            $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/' . $template_dir . '/';
+            $check_directory = array_merge($check_directory, zen_developers_tool_kit_template_first_language_directories($template_dir));
+            $check_directory = array_merge($check_directory, zen_developers_tool_kit_language_directories($template_dir, $_SESSION['language']));
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/extra_definitions/';
-            $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/extra_definitions/' . $template_dir . '/';
+            $check_directory = array_merge($check_directory, zen_developers_tool_kit_language_directories($template_dir, $_SESSION['language'], 'extra_definitions'));
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/payment/';
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/shipping/';
             $check_directory[] = DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/order_total/';
@@ -555,16 +575,11 @@ switch ($action) {
         break;
       case (1): // all template files
         $check_directory = [];
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/templates' . '/';
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/sideboxes' . '/';
+        $check_directory = array_merge($check_directory, zen_developers_tool_kit_template_directories($template_dir, ['templates', 'sideboxes']));
         $check_directory[] = DIR_FS_CATALOG_MODULES;
         $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/';
-
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/templates' . '/';
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
-
-        $check_directory[] = DIR_FS_CATALOG_MODULES . $template_dir . '/';
-        $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
+        $check_directory = array_merge($check_directory, zen_developers_tool_kit_catalog_override_directories($template_dir, 'includes/modules'));
+        $check_directory = array_merge($check_directory, zen_developers_tool_kit_catalog_override_directories($template_dir, 'includes/modules/sideboxes'));
 
         $sub_dir_files = [];
         getDirList(DIR_FS_CATALOG_MODULES . 'pages');
@@ -576,15 +591,13 @@ switch ($action) {
         break;
       case (2): // all /templates files
         $check_directory = [];
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/templates' . '/';
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/templates' . '/';
+        $check_directory = array_merge($check_directory, zen_developers_tool_kit_template_directories($template_dir, ['templates']));
         break;
       case (3): // all sideboxes files
         $check_directory = [];
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . 'template_default/sideboxes' . '/';
+        $check_directory = array_merge($check_directory, zen_developers_tool_kit_template_directories($template_dir, ['sideboxes']));
         $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/';
-        $check_directory[] = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $template_dir . '/';
-        $check_directory[] = DIR_FS_CATALOG_TEMPLATES . $template_dir . '/sideboxes' . '/';
+        $check_directory = array_merge($check_directory, zen_developers_tool_kit_catalog_override_directories($template_dir, 'includes/modules/sideboxes'));
         break;
       case (4): // all /pages files
         $check_directory = [];

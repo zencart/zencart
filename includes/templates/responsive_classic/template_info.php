@@ -9,7 +9,7 @@
  *
  * picaflor-azul.com, Picaflor Responsive Classic
  */
- 
+
 $template_name = 'Responsive Classic Template';
 $template_version = 'Version 1.0';
 $template_author = 'Anne, www.picaflor-azul.com (c) 2015';

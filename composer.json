@@ -33,18 +33,20 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
-        "ext-pcre": "*"
+        "ext-pcre": "*",
+        "ext-mysqli": "*"
     },
     "require-dev": {
+        "ext-pdo": "*",
         "guzzlehttp/guzzle": "^7.7",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^9.6",
-        "sempro/phpunit-pretty-print": "^1.4",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^11.5.42",
         "symfony/css-selector": "^6.0",
+        "symfony/dom-crawler": "^7.4",
         "symfony/maker-bundle": "^1.49",
         "symfony/mime": "^6.0",
-        "symfony/phpunit-bridge": "^7.0",
-        "symfony/test-pack": "^1.1"
+        "symfony/phpunit-bridge": "^7.0"
     },
     "autoload": {
         "classmap": ["includes/classes", "includes/modules"]
@@ -68,14 +70,20 @@
         "optimize-autoloader": true
     },
     "scripts": {
+        "phpstan": [
+            "@phpstan:catalog",
+            "@phpstan:admin"
+        ],
+        "phpstan:admin": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.admin.neon --no-progress",
+        "phpstan:catalog": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.catalog.neon --no-progress",
         "tests-ci": "bash not_for_release/testFramework/run-tests-ci.sh",
-        "tests-ci-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-tests-ci.sh",
+        "tests-ci-local": "bash not_for_release/testFramework/run-tests-ci-local.sh",
         "tests-db-prepare-workers": "bash not_for_release/testFramework/prepare-worker-databases.sh",
         "tests-feature": "bash not_for_release/testFramework/run-feature-tests-ci.sh",
         "tests-feature-admin": "bash not_for_release/testFramework/run-admin-feature-tests-ci.sh",
         "tests-feature-admin-parallel": "bash not_for_release/testFramework/run-parallel-admin-feature-tests.sh",
-        "tests-feature-admin-plugin-filesystem": "phpunit --verbose --testsuite FeatureAdmin --group plugin-filesystem --printer 'Sempro\\PHPUnitPrettyPrinter\\PrettyPrinterForPhpUnit9'",
-        "tests-feature-local": "ZC_TEST_DB_BASE_NAME=${ZC_TEST_DB_BASE_NAME:-db} ZC_TEST_DB_WORKERS=${ZC_TEST_DB_WORKERS:-2} ZC_TEST_DB_INCLUDE_BASE=0 bash not_for_release/testFramework/run-feature-tests-ci.sh",
+        "tests-feature-admin-plugin-filesystem": "phpunit --testsuite FeatureAdmin --group plugin-filesystem",
+        "tests-feature-local": "bash not_for_release/testFramework/run-feature-tests-ci-local.sh",
         "tests-feature-parallel": "bash not_for_release/testFramework/run-parallel-feature-tests.sh",
         "tests-feature-store": "bash not_for_release/testFramework/run-store-feature-tests-ci.sh",
         "tests-feature-store-parallel": "bash not_for_release/testFramework/run-parallel-storefront-feature-tests.sh",

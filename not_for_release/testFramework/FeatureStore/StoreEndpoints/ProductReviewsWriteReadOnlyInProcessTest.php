@@ -8,9 +8,7 @@ namespace Tests\FeatureStore\StoreEndpoints;
 
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class ProductReviewsWriteReadOnlyInProcessTest extends zcInProcessFeatureTestCaseStore
 {
     protected $runTestInSeparateProcess = true;

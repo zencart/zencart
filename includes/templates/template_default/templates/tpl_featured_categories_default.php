@@ -6,7 +6,6 @@
 * @copyright Portions Copyright 2003 osCommerce
 * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
 * @version $Id: lat9 2025 May 13 Modified in v2.2.0 $
-* based on tpl_brands_default
 */
 ?>
 <div class="centerColumn" id="featuredCategoryDefault">
@@ -18,7 +17,7 @@ $list_box_contents = [];
 $row = 0;
 $col = 0;
 
-if ($listing->EOF) {
+if (count($listing) === 0) {
     $list_box_contents[0][] = [
         'params' => 'class="centerBoxContentsFeatured centeredContent w-100"',
         'text' => defined('TEXT_NO_FEATURED_CATEGORIES') ? TEXT_NO_FEATURED_CATEGORIES : 'No products to show.',

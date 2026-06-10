@@ -49,7 +49,7 @@ require('includes/application_top.php');
                                    WHERE p.products_id = pd.products_id
                                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                    ORDER BY p.products_quantity, pd.products_name";
-            $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $products_query_raw, $products_query_numrows);
+            $products_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $products_query_raw, $products_query_numrows);
             $products = $db->Execute($products_query_raw);
 
             foreach ($products as $productRecord) {
@@ -73,8 +73,8 @@ require('includes/application_top.php');
       </table>
       <table class="table">
         <tr>
-          <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-          <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+          <td><?php echo $products_split->display_count($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+          <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
         </tr>
       </table>
       <!-- body_text_eof //-->

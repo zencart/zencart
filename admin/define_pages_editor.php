@@ -6,7 +6,10 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Dec 03 Modified in v2.2.1 $
  */
-require('includes/application_top.php');
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\HtmlIncludesFinder;
+
+require 'includes/application_top.php';
 
 /**
  * To treat certain pages as raw-html-only (no rich-text editor, ever, on those pages), enter those page names here
@@ -17,112 +20,83 @@ $no_html_editor_on_these_pages = [
     // 'define_shopping_cart.php'
 ];
 
-/**
- * @since ZC v1.2.0d
- */
-function zen_display_files(): array
-{
-    global $check_directory;
-    $directory_array = [];
-
-    foreach ($check_directory as $dir_check) {
-        $dir = glob(rtrim($dir_check, '/') . '/*.php') ?? [];
-        foreach ($dir as $file) {
-            $directory_array[] = basename($file);
-        }
-    }
-    sort($directory_array);
-
-    return $directory_array;
-}
+zen_define_default('TEXT_FULLSCREEN', 'Full Screen');
 
 $action = $_GET['action'] ?? '';
+$selected_page = (int)($_GET['define_it'] ?? -1);
 
+// Safeguard.
 if (isset($_GET['filename'])) {
-    $_GET['filename'] = str_replace('../', '!HA' . 'CK' . 'ER_A' . 'LERT!', $_GET['filename']);
+    $_GET['filename'] = basename($_GET['filename']);
 }
+$file = '';
 
-$za_who = $_GET['za_lookup'] ?? '';
+// Build dropdown for define pages.
+$htmlIncludesFinder = new HtmlIncludesFinder(new FileSystem(), $installedPlugins, $_SESSION['language'], $template_dir);
+$directories = $htmlIncludesFinder->findAll();
 
-if ($action === 'new_page') {
-    $page = $_GET['define_it'] ?? 0;
-
-    $check_directory = [];
-    $check_directory[] = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/';
-    $directory_files = zen_display_files();
-
-    $za_lookup = [];
-    for ($i = 0, $n = count($directory_files); $i < $n; $i++) {
-        $za_lookup[] = ['id' => $i, 'text' => $directory_files[$i]];
-    }
-
-// This will cause it to look for 'define_conditions.php'
-    $_GET['filename'] = $za_lookup[$page]['text'];
-    $_GET['box_name'] = BOX_TOOLS_DEFINE_CONDITIONS;
+$check_directory = [];
+$za_lookup = [];
+$za_lookup[-1] = ['id' => -1, 'text' => TEXT_INFO_SELECT_FILE];
+$filenames = array_keys($directories);
+sort($filenames);
+for ($i = 0, $n = count($directories); $i < $n; $i++) {
+    $za_lookup[$i] = ['id' => $i, 'text' => $filenames[$i]];
 }
-
-// define template specific file name defines
-$file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/html_includes/', $_GET['filename'] ?? '', 'false');
 
 switch ($action) {
     case 'set_editor':
-        // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
+        // Reset will be done by init_html_editor.php. Here we simply redirect to refresh the page properly.
         $action = '';
         zen_redirect(zen_href_link(FILENAME_DEFINE_PAGES_EDITOR));
         break;
     case 'save':
-        if (($_GET['lngdir']) && ($_GET['filename'])) {
+        if ($_GET['lngdir'] && $_GET['filename']) {
+            $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/html_includes/', $_GET['filename'] ?? '', 'false');
             if (file_exists($file)) {
                 if (file_exists('bak' . $file)) {
                     @unlink('bak' . $file);
                 }
                 @rename($file, 'bak' . $file);
                 $new_file = fopen($file, 'w');
-                $file_contents = stripslashes($_POST['file_contents']);
-                fwrite($new_file, $file_contents, strlen($file_contents));
-                fclose($new_file);
+                $file_contents = $_POST['file_contents'] ?? '';
+                $written = fwrite($new_file, $file_contents, strlen($file_contents));
+                $closed = fclose($new_file);
+                if (!$written || !$closed) {
+                    $messageStack->add_session(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
+                } else {
+                    zen_record_admin_activity('Define-Page-Editor was used to save changes to file ' . $file, 'info');
+                    $file = str_replace(DIR_FS_CATALOG, '', $file);
+                    $messageStack->add_session(sprintf(SUCCESS_FILE_SAVED_SUCCESSFULLY, $file), 'success');
+                }
             }
-            zen_record_admin_activity('Define-Page-Editor was used to save changes to file ' . $file, 'info');
             zen_redirect(zen_href_link(FILENAME_DEFINE_PAGES_EDITOR));
         }
         break;
+    case 'edit':
+            if (!isset($za_lookup[$selected_page])) {
+                $action = '';
+            } else {
+                $_GET['filename'] = $za_lookup[$selected_page]['text'];
+                $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/html_includes/', $_GET['filename'] ?? '', 'false');
+            }
+        break;
 }
 
-if (empty($_SESSION['language'])) {
-    $_SESSION['language'] = $language;
-}
-
-$languages_array = [];
-$languages = zen_get_languages();
-$lng_exists = false;
-for ($i = 0, $n = count($languages); $i < $n; $i++) {
-    if ($languages[$i]['directory'] === $_SESSION['language']) {
-        $lng_exists = true;
-    }
-
-    $languages_array[] = [
-        'id' => $languages[$i]['directory'],
-        'text' => $languages[$i]['name'],
-    ];
-}
-if (!$lng_exists) {
-    $_SESSION['language'] = $language;
-}
 ?>
 <!doctype html>
 <html <?= HTML_PARAMS ?>>
 <head>
-    <?php
-    require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php
     if ($editor_handler !== '') {
         include($editor_handler);
-    } ?>
+    }
+    ?>
 </head>
 <body>
 <!-- header //-->
-<?php
-require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require DIR_WS_INCLUDES . 'header.php'; ?>
 <!-- header_eof //-->
 
 <!-- body //-->
@@ -131,26 +105,15 @@ require(DIR_WS_INCLUDES . 'header.php'); ?>
     <div class="row">
         <div class="col-sm-4 col-md-4">
             <?php
-            $check_directory = [];
-            $check_directory[] = DIR_FS_CATALOG . DIR_WS_LANGUAGES . $_SESSION['language'] . '/html_includes/';
-            $directory_files = zen_display_files();
-
-            $za_lookup = [];
-            $za_lookup[] = ['id' => -1, 'text' => TEXT_INFO_SELECT_FILE];
-
-            for ($i = 0, $n = count($directory_files); $i < $n; $i++) {
-                $za_lookup[] = ['id' => $i, 'text' => $directory_files[$i]];
-            }
-
-            echo zen_draw_form('new_page', FILENAME_DEFINE_PAGES_EDITOR, '', 'get');
-            echo zen_draw_pull_down_menu('define_it', $za_lookup, '-1', 'onChange="this.form.submit();" class="form-control"');
+            echo zen_draw_form('choose_file', FILENAME_DEFINE_PAGES_EDITOR, '', 'get');
+            echo zen_draw_pull_down_menu('define_it', $za_lookup, (string)$selected_page, 'onChange="this.form.submit();" class="form-control"');
             echo zen_hide_session_id();
-            echo zen_draw_hidden_field('action', 'new_page');
+            echo zen_draw_hidden_field('action', 'edit');
             echo '</form>';
             ?>
         </div>
         <div class="col-sm-5 col-md-6">&nbsp;</div>
-        <div class="col-sm-3 col-md-2">
+        <div class="col-sm-3 col-md-2" style="margin-top: -15px;">
             <?php
             // toggle switch for editor
             echo zen_draw_form('set_editor_form', FILENAME_DEFINE_PAGES_EDITOR, '', 'get', 'class="form-horizontal"');
@@ -172,7 +135,7 @@ require(DIR_WS_INCLUDES . 'header.php'); ?>
                 $file_contents = file_get_contents($file);
 
                 $file_writeable = true;
-                if (!is_writeable($file)) {
+                if (!is_writable($file)) {
                     $file_writeable = false;
                     $messageStack->reset();
                     $messageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
@@ -180,27 +143,41 @@ require(DIR_WS_INCLUDES . 'header.php'); ?>
                 }
 
                 $editorCSSClass = 'editorHook';
-                if (in_array($_GET['filename'], $no_html_editor_on_these_pages, true)) {
+                if (in_array($_GET['filename'], $no_html_editor_on_these_pages, true) || str_starts_with($file_contents, '<?php')) {
                     $editorCSSClass = 'noEditor';
                 }
+                $fullscreenButtonStyle = ($current_editor_key !== $plain_editor_key && $editorCSSClass !== 'noEditor') ? ' style="display:none"' : '';
                 ?>
-                <div class="row"><strong><?= TEXT_INFO_CAUTION . '<br><br>' . TEXT_INFO_EDITING . '<br>' . $file . '<br>' ?></strong></div>
                 <div class="row">
-                    <?= zen_draw_form('language', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save') ?>
-                    <div class="col-sm-6"><?= zen_draw_textarea_field('file_contents', 'soft', '', '30',
+                    <div class="col-sm-6">
+                        <strong><?= TEXT_INFO_CAUTION . '<br><br>' . TEXT_INFO_EDITING . '<br>' . $file . '<br>' ?></strong>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <button type="button" id="fullscreen-toggle" class="btn btn-default" title="<?= TEXT_FULLSCREEN ?>" aria-label="<?= TEXT_FULLSCREEN ?>"<?= $fullscreenButtonStyle ?>>
+                            <?= zen_icon('maximize', hidden: true) ?>
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <?= zen_draw_form('page_editor', FILENAME_DEFINE_PAGES_EDITOR, 'lngdir=' . $_SESSION['language'] . '&filename=' . $_GET['filename'] . '&action=save', 'post', 'id="editing_form"') ?>
+                    <div class="col-sm-6"><?= zen_draw_textarea_field(
+                            'file_contents',
+                            'soft',
+                            '',
+                            '30',
                             htmlspecialchars($file_contents, ENT_COMPAT, CHARSET, true),
                             (($file_writeable) ? '' : 'readonly')
-                            . ' class="' . $editorCSSClass . ' form-control"'
-                        ); ?>
+                            . ' class="' . $editorCSSClass . ' form-control" id="file_contents_editor"'
+                        ) ?>
                     </div>
                     <div class="col-sm-6">&nbsp;</div>
-                    <div class="col-sm-12"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
+                    <div class="col-sm-12 py-4"></div>
                     <div class="col-sm-6 text-right">
                         <?php
                         if ($file_writeable) {
                             ?>
                             <button type="submit" class="btn btn-primary"><?= IMAGE_SAVE ?></button>
-                            <a href="<?= zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'define_it=' . $_GET['define_it'] . '&action=new_page') ?>" class="btn btn-primary" role="button">
+                            <a href="<?= zen_href_link(FILENAME_DEFINE_PAGES_EDITOR, 'define_it=' . $selected_page . '&action=edit') ?>" class="btn btn-primary" role="button">
                                 <?= IMAGE_RESET ?>
                             </a>
                             <a href="<?= zen_href_link(FILENAME_DEFINE_PAGES_EDITOR . '.php') ?>" class="btn btn-default">
@@ -222,7 +199,7 @@ require(DIR_WS_INCLUDES . 'header.php'); ?>
             } else {
                 ?>
                 <div class="row"><strong><?= sprintf(TEXT_FILE_DOES_NOT_EXIST, $file) ?></strong></div>
-                <div class="row"><?= zen_draw_separator('pixel_trans.gif', '1', '10') ?></div>
+                <div class="row py-4"></div>
                 <div class="row"><a href="<?= zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language']) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a></div>
                 <?php
             }
@@ -246,7 +223,7 @@ require(DIR_WS_INCLUDES . 'header.php'); ?>
                                     echo '                <td class="smallText"><a href="' . zen_href_link($_GET['filename'], 'lngdir=' . $_SESSION['language'] . '&filename=' . $file) . '">' . $file . '</a></td>' . "\n";
                                     if (!$left) {
                                         echo '              </tr>' . "\n" .
-                                            '              <tr>' . "\n";
+                                             '              <tr>' . "\n";
                                     }
                                     $left = !$left;
                                 }
@@ -260,12 +237,30 @@ require(DIR_WS_INCLUDES . 'header.php'); ?>
             <?php
         }
         ?>
-    <?php
-    } // filename   ?>
+        <?php
+    } // filename
+    ?>
     <!-- body_text_eof //-->
 </div>
 <!-- body_eof //-->
-
+<script>
+$(function() {
+    $('#fullscreen-toggle').on('click', function() {
+        $('#file_contents_editor').toggleClass('fullscreen-textarea');
+        $('body').toggleClass('no-scroll', $('#file_contents_editor').hasClass('fullscreen-textarea'));
+    });
+});
+</script>
+<style>
+.fullscreen-textarea {
+    width: 85vw !important;
+    height: 65vh !important;
+    resize: none;
+}
+.no-scroll {
+    overflow: hidden !important;
+}
+</style>
 <!-- footer //-->
 <?php
 require DIR_WS_INCLUDES . 'footer.php'; ?>

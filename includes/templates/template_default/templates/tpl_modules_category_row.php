@@ -2,7 +2,7 @@
 /**
  * index category_row.php
  *
- * Prepares the content for displaying a category's sub-category listing in grid format.  
+ * Prepares the content for displaying a category's sub-category listing in grid format.
  * Once the data is prepared, it calls the standard tpl_list_box_content template for display.
  *
  * @package page

@@ -1,0 +1,23 @@
+includes:
+    - phpstan.neon.dist
+
+parameters:
+    paths:
+        - index.php
+        - includes
+        - ajax.php
+        - zc_cli.php
+    scanFiles:
+        - phpstan-constants-catalog.php
+    bootstrapFiles:
+        - phpstan-bootstrap-catalog.php
+    scanDirectories:
+        - admin/includes/classes
+        - admin/includes/functions
+
+    ignoreErrors:
+        -
+            identifier: class.notFound
+            message: '#Instantiated class Installer not found#'
+            path: includes/classes/PluginSupport/InstallerFactory.php
+            count: 1

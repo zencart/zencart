@@ -26,8 +26,8 @@ if (!function_exists('zen_date_raw')) {
             $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
         }
 
-		$date = preg_replace('/\D+/', '', $date);
-		$date_format = str_replace(['/', '-'], '', DATE_FORMAT);
+        $date = preg_replace('/\D+/', '', $date);
+        $date_format = str_replace(['/', '-'], '', DATE_FORMAT);
 
         if ($date_format === 'dmY') {
             if ($reverse) {
@@ -60,9 +60,9 @@ if (!function_exists('zen_date_raw')) {
  */
 function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
 {
-	// Build 3 formats from 1 with 3 possible separators
-	$format0 = str_replace('-', '/', $format);
-	$format1 = str_replace('/', '-', $format);
+    // Build 3 formats from 1 with 3 possible separators
+    $format0 = str_replace('-', '/', $format);
+    $format1 = str_replace('/', '-', $format);
     $format2 = str_replace(['/','-'], '', $format);
     $d0 = DateTime::createFromFormat('!' . $format0, $date);
     $d1 = DateTime::createFromFormat('!' . $format1, $date);

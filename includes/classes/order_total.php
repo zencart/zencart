@@ -1,20 +1,21 @@
 <?php
 /**
- * File contains the order-totals-processing class ("order-total")
+ * File contains the order-totals-processing class ("order_total")
  *
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: torvista 2026 Jan 25 Modified in v2.2.1 $
  */
+
 use Zencart\FileSystem\FileSystem;
 use Zencart\ResourceLoaders\ModuleFinder;
 use Zencart\Traits\NotifierManager;
 
 /**
- * order-total class
+ * order_total class
  *
- * Handles all order-total processing functions
+ * Handles all order-total processing functions, often proxying through to the individual order-total modules.  The main functions are:
  *
  * @since ZC v1.0.3
  */
@@ -28,14 +29,11 @@ class order_total
 
     /**
      * $modules is an array of installed order totals module names
-     * @var array
      */
     public array $modules;
 
     /**
-     * $module_order_total_installed indicates whether/not at least
-     * one order-total module is installed.
-     * @var bool
+     * $module_order_total_installed indicates whether at least one order-total module is installed.
      */
     protected bool $module_order_total_installed = false;
 
@@ -44,7 +42,7 @@ class order_total
     {
         global $messageStack, $languageLoader, $installedPlugins;
 
-        if (defined('MODULE_ORDER_TOTAL_INSTALLED') && MODULE_ORDER_TOTAL_INSTALLED !== '') {
+        if (zen_config('MODULE_ORDER_TOTAL_INSTALLED') !== '') {
             // -----
             // Locate all order_total modules, looking in both /includes/modules/order_total
             // and for those provided by zc_plugins.  Note that any module provided by a
@@ -53,7 +51,7 @@ class order_total
             $moduleFinder = new ModuleFinder('order_total', new FileSystem());
             $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
-            $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+            $module_list = explode(';', zen_config('MODULE_ORDER_TOTAL_INSTALLED'));
 
             foreach ($module_list as $value) {
                 if (!$languageLoader->loadModuleLanguageFile($value, 'order_total')) {
@@ -89,6 +87,11 @@ class order_total
     }
 
     /**
+     * process() is called in the shopping cart and checkout pages, where totals/subtotals need to be calculated and displayed.
+     *
+     * This function loops through all installed order total modules and calls their process() method.
+     * The output from each module is collected and returned as an array.
+     *
      * @since ZC v1.0.3
      */
     public function process(): array
@@ -128,6 +131,10 @@ class order_total
     }
 
     /**
+     * Render the output for the order totals.
+     * This is called in the shopping cart (where, for simplicity, $return_html is true, and outputs hard-coded HTML-formatted totals in table rows).
+     * It is also called in checkout confirmation (where $return_html is false, and outputs the totals using a template file, tpl_modules_order_totals.php).
+     *
      * @since ZC v1.0.3
      */
     public function output(bool $return_html = false): string
@@ -159,18 +166,17 @@ class order_total
         return $output_string;
     }
 
-    //
-    // This function is called in checkout payment after display of payment methods. It actually calls
-    // two credit class functions.
-    //
-    // use_credit_amount() is normally a checkbox used to decide whether the credit amount should be applied to reduce
-    // the order total. Whether this is a Gift Voucher, or discount coupon or reward points etc.
-    //
-    // The second function called is credit_selection(). This in the credit classes already made is usually a redeem box.
-    // for entering a Gift Voucher number. Note credit classes can decide whether this part is displayed depending on
-    // E.g. a setting in the admin section.
-    //
     /**
+     * This function is called in checkout payment after display of payment methods.
+     * It actually calls two credit class functions:
+     *
+     * use_credit_amount() is normally a checkbox used to decide whether the credit amount
+     * should be applied to reduce the order total. Whether this is a Gift Voucher, or discount coupon or reward points etc.
+     *
+     * The second function called is credit_selection().
+     * In the credit classes this is usually a redeem box such as for entering a Gift Voucher number.
+     * Note credit classes can decide whether this part is displayed depending on factors such as an admin configuration setting.
+     *
      * @since ZC v1.0.3
      */
     public function credit_selection(): array
@@ -190,13 +196,12 @@ class order_total
         return $selection_array;
     }
 
-    // update_credit_account is called in checkout process on a per product basis. Its purpose
-    // is to decide whether each product in the cart should add something to a credit account.
-    // e.g. for the Gift Voucher it checks whether the product is a Gift voucher and then adds the amount
-    // to the Gift Voucher account.
-    // Another use would be to check if the product would give reward points and add these to the points/reward account.
-    //
     /**
+     * update_credit_account is called in checkout process on a per-product basis.
+     * Its purpose is to decide whether each product in the cart should add something to a credit account.
+     * e.g. for the Gift Voucher it checks whether the product is a Gift voucher and then adds the amount to the Gift Voucher account.
+     * Another use would be to check if the product would give reward points and add these to the points/reward account.
+     *
      * @since ZC v1.0.3
      */
     public function update_credit_account($i): void
@@ -211,12 +216,13 @@ class order_total
         }
     }
 
-    // This function is called in checkout confirmation.
-    // Its main use is for credit classes that use the credit_selection() method. This is usually for
-    // entering redeem codes(Gift Vouchers/Discount Coupons). This function is used to validate these codes.
-    // If they are valid then the necessary actions are taken, if not valid we are returned to checkout payment
-    // with an error
     /**
+     * This function is called in checkout confirmation.
+     * Its main use is for credit classes that use the credit_selection() method.
+     * This is usually for entering redeem codes (Gift Vouchers/Discount Coupons).
+     * This function is used to validate these codes.
+     * If they are valid then the necessary actions are taken, if not valid we are returned to checkout_payment with an error
+     *
      * @since ZC v1.0.3
      */
     public function collect_posts(): void
@@ -235,15 +241,18 @@ class order_total
         }
     }
 
-    // pre_confirmation_check is called on checkout confirmation. Its function is to decide whether the
-    // credits available are greater than the order total. If they are then a variable (credit_covers) is set to
-    // true. This is used to bypass the payment method. In other words if the Gift Voucher is more than the order
-    // total, we don't want to go to paypal etc.
-    //
     /**
+     * pre_confirmation_check is called on checkout confirmation.
+     * Its function is to decide whether the credits available are greater than the order total.
+     * If they are then a global variable (credit_covers) is set to true.
+     * This is used to bypass the payment method.
+     * In other words if the Gift Voucher is more than the order total, we don't want to go to paypal etc.
+     *
+     * @return array|string|null depending on the value of $returnOrderTotalOnly. If true, returns the recalculated order total. If string (legacy carryover), returns the order info array. Otherwise, returns null.
+     *
      * @since ZC v1.0.3
      */
-    public function pre_confirmation_check(bool|string $returnOrderTotalOnly = false)
+    public function pre_confirmation_check(bool|string $returnOrderTotalOnly = false): array|string|null
     {
         global $order, $credit_covers;
 
@@ -269,13 +278,14 @@ class order_total
                 return $reCalculatedOrderTotal;
             }
         }
+        return null;
     }
 
-    // this function is called in checkout process. it tests whether a decision was made at checkout payment to use
-    // the credit amount be applied aginst the order. If so some action is taken. E.g. for a Gift voucher the account
-    // is reduced the order total amount.
-    //
     /**
+     * This function is called in checkout process.
+     * It tests whether a decision was made at checkout payment to use the credit amount be applied aginst the order.
+     * If so some action is taken. E.g. for a Gift voucher the account is reduced the order total amount.
+     *
      * @since ZC v1.0.3
      */
     public function apply_credit(): void
@@ -290,9 +300,9 @@ class order_total
         }
     }
 
-    // Called in checkout process to clear session variables created by each credit class module.
-    //
     /**
+     * Called in checkout process to clear session variables created by each credit class module.
+     *
      * @since ZC v1.0.3
      */
     public function clear_posts(): void

@@ -143,7 +143,7 @@ class WhosOnline extends base
         }
         if ($exclude_admins) {
             $where .= ($where == '') ? " WHERE " : " AND ";
-            $where .= "ip_address != '' AND ip_address NOT IN ('" . implode("','", preg_split('/[\s,]/', zen_db_input(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE) . ',' . zen_db_input($_SERVER['REMOTE_ADDR']))) . "') ";
+            $where .= "ip_address != '' AND ip_address NOT IN ('" . implode("','", preg_split('/[\s,]/', zen_db_input(zen_config('EXCLUDE_ADMIN_IP_FOR_MAINTENANCE')) . ',' . zen_db_input($_SERVER['REMOTE_ADDR']))) . "') ";
         }
         $sql = "SELECT customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id, host_address, user_agent, s.value as session_data
                 FROM " . TABLE_WHOS_ONLINE . " w
@@ -394,7 +394,7 @@ class WhosOnline extends base
 
         if (session_decode($session_data) !== false) {
             $cart = $_SESSION['cart'];
-            $currency = $_SESSION['currency'] ?? DEFAULT_CURRENCY;
+            $currency = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
 
             if (is_object($cart) && isset($currency)) {
                 $extracted_data['products'] = $cart->get_products();

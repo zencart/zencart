@@ -87,7 +87,7 @@ if (!empty($action)) {
                 $music_genre_query_raw = "SELECT *
                                           FROM " . TABLE_MUSIC_GENRE . "
                                           ORDER BY music_genre_name";
-                $music_genre_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $music_genre_query_raw, $music_genre_query_numrows);
+                $music_genre_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $music_genre_query_raw, $music_genre_query_numrows);
                 $music_genres = $db->Execute($music_genre_query_raw);
                 $mGenre_parameter = '';
                 foreach ($music_genres as $music_genre) {
@@ -98,7 +98,7 @@ if (!empty($action)) {
 
                     $aInfo_array = array_merge($music_genre, $music_genre_products->fields);
                     $aInfo = new objectInfo($aInfo_array);
-					$mGenre_parameter = '&mID=' . $aInfo->music_genre_id;
+                    $mGenre_parameter = '&mID=' . $aInfo->music_genre_id;
                   }
 
                   if (isset($aInfo) && is_object($aInfo) && ($music_genre['music_genre_id'] == $aInfo->music_genre_id)) {
@@ -179,8 +179,8 @@ if (!empty($action)) {
       </div>
       <table class="table">
         <tr>
-          <td><?php echo $music_genre_split->display_count($music_genre_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES); ?></td>
-          <td class="text-right"><?php echo $music_genre_split->display_links($music_genre_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+          <td><?php echo $music_genre_split->display_count($music_genre_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MUSIC_GENRES); ?></td>
+          <td class="text-right"><?php echo $music_genre_split->display_links($music_genre_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
         </tr>
         <?php if (empty($action)) { ?>
           <tr>

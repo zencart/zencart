@@ -468,7 +468,6 @@ class paypal extends base {
    * Post-processing activities
    * When the order returns from the processor, if PDT was successful, this stores the results in order-status-history and logs data for subsequent reference
    *
-   * @return boolean
    * @since ZC v1.0.3
     */
   function after_process() {
@@ -476,7 +475,7 @@ class paypal extends base {
     if ($_SESSION['paypal_transaction_PDT_passed'] != true) {
       $_SESSION['order_created'] = '';
       unset($_SESSION['paypal_transaction_PDT_passed']);
-      return false;
+      return;
     } else {
     // PDT found order to be approved, so add a new OSH record for this order's PP details
       unset($_SESSION['paypal_transaction_PDT_passed']);

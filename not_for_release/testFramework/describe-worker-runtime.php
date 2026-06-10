@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/Support/configs/runtime_config.php';
+require_once __DIR__ . '/Support/TestConfigResolver.php';
 
 $catalogRoot = getenv('ZC_TEST_RUNTIME_ROOT');
 if (!is_string($catalogRoot) || $catalogRoot === '') {
@@ -12,6 +13,9 @@ if (!is_string($catalogRoot) || $catalogRoot === '') {
 }
 
 $databaseBase = getenv('ZC_TEST_RUNTIME_DB_BASE');
+if (!is_string($databaseBase) || $databaseBase === '') {
+    $databaseBase = getenv('ZC_TEST_DB_BASE_NAME');
+}
 if (!is_string($databaseBase) || $databaseBase === '') {
     $databaseBase = 'db_testing';
 }
@@ -22,9 +26,20 @@ if (!is_string($pluginName) || $pluginName === '') {
 }
 
 $workerToken = zc_test_config_worker_token();
+$configBasePath = __DIR__ . '/Support/configs/';
+$shellUser = \Tests\Support\TestConfigResolver::detectShellUser();
+$mainConfigProfile = \Tests\Support\TestConfigResolver::resolveConfigProfile('main', $configBasePath);
+$appConfigProfile = \Tests\Support\TestConfigResolver::resolveConfigProfile('configure', $configBasePath);
+$mainConfigPath = \Tests\Support\TestConfigResolver::resolveConfigPath('main', $configBasePath);
+$appConfigPath = \Tests\Support\TestConfigResolver::resolveConfigPath('configure', $configBasePath);
 
 echo "Worker Runtime Description\n\n";
 echo 'Catalog root: ' . rtrim($catalogRoot, '/') . "/\n";
+echo 'Detected shell user: ' . $shellUser . "\n";
+echo 'Main config profile: ' . $mainConfigProfile . "\n";
+echo 'Main config: ' . $mainConfigPath . "\n";
+echo 'App config profile: ' . $appConfigProfile . "\n";
+echo 'App config: ' . $appConfigPath . "\n";
 echo 'Worker token: ' . ($workerToken ?? '(none)') . "\n";
 echo 'Database: ' . zc_test_config_database_name($databaseBase) . "\n";
 echo 'Progress file: ' . zc_test_config_progress_file($catalogRoot) . "\n";

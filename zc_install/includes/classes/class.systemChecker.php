@@ -220,7 +220,6 @@ class systemChecker
 
     public function configFileExists(): bool
     {
-        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
         $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
         return $this->getServerConfig()->fileExists();
     }
@@ -253,6 +252,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -575,6 +578,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
 
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -598,6 +605,10 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
 
         $db = new queryFactory();
         $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -705,6 +716,10 @@ class systemChecker
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
 
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -792,30 +807,6 @@ class systemChecker
         if ((trim($lines[0]) > PROJECT_VERSION_MAJOR) || (trim($lines[0]) === PROJECT_VERSION_MAJOR && trim($lines[1]) > PROJECT_VERSION_MINOR)) {
             $new_version = TEXT_VERSION_CHECK_NEW_VER . trim($lines[0]) . '.' . trim($lines[1]) . ' :: ' . $lines[2];
         }
-        //check for patch version info
-        // first confirm that we're at latest major/minor -- otherwise no need to check patches:
-        if (trim($lines[0]) === PROJECT_VERSION_MAJOR && trim($lines[1]) === PROJECT_VERSION_MINOR) {
-            //check to see if either patch needs to be applied
-            if (trim($lines[3]) > (int)PROJECT_VERSION_PATCH1 || trim($lines[4]) > (int)PROJECT_VERSION_PATCH2) {
-                // reset update message, since we WILL be advising of an available upgrade
-                if ($new_version === TEXT_VERSION_CHECK_CURRENT) {
-                    $new_version = '';
-                }
-                //check for patch #1
-                if (trim($lines[3]) > (int)PROJECT_VERSION_PATCH1) {
-                    // if ($new_version != '') $new_version .= '<br>';
-                    $new_version .= (($new_version !== '') ? '<br>' : '') .
-                        '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) .
-                        ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[3]) . '] :: ' . $lines[5] . '</span>';
-                }
-                if (trim($lines[4]) > (int)PROJECT_VERSION_PATCH2) {
-                    // if ($new_version != '') $new_version .= '<br>';
-                    $new_version .= (($new_version !== '') ? '<br>' : '') .
-                        '<span class="alert">' . TEXT_VERSION_CHECK_NEW_PATCH . trim($lines[0]) . '.' . trim($lines[1]) .
-                        ' - ' . TEXT_VERSION_CHECK_PATCH . ': [' . trim($lines[4]) . '] :: ' . $lines[5] . '</span>';
-                }
-            }
-        }
 
         $this->log('Present: ' . PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR . '; Latest release online: ' . trim($lines[0]) . '.' . trim($lines[1]), __METHOD__, []);
 
@@ -841,6 +832,10 @@ class systemChecker
             $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
             $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
             $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+            if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+                return;
+            }
 
             $db = new queryFactory();
             $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -873,6 +868,10 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return true;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);

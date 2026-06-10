@@ -116,10 +116,7 @@ class LanguageLoader
      */
     public function hasLanguageFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): bool
     {
-        if (is_file($rootPath . $language . $extraPath . '/lang.' . $fileName)) {
-            return true;
-        }
-        return false;
+        return $this->arrayLoader->hasLanguageFile($rootPath, $language, $fileName, $extraPath);
     }
 
     /**

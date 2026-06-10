@@ -23,8 +23,8 @@ $error_state_input = false;
 $state = '';
 $zone_id = 0;
 $error = false;
-$email_format = (ACCOUNT_EMAIL_PREFERENCE === '1' ? 'HTML' : 'TEXT');
-$newsletter = !(ACCOUNT_NEWSLETTER_STATUS === '1' || ACCOUNT_NEWSLETTER_STATUS === '0');
+$email_format = ((int)zen_config('ACCOUNT_EMAIL_PREFERENCE') === 1 ? 'HTML' : 'TEXT');
+$newsletter = !((int)zen_config('ACCOUNT_NEWSLETTER_STATUS') === 1 || (int)zen_config('ACCOUNT_NEWSLETTER_STATUS') === 0);
 $extra_welcome_text = '';
 $send_welcome_email = true;
 
@@ -46,7 +46,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_CAPTCHA_CHECK', $antiSpamFieldName, $antiSpam);
 
     $gender = false;
-    if (ACCOUNT_GENDER === 'true' && isset($_POST['gender'])) {
+    if (zen_config('ACCOUNT_GENDER') === 'true' && isset($_POST['gender'])) {
         $gender = zen_db_prepare_input($_POST['gender']);
     }
 
@@ -64,23 +64,23 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     $suburb = '';
     $state = '';
     $zone_id = false;
-    if (ACCOUNT_COMPANY === 'true') {
+    if (zen_config('ACCOUNT_COMPANY') === 'true') {
         $company = zen_db_prepare_input($_POST['company']);
     }
     $firstname = zen_db_prepare_input(zen_sanitize_string($_POST['firstname']));
     $lastname = zen_db_prepare_input(zen_sanitize_string($_POST['lastname']));
     $nick = zen_db_prepare_input($_POST['nick'] ?? '');
-    if (ACCOUNT_DOB === 'true') {
+    if (zen_config('ACCOUNT_DOB') === 'true') {
         $dob = zen_db_prepare_input($_POST['dob']);
     }
     $email_address = zen_db_prepare_input($_POST['email_address']);
     $street_address = zen_db_prepare_input($_POST['street_address']);
-    if (ACCOUNT_SUBURB === 'true') {
+    if (zen_config('ACCOUNT_SUBURB') === 'true') {
         $suburb = zen_db_prepare_input($_POST['suburb']);
     }
     $postcode = zen_db_prepare_input($_POST['postcode']);
     $city = zen_db_prepare_input($_POST['city']);
-    if (ACCOUNT_STATE === 'true') {
+    if (zen_config('ACCOUNT_STATE') === 'true') {
         $state = zen_db_prepare_input($_POST['state'] ?? '');
         if (isset($_POST['zone_id'])) {
             $zone_id = zen_db_prepare_input($_POST['zone_id']);
@@ -89,11 +89,11 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     $country = zen_db_prepare_input($_POST['zone_country_id']);
     $telephone = zen_db_prepare_input($_POST['telephone']);
     $fax = zen_db_prepare_input($_POST['fax'] ?? '');
-    $customers_authorization = (int)CUSTOMERS_APPROVAL_AUTHORIZATION;
+    $customers_authorization = (int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION');
     $customers_referral = zen_db_prepare_input($_POST['customers_referral'] ?? '');
 
     $newsletter = 0;
-    if ((ACCOUNT_NEWSLETTER_STATUS === '1' || ACCOUNT_NEWSLETTER_STATUS === '2') && isset($_POST['newsletter'])) {
+    if (((int)zen_config('ACCOUNT_NEWSLETTER_STATUS') === 1 || (int)zen_config('ACCOUNT_NEWSLETTER_STATUS') === 2) && isset($_POST['newsletter'])) {
         $newsletter = zen_db_prepare_input($_POST['newsletter']);
     }
 
@@ -101,30 +101,30 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     $confirmation = zen_db_prepare_input($_POST['confirmation']);
 
 
-    if (DISPLAY_PRIVACY_CONDITIONS === 'true') {
+    if (zen_config('DISPLAY_PRIVACY_CONDITIONS') === 'true') {
         if (!isset($_POST['privacy_conditions']) || ($_POST['privacy_conditions'] !== '1')) {
             $error = true;
             $messageStack->add('create_account', ERROR_PRIVACY_STATEMENT_NOT_ACCEPTED, 'error');
         }
     }
 
-    if (ACCOUNT_GENDER === 'true' && !in_array(strtolower($gender), ['m', 'f'])) {
+    if (zen_config('ACCOUNT_GENDER') === 'true' && !in_array(strtolower($gender), ['m', 'f'])) {
         $error = true;
         $messageStack->add('create_account', ENTRY_GENDER_ERROR);
     }
 
-    if (mb_strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+    if (mb_strlen($firstname) < zen_config('ENTRY_FIRST_NAME_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_FIRST_NAME_ERROR);
     }
 
-    if (mb_strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+    if (mb_strlen($lastname) < zen_config('ENTRY_LAST_NAME_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_LAST_NAME_ERROR);
     }
 
-    if (ACCOUNT_DOB === 'true') {
-        if (ENTRY_DOB_MIN_LENGTH > 0 or !empty($_POST['dob'])) {
+    if (zen_config('ACCOUNT_DOB') === 'true') {
+        if ((int)zen_config('ENTRY_DOB_MIN_LENGTH') > 0 or !empty($_POST['dob'])) {
             if (strlen($dob) >10 || zen_valid_date($dob) === false) {
                 $error = true;
                 $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
@@ -132,8 +132,8 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         }
     }
 
-    if (ACCOUNT_COMPANY === 'true') {
-        if ((int)ENTRY_COMPANY_MIN_LENGTH > 0 && mb_strlen($company) < ENTRY_COMPANY_MIN_LENGTH) {
+    if (zen_config('ACCOUNT_COMPANY') === 'true') {
+        if ((int)zen_config('ENTRY_COMPANY_MIN_LENGTH') > 0 && mb_strlen($company) < zen_config('ENTRY_COMPANY_MIN_LENGTH')) {
             $error = true;
             $messageStack->add('create_account', ENTRY_COMPANY_ERROR);
         }
@@ -141,7 +141,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
 
 
     $nick_error = false;
-    if (mb_strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+    if (mb_strlen($email_address) < zen_config('ENTRY_EMAIL_ADDRESS_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
     } elseif (zen_validate_email($email_address) == false) {
@@ -164,7 +164,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         }
     }
 
-    $nick_length_min = ENTRY_NICK_MIN_LENGTH;
+    $nick_length_min = zen_config('ENTRY_NICK_MIN_LENGTH');
     $zco_notifier->notify('NOTIFY_NICK_CHECK_FOR_MIN_LENGTH', $nick, $nick_error, $nick_length_min);
     if ($nick_error) {
         $error = true;
@@ -185,17 +185,17 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         }
     }
 
-    if (mb_strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
+    if (mb_strlen($street_address) < zen_config('ENTRY_STREET_ADDRESS_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_STREET_ADDRESS_ERROR);
     }
 
-    if (mb_strlen($city) < ENTRY_CITY_MIN_LENGTH) {
+    if (mb_strlen($city) < zen_config('ENTRY_CITY_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_CITY_ERROR);
     }
 
-    if (ACCOUNT_STATE === 'true') {
+    if (zen_config('ACCOUNT_STATE') === 'true') {
         $check_query =
             "SELECT COUNT(*) AS total
                FROM " . TABLE_ZONES . "
@@ -238,14 +238,14 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
                 $error_state_input = true;
                 $messageStack->add('create_account', ENTRY_STATE_ERROR_SELECT);
             }
-        } elseif (mb_strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+        } elseif (mb_strlen($state) < zen_config('ENTRY_STATE_MIN_LENGTH')) {
             $error = true;
             $error_state_input = true;
             $messageStack->add('create_account', ENTRY_STATE_ERROR);
         }
     }
 
-    if (mb_strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
+    if (mb_strlen($postcode) < zen_config('ENTRY_POSTCODE_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_POST_CODE_ERROR);
     }
@@ -255,14 +255,14 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
     }
 
-    if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
+    if (strlen($telephone) < zen_config('ENTRY_TELEPHONE_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
     }
 
     $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', [], $error, $send_welcome_email);
 
-    if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
+    if (strlen($password) < zen_config('ENTRY_PASSWORD_MIN_LENGTH')) {
         $error = true;
         $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
     } elseif ($password !== $confirmation) {
@@ -292,7 +292,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         $result = $customer->create($data);
         if (!empty($result)) {
             $customer->login($result['customers_id'], $restore_cart = true);
-            if (SESSION_RECREATE === 'True') {
+            if (zen_config('SESSION_RECREATE') === 'True') {
                 zen_session_recreate();
             }
         }
@@ -317,9 +317,9 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
 /*
  * Set flags for template use:
  */
-$selected_country = !empty($_POST['zone_country_id']) ? (int)$_POST['zone_country_id'] : $country ?? (int)SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
-$flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true' || ($process === true && $entry_state_has_zones === true && $zone_name === '' && $error_state_input === true));
-$state = ($flag_show_pulldown_states === true) ? ($state == '' ? '&nbsp;' : $state) : $zone_name;
+$selected_country = !empty($_POST['zone_country_id']) ? (int)$_POST['zone_country_id'] : $country ?? (int)zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY');
+$flag_show_pulldown_states = (zen_config('ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN') === 'true' || ($process === true && $entry_state_has_zones === true && $zone_name === '' && $error_state_input === true));
+$state = ($flag_show_pulldown_states === true) ? $state : $zone_name;
 $state_field_label = ($flag_show_pulldown_states === true) ? '' : ENTRY_STATE;
 
 $display_nick_field = false;

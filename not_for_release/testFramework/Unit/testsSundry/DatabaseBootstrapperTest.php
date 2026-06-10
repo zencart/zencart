@@ -30,6 +30,10 @@ class DatabaseBootstrapperTest extends TestCase
             self::$rootPath . 'zc_install/sql/demo',
             self::$rootPath . 'zc_install/includes/classes',
             self::$rootPath . 'zc_install/includes/functions',
+            self::$rootPath . 'zc_install/includes/languages/en_us',
+            self::$rootPath . 'cache',
+            self::$rootPath . 'pub',
+            self::$rootPath . 'logs',
         ] as $directory) {
             if (!is_dir($directory)) {
                 mkdir($directory, 0777, true);
@@ -42,6 +46,10 @@ class DatabaseBootstrapperTest extends TestCase
         file_put_contents(self::$rootPath . 'zc_install/includes/classes/class.zcDatabaseInstaller.php', "<?php\n");
         file_put_contents(self::$rootPath . 'zc_install/includes/functions/general.php', "<?php\n");
         file_put_contents(self::$rootPath . 'zc_install/includes/functions/password_funcs.php', "<?php\n");
+        file_put_contents(
+            self::$rootPath . 'zc_install/includes/languages/en_us/main.php',
+            "<?php\nreturn [\n    'REASON_CONFIG_KEY_ALREADY_EXISTS' => 'config key already exists: %s',\n    'TEXT_ERROR_CACHE_FOLDER' => DIR_FS_SQL_CACHE . ' folder is not writeable',\n    'TEXT_ERROR_PUB_FOLDER' => DIR_FS_DOWNLOAD_PUBLIC . ' folder is not writeable',\n];\n"
+        );
 
         if (!defined('ROOTCWD')) {
             define('ROOTCWD', self::$rootPath);
@@ -76,9 +84,13 @@ class DatabaseBootstrapperTest extends TestCase
             'zc_install/includes/classes/class.zcDatabaseInstaller.php',
             'zc_install/includes/functions/general.php',
             'zc_install/includes/functions/password_funcs.php',
+            'zc_install/includes/languages/en_us/main.php',
             'zc_install/sql/install/mysql_zencart.sql',
             'zc_install/sql/install/mysql_utf8.sql',
             'zc_install/sql/demo/mysql_demo.sql',
+            'progress.json',
+            'progress_2.json',
+            'nested-progress/progress_2.json',
         ] as $file) {
             $path = self::$rootPath . $file;
             if (file_exists($path)) {
@@ -89,8 +101,14 @@ class DatabaseBootstrapperTest extends TestCase
         foreach ([
             'zc_install/includes/classes',
             'zc_install/includes/functions',
+            'zc_install/includes/languages/en_us',
+            'zc_install/includes/languages',
             'zc_install/sql/install',
             'zc_install/sql/demo',
+            'cache',
+            'pub',
+            'logs',
+            'nested-progress',
             'zc_install/includes',
             'zc_install/sql',
             'zc_install',
@@ -151,6 +169,38 @@ class DatabaseBootstrapperTest extends TestCase
         $this->assertSame(self::$rootPath . 'zc_install/sql/install/mysql_utf8.sql', $installer->files[1]);
         $this->assertSame(self::$rootPath . 'zc_install/sql/demo/mysql_demo.sql', $installer->files[2]);
         $this->assertSame(ROOTCWD . 'progress.json', $installer->options[0]['doJsonProgressLoggingFileName']);
+    }
+
+    public function testRunLoadsInstallerLanguageDefinesBeforeSqlParsing(): void
+    {
+        $installer = new class {
+            protected array $upgradeExceptions = [];
+
+            public function getConnection(): bool
+            {
+                return true;
+            }
+
+            public function parseSqlFile($fileName, ?array $options = null): bool
+            {
+                if (!defined('REASON_CONFIG_KEY_ALREADY_EXISTS')) {
+                    throw new \RuntimeException('Installer language define was not loaded.');
+                }
+
+                return false;
+            }
+        };
+
+        $bootstrapper = new DatabaseBootstrapper(
+            $this->createMock(SeederRunner::class),
+            static fn (array $options) => $installer
+        );
+
+        $bootstrapper->run([]);
+
+        $this->assertTrue(defined('REASON_CONFIG_KEY_ALREADY_EXISTS'));
+        $this->assertTrue(defined('DIR_FS_SQL_CACHE'));
+        $this->assertTrue(defined('DIR_FS_DOWNLOAD_PUBLIC'));
     }
 
     public function testRunUsesWorkerScopedProgressFileWhenWorkerIsConfigured(): void

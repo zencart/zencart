@@ -11,7 +11,7 @@
 /**
  * @since ZC v1.0.3
  */
-class cod 
+class cod
 {
     /**
      * $_check is used to check the configuration key set up
@@ -25,7 +25,7 @@ class cod
     public $code;
     /**
      * $description is a soft name for this payment method
-     * @var string 
+     * @var string
      */
     public $description;
     /**

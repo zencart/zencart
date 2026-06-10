@@ -12,7 +12,6 @@ if (file_exists(zcDatabaseInstaller::$initialProgressMeterFilename)) {
 
 $isUpgrade = false;
 $adminLink = $catalogLink = '#';
-$adminServer = $_POST['http_server_admin'] ?? '';
 $catalogHttpServer = $_POST['http_server_catalog'] ?? '';
 $dir_ws_http_catalog = $_POST['dir_ws_http_catalog'] ?? '';
 $adminDir = $_POST['admin_directory'] ?? '';
@@ -26,16 +25,12 @@ if (!isset($_POST['admin_directory']) || !file_exists(DIR_FS_ROOT . $_POST['admi
     [
         $adminDir,
         $documentRoot,
-        $adminServer,
         $catalogHttpServer,
         $catalogHttpUrl,
-        $catalogHttpsServer,
-        $catalogHttpsUrl,
         $dir_ws_http_catalog,
-        $dir_ws_https_catalog,
     ] = getDetectedURIs($adminDir);
 }
-$adminLink = zen_output_string_protected($adminServer) . zen_output_string_protected($dir_ws_http_catalog) . zen_output_string_protected($adminDir);
+$adminLink = zen_output_string_protected($catalogHttpServer) . zen_output_string_protected($dir_ws_http_catalog) . zen_output_string_protected($adminDir);
 $catalogLink = zen_output_string_protected($catalogHttpServer) . zen_output_string_protected($dir_ws_http_catalog);
 
 $adminLink = preg_replace('~(?<!:)/+~', '/', $adminLink);
@@ -45,7 +40,7 @@ if (isset($_POST['upgrade_mode']) && $_POST['upgrade_mode'] === 'yes') {
     $isUpgrade = true;
 }
 // only do the next step if there was real POST data, else bad info may be written to database
-elseif (isset($_POST['http_server_admin']) && $_POST['http_server_admin'] !== '') {
+elseif (isset($_POST['http_server_catalog']) && $_POST['http_server_catalog'] !== '') {
     $isUpgrade = false;
     $options = $_POST;
     $options['dieOnErrors'] = true;

@@ -2,11 +2,12 @@
 /**
  * File functions
  *
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Sep 29 Modified in v2.2.0 $
+ * @version $Id:  Modified in v3.0 $
  */
-
+use Zencart\FileSystem\FileSystem;
+use Zencart\ResourceLoaders\HtmlIncludesFinder;
 
 /**
  * build a list of directories in a specified parent folder
@@ -103,24 +104,54 @@ function zen_directory_is_in_application_dir(string $dir_to_check): bool
  * @return string
  * @since ZC v1.2.0d
  */
-function zen_get_file_directory($check_directory, $check_file, $dir_only = false)
+function zen_get_file_directory(string $check_directory, string $check_file, bool|string $dir_only = false): string
 {
     global $template_dir;
 
     $zv_filename = $check_file;
-    if (strpos($zv_filename, '.php') === false) $zv_filename .= '.php';
-
-    if (file_exists($check_directory . $template_dir . '/' . $zv_filename)) {
-        $zv_directory = $check_directory . $template_dir . '/';
-    } else {
-        $zv_directory = $check_directory;
+    if (!str_ends_with($zv_filename, '.php')) {
+        $zv_filename .= '.php';
     }
 
-    if ($dir_only === true) {
-        return $zv_directory;
+    $zv_directory = $check_directory;
+    foreach (zen_get_template_inheritance_chain($template_dir) as $chainTemplateKey) {
+        $candidateDirectory = rtrim($check_directory, '/') . '/' . $chainTemplateKey . '/';
+        if (file_exists($candidateDirectory . $zv_filename)) {
+            $zv_directory = $candidateDirectory;
+            break;
+        }
     }
 
-    return $zv_directory . $zv_filename;
+    $check_directory = rtrim($check_directory, '/') . '/';
+    $dir_only = ($dir_only === true || $dir_only === 'true');
+
+    if (!str_contains($check_directory, '/html_includes/')) {
+        if (is_file($check_directory . $template_dir . '/' . $zv_filename)) {
+            $zv_directory = $check_directory . $template_dir . '/';
+        } else {
+            $zv_directory = $check_directory;
+        }
+
+        if ($dir_only === true) {
+            return $zv_directory;
+        }
+
+        return $zv_directory . $zv_filename;
+    }
+
+    global $installedPlugins;
+    $language = str_replace([DIR_FS_CATALOG, DIR_WS_LANGUAGES, 'html_includes', '//'], '', $check_directory);
+    $htmlIncludesFinder = new HtmlIncludesFinder(new FileSystem(), $installedPlugins, $language, $template_dir);
+
+    // -----
+    // The returned value includes both the file's directory and filename.
+    //
+    $dir_filename = $htmlIncludesFinder->find($zv_filename, false);
+    if ($dir_filename === false) {
+        $dir_filename = $check_directory . $zv_filename;
+    } 
+
+    return ($dir_only === false) ? $dir_filename : pathinfo($dir_filename, PATHINFO_DIRNAME);
 }
 
 /**
@@ -137,18 +168,10 @@ function zen_include_language_file($file, $folder, $page)
     if ($languageLoader->hasLanguageFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder)) {
         $languageLoader->loadExtraLanguageFiles(DIR_FS_CATALOG . DIR_WS_LANGUAGES,  $_SESSION['language'], $file, $folder);
     } else {
-        // -----
-        // If the language file's name doesn't start with 'lang.' (which they do,
-        // as of zc300), add that prefix for the cautionary message.
-        //
-        if (!str_starts_with($file, 'lang.')) {
-            $lang_file = str_replace($lang_file, $file, 'lang.' . $file);
-        }
-
         if ($page === 'inline') {
 ?>
           <div class="messageStackCaution">
-            <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
+             <?php echo WARNING_COULD_NOT_LOCATE_LANG_FILE . $lang_file; ?>
           </div>
 <?php
         } else {
@@ -182,10 +205,16 @@ function zen_get_module_directory($check_file, $dir_only = false)
     $zv_filename = $check_file;
     if (strpos($zv_filename, '.php') === false) $zv_filename .= '.php';
 
-    if (file_exists(DIR_FS_CATALOG . DIR_WS_MODULES . $template_dir . '/' . $zv_filename)) {
-        $template_dir_select = $template_dir . '/';
-    } else {
-        $template_dir_select = '';
+    $template_dir_select = '';
+    foreach (zen_get_template_catalog_override_directories($template_dir, 'includes/modules') as $directory) {
+        if (file_exists(DIR_FS_CATALOG . $directory . $zv_filename)) {
+            if (str_starts_with($directory, 'includes/modules/')) {
+                $template_dir_select = substr($directory, strlen('includes/modules/'));
+            } else {
+                $template_dir_select = '../../' . $directory;
+            }
+            break;
+        }
     }
 
     if ($dir_only === true || $dir_only == 'true') {
@@ -207,10 +236,16 @@ function zen_get_module_sidebox_directory($check_file)
     $zv_filename = $check_file;
     if (strpos($zv_filename, '.php') === false) $zv_filename .= '.php';
 
-    if (file_exists(DIR_WS_MODULES . 'sideboxes/' . $template_dir . '/' . $zv_filename)) {
-        $template_dir_select = 'sideboxes/' . $template_dir . '/';
-    } else {
-        $template_dir_select = 'sideboxes/';
+    $template_dir_select = 'sideboxes/';
+    foreach (zen_get_template_catalog_override_directories($template_dir, 'includes/modules/sideboxes') as $directory) {
+        if (file_exists(DIR_FS_CATALOG . $directory . $zv_filename)) {
+            if (str_starts_with($directory, 'includes/modules/')) {
+                $template_dir_select = substr($directory, strlen('includes/modules/'));
+            } else {
+                $template_dir_select = '../../' . $directory;
+            }
+            break;
+        }
     }
 
     return $template_dir_select . $zv_filename;
@@ -252,9 +287,13 @@ function zen_get_index_filters_directory($check_file, $dir_only = false)
     $zv_filename = $check_file;
     if (strpos($zv_filename, '.php') === false) $zv_filename .= '.php';
     $checkArray = [];
-    $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $template_dir . '/' . $zv_filename;
+    foreach (zen_get_template_catalog_override_directories($template_dir, 'includes/index_filters') as $directory) {
+        $checkArray[] = $directory . $zv_filename;
+    }
     $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $zv_filename;
-    $checkArray[] = DIR_WS_INCLUDES . 'index_filters/' . $template_dir . '/' . 'default_filter.php';
+    foreach (zen_get_template_catalog_override_directories($template_dir, 'includes/index_filters') as $directory) {
+        $checkArray[] = $directory . 'default_filter.php';
+    }
     foreach ($checkArray as $key => $val) {
         if (file_exists($val)) {
             return ($dir_only === true || $dir_only == 'true') ? $val = substr($val, 0, strpos($val, '/')) : $val;

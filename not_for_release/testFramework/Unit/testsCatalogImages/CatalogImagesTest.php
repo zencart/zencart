@@ -6,13 +6,14 @@
 
 namespace Tests\Unit\testsCatalogImages;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\zcUnitTestCase;
 
 class CatalogImagesTest extends zcUnitTestCase
 {
-    public function setup(): void
+    public function setUp(): void
     {
-        parent::setup();
+        parent::setUp();
 
         defined('DIR_WS_IMAGES') || define('DIR_WS_IMAGES', 'images/');
 
@@ -22,15 +23,13 @@ class CatalogImagesTest extends zcUnitTestCase
         require_once DIR_FS_CATALOG . 'includes/functions/functions_product_images.php';
     }
 
-    /**
-     * @dataProvider imagesProvider
-     */
+    #[DataProvider('imagesProvider')]
     public function testImagesFound(string $image, bool $for_glob, bool $underscore_to_nonsubdirs, array $expected): void
     {
         $this->assertEquals($expected, zen_get_image_lookup_filename_components($image, $for_glob, $underscore_to_nonsubdirs));
     }
 
-    public function imagesProvider(): array
+    public static function imagesProvider(): array
     {
         defined('DIR_WS_IMAGES') || define('DIR_WS_IMAGES', 'images/');
 

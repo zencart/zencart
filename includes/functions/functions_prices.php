@@ -133,6 +133,9 @@ function zen_get_products_display_price($product_id)
 
     $free_tag = '';
     $call_tag = '';
+    $show_normal_price = '';
+    $show_special_price = '';
+    $show_sale_price = '';
 
     // if in catalog, check whether customer should see prices
     if (IS_ADMIN_FLAG === false) {
@@ -141,23 +144,23 @@ function zen_get_products_display_price($product_id)
         // 2 = Can browse but no prices
         // verify whether to display prices
         switch (true) {
-            case (CUSTOMERS_APPROVAL === '1' && !zen_is_logged_in()):
+            case (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()):
                 // customer must be logged in to browse
                 return '';
                 break;
-            case (CUSTOMERS_APPROVAL === '2' && !zen_is_logged_in()):
+            case (zen_config('CUSTOMERS_APPROVAL') === '2' && !zen_is_logged_in()):
                 // customer may browse but no prices
                 return TEXT_LOGIN_FOR_PRICE_PRICE;
                 break;
-            case (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM !== ''):
+            case (zen_config('CUSTOMERS_APPROVAL') === '3' && TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM !== ''):
                 // customer may browse but no prices
                 return TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM;
                 break;
-            case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '3' && !zen_is_logged_in()):
+            case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '3' && !zen_is_logged_in()):
                 // customer must be logged in to browse
                 return TEXT_AUTHORIZATION_PENDING_PRICE;
                 break;
-            case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '3' && (int)$_SESSION['customers_authorization'] > 0):
+            case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '3' && (int)$_SESSION['customers_authorization'] > 0):
                 // customer must be logged in to browse
                 return TEXT_AUTHORIZATION_PENDING_PRICE;
                 break;
@@ -171,7 +174,7 @@ function zen_get_products_display_price($product_id)
         }
 
         // no prices when showcase only
-        if (STORE_STATUS === '1') {
+        if (zen_config('STORE_STATUS') === '1') {
             return '';
         }
     }
@@ -196,7 +199,7 @@ function zen_get_products_display_price($product_id)
     $products_tax_rate = zen_get_tax_rate($product_check->fields['products_tax_class_id']);
 
     $show_sale_discount = '';
-    if (SHOW_SALE_DISCOUNT_STATUS === '1' && ($display_special_price != 0 || $display_sale_price != 0)) {
+    if (zen_config('SHOW_SALE_DISCOUNT_STATUS') === '1' && ($display_special_price != 0 || $display_sale_price != 0)) {
         // -----
         // Allows an observer to inject any override to the "Sale Price" formatting.
         // If an override is performed, the observer sets the 'pricing_handled' value to true.
@@ -216,9 +219,9 @@ function zen_get_products_display_price($product_id)
         );
         if (!$pricing_handled) {
             if ($display_sale_price) {
-                if (SHOW_SALE_DISCOUNT === '1') {
+                if (zen_config('SHOW_SALE_DISCOUNT') === '1') {
                     if ($display_normal_price != 0) {
-                        $show_discount_amount = number_format(100 - (($display_sale_price / $display_normal_price) * 100), (int)SHOW_SALE_DISCOUNT_DECIMALS);
+                        $show_discount_amount = number_format(100 - (($display_sale_price / $display_normal_price) * 100), (int)zen_config('SHOW_SALE_DISCOUNT_DECIMALS'));
                     } else {
                         $show_discount_amount = '';
                     }
@@ -239,12 +242,12 @@ function zen_get_products_display_price($product_id)
                             PRODUCT_PRICE_DISCOUNT_AMOUNT .
                         '</span>';
                 }
-            } elseif (SHOW_SALE_DISCOUNT === '1') {
+            } elseif (zen_config('SHOW_SALE_DISCOUNT') === '1') {
                 $show_sale_discount =
                     '<span class="productPriceDiscount">' .
                         '<br>' .
                         PRODUCT_PRICE_DISCOUNT_PREFIX .
-                        number_format(100 - (($display_special_price / $display_normal_price) * 100), (int)SHOW_SALE_DISCOUNT_DECIMALS) .
+                        number_format(100 - (($display_special_price / $display_normal_price) * 100), (int)zen_config('SHOW_SALE_DISCOUNT_DECIMALS')) .
                         PRODUCT_PRICE_DISCOUNT_PERCENTAGE .
                     '</span>';
             } else {
@@ -321,7 +324,7 @@ function zen_get_products_display_price($product_id)
                     $show_special_price =
                         '&nbsp;' .
                         '<span class="productSpecialPrice">' .
-                            $show_special_price .= $currencies->display_price($display_special_price, $products_tax_rate) .
+                            $currencies->display_price($display_special_price, $products_tax_rate) .
                         '</span>';
                 }
                 $show_sale_price = '';
@@ -420,7 +423,7 @@ function zen_get_products_display_price($product_id)
         // If Free, Show it
         if ($product_check->fields['product_is_free'] === '1') {
             $free_tag = '<br>';
-            if (OTHER_IMAGE_PRICE_IS_FREE_ON === '0') {
+            if (zen_config('OTHER_IMAGE_PRICE_IS_FREE_ON') === '0') {
                 $free_tag .= PRODUCTS_PRICE_IS_FREE_TEXT;
             } else {
                 $free_tag .= zen_image(DIR_WS_TEMPLATE_IMAGES . OTHER_IMAGE_PRICE_IS_FREE, PRODUCTS_PRICE_IS_FREE_TEXT);
@@ -431,7 +434,7 @@ function zen_get_products_display_price($product_id)
         if ($product_check->fields['product_is_call'] === '1') {
             $call_tag = '<br>';
             $final_display_price = (IS_ADMIN_FLAG === false) ? '' : $final_display_price;
-            if (PRODUCTS_PRICE_IS_CALL_IMAGE_ON === '0') {
+            if (zen_config('PRODUCTS_PRICE_IS_CALL_IMAGE_ON') === '0') {
                 $call_tag .= PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT;
             } else {
                 $call_tag .= zen_image(DIR_WS_TEMPLATE_IMAGES . OTHER_IMAGE_CALL_FOR_PRICE, PRODUCTS_PRICE_IS_CALL_FOR_PRICE_TEXT);
@@ -1307,7 +1310,7 @@ function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected =
     );
 
     // per word and letter charges
-    if (zen_get_attributes_type($attribute_id) == PRODUCTS_OPTIONS_TYPE_TEXT) {
+    if (zen_get_attributes_type($attribute_id) == zen_config('PRODUCTS_OPTIONS_TYPE_TEXT')) {
         // calc per word or per letter
     }
 
@@ -1426,7 +1429,7 @@ function zen_get_letters_count($string, $free = 0)
     $string = str_replace(["\r\n", "\n", "\r", "\t"], ' ', $string);
     $string = preg_replace('/[ ]+/', ' ', $string);
     $string = trim($string);
-    if (TEXT_SPACES_FREE === '1') {
+    if (zen_config('TEXT_SPACES_FREE') === '1') {
         $letters_count = mb_strlen(str_replace(' ', '', $string));
     } else {
         $letters_count = mb_strlen($string);

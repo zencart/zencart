@@ -21,7 +21,9 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
         $zco_notifier->notify('NOTIFY_LANGUAGE_CHANGE_REQUESTED_BY_ADMIN_VISITOR', $_GET['language'], $lng);
     } else {
         $lng->get_browser_language();
-        $lng->set_language(DEFAULT_LANGUAGE);
+
+        //@TODO: This next line was added in v1.2.0. It's an aggressive override. Do we still need this?
+        $lng->set_language(zen_config('DEFAULT_LANGUAGE'));
     }
 
     if (!is_file(DIR_WS_LANGUAGES . 'lang.' . $lng->language['directory'] . '.php')) {
@@ -39,13 +41,7 @@ if (!isset($_SESSION['language']) || isset($_GET['language'])) {
 // and order-total language files to also apply to their associated 'Modules' page
 // display.
 //
-$template_query = $db->Execute(
-    "SELECT template_dir
-       FROM " . TABLE_TEMPLATE_SELECT . "
-       WHERE template_language in (" . (int)$_SESSION['languages_id'] . ', 0' . ")
-       ORDER BY template_language DESC"
-);
-$template_dir = $template_query->fields['template_dir'];
+$template_dir = zen_resolve_template_key();
 
 // include the language translations
 $current_page = ($PHP_SELF === 'home.php') ? 'index.php' : $PHP_SELF;

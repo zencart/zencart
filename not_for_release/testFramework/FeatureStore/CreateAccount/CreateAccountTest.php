@@ -6,9 +6,7 @@ use Tests\Support\Database\TestDb;
 use Tests\Support\helpers\ProfileManager;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class CreateAccountTest extends zcInProcessFeatureTestCaseStore
 {
     protected $runTestInSeparateProcess = true;

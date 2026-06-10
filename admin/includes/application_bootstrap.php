@@ -12,10 +12,6 @@ use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PageLoader\PageLoader;
 /**
- * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
- */
-if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
-/**
  * boolean used to see if we are in the admin script, obviously set to false here.
  * DO NOT REMOVE THE define BELOW. WILL BREAK ADMIN
  */
@@ -51,6 +47,54 @@ if ($detected_locale === false || $detected_locale === 'C') {
 if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
 
 /**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies are required
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ */
+if (PHP_VERSION_ID < 80300) {
+    // redirect to catalog to display the PHP version compatibility message
+    chdir(realpath(__DIR__ . '/../'));
+    require 'includes/application_top.php';
+    exit(0);
+}
+
+if (file_exists('../not_for_release/testFramework/Support/application_testing.php')) {
+    require('../not_for_release/testFramework/Support/application_testing.php');
+}
+/**
+ * check for and load application configuration parameters
+ */
+if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
+    if (file_exists('includes/local/configure.php')) {
+        include('includes/local/configure.php');
+    } elseif (file_exists('../includes/local/configure.php')) {
+        include('../includes/local/configure.php');
+    } elseif (file_exists('includes/configure.php')) {
+        include('includes/configure.php');
+    } elseif (file_exists('../includes/configure.php')) {
+        include('../includes/configure.php');
+    }
+}
+
+if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE === '') {
+    if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
+        require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        exit;
+    } elseif (file_exists('../zc_install/index.php')) {
+        echo 'ERROR: configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
+    } else {
+        die('ERROR: includes/configure.php file not found. Suggest running zc_install/index.php?');
+    }
+}
+
+/**
+ * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
+ */
+if (!defined('DEBUG_AUTOLOAD')) {
+    define('DEBUG_AUTOLOAD', false);
+}
+
+/**
  * set the level of error reporting
  *
  * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
@@ -67,52 +111,6 @@ if ((defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) || (defined('STRICT_E
 }
 
 /**
- * Ensure minimum PHP version.
- * This is intended to run before any dependencies are required
- * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
- */
-if (PHP_VERSION_ID < 80300) {
-    // redirect to catalog to display the PHP version compatibility message
-    chdir(realpath(__DIR__ . '/../'));
-    require 'includes/application_top.php';
-    exit(0);
-}
-/**
- * Set the local configuration parameters - mainly for developers
- */
-if (file_exists('includes/local/configure.php')) {
-    /**
-     * load any local(user created) configure file.
-     */
-    include('includes/local/configure.php');
-}
-
-if (file_exists('../not_for_release/testFramework/Support/application_testing.php')) {
-    require('../not_for_release/testFramework/Support/application_testing.php');
-}
-/**
- * check for and load application configuration parameters
- */
-if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
-    if (file_exists('includes/configure.php')) {
-        /**
-         * load the main configure file.
-         */
-        include('includes/configure.php');
-    }
-}
-
-if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE == '') {
-    if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
-        require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
-        exit;
-    } elseif (file_exists('../zc_install/index.php')) {
-        echo 'ERROR: Admin configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
-    } else {
-        die('ERROR: admin/includes/configure.php file not found. Suggest running zc_install/index.php?');
-    }
-}
-/**
  * check for and load system defined path constants
  */
 if (file_exists('includes/defined_paths.php')) {
@@ -127,18 +125,6 @@ if (file_exists('includes/defined_paths.php')) {
 
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'php_polyfills.php';
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_define_default.php';
-
-/**
- * ignore version-check if INI file setting has been set
- */
-$file = DIR_FS_ADMIN . 'includes/local/skip_version_check.ini';
-if (file_exists($file) && $lines = @file($file)) {
-    if (is_array($lines)) {
-        foreach($lines as $line) {
-            if (substr($line,0,14)=='admin_configure_php_check=') $check_cfg=substr(trim(strtolower(str_replace('admin_configure_php_check=','',$line))),0,3);
-        }
-    }
-}
 
 /**
  * Register error-handling functions
@@ -181,7 +167,6 @@ $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_conf
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^filenames\.php$~i');
-$fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/functions/extra_functions', '~^[^\._].*\.php$~i');
 
 foreach ($installedPlugins as $plugin) {
     $namespaceAdmin = 'Zencart\\Plugins\\Admin\\' . ucfirst($plugin['unique_key']);
@@ -192,3 +177,10 @@ foreach ($installedPlugins as $plugin) {
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }
+// Load registered psr4Autoload in plugin directories
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^psr4Autoload\.php$~i');
+
+/**
+ * tell any proxies to store both the compressed and uncompressed versions of content, so output doesn't get served mangled
+ */
+header("Vary: Accept-Encoding");

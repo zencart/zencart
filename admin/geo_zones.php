@@ -182,19 +182,19 @@ if (!empty($action)) {
                   if ((empty($_GET['spage']) || $_GET['spage'] == '1') && !empty($_GET['sID'])) {
                     $check_page = $db->Execute($zones_query_raw);
                     $check_count = 0;
-                    if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                    if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
                       foreach ($check_page as $item) {
                         if ($item['association_id'] == $_GET['sID']) {
                           break;
                         }
                         $check_count++;
                       }
-                      $_GET['spage'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                      $_GET['spage'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
                     } else {
                       $_GET['spage'] = 1;
                     }
                   }
-                  $zones_split = new splitPageResults($_GET['spage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
+                  $zones_split = new splitPageResults($_GET['spage'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows);
                   $zones = $db->Execute($zones_query_raw);
                   foreach ($zones as $zone) {
                     if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ($_GET['sID'] == $zone['association_id']))) && !isset($sInfo) && (substr($action, 0, 3) != 'new')) {
@@ -251,19 +251,19 @@ if (!empty($action)) {
                     if ((empty($_GET['zpage']) ||$_GET['zpage'] == '1') && !empty($_GET['zID'])) {
                       $check_page = $db->Execute($zones_query_raw);
                       $check_count = 0;
-                      if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                      if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
                         foreach ($check_page as $item) {
                           if ($item['geo_zone_id'] == $_GET['zID']) {
                             break;
                           }
                           $check_count++;
                         }
-                        $_GET['zpage'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)), 0);
+                        $_GET['zpage'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
                       } else {
                         $_GET['zpage'] = 1;
                       }
                     }
-                    $zones_split = new splitPageResults($_GET['zpage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
+                    $zones_split = new splitPageResults($_GET['zpage'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows);
                     $zones = $db->Execute($zones_query_raw);
                     foreach ($zones as $zone) {
                       $num_zones = $db->Execute("SELECT COUNT(*) AS num_zones
@@ -431,8 +431,8 @@ if (!empty($action)) {
             <?php if ($action == 'list') { ?>
             <table class="table">
               <tr>
-                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_GEO_ZONES); ?></td>
-                <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></td>
+                <td><?php echo $zones_split->display_count($zones_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_GEO_ZONES); ?></td>
+                <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></td>
               </tr>
               <tr>
                 <td class="text-right" colspan="2"><?php if (empty($saction)) echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']) . '" class="btn btn-default" role="button">' . IMAGE_BACK . '</a> <a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&' . (isset($sInfo) ? 'sID=' . $sInfo->association_id . '&' : '') . 'saction=new') . '" class="btn btn-primary" role="button">' . IMAGE_INSERT . '</a>'; ?></td>
@@ -441,8 +441,8 @@ if (!empty($action)) {
           <?php } else { ?>
             <table class="table">
               <tr>
-                <td><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_GEO_ZONES); ?></td>
-                <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></td>
+                <td><?php echo $zones_split->display_count($zones_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_GEO_ZONES); ?></td>
+                <td class="text-right"><?php echo $zones_split->display_links($zones_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['zpage'], '', 'zpage'); ?></td>
               </tr>
               <tr>
                 <td class="text-right" colspan="2"><?php if (!$action) echo '<a href="' . zen_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone') . '" class="btn btn-primary" role="button">' . IMAGE_INSERT . '</a>'; ?></td>

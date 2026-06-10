@@ -17,13 +17,14 @@ if (PHP_VERSION_ID < 80300) {
  * the elements to be initialised and the order in which that happens.
  *
  */
-require_once('includes/application_bootstrap.php');
+require_once 'includes/application_bootstrap.php';
+
 /**
  * Prepare init-system
  */
 
-use Zencart\InitSystem\InitSystem;
 use Zencart\FileSystem\FileSystem;
+use Zencart\InitSystem\InitSystem;
 
 if (isset($loaderPrefix)) {
     $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
@@ -32,7 +33,9 @@ if (isset($loaderPrefix)) {
 }
 $initSystem = new InitSystem('admin', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
-if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $initSystem->setDebug(true);
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) {
+    $initSystem->setDebug(true);
+}
 
 $loaderList = $initSystem->loadAutoLoaders();
 $initSystemList = $initSystem->processLoaderList($loaderList);

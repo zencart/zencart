@@ -5,9 +5,7 @@ namespace Tests\FeatureStore\GVCoupons;
 use Tests\Support\Traits\LogFileConcerns;
 use Tests\Support\zcInProcessFeatureTestCaseStore;
 
-/**
- * @group parallel-candidate
- */
+#[\PHPUnit\Framework\Attributes\Group('parallel-candidate')]
 class GiftVoucherRedeemReadOnlyTest extends zcInProcessFeatureTestCaseStore
 {
     use LogFileConcerns;
@@ -16,9 +14,9 @@ class GiftVoucherRedeemReadOnlyTest extends zcInProcessFeatureTestCaseStore
     protected $preserveGlobalState = false;
 
     /**
-     * @test
      * scenario GV 1
      */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testGvRedeemGuestNoGVNum(): void
     {
         $response = $this->visitGiftVoucherRedeem()

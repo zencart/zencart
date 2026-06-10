@@ -92,7 +92,7 @@ if (!empty($action)) {
                 $classes_query_raw = "SELECT tax_class_id, tax_class_title, tax_class_description, last_modified, date_added
                                       FROM " . TABLE_TAX_CLASS . "
                                       ORDER BY tax_class_title";
-                $classes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $classes_query_raw, $classes_query_numrows);
+                $classes_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $classes_query_raw, $classes_query_numrows);
                 $classes = $db->Execute($classes_query_raw);
                 foreach ($classes as $class) {
                   if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $class['tax_class_id']))) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
@@ -175,8 +175,8 @@ if (!empty($action)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $classes_split->display_count($classes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></td>
-            <td class="text-right"><?php echo $classes_split->display_links($classes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $classes_split->display_count($classes_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></td>
+            <td class="text-right"><?php echo $classes_split->display_links($classes_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
           <?php
           if (empty($action)) {

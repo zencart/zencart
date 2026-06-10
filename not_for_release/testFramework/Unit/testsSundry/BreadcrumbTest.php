@@ -38,9 +38,9 @@ class BreadcrumbTest extends zcUnitTestCase
         'Zen Cart' => 'https://zen-cart.com'
     );
 
-    public function setup(): void
+    public function setUp(): void
     {
-        parent::setup();
+        parent::setUp();
         require_once DIR_FS_CATALOG . 'includes/classes/breadcrumb.php';
     }
 
