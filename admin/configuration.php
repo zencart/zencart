@@ -112,7 +112,7 @@ if ($gID === 7) {
     if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
         $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
     }
-    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && MODULE_SHIPPING_FREESHIPPER_STATUS !== 'True') {
+    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (!defined('MODULE_SHIPPING_FREESHIPPER_STATUS') || MODULE_SHIPPING_FREESHIPPER_STATUS !== 'True')) {
         $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
     }
     if ($shipping_errors !== '') {
@@ -191,7 +191,7 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
     if (isset($_GET['cID']) && $_GET['cID'] === $item['configuration_id']) {
-        $focusField = $fieldName;
+        $focusField = 'configuration[' . $fieldName . ']';
     }
 
     if (defined('CFGTITLE_' . $item['configuration_key'])) {
