@@ -53,12 +53,12 @@ if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_PO
 if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['action'] == 'update'))) {
   $process = true;
 
-  if (ACCOUNT_GENDER == 'true') $gender = zen_db_prepare_input($_POST['gender']);
-  if (ACCOUNT_COMPANY == 'true') $company = zen_db_prepare_input($_POST['company']);
+  if (zen_config('ACCOUNT_GENDER') === 'true') $gender = zen_db_prepare_input($_POST['gender']);
+  if (zen_config('ACCOUNT_COMPANY') === 'true') $company = zen_db_prepare_input($_POST['company']);
   $firstname = zen_db_prepare_input(zen_sanitize_string($_POST['firstname']));
   $lastname = zen_db_prepare_input(zen_sanitize_string($_POST['lastname']));
   $street_address = zen_db_prepare_input($_POST['street_address']);
-  if (ACCOUNT_SUBURB == 'true') $suburb = zen_db_prepare_input($_POST['suburb']);
+  if (zen_config('ACCOUNT_SUBURB') === 'true') $suburb = zen_db_prepare_input($_POST['suburb']);
   $postcode = zen_db_prepare_input($_POST['postcode']);
   $city = zen_db_prepare_input($_POST['city']);
 
@@ -66,7 +66,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
   /**
    * error checking when updating or adding an entry
    */
-  if (ACCOUNT_STATE == 'true') {
+  if (zen_config('ACCOUNT_STATE') === 'true') {
     $state = (isset($_POST['state'])) ? zen_db_prepare_input($_POST['state']) : '';
     if (isset($_POST['zone_id'])) {
       $zone_id = zen_db_prepare_input($_POST['zone_id']);
@@ -76,34 +76,34 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
   }
   $country = zen_db_prepare_input($_POST['zone_country_id']);
 
-  if (ACCOUNT_GENDER == 'true') {
+  if (zen_config('ACCOUNT_GENDER') === 'true') {
     if ( ($gender != 'm') && ($gender != 'f') ) {
       $error = true;
       $messageStack->add('addressbook', ENTRY_GENDER_ERROR);
     }
   }
 
-  if (mb_strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+  if (mb_strlen($firstname) < zen_config('ENTRY_FIRST_NAME_MIN_LENGTH')) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_FIRST_NAME_ERROR);
   }
 
-  if (mb_strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+  if (mb_strlen($lastname) < zen_config('ENTRY_LAST_NAME_MIN_LENGTH')) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_LAST_NAME_ERROR);
   }
 
-  if (mb_strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
+  if (mb_strlen($street_address) < zen_config('ENTRY_STREET_ADDRESS_MIN_LENGTH')) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_STREET_ADDRESS_ERROR);
   }
 
-  if (mb_strlen($city) < ENTRY_CITY_MIN_LENGTH) {
+  if (mb_strlen($city) < zen_config('ENTRY_CITY_MIN_LENGTH')) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_CITY_ERROR);
   }
 
-  if (ACCOUNT_STATE == 'true') {
+  if (zen_config('ACCOUNT_STATE') === 'true') {
     $check_query = "SELECT count(*) AS total
                     FROM " . TABLE_ZONES . "
                     WHERE zone_country_id = :zoneCountryID";
@@ -145,7 +145,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
         $messageStack->add('addressbook', ENTRY_STATE_ERROR_SELECT);
       }
     } else {
-      if (mb_strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+      if (mb_strlen($state) < zen_config('ENTRY_STATE_MIN_LENGTH')) {
         $error = true;
         $error_state_input = true;
         $messageStack->add('addressbook', ENTRY_STATE_ERROR);
@@ -153,7 +153,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
     }
   }
 
-  if (mb_strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
+  if (mb_strlen($postcode) < zen_config('ENTRY_POSTCODE_MIN_LENGTH')) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_POST_CODE_ERROR);
   }
@@ -177,10 +177,10 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
                            array('fieldName'=>'entry_city', 'value'=>$city, 'type'=>'stringIgnoreNull'),
                            array('fieldName'=>'entry_country_id', 'value'=>$country, 'type'=>'integer'));
 
-    if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'enum:m|f');
-    if (ACCOUNT_COMPANY == 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
-    if (ACCOUNT_SUBURB == 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
-    if (ACCOUNT_STATE == 'true') {
+    if (zen_config('ACCOUNT_GENDER') === 'true') $sql_data_array[] = array('fieldName'=>'entry_gender', 'value'=>$gender, 'type'=>'enum:m|f');
+    if (zen_config('ACCOUNT_COMPANY') === 'true') $sql_data_array[] = array('fieldName'=>'entry_company', 'value'=>$company, 'type'=>'stringIgnoreNull');
+    if (zen_config('ACCOUNT_SUBURB') === 'true') $sql_data_array[] = array('fieldName'=>'entry_suburb', 'value'=>$suburb, 'type'=>'stringIgnoreNull');
+    if (zen_config('ACCOUNT_STATE') === 'true') {
       if ($zone_id > 0) {
         $sql_data_array[] = array('fieldName'=>'entry_zone_id', 'value'=>$zone_id, 'type'=>'integer');
         $sql_data_array[] = array('fieldName'=>'entry_state', 'value'=>'', 'type'=>'stringIgnoreNull');
@@ -210,7 +210,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
                                 array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'customers_default_address_id', 'value'=>$_GET['edit'], 'type'=>'integer'));
 
-        if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'enum:m|f');
+        if (zen_config('ACCOUNT_GENDER') === 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'enum:m|f');
         $where_clause = "customers_id = :customersID";
         $where_clause = $db->bindVars($where_clause, ':customersID', $_SESSION['customer_id'], 'integer');
         $db->perform(TABLE_CUSTOMERS, $sql_data_array, 'update', $where_clause);
@@ -237,7 +237,7 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
         $sql_data_array = array(array('fieldName'=>'customers_firstname', 'value'=>$firstname, 'type'=>'stringIgnoreNull'),
                                 array('fieldName'=>'customers_lastname', 'value'=>$lastname, 'type'=>'stringIgnoreNull'));
 
-        if (ACCOUNT_GENDER == 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
+        if (zen_config('ACCOUNT_GENDER') === 'true') $sql_data_array[] = array('fieldName'=>'customers_gender', 'value'=>$gender, 'type'=>'stringIgnoreNull');
         //if (isset($_POST['primary']) && ($_POST['primary'] == 'on'))
         $sql_data_array[] = array('fieldName'=>'customers_default_address_id', 'value'=>$new_address_book_id, 'type'=>'integer');
 
@@ -321,15 +321,15 @@ if (!isset($_GET['delete'])) {
   if ($process == false) {
     $selected_country = $entry->fields['entry_country_id'];
   } else {
-    $selected_country = (isset($_POST['zone_country_id']) && $_POST['zone_country_id'] != '') ? $country : SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
+    $selected_country = (isset($_POST['zone_country_id']) && $_POST['zone_country_id'] != '') ? $country : zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY');
     $entry->fields['entry_country_id'] = $selected_country;
   }
-  $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN == 'true' || $error_state_input) ? true : false;
+  $flag_show_pulldown_states = ((($process == true || $entry_state_has_zones == true) && $zone_name == '') || zen_config('ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN') === 'true' || $error_state_input) ? true : false;
   $state = ($flag_show_pulldown_states && $state !== '') ? $state : $zone_name;
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 }
 
-if (!isset($_GET['delete']) && !isset($_GET['edit']) && count(zen_get_customer_address_book_entries($_SESSION['customer_id'])) >= MAX_ADDRESS_BOOK_ENTRIES) {
+if (!isset($_GET['delete']) && !isset($_GET['edit']) && count(zen_get_customer_address_book_entries($_SESSION['customer_id'])) >= zen_config('MAX_ADDRESS_BOOK_ENTRIES')) {
   $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
   zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 }

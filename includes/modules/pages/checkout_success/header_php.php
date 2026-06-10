@@ -118,7 +118,7 @@ if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
         }
     }
 
-    $flag_show_products_notification = (CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS === '1' && count($notificationsArray) > 0 && $flag_global_notifications !== '1');
+    $flag_show_products_notification = (zen_config('CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS') === '1' && count($notificationsArray) > 0 && $flag_global_notifications !== '1');
 
     $gv_balance = $customer->getData('gv_balance');
     $customer_has_gv_balance = !empty($gv_balance);
@@ -158,7 +158,7 @@ if (!isset($_GET['action']) || $_GET['action'] !== 'confirm') {
     echo
         '<body style="text-align: center; min-width: 600px;">' . "\n" .
         '<div style="text-align: center;  width: 600px;  margin-left: auto;  margin-right: auto; margin-top:20%;">
-         <p>This page will automatically redirect you back to ' . STORE_NAME . ' for your order confirmation details.<br>If you are not redirected within 5 seconds, please click the button below to continue.</p>' .
+         <p>This page will automatically redirect you back to ' . zen_config('STORE_NAME') . ' for your order confirmation details.<br>If you are not redirected within 5 seconds, please click the button below to continue.</p>' .
         "\n" .
         '<form action="' . zen_href_link(FILENAME_CHECKOUT_SUCCESS, zen_get_all_get_params(array('action')), 'SSL', false) . '" method="post" name="formpost">' . "\n";
     foreach ($_POST as $key => $value) {

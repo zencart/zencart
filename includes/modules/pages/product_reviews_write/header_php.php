@@ -53,7 +53,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $antiSpam = !empty($_POST[$antiSpamFieldName]) ? 'spam' : '';
   $zco_notifier->notify('NOTIFY_REVIEWS_WRITE_CAPTCHA_CHECK');
 
-  if (mb_strlen($review_text) < REVIEW_TEXT_MIN_LENGTH) {
+  if (mb_strlen($review_text) < zen_config('REVIEW_TEXT_MIN_LENGTH')) {
     $error = true;
     $messageStack->add('review_text', JS_REVIEW_TEXT);
   }
@@ -70,7 +70,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
     } else {
 
       $review_status = '1';
-      if (REVIEWS_APPROVAL == '1') {
+      if (zen_config('REVIEWS_APPROVAL') === '1') {
         $review_status = '0';
       }
 
@@ -98,7 +98,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $db->Execute($sql);
 
       $email_text = '';
-      $send_admin_email = REVIEWS_APPROVAL == '1' && SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS == '1' && defined('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO') && SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO !='';
+      $send_admin_email = REVIEWS_APPROVAL == '1' && zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS') === '1' && zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', '') !== '';
 
       $zco_notifier->notify('NOTIFY_SEND_ADMIN_EMAIL_WRITE_REVIEW');
       // send review-notification email to admin
@@ -113,11 +113,11 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
         $extra_info=email_collect_extra_info('', '', $reviewer->fields['customers_firstname'] . ' ' . $reviewer->fields['customers_lastname'] , $reviewer->fields['customers_email_address'] );
         $html_msg['EXTRA_INFO'] = $extra_info['HTML'];
         $zco_notifier->notify('NOTIFY_EMAIL_READY_WRITE_REVIEW');
-        zen_mail('', SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO, $email_subject, $email_text . $extra_info['TEXT'], STORE_NAME, EMAIL_FROM, $html_msg, 'reviews_extra');
+        zen_mail('', zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO'), $email_subject, $email_text . $extra_info['TEXT'], zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'reviews_extra');
       }
       // end send email
 
-      $messageStack->add_session('product_info', (REVIEWS_APPROVAL == '1') ? TEXT_REVIEW_SUBMITTED_FOR_REVIEW : TEXT_REVIEW_SUBMITTED, 'success');
+      $messageStack->add_session('product_info', (zen_config('REVIEWS_APPROVAL') === '1') ? TEXT_REVIEW_SUBMITTED_FOR_REVIEW : TEXT_REVIEW_SUBMITTED, 'success');
     }
     zen_redirect(zen_href_link(FILENAME_PRODUCT_REVIEWS, zen_get_all_get_params(array('action'))));
   }
@@ -136,7 +136,7 @@ if ($product_info->fields['products_model'] != '') {
 
 // set image
 $products_image = $product_info->fields['products_image'];
-if ($product_info->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
+if ($product_info->fields['products_image'] == '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
   $products_image = PRODUCTS_IMAGE_NO_IMAGE;
 }
 

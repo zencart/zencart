@@ -38,7 +38,7 @@ if (zen_get_customer_validate_session($_SESSION['customer_id']) === false) {
   }
 
 // Stock Check
-  if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
+  if ( (zen_config('STOCK_CHECK') === 'true') && (zen_config('STOCK_ALLOW_CHECKOUT') !== 'true') ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $qtyAvailable = zen_get_products_stock($products[$i]['id']);
@@ -103,17 +103,17 @@ if (isset($_SESSION['cart']->cartID)) {
 
   $pass = true;
   $free_shipping = false;
-  if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') ) {
+  if (zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') === 'true') {
     $pass = false;
 
-    switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
+    switch (zen_config('MODULE_ORDER_TOTAL_SHIPPING_DESTINATION')) {
       case 'national':
-        if ($order->delivery['country_id'] == STORE_COUNTRY) {
+        if ($order->delivery['country_id'] == zen_config('STORE_COUNTRY')) {
           $pass = true;
         }
         break;
       case 'international':
-        if ($order->delivery['country_id'] != STORE_COUNTRY) {
+        if ($order->delivery['country_id'] != zen_config('STORE_COUNTRY')) {
           $pass = true;
         }
         break;
@@ -122,7 +122,7 @@ if (isset($_SESSION['cart']->cartID)) {
         break;
     }
 
-    if ( ($pass == true) && ($_SESSION['cart']->show_total() >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
+    if ( ($pass == true) && ($_SESSION['cart']->show_total() >= zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) ) {
       $free_shipping = true;
     }
   }
@@ -208,7 +208,7 @@ if (isset($_SESSION['cart']->cartID)) {
   if ((!isset($_SESSION['shipping']) || (!isset($_SESSION['shipping']['id']) || $_SESSION['shipping']['id'] == '') && zen_count_shipping_modules() >= 1)) $_SESSION['shipping'] = $shipping_modules->cheapest();
 
   // Should address-edit button be offered?
-  $displayAddressEdit = (MAX_ADDRESS_BOOK_ENTRIES >= 2);
+  $displayAddressEdit = (zen_config('MAX_ADDRESS_BOOK_ENTRIES') >= 2);
 
   // if shipping-edit button should be overridden, do so
   $editShippingButtonLink = zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL');

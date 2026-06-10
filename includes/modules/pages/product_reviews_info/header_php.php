@@ -104,7 +104,7 @@
 
 // set image
 //  $products_image = $review_info->fields['products_image'];
-  if ($review_info->fields['products_image'] == '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == '1') {
+  if ($review_info->fields['products_image'] == '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
     $products_image = PRODUCTS_IMAGE_NO_IMAGE;
   } else {
     $products_image = $review_info->fields['products_image'];

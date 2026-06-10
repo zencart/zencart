@@ -89,7 +89,7 @@ if (($_GET['action'] ?? '') === 'process') {
         $body = sprintf(
             EMAIL_PASSWORD_RESET_BODY,
             zen_get_ip_address(),
-            STORE_NAME,
+            zen_config('STORE_NAME'),
             $reset_url_text
         );
 
@@ -100,7 +100,7 @@ if (($_GET['action'] ?? '') === 'process') {
             $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(
                 EMAIL_PASSWORD_RESET_HTML,
                 htmlspecialchars(zen_get_ip_address(), ENT_QUOTES, CHARSET),
-                htmlspecialchars(STORE_NAME, ENT_QUOTES, CHARSET),
+                htmlspecialchars(zen_config('STORE_NAME'), ENT_QUOTES, CHARSET),
                 htmlspecialchars($reset_url, ENT_QUOTES, CHARSET)
             );
         } else {
@@ -108,7 +108,7 @@ if (($_GET['action'] ?? '') === 'process') {
         }
 
         // Send the email
-        zen_mail($name, $email_address, EMAIL_PASSWORD_RESET_SUBJECT, $body, STORE_NAME, EMAIL_FROM, $html_msg, 'password_forgotten');
+        zen_mail($name, $email_address, EMAIL_PASSWORD_RESET_SUBJECT, $body, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'password_forgotten');
 
         // handle 3rd-party integrations
         $zco_notifier->notify('NOTIFY_PASSWORD_RESET_URL_SENT', $email_address, $check_customer['customers_id'], $token);

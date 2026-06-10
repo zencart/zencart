@@ -31,8 +31,8 @@ $numberOfItemsInCart = $_SESSION['cart']->count_contents();
 $cartTotalPrice = $_SESSION['cart']->show_total();
 
 
-$prodImgWidth = (int)IMAGE_SHOPPING_CART_WIDTH;
-$prodImgHeight = (int)IMAGE_SHOPPING_CART_HEIGHT;
+$prodImgWidth = (int)zen_config('IMAGE_SHOPPING_CART_WIDTH');
+$prodImgHeight = (int)zen_config('IMAGE_SHOPPING_CART_HEIGHT');
 
 $flagAnyOutOfStock = false;
 
@@ -53,7 +53,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
     $productsModel = $products[$i]['model'];
     // Push all attribute information into an array
     if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
-        if (PRODUCTS_OPTIONS_SORT_ORDER == '0') {
+        if (zen_config('PRODUCTS_OPTIONS_SORT_ORDER') === '0') {
             $options_order_by = " ORDER BY LPAD(popt.products_options_sort_order,11,'0')";
         } else {
             $options_order_by = ' ORDER BY popt.products_options_name';
@@ -80,7 +80,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
             }
 
             if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
-                $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . TEXT_PREFIX . $option . ']', $products[$i]['attributes_values'][$option]);
+                $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . zen_config('TEXT_PREFIX') . $option . ']', $products[$i]['attributes_values'][$option]);
                 $attr_value = htmlspecialchars($products[$i]['attributes_values'][$option], ENT_COMPAT, CHARSET, TRUE);
             } else {
                 $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
@@ -99,18 +99,18 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
     } //end foreach [attributes]
 
     // Stock Check
-    if (STOCK_CHECK == 'true') {
+    if (zen_config('STOCK_CHECK') === 'true') {
         $qtyAvailable = zen_get_products_stock($products[$i]['id']);
         // compare against product inventory, and against mixed=YES
         if ($qtyAvailable - $products[$i]['quantity'] < 0 || $qtyAvailable - $_SESSION['cart']->in_cart_mixed($products[$i]['id']) < 0) {
-            $flagStockCheck = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+            $flagStockCheck = '<span class="markProductOutOfStock">' . zen_config('STOCK_MARK_PRODUCT_OUT_OF_STOCK') . '</span>';
             $flagAnyOutOfStock = true;
         }
     }
 
     $linkProductsImage = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
     $linkProductsName = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
-    $productsImage = (IMAGE_SHOPPING_CART_STATUS == 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], $prodImgWidth, $prodImgHeight) : '');
+    $productsImage = ((int)zen_config('IMAGE_SHOPPING_CART_STATUS') === 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], $prodImgWidth, $prodImgHeight) : '');
     $show_products_quantity_max = zen_get_products_quantity_order_max($products[$i]['id']);
     $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
     $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
@@ -128,14 +128,14 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
 
     $buttonDelete = true;
     $checkBoxDelete = true;
-    if (SHOW_SHOPPING_CART_DELETE == 1) {
+    if ((int)zen_config('SHOW_SHOPPING_CART_DELETE') === 1) {
         $checkBoxDelete = false;
-    } elseif (SHOW_SHOPPING_CART_DELETE == 2) {
+    } elseif ((int)zen_config('SHOW_SHOPPING_CART_DELETE') === 2) {
         $buttonDelete = false;
     }
 
     $buttonUpdate = '';
-    if (SHOW_SHOPPING_CART_UPDATE == 1 or SHOW_SHOPPING_CART_UPDATE == 3) {
+    if ((int)zen_config('SHOW_SHOPPING_CART_UPDATE') === 1 || (int)zen_config('SHOW_SHOPPING_CART_UPDATE') === 3) {
         if (!$showFixedQuantity) {
             $buttonUpdate = zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT);
         } else {
@@ -178,7 +178,7 @@ $cartShowTotal = $currencies->format($cartTotalPrice);
 
 // build shipping/items message with Tare included. We do this here in case any custom product stuff needs to alter the original values from the cart class
 $totalsDisplay = '';
-switch (SHOW_TOTALS_IN_CART) {
+switch (zen_config('SHOW_TOTALS_IN_CART')) {
     case ('1'):
         $totalsDisplay = TEXT_TOTAL_ITEMS . $numberOfItemsInCart . TEXT_TOTAL_WEIGHT . $shipping_weight . TEXT_PRODUCT_WEIGHT_UNIT . TEXT_TOTAL_AMOUNT . $cartShowTotal;
         break;

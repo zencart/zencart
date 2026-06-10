@@ -24,7 +24,7 @@ $reviews_query_raw = "SELECT r.reviews_id, rd.reviews_text, rd.reviews_title, r.
                       ORDER BY r.reviews_id DESC";
 
 $reviews_query_raw = $db->bindVars($reviews_query_raw, ':languageID', $_SESSION['languages_id'], 'integer');
-$reviews_split = new splitPageResults($reviews_query_raw, MAX_DISPLAY_NEW_REVIEWS);
+$reviews_split = new splitPageResults($reviews_query_raw, zen_config('MAX_DISPLAY_NEW_REVIEWS'));
 
 $breadcrumb->add(NAVBAR_TITLE);
 ?>
