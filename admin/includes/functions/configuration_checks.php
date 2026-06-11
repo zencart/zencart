@@ -4,19 +4,19 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
  */
- 
+
   /**
   *   Function used for configuration checks only.
   *   @param $variable - variable to be checked
-  *   @param $check_string - a json encoded array containing: 
+  *   @param $check_string - a json encoded array containing:
   *     error: defined constant containing error message
   *     id: id of the filter to apply. (May be mnemonic value of int.)
   *     options: per http://php.net/manual/en/function.filter-var.php
   *   @return - NULL; failure results in redirection inline.
   *
   * @since ZC v1.5.6
-  */ 
-function zen_validate_configuration_entry($variable, $check_string, $config_name = '')
+  */
+function zen_validate_configuration_entry(string $variable, string $check_string, string $config_name = '')
 {
     global $messageStack;
 
@@ -28,6 +28,7 @@ function zen_validate_configuration_entry($variable, $check_string, $config_name
     }
 
     $options = $data['options'];
+    $config_name = zen_output_string_protected($config_name);
 
     if (!defined($data['error'])) {
         switch (true) {
