@@ -156,5 +156,3 @@ function getDetectedURIs($adminDir = 'admin'): array
 
     return [$adminDir, $documentRoot, $catalogHttpServer, $catalogHttpUrl, $dir_ws_http_catalog];
 }
-
-

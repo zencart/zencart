@@ -707,7 +707,7 @@ class systemChecker
                 'fieldName' => 'admin_profile',
                 'fieldCheck' => 'Type',
                 'expectedResult' => 'INT(11)',
-            ]
+            ],
         ];
         $hasAdminProfiles = $this->dbVersionChecker($parameters);
         $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
@@ -747,7 +747,7 @@ class systemChecker
             return (int)$result->fields['admin_id'];
         }
 
-// first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
+        // first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
         $sql = "SELECT DISTINCT(admin_profile)
                 FROM " . $dbPrefixVal . "admin
                 ORDER BY admin_profile";
@@ -779,12 +779,12 @@ class systemChecker
         return false;
     }
 
-    function backupConfigureFiles($parameters): bool
+    public function backupConfigureFiles($parameters): bool
     {
         return true;
     }
 
-    function checkIsZCVersionCurrent(): bool
+    public function checkIsZCVersionCurrent(): bool
     {
         $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
 

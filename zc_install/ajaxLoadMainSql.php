@@ -90,7 +90,7 @@ if (isset($_POST['demoData'])) {
     // attempt to unzip demo images, failing silently if Zip extension isn't installed
     if (class_exists('ZipArchive')) {
         // system('unzip --q demo_images/images.zip -d ../images/');
-        $za = new ZipArchive;
+        $za = new ZipArchive();
         if ($za->open('demo_images/images.zip') === true) {
             $za->extractTo('../images');
             $za->close();
@@ -133,4 +133,3 @@ if ($d = dir($pluginsfolder)) {
 
 echo json_encode(['error' => $error, 'file' => $file]);
 die();
-

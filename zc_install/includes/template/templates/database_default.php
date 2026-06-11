@@ -22,7 +22,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         <?php
         }
     }
-    ?>
+?>
     <fieldset class="border rounded p-3 mt-2">
         <legend><?= TEXT_DATABASE_SETUP_SETTINGS ?></legend>
         <div class="row mb-2">
