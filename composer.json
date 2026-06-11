@@ -38,6 +38,7 @@
     },
     "require-dev": {
         "ext-pdo": "*",
+        "friendsofphp/php-cs-fixer": "^3.95",
         "guzzlehttp/guzzle": "^7.7",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^2.2",
