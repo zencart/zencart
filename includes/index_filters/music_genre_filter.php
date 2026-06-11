@@ -34,8 +34,8 @@ if (!isset($do_filter_list)) {
     $do_filter_list = false;
 }
 
-$and = $and ?? '';
-$sql_joins = $sql_joins ?? '';
+$and ??= '';
+$sql_joins ??= '';
 
 // show the products of a specified music_genre
 if (!empty($_GET['music_genre_id'])) {
@@ -86,7 +86,7 @@ $order_by = $default_sort_order ?? '';
 if (empty($order_by) || !empty($_GET['disp_order'])) {
     // Build ORDER BY sort chosen from dropdown, or apply defaults
     $order_by_backup = $order_by;
-    require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
+    require DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER);
     if (empty($order_by)) {
         $order_by = $order_by_backup;
     }

@@ -28,7 +28,9 @@ class objectInfo
      */
     public function objectInfo($object_array)
     {
-        if (!is_array($object_array)) return;
+        if (!is_array($object_array)) {
+            return;
+        }
 
         foreach ($object_array as $key => $value) {
             $this->$key = zen_db_prepare_input($value);
@@ -42,7 +44,9 @@ class objectInfo
      */
     public function updateObjectInfo($object_array)
     {
-        if (!is_array($object_array)) return;
+        if (!is_array($object_array)) {
+            return;
+        }
 
         foreach ($object_array as $key => $value) {
             $this->$key = zen_db_prepare_input($value);
@@ -72,9 +76,13 @@ class objectInfo
      */
     public function __get($field)
     {
-        if (isset($this->$field)) return $this->$field;
+        if (isset($this->$field)) {
+            return $this->$field;
+        }
 
-        if ($field == 'keys') return array();
+        if ($field == 'keys') {
+            return [];
+        }
 
         return null;
     }

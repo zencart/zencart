@@ -126,13 +126,13 @@ function zen_cfg_select_coupon_id(string $coupon_id, string $key = ''): string
     $coupons = Coupon::getAllCouponsByName();
     $coupon_array[] = [
         'id' => '0',
-        'text' => TEXT_NONE
+        'text' => TEXT_NONE,
     ];
 
     foreach ($coupons as $coupon) {
         $coupon_array[] = [
             'id' => $coupon['coupon_id'],
-            'text' => $coupon['coupon_name']
+            'text' => $coupon['coupon_name'],
         ];
     }
 
@@ -361,10 +361,10 @@ function zen_get_system_information(bool $privacy = false): array
     $mysql_slow_query_log_status = '';
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log'");
     if (!$result->EOF) {
-       $mysql_slow_query_log_status = '0';
-       if (in_array($result->fields['Value'] ?? '', ['On', 'ON', '1',], false)) {
-         $mysql_slow_query_log_status = '1';
-       }
+        $mysql_slow_query_log_status = '0';
+        if (in_array($result->fields['Value'] ?? '', ['On', 'ON', '1',], false)) {
+            $mysql_slow_query_log_status = '1';
+        }
     }
     $result = $db->Execute("SHOW VARIABLES LIKE 'slow\_query\_log\_file'");
     $mysql_slow_query_log_file = $result->fields['Value'] ?? '';
@@ -429,7 +429,7 @@ function zen_get_system_information(bool $privacy = false): array
     ];
 
     if ($privacy) {
-        unset ($systemInfo['mysql_slow_query_log_file']);
+        unset($systemInfo['mysql_slow_query_log_file']);
     }
 
     return $systemInfo;
@@ -535,7 +535,7 @@ function zen_draw_order_status_dropdown(string $field_name, $default_value, stri
     foreach ($statuses as $status) {
         $statuses_array[] = [
             'id' => $status['id'],
-            'text' => "{$status['text']} [{$status['id']}]"
+            'text' => "{$status['text']} [{$status['id']}]",
         ];
     }
     return zen_draw_pull_down_menu($field_name, $statuses_array, $default_value, $parms);
@@ -552,7 +552,8 @@ function zen_draw_order_status_dropdown(string $field_name, $default_value, stri
 function zen_get_language_icon(string|int $lookup): string
 {
     global $db;
-    $languages_icon = $db->Execute("
+    $languages_icon = $db->Execute(
+        "
         SELECT directory, image FROM " . TABLE_LANGUAGES . "
          WHERE languages_id = " . (int)$lookup . "
             OR code = '" . zen_db_input((string)$lookup) . "'
@@ -734,7 +735,8 @@ function zen_geo_zones_pull_down_coupon(string $parameters, $selected = ''): str
     $zones = $db->Execute(
         "SELECT geo_zone_id, geo_zone_name
            FROM " . TABLE_GEO_ZONES . "
-          ORDER BY geo_zone_name");
+          ORDER BY geo_zone_name"
+    );
 
     if ($selected == 0) {
         $select_string .= '<option value="0" SELECTED>' . TEXT_NONE . '</option>';
@@ -783,7 +785,7 @@ function zen_get_orders_comments(int|string $orders_id): string
 function zen_set_ezpage_status(int $pages_id, int $status, string $status_field): void
 {
     global $db, $sniffer;
-    
+
     // Use the $sniffer class to check if the field exists in the table
     if (!$sniffer->field_exists(TABLE_EZPAGES, $status_field)) {
         return; // invalid field, do not proceed
@@ -847,7 +849,7 @@ function zen_getOrdersStatuses(bool $keyed = false): array
  */
 function zen_get_customer_email_from_id(int|string $cid): string
 {
-   global $db;
-   $query = $db->Execute("SELECT customers_email_address FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cid);
-   return ($query->EOF) ? '' : $query->fields['customers_email_address'];
+    global $db;
+    $query = $db->Execute("SELECT customers_email_address FROM " . TABLE_CUSTOMERS . " WHERE customers_id = " . (int)$cid);
+    return ($query->EOF) ? '' : $query->fields['customers_email_address'];
 }

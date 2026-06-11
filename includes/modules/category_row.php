@@ -83,8 +83,8 @@ foreach ($categories as $next_category) {
     if ($category_row_layout_style === 'columns') {
         $style = ' style="width:' . $col_width . '%;"';
     }
-    $grid_category_card_params = $grid_category_card_params ?? 'categoryListBoxContents centeredContent back gridlayout';
-    $grid_category_wrap_classes = $grid_category_wrap_classes ?? '';
+    $grid_category_card_params ??= 'categoryListBoxContents centeredContent back gridlayout';
+    $grid_category_wrap_classes ??= '';
     $list_box_contents[$rows][] = [
         'params' => 'class="' . $grid_category_card_params . '"' . $style,
         'text' =>

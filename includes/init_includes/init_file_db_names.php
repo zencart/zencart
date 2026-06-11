@@ -11,7 +11,7 @@
 use Zencart\Request\Request;
 
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 
 /**
@@ -24,7 +24,9 @@ $request_type = Request::isSecure() ? 'SSL' : 'NONSSL';
 /**
  * set php_self in the local scope
  */
-if (!isset($PHP_SELF)) $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+if (!isset($PHP_SELF)) {
+    $PHP_SELF = $_SERVER['SCRIPT_NAME'];
+}
 /**
  * require global definitons for Filenames
  */
@@ -46,5 +48,5 @@ $ws_extra_datafiles_directory = DIR_WS_INCLUDES . 'extra_datafiles/';
 
 // Check for new database tables and filenames etc in extra_datafiles directory, usually for plugins
 foreach (glob($extra_datafiles_directory . '*.php') ?? [] as $file) {
-    include($ws_extra_datafiles_directory . basename($file));
+    include $ws_extra_datafiles_directory . basename($file);
 }

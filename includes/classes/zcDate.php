@@ -7,14 +7,16 @@
  */
 class zcDate extends base
 {
-    protected
-        $useIntlDate = false,
-        $useStrftime = false,
-        $locale,                //- Only used when $this->useIntlDate is true
-        $strftime2date,         //- Only used when $this->useStrftime is false
-        $strftime2intl,         //- Only used when $this->useStrftime is false
-        $debug = false,
-        $dateObject;
+    protected $useIntlDate = false;
+    protected $useStrftime = false;
+    protected $locale;
+    //- Only used when $this->useIntlDate is true
+    protected $strftime2date;
+    //- Only used when $this->useStrftime is false
+    protected $strftime2intl;
+    //- Only used when $this->useStrftime is false
+    protected $debug = false;
+    protected $dateObject;
 
     // -----
     // Initial construction; initializes the conversion arrays and determines which PHP
@@ -81,7 +83,7 @@ class zcDate extends base
         ];
         $this->strftime2date = [
             'from' => array_keys($strftime2date),
-            'to' => array_values($strftime2date)
+            'to' => array_values($strftime2date),
         ];
 
         if ($this->useIntlDate === true) {
@@ -130,7 +132,7 @@ class zcDate extends base
             ];
             $this->strftime2intl = [
                 'from' => array_keys($strftime2intl),
-                'to' => array_values($strftime2intl)
+                'to' => array_values($strftime2intl),
             ];
         }
     }
@@ -175,15 +177,15 @@ class zcDate extends base
         if ($this->useStrftime === true) {
             $converted_format = $format;
             $output = strftime($format, $timestamp);
-        // -----
-        // Otherwise, if there's no international date support, format the requested string using date.
-        //
+            // -----
+            // Otherwise, if there's no international date support, format the requested string using date.
+            //
         } elseif ($this->useIntlDate === false) {
             $converted_format = $this->convertFormat($format, $this->strftime2date);
             $output = date($converted_format, $timestamp);
-        // -----
-        // Otherwise, the string is to be formatted using the IntlDateFormatter ...
-        //
+            // -----
+            // Otherwise, the string is to be formatted using the IntlDateFormatter ...
+            //
         } else {
             // -----
             // If the locale has changes (as it might between the class construction and

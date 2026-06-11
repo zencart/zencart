@@ -11,6 +11,7 @@ use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PageLoader\PageLoader;
+
 /**
  * boolean used to see if we are in the admin script, obviously set to false here.
  * DO NOT REMOVE THE define BELOW. WILL BREAK ADMIN
@@ -29,7 +30,7 @@ if (basename($PHP_SELF, '.php') === 'index') {
 $PHP_SELF = htmlspecialchars($PHP_SELF, ENT_COMPAT);
 $_SERVER['SCRIPT_NAME'] = str_replace($serverScript, '', $_SERVER['SCRIPT_NAME']) . $PHP_SELF;
 // Suppress html from error messages
-@ini_set("html_errors","0");
+@ini_set("html_errors", "0");
 /*
  * Get time zone info from PHP config
 */
@@ -44,7 +45,9 @@ if ($detected_locale === false || $detected_locale === 'C') {
     setlocale(LC_TIME, ['en_US', 'en_US.UTF-8', 'en-US', 'en']);
 }
 
-if (!defined('DIR_FS_ADMIN')) define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
+if (!defined('DIR_FS_ADMIN')) {
+    define('DIR_FS_ADMIN', preg_replace('#/includes/$#', '/', realpath(__DIR__ . '/../') . '/'));
+}
 
 /**
  * Ensure minimum PHP version.
@@ -59,26 +62,26 @@ if (PHP_VERSION_ID < 80300) {
 }
 
 if (file_exists('../not_for_release/testFramework/Support/application_testing.php')) {
-    require('../not_for_release/testFramework/Support/application_testing.php');
+    require '../not_for_release/testFramework/Support/application_testing.php';
 }
 /**
  * check for and load application configuration parameters
  */
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     if (file_exists('includes/local/configure.php')) {
-        include('includes/local/configure.php');
+        include 'includes/local/configure.php';
     } elseif (file_exists('../includes/local/configure.php')) {
-        include('../includes/local/configure.php');
+        include '../includes/local/configure.php';
     } elseif (file_exists('includes/configure.php')) {
-        include('includes/configure.php');
+        include 'includes/configure.php';
     } elseif (file_exists('../includes/configure.php')) {
-        include('../includes/configure.php');
+        include '../includes/configure.php';
     }
 }
 
-if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes') || !defined('DB_TYPE') || DB_TYPE === '') {
+if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG . '/includes/classes') || !defined('DB_TYPE') || DB_TYPE === '') {
     if (file_exists('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php')) {
-        require('../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php');
+        require '../includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
         exit;
     } elseif (file_exists('../zc_install/index.php')) {
         echo 'ERROR: configure.php not found. Suggest running install? <a href="../zc_install/index.php">Click here for installation</a>';
@@ -104,7 +107,7 @@ if (!defined('DEBUG_AUTOLOAD')) {
  *
  */
 if ((defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING === true)) {
-    @ini_set('display_errors', TRUE);
+    @ini_set('display_errors', true);
     error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
 } else {
     error_reporting(0);
@@ -117,7 +120,7 @@ if (file_exists('includes/defined_paths.php')) {
     /**
      * load the system-defined path constants
      */
-    require('includes/defined_paths.php');
+    require 'includes/defined_paths.php';
 } else {
     die('ERROR: /includes/defined_paths.php file not found. Cannot continue.');
     exit;
@@ -136,7 +139,7 @@ zen_enable_error_logging();
  * include the extra_configures files
  */
 foreach (glob(DIR_WS_INCLUDES . 'extra_configures/*.php') ?? [] as $file) {
-    include($file);
+    include $file;
 }
 /**
  * init some vars
@@ -147,7 +150,7 @@ zen_define_default('DIR_WS_TEMPLATES', DIR_WS_INCLUDES . 'templates/');
  * psr-4 autoloading
  */
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/AuraAutoload/src/Loader.php';
-$psr4Autoloader = new \Aura\Autoload\Loader;
+$psr4Autoloader = new \Aura\Autoload\Loader();
 $psr4Autoloader->register();
 require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'class.base.php';
@@ -160,9 +163,9 @@ $pluginManager = new PluginManager(new PluginControlRepository($db), new PluginC
 $installedPlugins = $pluginManager->getInstalledPlugins();
 
 $pageLoader = PageLoader::getInstance();
-$pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem);
+$pageLoader->init($installedPlugins, $PHP_SELF, new FileSystem());
 
-$fs = new FileSystem;
+$fs = new FileSystem();
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_configures', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, 'admin/includes/extra_datafiles', '~^[^\._].*\.php$~i');
 $fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^database_tables\.php$~i');

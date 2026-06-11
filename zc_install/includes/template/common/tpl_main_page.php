@@ -48,7 +48,7 @@ if (empty($hasFatalErrors) && empty($hasWarnErrors) && (!empty($hasUpdatedConfig
                     </form>
                 <?php
                 }
-                ?>
+?>
 
                 <h1><?= constant('TEXT_PAGE_HEADING_' . strtoupper($_GET['main_page'])) ?></h1>
 
@@ -59,7 +59,7 @@ if (empty($hasFatalErrors) && empty($hasWarnErrors) && (!empty($hasUpdatedConfig
                 $header_text = constant('TEXT_HEADER_MAIN');
             }
 
-            if (!empty($header_text && empty($skip_header))) { ?>
+if (!empty($header_text && empty($skip_header))) { ?>
                 <div class="alert alert-primary"><?= $header_text ?></div>
             <?php } ?>
 

@@ -13,7 +13,6 @@ use Tests\Support\zcUnitTestCase;
  */
 abstract class zcDiscountCouponTest extends zcUnitTestCase
 {
-
     /**
      * @param $qfrResult
      */
