@@ -296,14 +296,18 @@ class AdminRequestSanitizer extends base
         if (isset($_GET[$parameterName])) {
             $this->debugMessages[] = 'PROCESSING SIMPLE_ALPHANUM_PLUS(GET) == ' . $parameterName;
             $this->getKeysAlreadySanitized[] = $parameterName;
-            $_GET[$parameterName] = preg_replace('/[^\/ 0-9a-zA-Z_:@.-]/', '', $_GET[$parameterName]);
+            if (!is_int($_GET[$parameterName])) {
+                $_GET[$parameterName] = preg_replace('/[^\/ 0-9a-zA-Z_:@.-]/', '', $_GET[$parameterName]);
+            }
         }
         if (isset($_POST[$parameterName])) {
             // Add the parameterName to the base arrayname.
             $this->arrayName = $this->setCurrentArrayName($parameterName);
             $this->debugMessages[] = 'PROCESSING SIMPLE_ALPHANUM_PLUS(POST) == ' . $this->arrayName;
             $this->postKeysAlreadySanitized[] = $this->arrayName;
-            $_POST[$parameterName] = preg_replace('/[^\/ 0-9a-zA-Z_:@.-]/', '', $_POST[$parameterName]);
+            if (!is_int($_POST[$parameterName])) {
+                $_POST[$parameterName] = preg_replace('/[^\/ 0-9a-zA-Z_:@.-]/', '', $_POST[$parameterName]);
+            }
         }
     }
 
@@ -703,7 +707,7 @@ class AdminRequestSanitizer extends base
                     $this->arrayName = $currentArrayName;
                     $currentPostKeysAlreadySanitized = $this->postKeysAlreadySanitized;
                     $this->filterStrictSanitizeValues();
-                    //                    $this->arrayName = $currentArrayName; // Unnecessary as set below or in next loop.
+                    // $this->arrayName = $currentArrayName; // Unnecessary as set below or in next loop.
                     unset($this->postKeysAlreadySanitized);
                     $this->postKeysAlreadySanitized = $currentPostKeysAlreadySanitized;
                     unset($currentPostKeysAlreadySanitized);
@@ -768,16 +772,18 @@ class AdminRequestSanitizer extends base
             // Append the key of this item to the arrayname that called the sanitizer.
             $this->arrayName = $currentArrayName; // Set/reset $this->arrayName to the base for this iteration of the array.
             $this->arrayName = $this->setCurrentArrayName($k);
-            if ($inner || (!$inner && !in_array($this->arrayName, $ignore))) {
+            if ($inner || (!$inner && !in_array($this->arrayName, $ignore, false))) {
                 if (is_array($v)) {
                     $item[$k] = $this->traverseStrictSanitize($v, $ignore, true, $type);
                 } else {
-                    if (!in_array($this->arrayName, $ignore)) {
+                    if (!in_array($this->arrayName, $ignore, false)) {
                         $this->debugMessages[] = 'PROCESSING STRICT_SANITIZE_VALUES == ' . $this->arrayName;
-                        $item[$k] = htmlspecialchars($item[$k], ENT_COMPAT, $this->charset, true);
+                        if (!is_int($item[$k])) {
+                            $item[$k] = htmlspecialchars($item[$k], ENT_COMPAT, $this->charset, true);
+                        }
                         if ($inner) {
                             if ($type === 'post') {
-                                if (!in_array($this->arrayName, $ignore)) {
+                                if (!in_array($this->arrayName, $ignore, false)) {
                                     $this->postKeysAlreadySanitized[] = $this->arrayName;
                                     $this->arrayName = $currentArrayName;
                                 }
@@ -788,13 +794,13 @@ class AdminRequestSanitizer extends base
             }
             if (!$inner) {
                 if ($type === 'post') {
-                    if (!in_array($this->arrayName, $this->postKeysAlreadySanitized)) {
+                    if (!in_array($this->arrayName, $this->postKeysAlreadySanitized, false)) {
                         $this->postKeysAlreadySanitized[] = $this->arrayName;
                         $this->arrayName = $currentArrayName;
                     }
                 }
                 if ($type === 'get') {
-                    if (!in_array($k, $this->getKeysAlreadySanitized)) {
+                    if (!in_array($k, $this->getKeysAlreadySanitized, false)) {
                         $this->getKeysAlreadySanitized[] = $k;
                     }
                 }
