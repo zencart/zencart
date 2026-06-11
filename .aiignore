@@ -1,0 +1,66 @@
+# An .aiignore file follows the same syntax as a .gitignore file.
+# .gitignore documentation: https://git-scm.com/docs/gitignore
+
+configure.php
+configure.php.save
+local/configure*.php
+/vendor
+
+*.php1
+*.bak
+*.old
+devtools.php
+Thumbs.db
+clover.xml
+.DS_Store
+
+dev-*.*
+
+# IDE-specific things...
+/.idea
+*.iml
+/.vscode
+/.cursor/
+/.zed
+/auth.json
+_ide_helper.php
+# Eclipse project files:
+.project
+.settings
+.buildpath
+
+
+# dbv
+/data/meta/revision
+
+# images
+images/
+
+#testing
+not_for_release/testFramework/Support/configs/test-runner.env
+not_for_release/testFramework/Support/configs/test-runner.local.env
+not_for_release/testFramework/test-framework.env
+not_for_release/testFramework/test-framework.local.env
+localconfig_*.php
+!localconfig_github.php
+!localconfig_EXAMPLE.php
+includes/*.config.save
+admin/includes/*.config.save
+**/security_test.php
+
+#release process
+modified_files.txt
+
+# ignore phpunit cache file
+.phpunit.cache/
+.phpunit.result.cache
+
+.ddev
+
+/cache/
+/download/
+/extras/
+/media/
+/pub/
+
+/logs/

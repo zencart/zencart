@@ -5,6 +5,7 @@
 /phpunit.xml      export-ignore
 /phpunit.xml.dist export-ignore
 /crowdin.yml      export-ignore
+/.aiignore        export-ignore
 /AGENTS.md        export-ignore
 /CLAUDE.md        export-ignore
 /CLAUDE.local.md  export-ignore
