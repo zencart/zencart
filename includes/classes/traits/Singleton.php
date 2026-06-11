@@ -15,12 +15,12 @@ trait Singleton
 {
     private static array $instances = [];
 
-    final protected function __construct() { }
+    final protected function __construct() {}
 
     /**
      * @since ZC v1.5.7
      */
-    final protected function __clone() { }
+    final protected function __clone() {}
 
     /**
      * @since ZC v2.2.0
@@ -45,7 +45,7 @@ trait Singleton
     {
         $cls = get_called_class(); // late-static-bound class name
         if (!isset(self::$instances[$cls])) {
-            self::$instances[$cls] = new static;
+            self::$instances[$cls] = new static();
         }
         return self::$instances[$cls];
     }

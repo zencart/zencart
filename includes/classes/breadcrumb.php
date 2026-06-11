@@ -16,7 +16,9 @@ if (!defined('IS_ADMIN_FLAG')) {
  * If you desire to have the older behaviour of having all product and category items in the breadcrumb be shown as links
  * then you should add a define() for this item in the extra_datafiles folder and set it to 'false' instead of 'true':
  */
-if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', 'true');
+if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) {
+    define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', 'true');
+}
 
 /**
  * Handle page breadcrumbs
@@ -26,7 +28,7 @@ class breadcrumb extends base
 {
     protected $_trail = [];
 
-    function __construct()
+    public function __construct()
     {
         $this->reset();
     }
@@ -34,7 +36,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function reset()
+    public function reset()
     {
         $this->_trail = [];
     }
@@ -42,7 +44,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function add($title, $link = '')
+    public function add($title, $link = '')
     {
         $this->_trail[] = ['title' => $title, 'link' => $link];
     }
@@ -50,12 +52,12 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function trail($separator = '&nbsp;&nbsp;', $prefix = '', $suffix = '')
+    public function trail($separator = '&nbsp;&nbsp;', $prefix = '', $suffix = '')
     {
         $trail_string = '';
 
         for ($i = 0, $n = count($this->_trail); $i < $n; $i++) {
-        // echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br>';
+            // echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br>';
             $skip_link = false;
             if ($i == ($n - 1) && DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM == 'true') {
                 $skip_link = true;
@@ -73,7 +75,9 @@ class breadcrumb extends base
                 }
             }
 
-            if (($i + 1) < $n) $trail_string .= $separator;
+            if (($i + 1) < $n) {
+                $trail_string .= $separator;
+            }
             $trail_string .= "\n";
         }
 
@@ -83,7 +87,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function last()
+    public function last()
     {
         $trail_size = count($this->_trail);
         return $this->_trail[$trail_size - 1]['title'];
@@ -92,7 +96,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7c
      */
-    function removeLast()
+    public function removeLast()
     {
         $trail_size = count($this->_trail);
         unset($this->_trail[$trail_size - 1]);
@@ -101,9 +105,11 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7c
      */
-    function replaceLast($title = null, $link = null)
+    public function replaceLast($title = null, $link = null)
     {
-        if ($title === null && $link === null) return $this->removeLast();
+        if ($title === null && $link === null) {
+            return $this->removeLast();
+        }
 
         $trail_size = count($this->_trail);
         if ($title !== null) {
@@ -117,7 +123,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7
      */
-    function isEmpty()
+    public function isEmpty()
     {
         return empty($this->_trail);
     }
@@ -125,15 +131,15 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7
      */
-    function count()
+    public function count()
     {
         return count($this->_trail);
     }
     /**
      * @since ZC v1.5.8a
      */
-    function getTrail()
+    public function getTrail()
     {
-       return $this->_trail;
+        return $this->_trail;
     }
 }

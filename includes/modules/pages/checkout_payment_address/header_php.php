@@ -13,7 +13,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_CHECKOUT_PAYMENT_ADDRESS');
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
 if ($_SESSION['cart']->count_contents() <= 0) {
-  zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
+    zen_redirect(zen_href_link(FILENAME_SHOPPING_CART));
 }
 
 // if the customer is not logged on, redirect them to the login page
@@ -25,16 +25,16 @@ if (!zen_is_logged_in()) {
 $customer = new Customer($_SESSION['customer_id']);
 // validate customer
 if (zen_get_customer_validate_session($_SESSION['customer_id']) === false) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_SHIPPING));
+    $_SESSION['navigation']->set_snapshot(['mode' => 'SSL', 'page' => FILENAME_CHECKOUT_SHIPPING]);
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $addressType = "billto";
-require(DIR_WS_MODULES . zen_get_module_directory('checkout_new_address'));
+require DIR_WS_MODULES . zen_get_module_directory('checkout_new_address');
 // if no billing destination address was selected, use their own address as default
 if (empty($_SESSION['billto'])) {
-  $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

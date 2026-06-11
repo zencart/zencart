@@ -15,7 +15,7 @@ if ($current_page !== FILENAME_DISPLAY_LOGS . '.php' && (zen_is_superuser() || c
     $path = (defined('DIR_FS_LOGS')) ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
     $log_files = glob($path . '/myDEBUG-*.log');
     $num_log_files = ($log_files === false) ? 0 : count($log_files);
-    unset ($log_files);
+    unset($log_files);
     if ($num_log_files > 0) {
         $messageStack->add(sprintf(DISPLAY_LOGS_MESSAGE_LOGS_PRESENT, $num_log_files, zen_href_link(FILENAME_DISPLAY_LOGS)), 'caution');
     }

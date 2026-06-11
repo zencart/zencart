@@ -85,7 +85,7 @@ class payment
             $freecharger_enabled = (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') === 'True' && isset($modules_found['freecharger.php']));
             if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
                 $this->selected_module = $module;
-                $include_modules[] = ['class'=> 'freecharger', 'file' => 'freecharger.php'];
+                $include_modules[] = ['class' => 'freecharger', 'file' => 'freecharger.php'];
             } else {
                 // All Other Payment Modules show
                 foreach ($this->modules as $value) {
@@ -249,7 +249,7 @@ class payment
         $js .=  '    alert(error_message);' . "\n";
         $js .=  '    return false;' . "\n";
         $js .=  '  } else {' . "\n";
-        $js .=  ' var result = true; '  . "\n";
+        $js .=  ' var result = true; ' . "\n";
         if ($this->doesCollectsCardDataOnsite === true && zen_config('PADSS_AJAX_CHECKOUT') === '1') {
             $js .= '      result = !(doesCollectsCardDataOnsite(payment_value));' . "\n";
         }
@@ -282,7 +282,7 @@ class payment
                 $selection['fields'][] = [
                     'title' => '',
                     'field' => zen_draw_hidden_field($class . '_collects_onsite', 'true', 'id="' . $class . '_collects_onsite"'),
-                    'tag' => ''
+                    'tag' => '',
                 ];
             }
             if (is_array($selection)) {
@@ -362,7 +362,7 @@ class payment
      */
     public function process_button_ajax()
     {
-         if ($this->isPaymentModuleMethodPresent('process_button_ajax') === false) {
+        if ($this->isPaymentModuleMethodPresent('process_button_ajax') === false) {
             return;
         }
         return $GLOBALS[$this->selected_module]->process_button_ajax();
@@ -417,7 +417,7 @@ class payment
      */
     public function admin_notification($zf_order_id)
     {
-         if ($this->isPaymentModuleMethodPresent('admin_notification') === false) {
+        if ($this->isPaymentModuleMethodPresent('admin_notification') === false) {
             return;
         }
         return $GLOBALS[$this->selected_module]->admin_notification($zf_order_id);

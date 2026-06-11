@@ -246,10 +246,11 @@ zc_plugins/zenTestPlugin
 ppr_listener.php
 ppr_webhook.php
 
-# ignore phpunit cache file
+# Tests, Linting and Analysis
 .phpunit.cache/
 .phpunit.result.cache
-
+.php-cs-fixer.php
+.php-cs-fixer.cache
 
 # local per-dev control
 CLAUDE.local.md

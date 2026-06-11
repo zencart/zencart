@@ -33,7 +33,7 @@ if (defined('EO_VERSION') && version_compare(EO_VERSION, '4.2.0', '<')) {
 // Starting with v2.3.0 of POSM, check (if enabled) to see if any back-in-stock dates are within the expiration period.
 //
 if (((int)POSM_BIS_DATE_REMINDER) !== 0) {
-    $posm_check = $db->Execute (
+    $posm_check = $db->Execute(
         "SELECT pos.pos_id
            FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . " pos
              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " posn
@@ -53,7 +53,7 @@ if (((int)POSM_BIS_DATE_REMINDER) !== 0) {
 // - Subtract stock ............................... true
 //
 $configuration_array = [
-    'STOCK_LIMITED' => 'true'
+    'STOCK_LIMITED' => 'true',
 ];
 foreach ($configuration_array as $key => $value) {
     if (constant($key) !== $value) {

@@ -63,7 +63,7 @@ class ProductReviewsWriteInProcessTest extends zcInProcessFeatureTestCaseStore
         );
 
         $this->assertNotNull($review);
-        $this->assertSame('5', (string) $review['reviews_rating']);
+        $this->assertSame('5', (string)$review['reviews_rating']);
         $this->assertSame('Test Review', $review['reviews_title']);
         $this->assertSame('In-process review text for coverage that is long enough to pass validation.', $review['reviews_text']);
     }
