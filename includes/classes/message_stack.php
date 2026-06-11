@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * messageStack Class.
  *
@@ -46,7 +48,7 @@ class messageStack extends base
         $message = trim($message);
         $duplicate = false;
 
-        if (strlen($message) > 0) {
+        if ($message !== '') {
 
             $theAlert['class'] = $class;
 

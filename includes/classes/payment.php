@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Payment Class.
  *
@@ -27,31 +29,26 @@ class payment
 
     /**
      * $doesCollectsCardDataOnsite is a flag to indicate if card details are collected on site
-     * @var boolean
      */
     public bool $doesCollectsCardDataOnsite;
     /**
      * $form_action_url is the URL to process the payment or not set for local processing
-     * @var string
      */
     public string $form_action_url;
     /**
      * $modules array of payment module names
-     * @var array
      */
     public array $modules;
     /**
      * $paymentClass is a payment class
-     * @var class
      */
-    public $paymentClass;
+    public object $paymentClass;
     /**
      * $selected_module is the selected payment module
-     * @var string
      */
     public string $selected_module;
 
-    public function __construct($module = '')
+    public function __construct(string $module = '')
     {
         global $language, $credit_covers, $messageStack, $languageLoader, $installedPlugins;
 
@@ -76,14 +73,14 @@ class payment
 
         $include_modules = [];
 
-        if (!empty($module) && in_array($module . '.php', $this->modules) && isset($modules_found[$module . '.php'])) {
+        if (!empty($module) && in_array($module . '.php', $this->modules, true) && isset($modules_found[$module . '.php'])) {
             $this->selected_module = $module;
 
             $include_modules[] = ['class' => $module, 'file' => $module . '.php'];
         } else {
             // Free Payment Only shows
             $freecharger_enabled = (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') === 'True' && isset($modules_found['freecharger.php']));
-            if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
+            if ($freecharger_enabled && empty($_SESSION['cart']->show_total()) && empty($_SESSION['shipping']['cost'])) {
                 $this->selected_module = $module;
                 $include_modules[] = ['class' => 'freecharger', 'file' => 'freecharger.php'];
             } else {
@@ -91,7 +88,7 @@ class payment
                 foreach ($this->modules as $value) {
                     // double check that the module really exists before adding to the array
                     if (isset($modules_found[$value])) {
-                        $class = pathinfo($value, PATHINFO_FILENAME);
+                        $class = pathinfo($value, \PATHINFO_FILENAME);
                         // Don't show Free Payment Module
                         if ($class !== 'freecharger') {
                             $include_modules[] = ['class' => $class, 'file' => $value];
@@ -142,13 +139,13 @@ class payment
         // if there is only one payment method, select it as default because in
         // checkout_confirmation.php the $payment variable is being assigned the
         // $_POST['payment'] value which will be empty (no radio button selection possible)
-        if (zen_count_payment_modules() == 1 && (!isset($_SESSION['payment']) || !is_object($_SESSION['payment']))) {
+        if (zen_count_payment_modules() === 1 && (!isset($_SESSION['payment']) || !is_object($_SESSION['payment']))) {
             if (empty($credit_covers)) {
                 $_SESSION['payment'] = $include_modules[0]['class'];
             }
         }
 
-        if (!empty($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
+        if (!empty($module) && in_array($module, $this->modules, true) && isset($GLOBALS[$module]->form_action_url)) {
             $this->form_action_url = $GLOBALS[$module]->form_action_url;
         }
     }
@@ -169,12 +166,10 @@ class payment
         return $credit_is_covered;
     }
 
-    // -----
-    // This protected method is used by various public methods to
-    // perform common determination of whether the currently-selected
-    // module is present, enabled and includes the submitted method.
-    //
     /**
+     * This protected method is used by various public methods to
+     * perform common determination of whether the currently-selected
+     * module is present AND enabled AND includes the submitted method.
      * @since ZC v2.1.0
      */
     protected function isPaymentModuleMethodPresent(string $method): bool
@@ -235,7 +230,7 @@ class payment
             '  }' . "\n\n";
 
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (!empty($GLOBALS[$class]->enabled)) {
                 $js .= $GLOBALS[$class]->javascript_validation();
             }
@@ -271,7 +266,7 @@ class payment
 
         $selection_array = [];
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (empty($GLOBALS[$class]->enabled)) {
                 continue;
             }
@@ -303,7 +298,7 @@ class payment
 
         $result = false;
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
                 $module_result = $GLOBALS[$class]->in_special_checkout();
                 if ($module_result === true) {

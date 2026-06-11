@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * cache Class.
  *
@@ -124,7 +126,7 @@ class cache
     /**
      * @since ZC v1.2.0d
      */
-    public function sql_cache_store($zf_query, $zf_result_array): void
+    public function sql_cache_store(string $zf_query, array $zf_result_array): void
     {
         global $db;
         $zp_cache_name = $this->cache_generate_cache_name($zf_query);

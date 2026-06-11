@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Class ProductConfigurationSwitch
  *
@@ -9,34 +11,25 @@
  * @since ZC v1.5.8
  */
 
-class ProductConfigurationSwitch extends base
+class ProductConfigurationSwitch
 {
-    protected $layout_data = [];
-    protected $configuration_data = [];
-    protected $prefix;
-    protected $suffix;
-    protected $field_prefix;
-    protected $field_suffix;
-    protected $type_handler;
-    protected $products_type;
+    protected array $layout_data = [];
+    protected array $configuration_data = [];
+    protected string $type_handler;
+    protected int $products_type;
 
-    public function __construct($lookup, $prefix = 'SHOW_', $suffix = '_INFO', $field_prefix = '_', $field_suffix = '')
+    public function __construct($lookup, protected string $prefix = 'SHOW_', protected string $suffix = '_INFO', protected string $field_prefix = '_', protected string $field_suffix = '')
     {
         global $db;
-
-        $this->prefix = $prefix;
-        $this->suffix = $suffix;
-        $this->field_prefix = $field_prefix;
-        $this->field_suffix = $field_suffix;
 
         $sql = "SELECT products_type FROM " . TABLE_PRODUCTS . " WHERE products_id=" . (int)$lookup;
         $type_lookup = $db->Execute($sql, 1);
 
-        if ($type_lookup->RecordCount() == 0) {
-            return false;
+        if ($type_lookup->RecordCount() === 0) {
+            return;
         }
 
-        $this->products_type = $type_lookup->fields['products_type'];
+        $this->products_type = (int)$type_lookup->fields['products_type'];
 
         $sql = "SELECT type_handler FROM " . TABLE_PRODUCT_TYPES . " WHERE type_id = " . (int)$type_lookup->fields['products_type'];
         $show_key = $db->Execute($sql, 1);
@@ -63,22 +56,16 @@ class ProductConfigurationSwitch extends base
     /**
      * @since ZC v1.5.8
      */
-    public function getSwitch($field)
+    public function getSwitch($field): string|false
     {
         $switch = strtoupper($this->prefix . $this->type_handler . $this->suffix . $this->field_prefix . $field . $this->field_suffix);
-        if (isset($this->layout_data[$switch])) {
-            return $this->layout_data[$switch];
-        } elseif (isset($this->configuration_data[$switch])) {
-            return $this->configuration_data[$switch];
-        } else {
-            return false;
-        }
+        return $this->layout_data[$switch] ?? $this->configuration_data[$switch] ?? false;
     }
 
     /**
      * @since ZC v1.5.8
      */
-    public function getProductsType()
+    public function getProductsType(): int
     {
         return $this->products_type;
     }

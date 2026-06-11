@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * zcAjaxAdminDashboardWidgetArrange
  *
@@ -44,8 +46,8 @@ class zcAjaxAdminDashboardWidgetArrange extends base
         $clean_layout = [];
 
         foreach ($allowed_zones as $zone) {
+            $clean_layout[$zone] = [];
             if (isset($layout[$zone]) && is_array($layout[$zone])) {
-                $clean_layout[$zone] = [];
                 foreach ($layout[$zone] as $widget) {
                     // filter out empty elements that the ajax drag-drop might send
                     if (!is_string($widget) || empty(trim($widget))) {
@@ -62,8 +64,6 @@ class zcAjaxAdminDashboardWidgetArrange extends base
                     }
                     $clean_layout[$zone][] = $clean_widget;
                 }
-            } else {
-                $clean_layout[$zone] = [];
             }
         }
 

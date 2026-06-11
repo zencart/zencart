@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -6,7 +8,7 @@
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 /*
   Example usage:
@@ -23,31 +25,33 @@ if (!defined('IS_ADMIN_FLAG')) {
   echo $box->infoBox($heading, $contents);
 */
 
-    /**
-     * @since ZC v1.0.3
-     */
-class box extends boxTableBlock {
-      private
-          $heading,
-          $contents;
+/**
+ * @since ZC v1.0.3
+ */
+class box extends boxTableBlock
+{
+    private string $heading;
+    private string $contents;
 
-    function __construct() {
-      $this->heading = array();
-      $this->contents = array();
+    public function __construct()
+    {
+        $this->heading = '';
+        $this->contents = '';
     }
 
     /**
      * @since ZC v1.0.3
      */
-    function infoBox($heading, $contents) {
-      $this->table_row_parameters = 'infoBoxHeading';
-      $this->table_data_parameters = 'infoBoxHeading';
-      $this->heading = $this->tableBlock($heading);
+    public function infoBox(array $heading, array $contents): string
+    {
+        $this->table_row_parameters = 'infoBoxHeading';
+        $this->table_data_parameters = 'infoBoxHeading';
+        $this->heading = $this->tableBlock($heading);
 
-      $this->table_row_parameters = '';
-      $this->table_data_parameters = 'infoBoxContent';
-      $this->contents = $this->tableBlock($contents);
+        $this->table_row_parameters = '';
+        $this->table_data_parameters = 'infoBoxContent';
+        $this->contents = $this->tableBlock($contents);
 
-      return $this->heading . $this->contents;
+        return $this->heading . $this->contents;
     }
 }

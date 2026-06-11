@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -34,11 +36,10 @@ class TemplateResolver
         ?string $pluginsRoot = null,
         ?array $installedPlugins = null,
         ?PluginManager $pluginManager = null
-    )
-    {
-        $this->catalogRoot = $this->normalizeDirectory($catalogRoot ?? (defined('DIR_FS_CATALOG') ? DIR_FS_CATALOG : dirname(__DIR__, 2)));
-        $this->coreTemplatesPath = $this->normalizeDirectory($coreTemplatesPath ?? $this->catalogRoot . '/includes/templates');
-        $this->pluginsRoot = $this->normalizeDirectory($pluginsRoot ?? $this->catalogRoot . '/zc_plugins');
+    ) {
+        $this->catalogRoot = self::normalizeDirectory($catalogRoot ?? (defined('DIR_FS_CATALOG') ? DIR_FS_CATALOG : dirname(__DIR__, 2)));
+        $this->coreTemplatesPath = self::normalizeDirectory($coreTemplatesPath ?? $this->catalogRoot . '/includes/templates');
+        $this->pluginsRoot = self::normalizeDirectory($pluginsRoot ?? $this->catalogRoot . '/zc_plugins');
         $this->installedPlugins = $installedPlugins;
 
         if ($pluginManager !== null) {
@@ -209,9 +210,9 @@ class TemplateResolver
 
             if (!isset(self::$templateRecords[$contextKey])) {
                 self::$templateRecords[$contextKey] = array_merge(
-                $this->loadCoreTemplates(),
-                $this->loadPluginTemplates()
-            );
+                    $this->loadCoreTemplates(),
+                    $this->loadPluginTemplates()
+                );
             }
 
             foreach (self::$templateRecords[$contextKey] as $templateKey => $templateProperties) {
@@ -241,20 +242,20 @@ class TemplateResolver
             }
 
             $templateKey = $fileInfo->getFilename();
-            $templatePath = $this->normalizeDirectory($fileInfo->getPathname());
-            $templateInfo = $this->loadTemplateInfo($templatePath . '/template_info.php');
+            $templatePath = self::normalizeDirectory($fileInfo->getPathname());
+            $templateInfo = self::loadTemplateInfo($templatePath . '/template_info.php');
             if ($templateInfo === null) {
                 continue;
             }
 
             $templates[$templateKey] = array_merge($templateInfo, [
-                'template_base_fs' => $this->normalizeDirectory($this->catalogRoot) . '/',
+                'template_base_fs' => self::normalizeDirectory($this->catalogRoot) . '/',
                 'template_key' => $templateKey,
                 'template_path' => $templatePath . '/',
                 'template_catalog_path' => 'includes/templates/' . $templateKey . '/',
-                'template_web_path' => $this->buildCoreWebPath($templateKey),
+                'template_web_path' => self::buildCoreWebPath($templateKey),
                 'template_settings_path' => $templatePath . '/template_settings.php',
-                'base_template' => $this->normalizeBaseTemplate($templateInfo['base_template'] ?? null, $templateKey),
+                'base_template' => self::normalizeBaseTemplate($templateInfo['base_template'] ?? null, $templateKey),
                 'is_plugin_template' => false,
                 'template_source' => 'core',
             ]);
@@ -282,7 +283,7 @@ class TemplateResolver
                 continue;
             }
             $manifest = require $manifestFile;
-            if (!$this->isSelectableTemplateManifest($manifest)) {
+            if (!self::isSelectableTemplateManifest($manifest)) {
                 continue;
             }
 
@@ -302,7 +303,7 @@ class TemplateResolver
     private function getInstalledPlugins(): array
     {
         if ($this->installedPlugins !== null) {
-            return $this->normalizeInstalledPlugins($this->installedPlugins);
+            return self::normalizeInstalledPlugins($this->installedPlugins);
         }
 
         if ($this->pluginManager !== null) {
@@ -315,7 +316,7 @@ class TemplateResolver
     /**
      * @since ZC v3.0.0
      */
-    private function isSelectableTemplateManifest(mixed $manifest): bool
+    private static function isSelectableTemplateManifest(mixed $manifest): bool
     {
         if (!is_array($manifest) || empty($manifest['template']) || !is_array($manifest['template'])) {
             return false;
@@ -331,29 +332,29 @@ class TemplateResolver
     {
         $template = $manifest['template'];
         $templateKey = $template['key'];
-        $defaultTemplatePath = $this->normalizeDirectory($versionPath . '/catalog/includes/templates/' . $templateKey);
+        $defaultTemplatePath = self::normalizeDirectory($versionPath . '/catalog/includes/templates/' . $templateKey);
         $templateInfoFile = !empty($template['infoFile'])
             ? $versionPath . '/' . ltrim($template['infoFile'], '/')
             : $defaultTemplatePath . '/template_info.php';
-        $templateInfo = $this->loadTemplateInfo($templateInfoFile);
+        $templateInfo = self::loadTemplateInfo($templateInfoFile);
         if ($templateInfo === null) {
             return null;
         }
 
-        $templatePath = $this->normalizeDirectory(dirname($templateInfoFile)) . '/';
-        $templateCatalogPath = ltrim(str_replace($this->normalizeDirectory($this->catalogRoot) . '/', '', $this->normalizeDirectory($templatePath)), '/') . '/';
+        $templatePath = self::normalizeDirectory(dirname($templateInfoFile)) . '/';
+        $templateCatalogPath = ltrim(str_replace(self::normalizeDirectory($this->catalogRoot) . '/', '', self::normalizeDirectory($templatePath)), '/') . '/';
         $settingsFile = !empty($template['settingsFile'])
             ? $versionPath . '/' . ltrim($template['settingsFile'], '/')
             : $templatePath . 'template_settings.php';
 
         return array_merge($templateInfo, [
-            'template_base_fs' => $this->normalizeDirectory($versionPath . '/catalog/') . '/',
+            'template_base_fs' => self::normalizeDirectory($versionPath . '/catalog/') . '/',
             'template_key' => $templateKey,
             'template_path' => $templatePath,
             'template_catalog_path' => $templateCatalogPath,
-            'template_web_path' => $this->buildPluginWebPath($templateCatalogPath),
+            'template_web_path' => self::buildPluginWebPath($templateCatalogPath),
             'template_settings_path' => $settingsFile,
-            'base_template' => $this->normalizeBaseTemplate($template['baseTemplate'] ?? null, $templateKey),
+            'base_template' => self::normalizeBaseTemplate($template['baseTemplate'] ?? null, $templateKey),
             'is_plugin_template' => true,
             'template_source' => 'plugin',
             'plugin_key' => $pluginKey,
@@ -366,7 +367,7 @@ class TemplateResolver
     /**
      * @since ZC v3.0.0
      */
-    private function loadTemplateInfo(string $templateInfoFile): ?array
+    private static function loadTemplateInfo(string $templateInfoFile): ?array
     {
         if (!file_exists($templateInfoFile)) {
             return null;
@@ -400,7 +401,7 @@ class TemplateResolver
     /**
      * @since ZC v3.0.0
      */
-    private function buildCoreWebPath(string $templateKey): string
+    private static function buildCoreWebPath(string $templateKey): string
     {
         $catalogWebRoot = defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '/';
         return rtrim($catalogWebRoot, '/') . '/includes/templates/' . $templateKey . '/';
@@ -409,7 +410,7 @@ class TemplateResolver
     /**
      * @since ZC v3.0.0
      */
-    private function buildPluginWebPath(string $templateCatalogPath): string
+    private static function buildPluginWebPath(string $templateCatalogPath): string
     {
         $catalogWebRoot = defined('DIR_WS_CATALOG') ? DIR_WS_CATALOG : '/';
         return rtrim($catalogWebRoot, '/') . '/' . trim($templateCatalogPath, '/') . '/';
@@ -418,7 +419,7 @@ class TemplateResolver
     /**
      * @since ZC v3.0.0
      */
-    private function normalizeBaseTemplate(?string $baseTemplate, string $templateKey): ?string
+    private static function normalizeBaseTemplate(?string $baseTemplate, string $templateKey): ?string
     {
         if (empty($baseTemplate)) {
             return $templateKey === 'template_default' ? null : 'template_default';
@@ -427,7 +428,7 @@ class TemplateResolver
         return $baseTemplate === $templateKey ? null : $baseTemplate;
     }
 
-    private function normalizeDirectory(string $path): string
+    private static function normalizeDirectory(string $path): string
     {
         return rtrim(str_replace('\\', '/', $path), '/');
     }
@@ -441,14 +442,14 @@ class TemplateResolver
             $this->catalogRoot,
             $this->coreTemplatesPath,
             $this->pluginsRoot,
-            md5(json_encode($this->normalizeInstalledPlugins($this->installedPlugins ?? [])) ?: '[]'),
+            md5(json_encode(self::normalizeInstalledPlugins($this->installedPlugins ?? [])) ?: '[]'),
         ]);
     }
 
     /**
      * @since ZC v3.0.0
      */
-    private function normalizeInstalledPlugins(array $installedPlugins): array
+    private static function normalizeInstalledPlugins(array $installedPlugins): array
     {
         $normalized = [];
         foreach ($installedPlugins as $key => $plugin) {

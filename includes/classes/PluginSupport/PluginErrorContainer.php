@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -36,23 +38,23 @@ class PluginErrorContainer
     /**
      * @since ZC v1.5.7
      */
-    public function hasLogErrors()
+    public function hasLogErrors(): bool
     {
-        return (count($this->logErrors));
+        return count($this->logErrors) > 0;
     }
 
     /**
      * @since ZC v1.5.7
      */
-    public function hasFriendlyErrors()
+    public function hasFriendlyErrors(): bool
     {
-        return (count($this->friendlyErrors));
+        return count($this->friendlyErrors) > 0;
     }
 
     /**
      * @since ZC v1.5.7
      */
-    public function addError($logSeverity, $logMessage, $useLogMessageForFriendly = false, $friendlyMessage = '')
+    public function addError($logSeverity, $logMessage, $useLogMessageForFriendly = false, $friendlyMessage = ''): void
     {
         if ($useLogMessageForFriendly) {
             $friendlyMessage = $logMessage;
@@ -71,15 +73,15 @@ class PluginErrorContainer
     /**
      * @since ZC v1.5.7
      */
-    public function hasErrors()
+    public function hasErrors(): bool
     {
-        return (count($this->logErrors + $this->friendlyErrors));
+        return count($this->logErrors + $this->friendlyErrors) > 0;
     }
 
     /**
      * @since ZC v1.5.7
      */
-    public function getFriendlyErrors()
+    public function getFriendlyErrors(): array
     {
         return $this->friendlyErrors;
     }
@@ -87,7 +89,7 @@ class PluginErrorContainer
     /**
      * @since ZC v1.5.7
      */
-    public function getLogErrors()
+    public function getLogErrors(): array
     {
         return $this->logErrors;
     }

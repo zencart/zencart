@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Handle Multi-Factor authentication via TOTP
  * Compatible with most Authenticator apps and in-browser support.
@@ -16,8 +18,8 @@
 foreach ([
     DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/DaspridEnum/autoload.php', // required by BaconQrCode
     DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/BaconQrCode/autoload.php', // required by BaconQrCode
-//    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-color/autoload.php', // required by TCBarcode
-//    DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-barcode/autoload.php', // required by TCBarcode
+    //DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-color/autoload.php', // required by TCBarcode
+    //DIR_FS_CATALOG . DIR_WS_CLASSES . 'vendors/tc-lib-barcode/autoload.php', // required by TCBarcode
 ] as $file) {
     if (file_exists($file)) {
         include $file;
@@ -81,7 +83,7 @@ class MultiFactorAuth
      */
     public function getCode(string $secret, ?int $time = null): string
     {
-        $secretkey = $this->base32Decode($secret);
+        $secretkey = self::base32Decode($secret);
 
         $timestamp = "\0\0\0\0" . pack('N*', $this->getTimeSlice($time ?? time()));      // Pack time into binary string
         $hashhmac = hash_hmac($this->algorithm, $timestamp, $secretkey, true); // Hash it with users secret key
@@ -89,7 +91,7 @@ class MultiFactorAuth
         $value = unpack('N', $hashpart);                                       // Unpack binary value
         $value = $value[1] & 0x7FFFFFFF;                                              // Drop MSB, keep only 31 bits
 
-        return str_pad((string)($value % 10 ** $this->codeLength), $this->codeLength, '0', STR_PAD_LEFT);
+        return str_pad((string)($value % 10 ** $this->codeLength), $this->codeLength, '0', \STR_PAD_LEFT);
     }
 
     /**
@@ -138,14 +140,14 @@ class MultiFactorAuth
      */
     private function getTimeSlice(?int $time = null, int $offset = 0): int
     {
-        $time = $time ?? time();
+        $time ??= time();
         return (int)floor($time / $this->period) + ($offset * $this->period);
     }
 
     /**
      * @since ZC v2.1.0
      */
-    private function base32Decode(string $value): string
+    private static function base32Decode(string $value): string
     {
         if ($value === '') {
             return '';
@@ -158,7 +160,7 @@ class MultiFactorAuth
         $buffer = '';
         foreach (str_split($value) as $char) {
             if ($char !== '=') {
-                $buffer .= str_pad(decbin(self::$_base32lookup[$char]), 5, '0', STR_PAD_LEFT);
+                $buffer .= str_pad(decbin(self::$_base32lookup[$char]), 5, '0', \STR_PAD_LEFT);
             }
         }
         $length = strlen($buffer);
@@ -166,7 +168,7 @@ class MultiFactorAuth
 
         $output = '';
         foreach (explode(' ', $blocks) as $block) {
-            $output .= chr(bindec(str_pad($block, 8, '0', STR_PAD_RIGHT)));
+            $output .= chr(bindec(str_pad($block, 8, '0', \STR_PAD_RIGHT)));
         }
         return $output;
     }

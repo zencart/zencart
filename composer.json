@@ -30,11 +30,13 @@
         "ext-gd": "*",
         "ext-hash": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pcre": "*",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-zlib": "*"
     },
     "require-dev": {
         "ext-pdo": "*",

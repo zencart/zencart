@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
@@ -43,7 +45,7 @@ trait Singleton
      */
     public static function getInstance()
     {
-        $cls = get_called_class(); // late-static-bound class name
+        $cls = static::class; // late-static-bound class name
         if (!isset(self::$instances[$cls])) {
             self::$instances[$cls] = new static();
         }

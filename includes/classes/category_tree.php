@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * category_tree Class.
  *
@@ -25,9 +27,7 @@ class category_tree extends base
      */
     private array $box_categories_array = [];
     /**
-     * String containing concatenated list of categories with separator.
-     *
-     * @since ZC v1.2.0d
+     * String containing a concatenated list of categories with separator.
      */
     private string $categories_string;
     /*
@@ -35,117 +35,129 @@ class category_tree extends base
      */
     private array $tree = [];
 
-    public function zen_category_tree($product_type = "all"): array
+    /**
+     * @var int|string $product_type int = product type id, 0 = all, 'all' = all (for legacy support)
+     *
+     * @since ZC v1.2.0d
+     */
+    public function zen_category_tree(int|string $product_type = 0): array
     {
         global $db, $cPath, $cPath_array;
-        if ($product_type !== 'all') {
-            $sql = "select type_master_type from " . TABLE_PRODUCT_TYPES . "
-                    where type_master_type = " . $product_type;
+        if ($product_type !== 0 && $product_type !== 'all') {
+            $sql = "SELECT type_master_type FROM " . TABLE_PRODUCT_TYPES . "
+                    WHERE type_master_type = " . (int)$product_type;
             $master_type_result = $db->Execute($sql);
-            $master_type = $master_type_result->fields['type_master_type'];
+            $master_type = (int)$master_type_result->fields['type_master_type'];
         }
         $this->tree = [];
-        if ($product_type === 'all') {
-            $categories_query = "select c.categories_id, cd.categories_name, c.parent_id, c.categories_image
-                             from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
-                             and c.categories_id = cd.categories_id
-                             and cd.language_id='" . (int)$_SESSION['languages_id'] . "'
-                             and c.categories_status= 1
-                             order by sort_order, cd.categories_name";
+        if ($product_type === 0 || $product_type === 'all') {
+            $categories_query = "SELECT c.categories_id, cd.categories_name, c.parent_id, c.categories_image
+                             FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                             WHERE c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
+                             AND c.categories_id = cd.categories_id
+                             AND cd.language_id='" . (int)$_SESSION['languages_id'] . "'
+                             AND c.categories_status= 1
+                             ORDER BY sort_order, cd.categories_name";
         } else {
-            $categories_query = "select ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
-                             from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
-                             where c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
-                             and ptc.category_id = cd.categories_id
-                             and ptc.product_type_id = " . $master_type . "
-                             and c.categories_id = ptc.category_id
-                             and cd.language_id=" . (int)$_SESSION['languages_id'] . "
-                             and c.categories_status= 1
-                             order by sort_order, cd.categories_name";
+            $categories_query = "SELECT ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
+                             FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
+                             WHERE c.parent_id = " . (int)TOPMOST_CATEGORY_PARENT_ID . "
+                             AND ptc.category_id = cd.categories_id
+                             AND ptc.product_type_id = " . (int)$master_type . "
+                             AND c.categories_id = ptc.category_id
+                             AND cd.language_id=" . (int)$_SESSION['languages_id'] . "
+                             AND c.categories_status= 1
+                             ORDER BY sort_order, cd.categories_name";
         }
         $categories = $db->Execute($categories_query, '', true, 150);
-        while (!$categories->EOF) {
-            $this->tree[$categories->fields['categories_id']] = [
-                'name' => $categories->fields['categories_name'],
-                'parent' => $categories->fields['parent_id'],
+
+        $parent_id = null;
+        $first_element = null;
+
+        foreach ($categories as $category) {
+            $categoryId = $category['categories_id'];
+
+            $this->tree[$categoryId] = [
+                'name' => $category['categories_name'],
+                'parent' => $category['parent_id'],
                 'level' => 0,
-                'path' => $categories->fields['categories_id'],
-                'image' => $categories->fields['categories_image'],
+                'path' => $categoryId,
+                'image' => $category['categories_image'],
                 'next_id' => false,
             ];
 
             if (isset($parent_id)) {
-                $this->tree[$parent_id]['next_id'] = $categories->fields['categories_id'];
+                $this->tree[$parent_id]['next_id'] = $categoryId;
             }
 
-            $parent_id = $categories->fields['categories_id'];
+            $parent_id = $categoryId;
 
             if (!isset($first_element)) {
-                $first_element = $categories->fields['categories_id'];
+                $first_element = $categoryId;
             }
-            $categories->MoveNext();
         }
+
         if (zen_not_null($cPath)) {
             $new_path = '';
             foreach ($cPath_array as $key => $value) {
                 unset($parent_id);
                 unset($first_id);
-                if ($product_type == 'all') {
-                    $categories_query = "select c.categories_id, cd.categories_name, c.parent_id, c.categories_image
-                               from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                               where c.parent_id = " . (int)$value . "
-                               and c.categories_id = cd.categories_id
-                               and cd.language_id=" . (int)$_SESSION['languages_id'] . "
-                               and c.categories_status= 1
-                               order by sort_order, cd.categories_name";
+                if ($product_type === 0 || $product_type === 'all') {
+                    $categories_query = "SELECT c.categories_id, cd.categories_name, c.parent_id, c.categories_image
+                               FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                               WHERE c.parent_id = " . (int)$value . "
+                               AND c.categories_id = cd.categories_id
+                               AND cd.language_id=" . (int)$_SESSION['languages_id'] . "
+                               AND c.categories_status= 1
+                               ORDER BY sort_order, cd.categories_name";
                 } else {
                     /*
-                    $categories_query = "select ptc.category_id as categories, cd.categories_name, c.parent_id, c.categories_image
-                    from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
-                    where c.parent_id = '" . (int)$value . "'
-                    and ptc.category_id = cd.categories_id
-                    and ptc.product_type_id = '" . $master_type . "'
-                    and cd.language_id='" . (int)$_SESSION['languages_id'] . "'
-                    and c.categories_status= '1'
-                    order by sort_order, cd.categories_name";
+                    $categories_query = "SELECT ptc.category_id as categories, cd.categories_name, c.parent_id, c.categories_image
+                    FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
+                    WHERE c.parent_id = '" . (int)$value . "'
+                    AND ptc.category_id = cd.categories_id
+                    AND ptc.product_type_id = '" . $master_type . "'
+                    AND cd.language_id='" . (int)$_SESSION['languages_id'] . "'
+                    AND c.categories_status= '1'
+                    ORDER BY sort_order, cd.categories_name";
                     */
-                    $categories_query = "select ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
-                             from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
-                             where c.parent_id = " . (int)$value . "
-                             and ptc.category_id = cd.categories_id
-                             and ptc.product_type_id = " . $master_type . "
-                             and c.categories_id = ptc.category_id
-                             and cd.language_id=" . (int)$_SESSION['languages_id'] . "
-                             and c.categories_status= 1
-                             order by sort_order, cd.categories_name";
+                    $categories_query = "SELECT ptc.category_id as categories_id, cd.categories_name, c.parent_id, c.categories_image
+                             FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc
+                             WHERE c.parent_id = " . (int)$value . "
+                             AND ptc.category_id = cd.categories_id
+                             AND ptc.product_type_id = " . $master_type . "
+                             AND c.categories_id = ptc.category_id
+                             AND cd.language_id=" . (int)$_SESSION['languages_id'] . "
+                             AND c.categories_status= 1
+                             ORDER BY sort_order, cd.categories_name";
                 }
 
                 $rows = $db->Execute($categories_query);
 
                 if ($rows->RecordCount() > 0) {
                     $new_path .= $value;
-                    while (!$rows->EOF) {
-                        $this->tree[$rows->fields['categories_id']] = [
-                            'name' => $rows->fields['categories_name'],
-                            'parent' => $rows->fields['parent_id'],
+                    foreach ($rows as $row) {
+                        $categoryId = $row['categories_id'];
+
+                        $this->tree[$categoryId] = [
+                            'name' => $row['categories_name'],
+                            'parent' => $row['parent_id'],
                             'level' => $key + 1,
-                            'path' => $new_path . '_' . $rows->fields['categories_id'],
-                            'image' => $categories->fields['categories_image'],
+                            'path' => $new_path . '_' . $categoryId,
+                            'image' => $row['categories_image'],
                             'next_id' => false,
                         ];
 
                         if (isset($parent_id)) {
-                            $this->tree[$parent_id]['next_id'] = $rows->fields['categories_id'];
+                            $this->tree[$parent_id]['next_id'] = $categoryId;
                         }
 
-                        $parent_id = $rows->fields['categories_id'];
+                        $parent_id = $categoryId;
                         if (!isset($first_id)) {
-                            $first_id = $rows->fields['categories_id'];
+                            $first_id = $categoryId;
                         }
 
-                        $last_id = $rows->fields['categories_id'];
-                        $rows->MoveNext();
+                        $last_id = $categoryId;
                     }
                     if (!empty($value) && !empty($this->tree[$value]) /* Needed to thwart notice */) {
                         $this->tree[$last_id]['next_id'] = $this->tree[$value]['next_id'];
@@ -214,7 +226,7 @@ class category_tree extends base
             }
         }
 
-        if ($this->tree[$counter]['next_id'] != false) {
+        if ($this->tree[$counter]['next_id'] !== false) {
             $ii++;
             $this->zen_show_category($this->tree[$counter]['next_id'], $ii);
         }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * zcAjaxAdminNotifications
  *
@@ -12,7 +14,7 @@ class zcAjaxAdminNotifications extends base
     /**
      * @since ZC v1.5.6
      */
-    public function forget()
+    public function forget(): array
     {
         global $db;
 

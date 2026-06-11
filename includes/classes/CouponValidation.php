@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -46,19 +48,19 @@ class CouponValidation
         }
         if ($coupons->RecordCount() === 1) {
             // If product is restricted(deny) and is same as tested product deny
-            if ($coupons->fields['product_id'] > 0 && $coupons->fields['product_id'] == $product_id && $coupons->fields['coupon_restrict'] === 'Y') {
+            if ($coupons->fields['product_id'] > 0 && (int)$coupons->fields['product_id'] === $product_id && $coupons->fields['coupon_restrict'] === 'Y') {
                 return false;
             }
             // If product is not restricted(allow) and is not same as tested product deny
-            if ($coupons->fields['product_id'] > 0 && $coupons->fields['product_id'] != $product_id && $coupons->fields['coupon_restrict'] === 'N') {
+            if ($coupons->fields['product_id'] > 0 && (int)$coupons->fields['product_id'] !== $product_id && $coupons->fields['coupon_restrict'] === 'N') {
                 return false;
             }
             // if category is restricted(deny) and product in category deny
-            if ($coupons->fields['category_id'] > 0 && zen_product_in_category($product_id, $coupons->fields['category_id']) && $coupons->fields['coupon_restrict'] === 'Y') {
+            if ($coupons->fields['category_id'] > 0 && zen_product_in_category($product_id, (int)$coupons->fields['category_id']) && $coupons->fields['coupon_restrict'] === 'Y') {
                 return false;
             }
             // if category is not restricted(allow) and product not in category deny
-            if ($coupons->fields['category_id'] > 0 && !zen_product_in_category($product_id, $coupons->fields['category_id']) && $coupons->fields['coupon_restrict'] === 'N') {
+            if ($coupons->fields['category_id'] > 0 && !zen_product_in_category($product_id, (int)$coupons->fields['category_id']) && $coupons->fields['coupon_restrict'] === 'N') {
                 return false;
             }
             return true;
@@ -141,7 +143,7 @@ class CouponValidation
     }
 
     /**
-     * is coupon valid for specials and sales
+     * is coupon valid for specials and sales?
      * @since ZC v2.0.0
      */
     public static function is_coupon_valid_for_sales(int $product_id, int $coupon_id): bool
@@ -203,7 +205,7 @@ class CouponValidation
      * e.g. referrer 'abc.com' may only be assigned to one coupon, not two or more.
      *
      * @param string $referrer The domain to check e.g. 'abc.com'
-     * @param int $exclude_coupon_id Optional coupon_id to exclude/ignore (ie: "self" record)
+     * @param int|null $exclude_coupon_id Optional coupon_id to exclude/ignore (ie: "self" record)
      * @return ?array
      * @since ZC v2.0.0
      */

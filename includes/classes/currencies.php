@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * currencies class
  *
@@ -80,7 +82,7 @@ class currencies extends base
 
         if ($calculate_using_exchange_rate === true) {
             // Special Case: if the selected currency is in the european euro-conversion and the default currency is euro,
-            // then the currency will displayed in both the national currency and euro currency
+            // then the currency will be displayed in both the national currency and euro currency
             if (zen_config('DEFAULT_CURRENCY') === 'EUR' && in_array($currency_code, ['DEM', 'BEF', 'LUF', 'ESP', 'FRF', 'IEP', 'ITL', 'NLG', 'ATS', 'PTE', 'FIM', 'GRD'])) {
                 $formatted_string .= ' <small>[' . $this->format($number, true, 'EUR') . ']</small>';
             }
@@ -90,7 +92,7 @@ class currencies extends base
     }
 
     /**
-     * Convert amount based on currency values and round it to the relevant decimal places
+     * Convert the amount based on currency values and round it to the relevant decimal places
      *
      * @param numeric $number
      * @param bool $calculate_using_exchange_rate
@@ -105,10 +107,10 @@ class currencies extends base
 
         if ($calculate_using_exchange_rate === true) {
             $rate = !empty($currency_value) ? $currency_value : $currency_info['value'];
-            $number = $number * $rate;
+            $number *= $rate;
         }
 
-        return zen_round($number, $currency_info['decimal_places']);
+        return zen_round(zen_str_to_numeric($number), $currency_info['decimal_places']);
     }
 
     /**
@@ -129,10 +131,10 @@ class currencies extends base
         if ($calculate_using_exchange_rate === true) {
             $multiplier = ($currency_code === zen_config('DEFAULT_CURRENCY')) ? 1 / $this->currencies[$_SESSION['currency']]['value'] : $currency_info['value'];
             $rate = !empty($currency_value) ? $currency_value : $multiplier;
-            $number = $number * $rate;
+            $number *= $rate;
         }
 
-        return zen_round($number, $currency_info['decimal_places']);
+        return zen_round(zen_str_to_numeric($number), $currency_info['decimal_places']);
     }
 
     /**
@@ -166,7 +168,7 @@ class currencies extends base
     public function get_value(string $currency_code): float
     {
         $currency_info = $this->getCurrencyInfo($currency_code);
-        return $currency_info['value'];
+        return zen_str_to_numeric($currency_info['value']);
     }
 
     /**
@@ -177,7 +179,7 @@ class currencies extends base
     public function get_decimal_places(string $currency_code): int
     {
         $currency_info = $this->getCurrencyInfo($currency_code);
-        return $currency_info['decimal_places'];
+        return (int)$currency_info['decimal_places'];
     }
 
     /**
@@ -253,7 +255,7 @@ class currencies extends base
      */
     public function display_price(mixed $product_price, mixed $product_tax, mixed $quantity = 1): string
     {
-        return $this->format(zen_add_tax($product_price, $product_tax) * $quantity);
+        return $this->format(zen_add_tax(zen_str_to_numeric($product_price), zen_str_to_numeric($product_tax)) * $quantity);
     }
 
     /**

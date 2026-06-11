@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -18,9 +20,7 @@ class ConfigurationRepository
     protected array $configAsIntArray = ['SECURITY_CODE_LENGTH'];
     protected array $keepAsStringArray = ['PRODUCTS_MANUFACTURERS_STATUS'];
 
-    public function __construct(private queryFactory $db)
-    {
-    }
+    public function __construct(private queryFactory $db) {}
 
     /**
      * @since ZC v2.2.0

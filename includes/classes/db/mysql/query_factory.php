@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * MySQL query_factory class.
  * Class used for database abstraction to MySQL via mysqli procedural interface.
@@ -681,7 +683,7 @@ class queryFactory extends base
     public function bindVars(string $sql, string $parameterToReplace, $valueToBind, string $bindingRule): string
     {
         $sqlNew = $this->getBindVarValue($valueToBind, $bindingRule);
-        $sqlNew = str_replace($parameterToReplace, $sqlNew, $sql);
+        $sqlNew = str_replace($parameterToReplace, (string)$sqlNew, $sql);
         return $sqlNew;
     }
 
@@ -699,14 +701,14 @@ class queryFactory extends base
         $type = $typeArray[0];
         switch ($type) {
             case 'inConstructInteger':
-                $list = explode(',', $value);
-                $newList = array_map(fn($value) => (int)$value, $list);
+                $list = explode(',', (string)$value);
+                $newList = array_map(static fn($value) => (int)$value, $list);
                 $value = implode(',', $newList);
 
                 return $value;
 
             case 'inConstructString':
-                $list = explode(',', $value);
+                $list = explode(',', (string)$value);
                 $newList = array_map(fn($value) => '\'' . $this->prepare_input($value) . '\'', $list);
                 $value = implode(',', $newList);
 
@@ -719,31 +721,31 @@ class queryFactory extends base
                 return $value;
 
             case 'float':
-                return (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : (float)$value;
+                return (!zen_not_null($value) || $value === '' || $value === 0) ? 0 : (float)$value;
 
             case 'integer':
                 return (int)$value;
 
             case 'string':
-                if (preg_match('/NULL/', $value)) {
+                if (preg_match('/NULL/', (string)$value)) {
                     return 'null';
                 }
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'stringIgnoreNull':
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'noquotestring':
-                return $this->prepare_input($value);
+                return $this->prepare_input((string)$value);
 
             case 'currency':
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'date':
-                if (preg_match('/null/i', $value)) {
+                if (preg_match('/null/i', (string)$value)) {
                     return 'null';
                 }
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'enum':
                 if (isset($typeArray[1])) {
@@ -1137,6 +1139,7 @@ class queryFactoryResult implements Countable, Iterator
         if (!empty($this->resource) && $this->resource instanceof mysqli_result) {
             return @mysqli_num_rows($this->resource);
         }
+
         return 0;
     }
 

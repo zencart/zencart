@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * shipping class
  *
@@ -42,10 +44,10 @@ class shipping
      */
     protected array $initialized_modules = [];
 
-    public function __construct($module = null)
+    public function __construct(?array $module = null)
     {
         if (!empty(zen_config('MODULE_SHIPPING_INSTALLED'))) {
-            $this->modules = explode(';', zen_config('MODULE_SHIPPING_INSTALLED'));
+            $this->modules = explode(';', zen_config('MODULE_SHIPPING_INSTALLED', ''));
         }
         $this->notify('NOTIFY_SHIPPING_CLASS_GET_INSTALLED_MODULES', $module);
 
@@ -61,7 +63,7 @@ class shipping
      * If $module is specified, limits the initialization to just that module; else processes all "installed" modules listed in Admin.
      * @since ZC v2.0.0
      */
-    protected function initialize_modules($module = null): void
+    protected function initialize_modules(?array $module = null): void
     {
         global $messageStack, $languageLoader, $installedPlugins;
 
@@ -76,14 +78,14 @@ class shipping
         $modules_to_quote = [];
 
         $module_name = (empty($module)) ? '0' : substr($module['id'], 0, strpos($module['id'], '_'));
-        if (!empty($module) && in_array($module_name . '.php', $this->modules) && isset($modules_found[$module_name])) {
+        if (!empty($module) && in_array($module_name . '.php', $this->modules, true) && isset($modules_found[$module_name])) {
             $modules_to_quote[] = [
                 'class' => $module_name,
                 'file' => $module_name . '.php',
             ];
         } else {
             foreach ($this->modules as $value) {
-                $class = pathinfo($value, PATHINFO_FILENAME);
+                $class = pathinfo($value, \PATHINFO_FILENAME);
                 $modules_to_quote[] = [
                     'class' => $class,
                     'file' => $value,
@@ -151,7 +153,7 @@ class shipping
      * Check whether a module is enabled for the active checkout zone
      * @since ZC v1.5.5
      */
-    public function check_enabled($module_class): bool
+    public function check_enabled(object $module_class): bool
     {
         $enabled = $module_class->enabled;
         if (method_exists($module_class, 'check_enabled_for_zone') && $module_class->enabled) {
@@ -174,7 +176,7 @@ class shipping
      * DOES NOT TAKE PACKAGE DIMENSIONS INTO ACCOUNT.
      * @since ZC v1.3.8
      */
-    public function calculate_boxes_weight_and_tare()
+    public function calculate_boxes_weight_and_tare(): void
     {
         global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
@@ -204,12 +206,12 @@ class shipping
             switch (true) {
                 // large box add padding
                 case (zen_config('SHIPPING_MAX_WEIGHT') <= $shipping_weight):
-                    $shipping_weight = $shipping_weight + ($shipping_weight * ($zc_large_percent / 100)) + $zc_large_weight;
+                    $shipping_weight += ($shipping_weight * ($zc_large_percent / 100)) + $zc_large_weight;
                     break;
 
                 default:
                     // add tare weight < large
-                    $shipping_weight = $shipping_weight + ($shipping_weight * ($zc_tare_percent / 100)) + $zc_tare_weight;
+                    $shipping_weight += ($shipping_weight * ($zc_tare_percent / 100)) + $zc_tare_weight;
                     break;
             }
 
@@ -218,7 +220,7 @@ class shipping
             if ($shipping_weight > zen_config('SHIPPING_MAX_WEIGHT')) { // Split into many boxes
                 $zc_boxes = zen_round(($shipping_weight / zen_config('SHIPPING_MAX_WEIGHT')), 2);
                 $shipping_num_boxes = ceil($zc_boxes);
-                $shipping_weight = $shipping_weight / $shipping_num_boxes;
+                $shipping_weight /= $shipping_num_boxes;
             }
         }
         $this->notify('NOTIFY_SHIPPING_MODULE_CALCULATE_BOXES_AND_TARE', [], $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes);
@@ -234,7 +236,7 @@ class shipping
      * @return array
      * @since ZC v1.0.3
      */
-    public function quote($method = '', $module = '', $calc_boxes_weight_tare = true, $insurance_exclusions = []): array
+    public function quote(string $method = '', string $module = '', bool $calc_boxes_weight_tare = true, array $insurance_exclusions = []): array
     {
         global $shipping_weight, $uninsurable_value;
 
@@ -244,6 +246,8 @@ class shipping
             $this->calculate_boxes_weight_and_tare();
         }
 
+
+        // @TODO - Check whether $this should still be used here, or if it needs to relate to $GLOBALS[$class] instead
         // calculate amount not to be insured on shipping
         $uninsurable_value = (method_exists($this, 'get_uninsurable_value')) ? $this->get_uninsurable_value($insurance_exclusions) : 0;
 
@@ -251,7 +255,7 @@ class shipping
             $modules_to_quote = [];
 
             foreach ($this->modules as $value) {
-                $class = pathinfo($value, PATHINFO_FILENAME);
+                $class = pathinfo($value, \PATHINFO_FILENAME);
                 if (!empty($module)) {
                     if ($module === $class && isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
                         $modules_to_quote[] = $class;
@@ -298,7 +302,7 @@ class shipping
         $rates = [];
         $exclude_storepickup_module = false;
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
                 $quotes = $GLOBALS[$class]->quotes ?? null;
                 if (empty($quotes['methods']) || isset($quotes['error'])) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * httpClient Class.
  *
@@ -378,7 +380,7 @@ class httpClient extends base
             }
 
             if (!empty($this->requestBody)) {
-                $this->addHeader('Content-Length', strlen($this->requestBody));
+                $this->addHeader('Content-Length', (string)strlen($this->requestBody));
             }
 
             $this->request = $command;
@@ -449,7 +451,7 @@ class httpClient extends base
                 break;
             }
 
-            $finished = ($str == $lastLine);
+            $finished = ($str === $lastLine);
             if (!$finished) {
                 $parts = explode(': ', $str, 2);
                 if (count($parts) < 2) {

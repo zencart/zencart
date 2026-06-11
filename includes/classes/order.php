@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -41,9 +43,8 @@ class order extends base
     public array $customer = [];
     /**
      * $delivery is an array containing delivery details for the order
-     * @var array
      */
-    public $delivery = [];
+    public array|false $delivery = [];
     /**
      * $doStockDecrement is a flag used by a notifier to prevent the default stock decrement processing
      */
@@ -340,21 +341,20 @@ class order extends base
             $attributes = $db->Execute($attributes_query);
             if ($attributes->RecordCount()) {
                 $this->products[$index]['attributes'] = [];
-                while (!$attributes->EOF) {
+                foreach ($attributes as $attribute) {
                     $this->products[$index]['attributes'][$subindex] = [
-                        'option' => $attributes->fields['products_options'],
-                        'value' => $attributes->fields['products_options_values'],
-                        'option_id' => $attributes->fields['products_options_id'],
-                        'value_id' => $attributes->fields['products_options_values_id'],
-                        'prefix' => $attributes->fields['price_prefix'],
-                        'price' => $attributes->fields['options_values_price'],
-                        'product_attribute_is_free' => (int)$attributes->fields['product_attribute_is_free'],
-                        'weight' => $attributes->fields['products_attributes_weight'],
-                        'weight_prefix' => $attributes->fields['products_attributes_weight_prefix'],
+                        'option' => $attribute['products_options'],
+                        'value' => $attribute['products_options_values'],
+                        'option_id' => $attribute['products_options_id'],
+                        'value_id' => $attribute['products_options_values_id'],
+                        'prefix' => $attribute['price_prefix'],
+                        'price' => $attribute['options_values_price'],
+                        'product_attribute_is_free' => (int)$attribute['product_attribute_is_free'],
+                        'weight' => $attribute['products_attributes_weight'],
+                        'weight_prefix' => $attribute['products_attributes_weight_prefix'],
                     ];
 
                     $subindex++;
-                    $attributes->MoveNext();
                 }
             }
 
@@ -448,7 +448,7 @@ class order extends base
     /**
      * @since ZC v1.5.8
      */
-    protected function getCountryZoneId(int $countries_id, string $state)
+    protected function getCountryZoneId(int $countries_id, string $state): int|string
     {
         global $db;
 
@@ -512,11 +512,6 @@ class order extends base
             'payment_method' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->title : '',
             'payment_module_code' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->code : '',
             'coupon_code' => $coupon_code->fields['coupon_code'] ?? '',
-            //            'cc_type' => $GLOBALS['cc_type'] ?? '',
-            //            'cc_owner' => $GLOBALS['cc_owner'] ?? '',
-            //            'cc_number' => $GLOBALS['cc_number'] ?? '',
-            //            'cc_expires' => $GLOBALS['cc_expires'] ?? '',
-            //            'cc_cvv' => $GLOBALS['cc_cvv'] ?? '',
             'shipping_method' => $_SESSION['shipping']['title'] ?? '',
             'shipping_module_code' => $shipping_module_code,
             'shipping_cost' => !empty($_SESSION['shipping']['cost']) ? $_SESSION['shipping']['cost'] : 0,
@@ -675,7 +670,7 @@ class order extends base
                     }
 
                     //clr 030714 Account for text attributes
-                    if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
+                    if ($value == (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')) {
                         $attr_value = $products[$i]['attributes_values'][$option];
                     } else {
                         $attr_value = htmlspecialchars_decode($attributes->fields['products_options_values_name'], \ENT_COMPAT);
@@ -757,7 +752,7 @@ class order extends base
                     $address_book_id = $billToAddressId;
                     break;
                 case 'Store':
-                    if (isset($this->billing['zone_id']) && $this->billing['zone_id'] == zen_config('STORE_ZONE')) {
+                    if (isset($this->billing['zone_id']) && $this->billing['zone_id'] == (int)zen_config('STORE_ZONE')) {
                         $address_book_id = $billToAddressId;
                     } else {
                         $address_book_id = ($this->content_type === 'virtual' ? $billToAddressId : $shipToAddressId);
@@ -769,7 +764,7 @@ class order extends base
                                   WHERE ab.customers_id = " . (int)$_SESSION['customer_id'] . "
                                   AND ab.address_book_id = " . $address_book_id;
 
-            if ($tax_address_query != '') {
+            if ($tax_address_query !== '') {
                 $tax_address = $db->Execute($tax_address_query);
                 if ($tax_address->RecordCount() > 0) {
                     $taxCountryId = $tax_address->fields['entry_country_id'];
@@ -878,7 +873,7 @@ class order extends base
             if ((int)zen_config('DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID') === 0) {
                 $this->info['order_status'] = (int)zen_config('DEFAULT_ORDERS_STATUS_ID');
             } else {
-                if ($_SESSION['payment'] != 'freecharger') {
+                if ($_SESSION['payment'] !== 'freecharger') {
                     $this->info['order_status'] = (int)zen_config('DEFAULT_ZERO_BALANCE_ORDERS_STATUS_ID');
                 }
             }
@@ -1010,35 +1005,35 @@ class order extends base
         global $db;
         $this->notify('NOTIFIER_ADMIN_ZEN_REMOVE_ORDER', [], $this->orderId, $restock);
         if ($restock || $restock === 'on') {
-            $order_products = $db->Execute("select products_id, products_quantity
-                                from " . TABLE_ORDERS_PRODUCTS . "
-                                where orders_id = " . (int)$this->orderId);
+            $order_products = $db->Execute("SELECT products_id, products_quantity
+                                FROM " . TABLE_ORDERS_PRODUCTS . "
+                                WHERE orders_id = " . (int)$this->orderId);
 
-            while (!$order_products->EOF) {
-                $db->Execute("update " . TABLE_PRODUCTS . "
-                        set products_quantity = products_quantity + " . $order_products->fields['products_quantity'] . ", products_ordered = products_ordered - " . $order_products->fields['products_quantity'] . " where products_id = " . $order_products->fields['products_id']);
-                $order_products->MoveNext();
+            foreach ($order_products as $product) {
+                $db->Execute("UPDATE " . TABLE_PRODUCTS . "
+                        SET products_quantity = products_quantity + " . $product['products_quantity'] . ", products_ordered = products_ordered - " . $product['products_quantity'] . "
+                        WHERE products_id = " . $product['products_id']);
             }
         }
 
-        $db->Execute("delete from " . TABLE_ORDERS . " where orders_id = " . (int)$this->orderId);
-        $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS . "
-                                    where orders_id = " . (int)$this->orderId);
+        $db->Execute("DELETE FROM " . TABLE_ORDERS . " WHERE orders_id = " . (int)$this->orderId);
+        $db->Execute("DELETE FROM " . TABLE_ORDERS_PRODUCTS . "
+                                WHERE orders_id = " . (int)$this->orderId);
 
-        $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                                    where orders_id = " . (int)$this->orderId);
+        $db->Execute("DELETE FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
+                                WHERE orders_id = " . (int)$this->orderId);
 
-        $db->Execute("delete from " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
-                                    where orders_id = " . (int)$this->orderId);
+        $db->Execute("DELETE FROM " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . "
+                                WHERE orders_id = " . (int)$this->orderId);
 
-        $db->Execute("delete from " . TABLE_ORDERS_STATUS_HISTORY . "
-                                    where orders_id = " . (int)$this->orderId);
+        $db->Execute("DELETE FROM " . TABLE_ORDERS_STATUS_HISTORY . "
+                                WHERE orders_id = " . (int)$this->orderId);
 
-        $db->Execute("delete from " . TABLE_ORDERS_TOTAL . "
-                                    where orders_id = " . (int)$this->orderId);
+        $db->Execute("DELETE FROM " . TABLE_ORDERS_TOTAL . "
+                                WHERE orders_id = " . (int)$this->orderId);
 
-        $db->Execute("delete from " . TABLE_COUPON_GV_QUEUE . "
-                                    where order_id = " . (int)$this->orderId . " and release_flag = 'N'");
+        $db->Execute("DELETE FROM " . TABLE_COUPON_GV_QUEUE . "
+                                WHERE order_id = " . (int)$this->orderId . " AND release_flag = 'N'");
 
         zen_record_admin_activity('Deleted order ' . (int)$this->orderId . ' from database via admin console.', 'warning');
 
@@ -1458,8 +1453,8 @@ class order extends base
         }
         $html_msg['PAYMENT_METHOD_TITLE'] = EMAIL_TEXT_PAYMENT_METHOD;
         $html_msg['PAYMENT_METHOD_DETAIL'] = (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']]) ? $GLOBALS[$payment_class]->title : PAYMENT_METHOD_GV);
-        $html_msg['PAYMENT_METHOD_FOOTER'] = (!empty($payment_class) && isset($GLOBALS[$payment_class]->email_footer) && is_object($GLOBALS[$_SESSION['payment']])
-    && $GLOBALS[$payment_class]->email_footer !== '') ? nl2br($GLOBALS[$payment_class]->email_footer) : (isset($this->info['cc_type']) && $this->info['cc_type'] !== '' ? $this->info['cc_type'] . ' ' . $cc_num_display : '');
+        $html_msg['PAYMENT_METHOD_FOOTER'] = (!empty($payment_class) && isset($GLOBALS[$payment_class]->email_footer) && is_object($GLOBALS[$_SESSION['payment']]) && $GLOBALS[$payment_class]->email_footer !== '')
+            ? nl2br($GLOBALS[$payment_class]->email_footer) : (isset($this->info['cc_type']) && $this->info['cc_type'] !== '' ? $this->info['cc_type'] . ' ' . $cc_num_display : '');
 
         // Add in store specific order message
         $this->email_order_message = defined('EMAIL_ORDER_MESSAGE') ? constant('EMAIL_ORDER_MESSAGE') : '';
@@ -1470,7 +1465,7 @@ class order extends base
         $html_msg['EMAIL_ORDER_MESSAGE'] = $this->email_order_message;
 
         // include disclaimer
-        if (defined('EMAIL_DISCLAIMER') && EMAIL_DISCLAIMER != '') {
+        if (defined('EMAIL_DISCLAIMER') && EMAIL_DISCLAIMER !== '') {
             $email_order .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, zen_config('STORE_OWNER_EMAIL_ADDRESS')) . "\n\n";
         }
         // include copyright

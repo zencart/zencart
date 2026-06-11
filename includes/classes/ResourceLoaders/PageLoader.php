@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
+
 namespace Zencart\PageLoader;
 
 use Zencart\FileSystem\FileSystem as FileSystem;
@@ -32,8 +35,7 @@ class PageLoader
         string $mainPage,
         FileSystem $fileSystem,
         ?TemplateResolver $templateResolver = null
-    ): void
-    {
+    ): void {
         $this->installedPlugins = $installedPlugins;
         $this->mainPage = $mainPage;
         $this->fileSystem = $fileSystem;
@@ -87,10 +89,10 @@ class PageLoader
      */
     public function getTemplatePart(string $pageDirectory, string $templatePart, string $fileExtension = '.php'): array
     {
-        if ($this->isTemplatePath($pageDirectory)) {
+        if (self::isTemplatePath($pageDirectory)) {
             $directoryArray = [];
             foreach ($this->getTemplateSearchDirectoriesFromPath($pageDirectory) as $directory) {
-                $directoryArray = $this->getTemplatePartFromDirectory(
+                $directoryArray = self::getTemplatePartFromDirectory(
                     $directoryArray,
                     $directory,
                     $templatePart,
@@ -102,7 +104,7 @@ class PageLoader
             return $directoryArray;
         }
 
-        $directoryArray = $this->getTemplatePartFromDirectory(
+        $directoryArray = self::getTemplatePartFromDirectory(
             [],
             $pageDirectory,
             $templatePart,
@@ -112,7 +114,7 @@ class PageLoader
         foreach ($this->installedPlugins as $plugin) {
             $checkDir = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/';
             $checkDir .= $pageDirectory;
-            $directoryArray = $this->getTemplatePartFromDirectory(
+            $directoryArray = self::getTemplatePartFromDirectory(
                 $directoryArray,
                 $checkDir,
                 $templatePart,
@@ -128,7 +130,7 @@ class PageLoader
      *
      * @since ZC v1.5.7
      */
-    private function getTemplatePartFromDirectory(array $directoryArray, string $pageDirectory, string $templatePart, string $fileExtension): array
+    private static function getTemplatePartFromDirectory(array $directoryArray, string $pageDirectory, string $templatePart, string $fileExtension): array
     {
         if ($dir = @dir($pageDirectory)) {
             while ($file = $dir->read()) {
@@ -168,7 +170,7 @@ class PageLoader
     public function getTemplateDirectory(string $fileName, string $currentTemplateDir, string $currentPage, string $templateSubDir): string
     {
         $fileName = str_replace("/", '', $fileName);
-        foreach ($this->getTemplateSearchDirectories($this->getCurrentTemplateKey($currentTemplateDir), $currentPage, $templateSubDir) as $directory) {
+        foreach ($this->getTemplateSearchDirectories(self::getCurrentTemplateKey($currentTemplateDir), $currentPage, $templateSubDir) as $directory) {
             if ($this->fileSystem->fileExistsInDirectory($directory, $fileName)) {
                 return rtrim($directory, '/');
             }
@@ -186,7 +188,7 @@ class PageLoader
                 continue;
             }
 
-            foreach ($this->getPluginOverlayDirectories($plugin, $templateDir) as $checkDir) {
+            foreach (self::getPluginOverlayDirectories($plugin, $templateDir) as $checkDir) {
                 if ($this->fileSystem->fileExistsInDirectory($checkDir, preg_replace('/\//', '', $fileName))) {
                     return $checkDir;
                 }
@@ -278,7 +280,7 @@ class PageLoader
      */
     private function getTemplateSearchDirectoriesFromPath(string $pageDirectory): array
     {
-        $normalized = $this->normalizeDirectory($pageDirectory);
+        $normalized = self::normalizeDirectory($pageDirectory);
         if (!preg_match('~includes/templates/([^/]+)/(.+)$~', $normalized, $matches)) {
             return [$pageDirectory];
         }
@@ -298,7 +300,7 @@ class PageLoader
             return [];
         }
 
-        $templateRoot = $this->getRelativeCatalogPath($record['template_path']);
+        $templateRoot = self::getRelativeCatalogPath($record['template_path']);
         if ($templateRoot === null) {
             return [];
         }
@@ -315,7 +317,7 @@ class PageLoader
     {
         $directories = [];
         foreach ($this->installedPlugins as $plugin) {
-            foreach ($this->getPluginOverlayDirectories($plugin, $subDirectory, ['default']) as $directory) {
+            foreach (self::getPluginOverlayDirectories($plugin, $subDirectory, ['default']) as $directory) {
                 $directories[] = $directory;
             }
         }
@@ -335,7 +337,7 @@ class PageLoader
     {
         $directories = [];
         foreach ($this->installedPlugins as $plugin) {
-            foreach ($this->getPluginOverlayDirectories($plugin, $templateSubDir, [$targetTemplate]) as $directory) {
+            foreach (self::getPluginOverlayDirectories($plugin, $templateSubDir, [$targetTemplate]) as $directory) {
                 $directories[] = $directory;
             }
         }
@@ -346,14 +348,14 @@ class PageLoader
     /**
      * @since ZC v3.0.0
      */
-    private function getPluginOverlayDirectories(array $plugin, string $templateSubDir, ?array $targets = null): array
+    private static function getPluginOverlayDirectories(array $plugin, string $templateSubDir, ?array $targets = null): array
     {
         $templatesRoot = 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'] . '/catalog/includes/templates/';
         if (!is_dir(DIR_FS_CATALOG . $templatesRoot)) {
             return [];
         }
 
-        $availableTargets = $targets ?? $this->getPluginTemplateTargets($templatesRoot);
+        $availableTargets = $targets ?? self::getPluginTemplateTargets($templatesRoot);
         $directories = [];
         foreach ($availableTargets as $target) {
             $directory = $templatesRoot . trim($target, '/') . '/' . trim($templateSubDir, '/') . '/';
@@ -368,7 +370,7 @@ class PageLoader
     /**
      * @since ZC v3.0.0
      */
-    private function getPluginTemplateTargets(string $templatesRoot): array
+    private static function getPluginTemplateTargets(string $templatesRoot): array
     {
         $targets = [];
         $directory = new \DirectoryIterator(DIR_FS_CATALOG . $templatesRoot);
@@ -398,9 +400,9 @@ class PageLoader
     /**
      * @since ZC v3.0.0
      */
-    private function getCurrentTemplateKey(string $currentTemplateDir): string
+    private static function getCurrentTemplateKey(string $currentTemplateDir): string
     {
-        $normalized = trim($this->normalizeDirectory($currentTemplateDir), '/');
+        $normalized = trim(self::normalizeDirectory($currentTemplateDir), '/');
         if ($normalized === '' || $normalized === 'template_default') {
             return 'template_default';
         }
@@ -424,10 +426,10 @@ class PageLoader
     /**
      * @since ZC v3.0.0
      */
-    private function getRelativeCatalogPath(string $path): ?string
+    private static function getRelativeCatalogPath(string $path): ?string
     {
         $normalizedCatalogRoot = rtrim(str_replace('\\', '/', DIR_FS_CATALOG), '/');
-        $normalizedPath = $this->normalizeDirectory($path);
+        $normalizedPath = self::normalizeDirectory($path);
         if (!str_starts_with($normalizedPath, $normalizedCatalogRoot . '/')) {
             return null;
         }
@@ -438,15 +440,15 @@ class PageLoader
     /**
      * @since ZC v3.0.0
      */
-    private function isTemplatePath(string $path): bool
+    private static function isTemplatePath(string $path): bool
     {
-        return str_contains($this->normalizeDirectory($path), 'includes/templates/');
+        return str_contains(self::normalizeDirectory($path), 'includes/templates/');
     }
 
     /**
      * @since ZC v3.0.0
      */
-    private function normalizeDirectory(string $path): string
+    private static function normalizeDirectory(string $path): string
     {
         return rtrim(str_replace('\\', '/', $path), '/');
     }

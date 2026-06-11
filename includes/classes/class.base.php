@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This \base class is sometimes used as a parent class for other classes, but it is not intended to be instantiated on its own.
  * It provides some common functionality that can be shared to child classes, such as the ability to manage observers and notifiers.
@@ -26,16 +28,18 @@ class base
     use ObserverManager;
 
     /**
+     * Convert a string to camel case format
+     *
      * @since ZC v1.5.2
      */
-    public static function camelize($rawName, $camelFirst = false)
+    public static function camelize(string $rawName, bool $camelFirst = false): array|string|null
     {
-        if ($rawName == "") {
+        if ($rawName === '') {
             return $rawName;
         }
         if ($camelFirst) {
             $rawName[0] = strtoupper($rawName[0]);
         }
-        return preg_replace_callback('/[_-]([0-9,a-z])/', fn($matches) => strtoupper($matches[1]), $rawName);
+        return preg_replace_callback('/[_-]([0-9,a-z])/', static fn($matches) => strtoupper($matches[1]), $rawName);
     }
 }

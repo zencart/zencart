@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -7,16 +9,24 @@
  */
 class zcDate extends base
 {
-    protected $useIntlDate = false;
-    protected $useStrftime = false;
-    protected $locale;
-    //- Only used when $this->useIntlDate is true
-    protected $strftime2date;
-    //- Only used when $this->useStrftime is false
-    protected $strftime2intl;
-    //- Only used when $this->useStrftime is false
-    protected $debug = false;
-    protected $dateObject;
+    protected bool $useIntlDate = false;
+    protected bool $useStrftime = false;
+
+    /**
+     * Only used when $this->useIntlDate is true
+     */
+    protected string $locale;
+    /**
+     * Only used when $this->useStrftime is false
+     */
+    protected array $strftime2date;
+    /**
+     * Only used when $this->useStrftime is false
+     */
+    protected array $strftime2intl;
+
+    protected bool $debug = false;
+    protected IntlDateFormatter $dateObject;
 
     // -----
     // Initial construction; initializes the conversion arrays and determines which PHP
@@ -33,7 +43,7 @@ class zcDate extends base
             $this->debug = true;
         }
 
-        if (version_compare(\PHP_VERSION, '8.1', '<')) {
+        if (PHP_VERSION_ID < 80100) {
             $this->useStrftime = true;
         } else {
             if (function_exists('datefmt_create')) {
@@ -60,7 +70,7 @@ class zcDate extends base
     /**
      * @since ZC v1.5.8
      */
-    protected function initializeConversionArrays()
+    protected function initializeConversionArrays(): void
     {
         $strftime2date = [
             '%a' => 'D',
@@ -144,7 +154,7 @@ class zcDate extends base
     /**
      * @since ZC v1.5.8
      */
-    public function enableDebug()
+    public function enableDebug(): void
     {
         $this->debug = true;
         $this->debug('Debug enabled: ' . \PHP_EOL . var_export($this, true));
@@ -152,20 +162,20 @@ class zcDate extends base
     /**
      * @since ZC v1.5.8
      */
-    public function disableDebug()
+    public function disableDebug(): void
     {
         $this->debug = false;
     }
 
     /**
-     * @param string $format  output method should start with a strftime-format string
-     * @param int    $timestamp
+     * @param string $format output method should start with a strftime-format string
+     * @param int $timestamp
      * @param string|null $calendar_locale Optional calendar-related locale. eg: 'ja_JP@calendar=japanese'
      *
      * @return false|string
      * @since ZC v1.5.8
      */
-    public function output(string $format, int $timestamp = 0, ?string $calendar_locale = null)
+    public function output(string $format, int $timestamp = 0, ?string $calendar_locale = null): false|string
     {
         if ($timestamp === 0) {
             $timestamp = time();
@@ -224,7 +234,7 @@ class zcDate extends base
     /**
      * @since ZC v1.5.8
      */
-    protected function convertFormat(string $format, array $replacements)
+    protected function convertFormat(string $format, array $replacements): array|string
     {
         return str_replace($replacements['from'], $replacements['to'], $format);
     }
@@ -245,7 +255,7 @@ class zcDate extends base
     /**
      * @since ZC v1.5.8
      */
-    protected function debug(string $message)
+    protected function debug(string $message): void
     {
         if ($this->debug === true) {
             error_log($message . \PHP_EOL);

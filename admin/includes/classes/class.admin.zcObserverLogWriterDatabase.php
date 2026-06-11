@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -74,7 +76,7 @@ class zcObserverLogWriterDatabase
                 'admin_id' => (int)$admin_id,
                 'page_accessed' =>  'Log found to be empty. Logging started.',
                 'page_parameters' => '',
-                'ip_address' => $db->prepare_input(substr($_SERVER['REMOTE_ADDR'],0,45)),
+                'ip_address' => $db->prepare_input(substr($_SERVER['REMOTE_ADDR'], 0, 45)),
                 'gzpost' => '',
                 'flagged' => 0,
                 'attention' => '',
