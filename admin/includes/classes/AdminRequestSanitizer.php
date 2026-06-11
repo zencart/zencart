@@ -880,11 +880,11 @@ class AdminRequestSanitizer extends base
     }
 
     /**
-     * @param string $parameterName the sub-parameter (key) to be added to the $this->arrayname if $this->arrayname has already been defined as a non-empty string.
+     * @param string|int $parameterName the sub-parameter (key) to be added to the $this->arrayname if $this->arrayname has already been defined as a non-empty string.
      * @return string the newly built arrayname to be assigned/evaluated as necessary.
      * @since ZC v1.5.6
      */
-    private function setCurrentArrayName(string $parameterName): string
+    private function setCurrentArrayName(string|int $parameterName): string
     {
         $result = $parameterName; // Assign as base variable, assumed to not be an array, but instead a single name/string.
 
