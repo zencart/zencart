@@ -24,7 +24,7 @@ function zen_validate_configuration_entry(string $variable, string $check_string
 
     // check inputs - error should be a defined constant in the language files
     if (empty($data['error']) || !isset($data['options']) || !is_array($data['options'])) {
-        return;
+        return null;
     }
 
     $options = $data['options'];
@@ -53,7 +53,7 @@ function zen_validate_configuration_entry(string $variable, string $check_string
     } elseif (is_int($data['id'])) {
         $id = $data['id'];
     } else {
-        return;
+        return null;
     }
 
     $result = filter_var($variable, $id, $options);
