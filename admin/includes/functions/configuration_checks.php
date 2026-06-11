@@ -12,11 +12,11 @@
   *     error: defined constant containing error message
   *     id: id of the filter to apply. (May be mnemonic value of int.)
   *     options: per http://php.net/manual/en/function.filter-var.php
-  *   @return - NULL; failure results in redirection inline.
+  *   @returns null for malformed requests
   *
   * @since ZC v1.5.6
   */
-function zen_validate_configuration_entry(string $variable, string $check_string, string $config_name = '')
+function zen_validate_configuration_entry(string $variable, string $check_string, string $config_name = ''): ?bool
 {
     global $messageStack;
 
@@ -24,10 +24,11 @@ function zen_validate_configuration_entry(string $variable, string $check_string
 
     // check inputs - error should be a defined constant in the language files
     if (empty($data['error']) || !isset($data['options']) || !is_array($data['options'])) {
-        return;
+        return null;
     }
 
     $options = $data['options'];
+    $config_name = zen_output_string_protected($config_name);
 
     if (!defined($data['error'])) {
         switch (true) {
@@ -47,12 +48,12 @@ function zen_validate_configuration_entry(string $variable, string $check_string
         $error_msg = constant($data['error']);
     }
 
-    if (defined($data['id'])) {
-        $id = constant($data['id']);
-    } elseif (is_integer($data['id'])) {
+    if (is_string($data['id']) && defined($data['id'])) {
+        $id = (int)constant($data['id']);
+    } elseif (is_int($data['id'])) {
         $id = $data['id'];
     } else {
-        return;
+        return null;
     }
 
     $result = filter_var($variable, $id, $options);
