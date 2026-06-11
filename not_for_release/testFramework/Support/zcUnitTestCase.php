@@ -33,64 +33,46 @@ abstract class zcUnitTestCase extends TestCase
         $iteratorData->array = $items;
         $iteratorData->position = 0;
 
-        $iteratorMock->expects($this->any())
-            ->method('rewind')
-            ->will(
-                $this->returnCallback(
-                    function () use ($iteratorData) {
-                        $iteratorData->position = 0;
-                    }
-                )
+        $iteratorMock->method('rewind')
+            ->willReturnCallback(
+                function () use ($iteratorData) {
+                    $iteratorData->position = 0;
+                }
             );
 
-        $iteratorMock->expects($this->any())
-            ->method('current')
-            ->will(
-                $this->returnCallback(
-                    function () use ($iteratorData) {
-                        return $iteratorData->array[$iteratorData->position];
-                    }
-                )
+        $iteratorMock->method('current')
+            ->willReturnCallback(
+                function () use ($iteratorData) {
+                    return $iteratorData->array[$iteratorData->position];
+                }
             );
 
-        $iteratorMock->expects($this->any())
-            ->method('key')
-            ->will(
-                $this->returnCallback(
-                    function () use ($iteratorData) {
-                        return $iteratorData->position;
-                    }
-                )
+        $iteratorMock->method('key')
+            ->willReturnCallback(
+                function () use ($iteratorData) {
+                    return $iteratorData->position;
+                }
             );
 
-        $iteratorMock->expects($this->any())
-            ->method('next')
-            ->will(
-                $this->returnCallback(
-                    function () use ($iteratorData) {
-                        $iteratorData->position++;
-                    }
-                )
+        $iteratorMock->method('next')
+            ->willReturnCallback(
+                function () use ($iteratorData) {
+                    $iteratorData->position++;
+                }
             );
 
-        $iteratorMock->expects($this->any())
-            ->method('valid')
-            ->will(
-                $this->returnCallback(
-                    function () use ($iteratorData) {
-                        return isset($iteratorData->array[$iteratorData->position]);
-                    }
-                )
+        $iteratorMock->method('valid')
+            ->willReturnCallback(
+                function () use ($iteratorData) {
+                    return isset($iteratorData->array[$iteratorData->position]);
+                }
             );
 
-        $iteratorMock->expects($this->any())
-            ->method('count')
-            ->will(
-                $this->returnCallback(
-                    function () use ($iteratorData) {
-                        return sizeof($iteratorData->array);
-                    }
-                )
+        $iteratorMock->method('count')
+            ->willReturnCallback(
+                function () use ($iteratorData) {
+                    return sizeof($iteratorData->array);
+                }
             );
 
         return $iteratorMock;

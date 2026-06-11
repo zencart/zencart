@@ -41,7 +41,7 @@
         "guzzlehttp/guzzle": "^7.7",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^2.2",
-        "phpunit/phpunit": "^11.5.42",
+        "phpunit/phpunit": "^12.0",
         "symfony/css-selector": "^6.0",
         "symfony/dom-crawler": "^7.4",
         "symfony/maker-bundle": "^1.49",
