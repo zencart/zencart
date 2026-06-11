@@ -14,9 +14,7 @@ use queryFactory;
  */
 class ScriptedInstallerFactory
 {
-    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
-    {
-    }
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer) {}
 
     /**
      * @since ZC v1.5.7

@@ -20,7 +20,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class category_tree extends base
 {
-
     /**
      * Array of category details for display
      */

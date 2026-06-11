@@ -21,9 +21,7 @@ class BasePluginInstaller
      */
     protected string $pluginDir;
 
-    public function __construct(protected queryFactory $dbConn, protected Installer $pluginInstaller, protected PluginErrorContainer $errorContainer)
-    {
-    }
+    public function __construct(protected queryFactory $dbConn, protected Installer $pluginInstaller, protected PluginErrorContainer $errorContainer) {}
 
     /**
      * @since ZC v1.5.7

@@ -22,9 +22,7 @@ class ScriptedInstaller
     protected string $version;
     protected ?string $oldVersion; // null if not in upgrade mode
 
-    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
-    {
-    }
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer) {}
 
     /***** START: METHODS FOR IMPLEMENTATION IN EXTENDED CLASSES *********/
     /***** There is no need to implement any other methods in extended classes ****/
@@ -192,7 +190,7 @@ class ScriptedInstaller
             return false;
         }
         return $this->executeInstall();
-     }
+    }
 
     /**
      * @since ZC v1.5.7

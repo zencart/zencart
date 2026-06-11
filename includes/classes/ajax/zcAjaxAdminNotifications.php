@@ -9,7 +9,6 @@
  */
 class zcAjaxAdminNotifications extends base
 {
-
     /**
      * @since ZC v1.5.6
      */
@@ -18,9 +17,9 @@ class zcAjaxAdminNotifications extends base
         global $db;
 
         if (!isset($_POST['key'])) {
-            return (array(
-                'data' => false
-            ));
+            return ([
+                'data' => false,
+            ]);
         }
 
         $sql = "INSERT INTO " . TABLE_ADMIN_NOTIFICATIONS . "(notification_key, admin_id, dismissed) VALUE (:nKey:,:adminId:, 1)
@@ -30,9 +29,9 @@ class zcAjaxAdminNotifications extends base
         $sql = $db->bindVars($sql, ':nKey:', $_POST['key'], 'string');
         $result = $db->Execute($sql);
 
-        return (array(
-            'data' => $result
-        ));
+        return ([
+            'data' => $result,
+        ]);
     }
 
 }

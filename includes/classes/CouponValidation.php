@@ -8,7 +8,6 @@
 
 class CouponValidation
 {
-
     /**
      * Check whether the product is valid for the specified coupon, according to model/category/product restrictions assigned to the coupon
      * @since ZC v2.0.0
@@ -67,8 +66,8 @@ class CouponValidation
 
         $allow_for_category = self::validate_for_category($product_id, $coupon_id);
         $allow_for_product = self::validate_for_product($product_id, $coupon_id);
-//    echo '#'.$product_id . '#' . $allow_for_category;
-//    echo '#'.$product_id . '#' . $allow_for_product;
+        //    echo '#'.$product_id . '#' . $allow_for_category;
+        //    echo '#'.$product_id . '#' . $allow_for_product;
         if ($allow_for_category === 'none') {
             if ($allow_for_product === 'none') {
                 return true;

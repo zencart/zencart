@@ -19,7 +19,6 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class zen_SiteMapTree
 {
-
     /**
      * The root category name
      *

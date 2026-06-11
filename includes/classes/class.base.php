@@ -30,13 +30,12 @@ class base
      */
     public static function camelize($rawName, $camelFirst = false)
     {
-        if ($rawName == "")
+        if ($rawName == "") {
             return $rawName;
+        }
         if ($camelFirst) {
             $rawName[0] = strtoupper($rawName[0]);
         }
-        return preg_replace_callback('/[_-]([0-9,a-z])/', function ($matches) {
-            return strtoupper($matches[1]);
-        }, $rawName);
+        return preg_replace_callback('/[_-]([0-9,a-z])/', fn($matches) => strtoupper($matches[1]), $rawName);
     }
 }

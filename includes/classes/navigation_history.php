@@ -18,9 +18,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class navigationHistory extends base
 {
-    public
-        $path,
-        $snapshot;
+    public $path;
+    public $snapshot;
 
     public function __construct()
     {
@@ -74,7 +73,7 @@ class navigationHistory extends base
                         continue;
                     } else {
                         if ($this->path[$i]['get']['cPath'] == $cPath) {
-                            array_splice($this->path, ($i+1));
+                            array_splice($this->path, ($i + 1));
                             $set = 'false';
                             break;
                         } else {
@@ -82,7 +81,7 @@ class navigationHistory extends base
                             $new_cPath = explode('_', $cPath);
 
                             $exit_loop = false;
-                            for ($j=0, $n2=sizeof($old_cPath); $j<$n2; $j++) {
+                            for ($j = 0, $n2 = count($old_cPath); $j < $n2; $j++) {
                                 if ($old_cPath[$j] != $new_cPath[$j]) {
                                     array_splice($this->path, ($i));
                                     $set = 'true';
@@ -105,11 +104,11 @@ class navigationHistory extends base
 
         if ($set === 'true') {
             $page = (isset($_GET['main_page'])) ? $_GET['main_page'] : FILENAME_DEFAULT;
-             $this->path[] = [
+            $this->path[] = [
                 'page' => $page,
                 'mode' => $request_type,
                 'get' => $get_vars,
-                'post' => [] /*$_POST*/
+                'post' => [], /*$_POST*/
             ];
         }
     }
@@ -143,7 +142,7 @@ class navigationHistory extends base
                 'page' => $page,
                 'mode' => $request_type,
                 'get' => $get_vars,
-                'post' => [] /*$_POST*/
+                'post' => [], /*$_POST*/
             ];
         }
     }
@@ -168,7 +167,7 @@ class navigationHistory extends base
             'page' => $this->path[$pos]['page'],
             'mode' => $this->path[$pos]['mode'],
             'get' => $this->path[$pos]['get'],
-            'post' => $this->path[$pos]['post']
+            'post' => $this->path[$pos]['post'],
         ];
     }
 

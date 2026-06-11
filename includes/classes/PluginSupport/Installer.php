@@ -17,9 +17,7 @@ class Installer
     protected string $version;
     protected ?string $oldVersion;
 
-    public function __construct(protected SqlPatchInstaller $patchInstaller, protected ScriptedInstallerFactory $scriptedInstallerFactory, protected PluginErrorContainer $errorContainer)
-    {
-    }
+    public function __construct(protected SqlPatchInstaller $patchInstaller, protected ScriptedInstallerFactory $scriptedInstallerFactory, protected PluginErrorContainer $errorContainer) {}
 
     /**
      * @since ZC v2.1.0

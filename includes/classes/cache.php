@@ -72,7 +72,7 @@ class cache
                 }
                 break;
             case 'database':
-                $sql = "SELECT * FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name ."'";
+                $sql = "SELECT * FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name . "'";
                 $cache_result = $db->Execute($sql);
                 if (!$cache_result->EOF) {
                     $start_time = $cache_result->fields['cache_entry_created'];

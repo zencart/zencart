@@ -5,6 +5,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
+
 namespace Zencart\FileSystem;
 
 /**
@@ -25,7 +26,7 @@ class FileSystem
         }
         while ($file = $dir->read()) {
             if (preg_match($fileRegx, $file) > 0) {
-                require_once($rootDir . '/' . $file);
+                require_once $rootDir . '/' . $file;
             }
         }
         $dir->close();
@@ -160,7 +161,7 @@ class FileSystem
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file) {
             $bytes += $file->getSize();
         }
-        $size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $factor = floor((strlen($bytes) - 1) / 3);
         $suffix = 'bloody huge!';
         if (isset($size[$factor])) {

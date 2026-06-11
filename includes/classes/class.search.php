@@ -175,7 +175,7 @@ class Search extends \base
             'PRODUCT_LIST_PRICE' => zen_config('PRODUCT_LIST_PRICE'),
             'PRODUCT_LIST_QUANTITY' => zen_config('PRODUCT_LIST_QUANTITY'),
             'PRODUCT_LIST_WEIGHT' => zen_config('PRODUCT_LIST_WEIGHT'),
-            'PRODUCT_LIST_IMAGE' => zen_config('PRODUCT_LIST_IMAGE')
+            'PRODUCT_LIST_IMAGE' => zen_config('PRODUCT_LIST_IMAGE'),
         ];
 
         asort($define_list);

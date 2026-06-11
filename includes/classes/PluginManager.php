@@ -20,9 +20,7 @@ class PluginManager
     public function __construct(
         private PluginControlRepository $pluginControl,
         private PluginControlVersionRepository $pluginControlVersion
-    )
-    {
-    }
+    ) {}
 
     /**
      * @since ZC v1.5.7

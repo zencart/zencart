@@ -12,7 +12,6 @@ namespace Zencart\PluginSupport;
  */
 class SqlPatchInstaller
 {
-
     /**
      * $dbConn is a database object
      * @var object
@@ -109,7 +108,7 @@ class SqlPatchInstaller
         $type = $this->findSqlLineType(strtoupper($line));
 
         if (count($type) === 0) {
-             $this->errorContainer->addError(0, ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP. $line, true);
+            $this->errorContainer->addError(0, ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP . $line, true);
             return [];
         }
         $method = 'processLine' . ucfirst($type['method']);
@@ -118,7 +117,7 @@ class SqlPatchInstaller
          * if empty the line could not be correctly parsed
          */
         if (empty($newParams)) {
-             $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);
+            $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);
         }
         return $newParams;
     }

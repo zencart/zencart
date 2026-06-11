@@ -78,7 +78,7 @@ class QueryCache
             $this->queries = [];
             return false;
         }
-        unset ($this->queries[$query]);
+        unset($this->queries[$query]);
         return true;
     }
 }

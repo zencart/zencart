@@ -22,6 +22,4 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-class notifier extends base
-{
-}
+class notifier extends base {}

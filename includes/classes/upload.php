@@ -17,7 +17,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @since ZC v1.0.3
  */
- //
+//
 // This is the old UPLOAD_FILENAME_EXTENSIONS which was in the database
 zen_define_default('UPLOAD_FILENAME_EXTENSIONS_LIST', 'jpg,jpeg,gif,png,eps,cdr,ai,pdf,tif,tiff,bmp,zip');
 
@@ -123,7 +123,7 @@ class upload
             return false;
         }
 
-        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $file_extension = pathinfo($file['name'], \PATHINFO_EXTENSION);
         if (str_ends_with($file['name'], '.htaccess') || (count($this->extensions) !== 0 && !in_array(strtolower($file_extension), $this->extensions))) {
             $this->message_stack(sprintf(ERROR_FILETYPE_NOT_ALLOWED, $file_extension, '.' . implode(', .', $this->extensions)), 'error');
             return false;
@@ -140,11 +140,11 @@ class upload
      */
     protected function fileError(array $file): bool
     {
-        if ((int)$file['error'] === UPLOAD_ERR_OK) {
+        if ((int)$file['error'] === \UPLOAD_ERR_OK) {
             return false;
         }
         switch ((int)$file['error']) {  //- See for details: https://www.php.net/manual/en/filesystem.constants.php#constant.upload-err-form-size
-            case UPLOAD_ERR_INI_SIZE:   //- 1
+            case \UPLOAD_ERR_INI_SIZE:   //- 1
                 if (IS_ADMIN_FLAG === true) {
                     $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_INI, ini_get('upload_max_filesize')), 'error'); //- TODO: Check post_max_size, too
                 } else {
@@ -152,7 +152,7 @@ class upload
                 }
                 break;
 
-            case UPLOAD_ERR_FORM_SIZE:  //- 2
+            case \UPLOAD_ERR_FORM_SIZE:  //- 2
                 if (IS_ADMIN_FLAG === true) {
                     $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_MAXSIZE, $_POST['MAX_FILE_SIZE']), 'error');
                 } else {
@@ -160,10 +160,10 @@ class upload
                 }
                 break;
 
-            // -----
-            // Note: No message here, intentionally.
-            //
-            case UPLOAD_ERR_NO_FILE:    //- 4
+                // -----
+                // Note: No message here, intentionally.
+                //
+            case \UPLOAD_ERR_NO_FILE:    //- 4
                 $this->fileUploaded = false;
                 break;
 
@@ -262,7 +262,7 @@ class upload
      * @param array $extensions
      * @since ZC v1.0.3
      */
-    function set_extensions(array|string $extensions): void
+    public function set_extensions(array|string $extensions): void
     {
         if (!empty($extensions)) {
             if (is_array($extensions)) {
@@ -280,7 +280,7 @@ class upload
      */
     public function check_destination(): bool
     {
-        if (!is_writeable($this->destination)) {
+        if (!is_writable($this->destination)) {
             if (is_dir($this->destination)) {
                 $this->message_stack(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
             } else {

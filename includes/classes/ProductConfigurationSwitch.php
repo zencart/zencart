@@ -13,7 +13,10 @@ class ProductConfigurationSwitch extends base
 {
     protected $layout_data = [];
     protected $configuration_data = [];
-    protected $prefix, $suffix,  $field_prefix, $field_suffix;
+    protected $prefix;
+    protected $suffix;
+    protected $field_prefix;
+    protected $field_suffix;
     protected $type_handler;
     protected $products_type;
 
@@ -30,7 +33,7 @@ class ProductConfigurationSwitch extends base
         $type_lookup = $db->Execute($sql, 1);
 
         if ($type_lookup->RecordCount() == 0) {
-          return false;
+            return false;
         }
 
         $this->products_type = $type_lookup->fields['products_type'];
@@ -46,14 +49,14 @@ class ProductConfigurationSwitch extends base
         $zv_key_values = $db->Execute($sql);
 
         foreach ($zv_key_values as $entry) {
-          $this->layout_data[$entry['configuration_key']] = $entry['configuration_value'];
+            $this->layout_data[$entry['configuration_key']] = $entry['configuration_value'];
         }
 
         $sql = "SELECT configuration_key, configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE '" . zen_db_input($zv_key) . "'";
         $zv_key_values = $db->Execute($sql);
 
         foreach ($zv_key_values as $entry) {
-          $this->configuration_data[$entry['configuration_key']] = $entry['configuration_value'];
+            $this->configuration_data[$entry['configuration_key']] = $entry['configuration_value'];
         }
     }
 
@@ -64,11 +67,11 @@ class ProductConfigurationSwitch extends base
     {
         $switch = strtoupper($this->prefix . $this->type_handler . $this->suffix . $this->field_prefix . $field . $this->field_suffix);
         if (isset($this->layout_data[$switch])) {
-           return $this->layout_data[$switch];
-        } else if (isset($this->configuration_data[$switch])) {
-           return $this->configuration_data[$switch];
+            return $this->layout_data[$switch];
+        } elseif (isset($this->configuration_data[$switch])) {
+            return $this->configuration_data[$switch];
         } else {
-           return false;
+            return false;
         }
     }
 
@@ -77,6 +80,6 @@ class ProductConfigurationSwitch extends base
      */
     public function getProductsType()
     {
-       return $this->products_type;
+        return $this->products_type;
     }
 }

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -186,11 +188,11 @@ class SimpleDataFormatter
      */
     public function hasButtonActions()
     {
-         $buttonActions = $this->getRawButtonActions();
-         if (count($buttonActions) == 0) {
-             return false;
-         }
-         return (count($buttonActions) > 0);
+        $buttonActions = $this->getRawButtonActions();
+        if (count($buttonActions) == 0) {
+            return false;
+        }
+        return (count($buttonActions) > 0);
     }
 
     /**
@@ -282,7 +284,7 @@ class SimpleDataFormatter
     {
         $pagerVar = $this->tableDefinition->getParameter('pagerVariable');
         $link = $pagerVar . '=' . $this->request->input($pagerVar, 1);
-        $link .= '&action='  . $rowAction['action'];
+        $link .= '&action=' . $rowAction['action'];
         $tableRowLink = $this->processRowActionTableRowLink($rowAction, $tableRow);
         $tableRowLink = rtrim($tableRowLink, '&');
         $link .= '&' . $tableRowLink;
@@ -299,7 +301,9 @@ class SimpleDataFormatter
             return $link;
         }
         foreach ($rowAction['linkParams'] as $linkParams) {
-            if ($linkParams['source'] !== 'tableRow') continue;
+            if ($linkParams['source'] !== 'tableRow') {
+                continue;
+            }
             $link .= $linkParams['param'] . '=' . $tableRow[$linkParams['field']]['original'] . '&';
         }
         return $link;

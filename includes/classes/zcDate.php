@@ -33,7 +33,7 @@ class zcDate extends base
             $this->debug = true;
         }
 
-        if (version_compare(phpversion(), '8.1', '<')) {
+        if (version_compare(\PHP_VERSION, '8.1', '<')) {
             $this->useStrftime = true;
         } else {
             if (function_exists('datefmt_create')) {
@@ -41,7 +41,7 @@ class zcDate extends base
             }
             $this->initializeConversionArrays();
         }
-        $this->debug('zcDate construction: ' . PHP_EOL . var_export($this, true));
+        $this->debug('zcDate construction: ' . \PHP_EOL . var_export($this, true));
     }
 
     // -----
@@ -91,7 +91,7 @@ class zcDate extends base
             // First, save the current locale; it's set by the main language file's (presumed) call to the
             // setlocale function.
             //
-            $this->locale = setlocale(LC_TIME, '0');
+            $this->locale = setlocale(\LC_TIME, '0');
 
             // -----
             // Using the current locale, retrieve the locale-specific 'short' date and time
@@ -147,7 +147,7 @@ class zcDate extends base
     public function enableDebug()
     {
         $this->debug = true;
-        $this->debug('Debug enabled: ' . PHP_EOL . var_export($this, true));
+        $this->debug('Debug enabled: ' . \PHP_EOL . var_export($this, true));
     }
     /**
      * @since ZC v1.5.8
@@ -191,7 +191,7 @@ class zcDate extends base
             // If the locale has changes (as it might between the class construction and
             // this method, re-initialize the conversion arrays for the current locale.
             //
-            if ($this->locale !== setlocale(LC_TIME, '0')) {
+            if ($this->locale !== setlocale(\LC_TIME, '0')) {
                 $this->initializeConversionArrays();
             }
 
@@ -211,7 +211,7 @@ class zcDate extends base
             );
             $output = $this->dateObject->format($timestamp);
             if ($output === false) {
-                trigger_error(sprintf("Formatting error using '%s': %s (%d)", $converted_format, $this->dateObject->getErrorMessage(), $this->dateObject->getErrorCode()), E_USER_WARNING);
+                trigger_error(sprintf("Formatting error using '%s': %s (%d)", $converted_format, $this->dateObject->getErrorMessage(), $this->dateObject->getErrorCode()), \E_USER_WARNING);
             }
         }
 
@@ -248,7 +248,7 @@ class zcDate extends base
     protected function debug(string $message)
     {
         if ($this->debug === true) {
-            error_log($message . PHP_EOL);
+            error_log($message . \PHP_EOL);
         }
     }
 }

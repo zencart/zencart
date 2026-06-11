@@ -8,7 +8,7 @@
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 /**
  * cc_validation Class.
@@ -18,7 +18,10 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class cc_validation
 {
-    public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
+    public $cc_type;
+    public $cc_number;
+    public $cc_expiry_month;
+    public $cc_expiry_year;
 
     /**
     * @since ZC v1.0.3
@@ -72,7 +75,7 @@ class cc_validation
 
         $current_year = date('Y');
         if (strlen($expiry_y) === 2) {
-            $expiry_y = intval(substr($current_year, 0, 2) . $expiry_y);
+            $expiry_y = (int)(substr($current_year, 0, 2) . $expiry_y);
         }
         if (is_numeric($expiry_y) && $expiry_y >= $current_year && $expiry_y <= ($current_year + 10)) {
             $this->cc_expiry_year = $expiry_y;
@@ -94,9 +97,9 @@ class cc_validation
 
             if (strlen($start_y) === 2) {
                 if ($start_y > 80) {
-                    $start_y = intval('19' . $start_y);
+                    $start_y = (int)('19' . $start_y);
                 } else {
-                    $start_y = intval('20' . $start_y);
+                    $start_y = (int)('20' . $start_y);
                 }
             }
 

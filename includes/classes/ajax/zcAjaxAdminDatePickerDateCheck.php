@@ -36,7 +36,7 @@ class zcAjaxAdminDatePickerDateCheck extends base
             $dt = DateTime::createFromFormat($local_fmt, $date_raw);
             $date_raw = false;
             if (!empty($dt)) {
-              $date_raw = $dt->format('Y-m-d');
+                $date_raw = $dt->format('Y-m-d');
             }
         }
         return ($date_raw !== false && zcDate::validateDate($date_raw) === true) ? 'true' : 'false';

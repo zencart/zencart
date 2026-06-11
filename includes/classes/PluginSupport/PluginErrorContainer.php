@@ -12,7 +12,6 @@ namespace Zencart\PluginSupport;
  */
 class PluginErrorContainer
 {
-
     /**
      * $logger "null" the logger to use.
      * @var object
@@ -59,7 +58,9 @@ class PluginErrorContainer
             $friendlyMessage = $logMessage;
         }
         $this->logErrors[] = $logMessage;
-        if ($friendlyMessage === '') return;
+        if ($friendlyMessage === '') {
+            return;
+        }
         $friendlyHash = hash('md5', $friendlyMessage);
         $this->friendlyErrors[$friendlyHash] = $friendlyMessage;
         if ($this->logger) {

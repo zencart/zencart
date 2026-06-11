@@ -233,7 +233,7 @@ class currencies extends base
             $this->currencies[$currency_code]['symbol_left'] = $currency_code . ' ';
             $this->currencies[$currency_code]['symbol_right'] = '';
             if ($this->debug === true) {
-                trigger_error("Creating currency settings for $currency_code, based on " . zen_config('DEFAULT_CURRENCY') . " settings.", E_USER_NOTICE);
+                trigger_error("Creating currency settings for $currency_code, based on " . zen_config('DEFAULT_CURRENCY') . " settings.", \E_USER_NOTICE);
             }
         }
 
