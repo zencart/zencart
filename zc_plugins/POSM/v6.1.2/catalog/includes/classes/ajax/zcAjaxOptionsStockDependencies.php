@@ -27,7 +27,7 @@ class zcAjaxOptionsStockDependencies extends base
     {
         global $db;
 
-        $this->debug = (POSM_ENABLE_DEBUG === 'true');
+        $this->debug = (zen_config('POSM_ENABLE_DEBUG') === 'true');
         $this->debug_log_file = DIR_FS_LOGS . '/myDEBUG-ajaxPOSM-' . date('Ymd-His') . '.log';
 
         $this->debug_message('On entry: ' . json_encode($_POST));
@@ -96,7 +96,7 @@ class zcAjaxOptionsStockDependencies extends base
                     $this->debug_message("Processing unmanaged option ($options_id) ...");
                     $unmanaged_option = [
                         'quantity' => 0,
-                        'oos_message' => (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') ? PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK : '',
+                        'oos_message' => (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true') ? PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK : '',
                         'model' => ''
                     ];
                     foreach ($unmanaged_option_info as $next_unmanaged) {

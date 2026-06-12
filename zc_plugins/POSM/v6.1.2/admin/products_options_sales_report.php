@@ -129,7 +129,7 @@ if ($timeframe_type === 'preset') {
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <style>
     table > tbody > tr.name-list > td {
-        background-color: <?= POSM_DIVIDER_COLOR ?>;
+        background-color: <?= zen_config('POSM_DIVIDER_COLOR') ?>;
         font-weight: bold;
     }
     table.breakdown > tbody > tr > th {

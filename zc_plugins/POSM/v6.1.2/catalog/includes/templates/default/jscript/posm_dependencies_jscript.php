@@ -34,7 +34,7 @@ if (isset($attribute_swatch) && is_object($attribute_swatch) && method_exists($a
 // only if the processing is enabled via configuration or if an override is in place.
 //
 global $zco_notifier;
-$posm_dependent_attrs_enable = (POSM_DEPENDENT_ATTRS_ENABLE === 'true');
+$posm_dependent_attrs_enable = (zen_config('POSM_DEPENDENT_ATTRS_ENABLE') === 'true');
 $zco_notifier->notify('NOTIFY_POSM_DEPENDENCIES_ENABLE_OVERRIDE', [], $posm_dependent_attrs_enable);
 if ($posm_dependent_attrs_enable !== true) {
     return;
@@ -59,11 +59,11 @@ foreach ($oos_messages as $oos_message) {
 
 $check_select = false;
 $check_radio = false;
-if (POSM_OPTIONS_TYPES_TO_MANAGE === '') {
+if (zen_config('POSM_OPTIONS_TYPES_TO_MANAGE') === '') {
     trigger_error("FATAL ERROR: Products' Options' Stock Manager -- Option Types to Manage cannot be empty.", E_USER_WARNING);
     die();
 }
-$the_list = explode(',', POSM_OPTIONS_TYPES_TO_MANAGE);
+$the_list = explode(',', zen_config('POSM_OPTIONS_TYPES_TO_MANAGE', ''));
 foreach ($the_list as $the_type) {
     switch ($the_type) {
         case 0:
@@ -76,8 +76,8 @@ foreach ($the_list as $the_type) {
             break;
     }
 }
-if (POSM_OPTIONAL_OPTION_TYPES_LIST !== '') {
-    $the_list = explode(',', POSM_OPTIONAL_OPTION_TYPES_LIST);
+if (zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') !== '') {
+    $the_list = explode(',', zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST', ''));
     foreach ($the_list as $the_type) {
         switch ($the_type) {
             case 0:
@@ -107,8 +107,8 @@ $option_check = $db->Execute(
        FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS . " po
       WHERE pa.products_id = " . (int)$_GET['products_id'] . "
         AND pa.options_id = po.products_options_id
-        AND po.products_options_type IN (" . POSM_OPTIONS_TYPES_TO_MANAGE . ")" .
-        ((POSM_OPTIONAL_OPTION_NAMES_LIST === '') ? '' : " AND pa.options_id NOT IN (" . POSM_OPTIONAL_OPTION_NAMES_LIST . ")")
+        AND po.products_options_type IN (" . zen_config('POSM_OPTIONS_TYPES_TO_MANAGE') . ")" .
+        ((zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') === '') ? '' : " AND pa.options_id NOT IN (" . zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') . ")")
 );
 $is_single_option = ($option_check->RecordCount() < 2);
 ?>
@@ -130,33 +130,33 @@ swatchOptions[<?= $option_info->fields['products_options_id'] ?>] = {
 }
 
 $in_stock_message = '';
-if (POSM_SHOW_IN_STOCK_MESSAGE === 'true' && POSM_DEPENDENT_ATTRS_STOCK_STATUS === 'true') {
-    $in_stock_message = (POSM_DEPENDENT_ATTRS_STOCK_STATUS_QTY === 'true') ? PRODUCTS_OPTIONS_STOCK_IN_STOCK_QTY : PRODUCTS_OPTIONS_STOCK_IN_STOCK;
+if (zen_config('POSM_SHOW_IN_STOCK_MESSAGE') === 'true' && zen_config('POSM_DEPENDENT_ATTRS_STOCK_STATUS') === 'true') {
+    $in_stock_message = (zen_config('POSM_DEPENDENT_ATTRS_STOCK_STATUS_QTY') === 'true') ? PRODUCTS_OPTIONS_STOCK_IN_STOCK_QTY : PRODUCTS_OPTIONS_STOCK_IN_STOCK;
 }
 ?>
 let inStockMessage = '<?= addslashes($in_stock_message) ?>';
 let lastSelection = false;
 let outOfStockClass = '';
 let outOfStockMessage = '';
-let wrapperAttribsOptions = '<?= POSM_ATTRIBUTE_SELECTOR ?>';
-let optionNameSelector = '<?= POSM_OPTION_NAME_SELECTOR ?>';
-let attributeWrapper = '<?= (POSM_ATTRIBUTE_WRAPPER_SELECTOR !== '') ? POSM_ATTRIBUTE_WRAPPER_SELECTOR : POSM_ATTRIBUTE_SELECTOR ?>';
-let attribImgSelector = '<?= POSM_ATTRIBUTE_IMAGE_SELECTOR ?>';
-let ignoreOptionsList = [<?= POSM_OPTIONAL_OPTION_NAMES_LIST ?>];
+let wrapperAttribsOptions = '<?= zen_config('POSM_ATTRIBUTE_SELECTOR') ?>';
+let optionNameSelector = '<?= zen_config('POSM_OPTION_NAME_SELECTOR') ?>';
+let attributeWrapper = '<?= (zen_config('POSM_ATTRIBUTE_WRAPPER_SELECTOR') !== '') ? zen_config('POSM_ATTRIBUTE_WRAPPER_SELECTOR') : zen_config('POSM_ATTRIBUTE_SELECTOR') ?>';
+let attribImgSelector = '<?= zen_config('POSM_ATTRIBUTE_IMAGE_SELECTOR') ?>';
+let ignoreOptionsList = [<?= zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') ?>];
 let checkSelect = <?= ($check_select === true) ? 'true' : 'false' ?>;
 let inputTypes = '<?= $input_types ?>';
 let inputTypesFirst = '<?= $input_types_first ?>';
 let isSingleOption = <?= ($is_single_option === true) ? 'true' : 'false' ?>;
 let callingPage = '<?= $current_page_base ?>';
 let callingPid = <?= (int)$_GET['products_id'] ?>;
-let insertPleaseChoose = <?= (POSM_DEPENDENT_ATTRS_PLEASE_CHOOSE === 'true' && $check_select === true && $is_single_option === false) ? 'true' : 'false' ?>;
-let showModelNum = <?= POSM_DEPENDENT_ATTRS_SHOW_MODEL ?>;
+let insertPleaseChoose = <?= (zen_config('POSM_DEPENDENT_ATTRS_PLEASE_CHOOSE') === 'true' && $check_select === true && $is_single_option === false) ? 'true' : 'false' ?>;
+let showModelNum = <?= zen_config('POSM_DEPENDENT_ATTRS_SHOW_MODEL') ?>;
 <?php
 // -----
 // The "Please Choose" text associated with the first drop-down option depends on whether a drop-down option is first in a product's
 // option-list!  Note that the "Please Choose" text-insertion applies **ONLY** to products with multiple options.
 //
-if (PRODUCTS_OPTIONS_SORT_ORDER === '0') {
+if (zen_config('PRODUCTS_OPTIONS_SORT_ORDER') === '0') {
     $options_order_by = " ORDER BY LPAD(po.products_options_sort_order,11,'0')";
 } else {
     $options_order_by = ' ORDER BY po.products_options_name';
@@ -182,10 +182,10 @@ let pleaseChooseText = '<?= addslashes($please_choose_text) ?>';
 let pleaseChooseNextText = '<?= addslashes(PRODUCTS_OPTIONS_STOCK_PLEASE_CHOOSE_NEXT) ?>';
 let noSelectionText = '<?= addslashes(JS_ERROR_NO_SELECTION) ?>';
 let radioButtonChoose = '<?= addslashes(PRODUCTS_OPTIONS_STOCK_RADIO_BUTTON_CHOOSE) ?>';
-let allowCheckout = <?= (STOCK_ALLOW_CHECKOUT === 'false') ? 'false' : 'true' ?>;
+let allowCheckout = <?= (zen_config('STOCK_ALLOW_CHECKOUT') === 'false') ? 'false' : 'true' ?>;
 </script>
 <?php
-if (POSM_USE_MINIFIED_JSCRIPT === 'true') {
+if (zen_config('POSM_USE_MINIFIED_JSCRIPT') === 'true') {
     $jquery_filename = 'jquery.posm_dependencies.min.js';
 } else {
     $jquery_filename = 'jquery.posm_dependencies.js';

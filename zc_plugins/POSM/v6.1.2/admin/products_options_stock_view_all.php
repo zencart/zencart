@@ -57,7 +57,7 @@ if (isset($_GET['action'], $_POST['quantity'], $_POST['update_x']) && $_GET['act
                 break;
             }
 
-            if (POSM_DUPLICATE_MODELNUMS === 'Disallow' && posm_modelnum_is_duplicate($pos_id, $new_model)) {
+            if (zen_config('POSM_DUPLICATE_MODELNUMS') === 'Disallow' && posm_modelnum_is_duplicate($pos_id, $new_model)) {
                 $messageStack->add(sprintf(ERROR_DUPLICATE_MODEL_FOUND, $new_model));
                 $error = true;
                 $onload = " document.modify_form['model[$pos_id]'].focus();";
@@ -117,15 +117,15 @@ if (isset($_GET['action'], $_POST['quantity'], $_POST['update_x']) && $_GET['act
 // -----
 // Check for invalid values in the POSM_STOCK_REORDER_LEVEL setting (it should contain only digits 0-9) and reset it to 0 if found invalid.
 //
-$posm_stock_reorder_level = preg_replace("/[^0-9]/", '', POSM_STOCK_REORDER_LEVEL);
-if ($posm_stock_reorder_level !== POSM_STOCK_REORDER_LEVEL) {
+$posm_stock_reorder_level = preg_replace("/[^0-9]/", '', zen_config('POSM_STOCK_REORDER_LEVEL', ''));
+if ($posm_stock_reorder_level !== zen_config('POSM_STOCK_REORDER_LEVEL')) {
     $db->Execute(
         "UPDATE " . TABLE_CONFIGURATION . "
             SET configuration_value = '0'
           WHERE configuration_key = 'POSM_STOCK_REORDER_LEVEL'
           LIMIT 1"
     );
-    $messageStack->add(sprintf(CAUTION_POSM_REORDER_LEVEL, POSM_STOCK_REORDER_LEVEL), 'caution');
+    $messageStack->add(sprintf(CAUTION_POSM_REORDER_LEVEL, zen_config('POSM_STOCK_REORDER_LEVEL')), 'caution');
 }
 ?>
 <!doctype html>
@@ -133,7 +133,7 @@ if ($posm_stock_reorder_level !== POSM_STOCK_REORDER_LEVEL) {
 <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 <?php
-$model_num_width = (POSM_ADMIN_MODEL_WIDTH === '') ? '' : ('width: ' . POSM_ADMIN_MODEL_WIDTH . ';');
+$model_num_width = (zen_config('POSM_ADMIN_MODEL_WIDTH') === '') ? '' : ('width: ' . zen_config('POSM_ADMIN_MODEL_WIDTH') . ';');
 ?>
     <style>
 input[type="text"] {
@@ -148,7 +148,7 @@ input[type="text"].date {
     width: auto;
 }
 table > thead > tr.dataTableHeadingRow > th, table > tbody > tr.dataTableHeadingRow > td {
-    background-color: <?= POSM_DIVIDER_COLOR ?>;
+    background-color: <?= zen_config('POSM_DIVIDER_COLOR') ?>;
 }
 .centered {
     text-align: center;
@@ -338,7 +338,7 @@ $view_all_sql =
                AND pd.language_id = " . $_SESSION['languages_id'] . $where_clause . "
    ORDER BY pd.products_name ASC";
 
-$view_all_split = new splitPageResults($page_num, POSM_MAX_PRODUCTS_VIEW_ALL, $view_all_sql, $view_all_query_numrows);
+$view_all_split = new splitPageResults($page_num, zen_config('POSM_MAX_PRODUCTS_VIEW_ALL'), $view_all_sql, $view_all_query_numrows);
 $products_list = $db->Execute($view_all_sql);
 if ($products_list->EOF) {
 ?>
@@ -351,7 +351,7 @@ if ($products_list->EOF) {
 <?php
 } else {
     $posm_view_all = new PosmViewAll($posm_stock_reorder_level, $sort_by);
-    $model_field_size = (POSM_ADMIN_MODEL_WIDTH === '') ? ' ' . zen_set_field_length(TABLE_PRODUCTS_OPTIONS_STOCK, 'pos_model') : '';
+    $model_field_size = (zen_config('POSM_ADMIN_MODEL_WIDTH') === '') ? ' ' . zen_set_field_length(TABLE_PRODUCTS_OPTIONS_STOCK, 'pos_model') : '';
     foreach ($products_list as $next_product) {
         $products_id = $next_product['products_id'];
         $products_name_extra_info = '';
@@ -459,8 +459,8 @@ if ($products_list->EOF) {
             $pos_id = $current_option['fields']['pos_id'];
 
             $pos_model = isset($_POST['model'][$pos_id]) ? zen_output_string_protected($_POST['model'][$pos_id]) : $current_option['fields']['pos_model'];
-            $extra_model_class = (POSM_DUPLICATE_MODELNUMS !== 'Allow' && posm_modelnum_is_duplicate($pos_id, $pos_model)) ? ' duplicate' : '';
-            if (POSM_VIEW_ALL_MODEL_UPDATE === 'true') {
+            $extra_model_class = (zen_config('POSM_DUPLICATE_MODELNUMS') !== 'Allow' && posm_modelnum_is_duplicate($pos_id, $pos_model)) ? ' duplicate' : '';
+            if (zen_config('POSM_VIEW_ALL_MODEL_UPDATE') === 'true') {
                 $pos_model = zen_draw_input_field("model[$pos_id]", $pos_model, 'class="model-num' . $extra_model_class . '"' . $model_field_size);
             }
 ?>
@@ -526,10 +526,10 @@ if ($products_list->EOF) {
 
     <div class="row">
         <div class="col-md-6 smallText">
-            <?= $view_all_split->display_count($view_all_query_numrows, POSM_MAX_PRODUCTS_VIEW_ALL, $page_num, POSM_TEXT_DISPLAY_NUMBER_OF_PRODUCTS) ?>
+            <?= $view_all_split->display_count($view_all_query_numrows, zen_config('POSM_MAX_PRODUCTS_VIEW_ALL'), $page_num, POSM_TEXT_DISPLAY_NUMBER_OF_PRODUCTS) ?>
         </div>
         <div class="col-md-6 smallText text-right">
-            <?= $view_all_split->display_links($view_all_query_numrows, POSM_MAX_PRODUCTS_VIEW_ALL, MAX_DISPLAY_PAGE_LINKS, $page_num, zen_get_all_get_params(['page'])) ?>
+            <?= $view_all_split->display_links($view_all_query_numrows, zen_config('POSM_MAX_PRODUCTS_VIEW_ALL'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $page_num, zen_get_all_get_params(['page'])) ?>
         </div>
     </div>
 <?php
@@ -542,7 +542,7 @@ if ($products_list->EOF) {
 <?php require DIR_WS_INCLUDES . 'footer.php'; ?>
 <!-- footer_eof //-->
 <?php
-if (POSM_DUPLICATE_MODELNUMS !== 'Allow') {
+if (zen_config('POSM_DUPLICATE_MODELNUMS') !== 'Allow') {
 ?>
 <script>
 $(function() {
@@ -561,7 +561,7 @@ $(function() {
             if (response.isOk === false) {
                 $('input[type="text"][name="'+modelField+'"].model-num').addClass('duplicate');
 <?php
-    if (POSM_DUPLICATE_MODELNUMS === 'Disallow') {
+    if (zen_config('POSM_DUPLICATE_MODELNUMS') === 'Disallow') {
 ?>
                 alert(<?= JSCRIPT_ERROR_DUPLICATE_MODEL ?>);
                 document.modify_form['model['+posID+']'].focus();

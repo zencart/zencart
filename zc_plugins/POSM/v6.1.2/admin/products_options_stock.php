@@ -63,11 +63,11 @@ $show_date_column = (count($pos_names_date_array) !== 0);
 $show_oos_label_column = (count($pos_names_array) > 1 || $show_date_column === true);
 $single_label_text = $pos_names_array[0]['text'];
 $single_label_id = $pos_names_array[0]['id'];
-if (((int)POSM_BIS_DATE_REMINDER === 0) || $show_date_column === false) {
+if (((int)zen_config('POSM_BIS_DATE_REMINDER') === 0) || $show_date_column === false) {
     $reminder_date = '';
     $names_with_dates = '';
 } else {
-    $reminder_date = date('Y-m-d', strtotime('-' . (int)POSM_BIS_DATE_REMINDER . ' day'));
+    $reminder_date = date('Y-m-d', strtotime('-' . (int)zen_config('POSM_BIS_DATE_REMINDER') . ' day'));
     $names_with_dates = implode(',', $pos_names_date_array);
 }
 
@@ -192,7 +192,7 @@ if ($action === 'update') {
                     }
 
                     $model = zen_db_input($pos_models[$pos_id]);
-                    if (POSM_DUPLICATE_MODELNUMS === 'Disallow' && posm_modelnum_is_duplicate($pos_id, $model)) {
+                    if (zen_config('POSM_DUPLICATE_MODELNUMS') === 'Disallow' && posm_modelnum_is_duplicate($pos_id, $model)) {
                         $messageStack->add(sprintf(ERROR_DUPLICATE_MODEL_FOUND, $model));
                         $error = true;
                         $onload = "document.modify_form['pos_model[$pos_id]'].focus();";
@@ -426,15 +426,15 @@ if ($current_category_id !== -1) {
 // -----
 // Check for invalid values in the POSM_STOCK_REORDER_LEVEL setting (it should contain only digits 0-9) and reset it to 0 if found invalid.
 //
-$posm_stock_reorder_level = preg_replace("/[^0-9]/", '', POSM_STOCK_REORDER_LEVEL);
-if ($posm_stock_reorder_level !== POSM_STOCK_REORDER_LEVEL) {
+$posm_stock_reorder_level = preg_replace("/[^0-9]/", '', zen_config('POSM_STOCK_REORDER_LEVEL', ''));
+if ($posm_stock_reorder_level !== zen_config('POSM_STOCK_REORDER_LEVEL')) {
     $db->Execute(
         "UPDATE " . TABLE_CONFIGURATION . "
             SET configuration_value = '0'
           WHERE configuration_key = 'POSM_STOCK_REORDER_LEVEL'
           LIMIT 1"
     );
-    $messageStack->add(sprintf(CAUTION_POSM_REORDER_LEVEL, POSM_STOCK_REORDER_LEVEL), 'caution');
+    $messageStack->add(sprintf(CAUTION_POSM_REORDER_LEVEL, zen_config('POSM_STOCK_REORDER_LEVEL')), 'caution');
 }
 ?>
 <!doctype html>
@@ -442,7 +442,7 @@ if ($posm_stock_reorder_level !== POSM_STOCK_REORDER_LEVEL) {
 <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
 <?php
-$model_num_width = (POSM_ADMIN_MODEL_WIDTH === '') ? '' : ('width: ' . POSM_ADMIN_MODEL_WIDTH . ';');
+$model_num_width = (zen_config('POSM_ADMIN_MODEL_WIDTH') === '') ? '' : ('width: ' . zen_config('POSM_ADMIN_MODEL_WIDTH') . ';');
 ?>
     <style>
 input[type="text"].model-num {
@@ -478,7 +478,7 @@ hr {
     text-align: center;
 }
 table > tbody > tr.dataTableHeadingRow > td {
-    background-color: <?= POSM_DIVIDER_COLOR ?>;
+    background-color: <?= zen_config('POSM_DIVIDER_COLOR') ?>;
 }
 .disabled, .out-of-stock, .dup-model {
     color: red;
@@ -1236,7 +1236,7 @@ if (count($products_select) === 0) {
             $pos_date = $info_array['date'];
             $pos_quantity = $info_array['quantity'];
         }
-        $extra_model_class = (POSM_DUPLICATE_MODELNUMS !== 'Allow' && posm_modelnum_is_duplicate($pos_id, $pos_model)) ? ' duplicate' : '';
+        $extra_model_class = (zen_config('POSM_DUPLICATE_MODELNUMS') !== 'Allow' && posm_modelnum_is_duplicate($pos_id, $pos_model)) ? ' duplicate' : '';
 
         $oos_date_is_expired = false;
         if ($posObserver->stringPos(get_pos_oos_name($pos_name_id, $_SESSION['languages_id']), '[date]') !== false) {
@@ -1442,7 +1442,7 @@ $(function() {
         $('#pid-sort').remove();
     });
 <?php
-if (POSM_DUPLICATE_MODELNUMS !== 'Allow') {
+if (zen_config('POSM_DUPLICATE_MODELNUMS') !== 'Allow') {
 ?>
     $('input[type="text"].model-num').on('change', function() {
         let modelField = $(this).attr('name');
@@ -1459,7 +1459,7 @@ if (POSM_DUPLICATE_MODELNUMS !== 'Allow') {
             if (response.isOk === false) {
                 $('input[type="text"][name="'+modelField+'"].model-num').addClass('duplicate');
 <?php
-    if (POSM_DUPLICATE_MODELNUMS === 'Disallow') {
+    if (zen_config('POSM_DUPLICATE_MODELNUMS') === 'Disallow') {
 ?>
                 alert(<?= JSCRIPT_ERROR_DUPLICATE_MODEL ?>);
                 document.modify_form['pos_model['+posID+']'].focus();
