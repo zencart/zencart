@@ -108,7 +108,7 @@ class zcAjaxScanAdditionalImages
             $products_image = $product['products_image'];
 
             // The query should have filtered these out already.
-            if (empty($products_image) || $products_image === PRODUCTS_IMAGE_NO_IMAGE) {
+            if (empty($products_image) || $products_image === zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) {
                 continue;
             }
 
@@ -124,7 +124,7 @@ class zcAjaxScanAdditionalImages
             $image_dir = DIR_FS_CATALOG_IMAGES . $subdir;
 
             // Use '_' suffix unless legacy mode
-            if (defined('ADDITIONAL_IMAGES_MODE') && ADDITIONAL_IMAGES_MODE !== 'legacy' && !str_ends_with($image_base, '_')) {
+            if (defined('ADDITIONAL_IMAGES_MODE') && zen_config('ADDITIONAL_IMAGES_MODE') !== 'legacy' && !str_ends_with($image_base, '_')) {
                 $image_base .= '_';
             }
 
@@ -175,7 +175,7 @@ class zcAjaxScanAdditionalImages
         $sql .= " FROM " . TABLE_PRODUCTS . "
                 WHERE products_image IS NOT NULL
                 AND products_image != ''
-                AND products_image != '" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'";
+                AND products_image != '" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) . "'";
 
         if ($batch_size < 1) {
             return $sql;
