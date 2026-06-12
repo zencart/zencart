@@ -79,16 +79,14 @@ trait InteractsWithPlugins
     }
 
     /**
-     * @param string $stylesheet_filename
-     * @param string|null $current_page
-     * @return bool
+     * Link/output a stylesheet file from the plugin's css directory.
+     * Checks first in the plugin's own css directory, then in the active template's css directory.
      *
-     * @var \template_func $template
-     * @var PageLoader $pageLoader
      * @since ZC v2.1.0
      */
     protected function linkCatalogStylesheet(string $stylesheet_filename, ?string $current_page): bool
     {
+        /** @var \template_func $template */
         global $template, $pageLoader, $current_page_base;
         if (!$pageLoader) {
             $pageLoader = PageLoader::getInstance();
