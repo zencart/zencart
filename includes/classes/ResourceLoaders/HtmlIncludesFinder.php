@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
+
 namespace Zencart\ResourceLoaders;
 
 /**
@@ -12,20 +15,14 @@ namespace Zencart\ResourceLoaders;
 class HtmlIncludesFinder
 {
     private $filesystem;
-    private array $installedPlugins;
-    private string $language;
     private string $fallback = 'english';
-    private string $templateDir;
     private TemplateResolver $templateResolver;
 
     private static array $files = [];
 
-    public function __construct($filesystem, array $installedPlugins, string $language, string $templateDir)
+    public function __construct($filesystem, private array $installedPlugins, private string $language, private string $templateDir)
     {
         $this->filesystem = $filesystem;
-        $this->installedPlugins = $installedPlugins;
-        $this->language = $language;
-        $this->templateDir = $templateDir;
         $this->templateResolver = new TemplateResolver(null, null, null, $installedPlugins);
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Database-Sniffer Class.
  *
@@ -88,7 +90,7 @@ class sniffer
         global $db;
         $sql = "SHOW FIELDS FROM " . $db->prepare_input($table_name);
         $result = $db->Execute($sql);
-        foreach($result as $record) {
+        foreach ($result as $record) {
             if ($record['Field'] === $field_name) {
                 if ($record['Type'] === $field_type) {
                     return true; // exists and matches required type, so return with no error

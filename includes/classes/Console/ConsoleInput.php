@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -132,7 +134,7 @@ class ConsoleInput
             return;
         }
 
-        if ($this->looksLikeOption($tokens[0])) {
+        if (self::looksLikeOption($tokens[0])) {
             $this->parseTokens($tokens);
             return;
         }
@@ -197,7 +199,7 @@ class ConsoleInput
         }
 
         $nextToken = $tokens[$index + 1] ?? null;
-        if ($nextToken !== null && !$this->looksLikeOption($nextToken)) {
+        if ($nextToken !== null && !self::looksLikeOption($nextToken)) {
             $this->options[$nameValue] = $nextToken;
             $index++;
             return;
@@ -226,7 +228,7 @@ class ConsoleInput
         }
 
         $nextToken = $tokens[$index + 1] ?? null;
-        if ($nextToken !== null && !$this->looksLikeOption($nextToken)) {
+        if ($nextToken !== null && !self::looksLikeOption($nextToken)) {
             $this->options[$flags] = $nextToken;
             $index++;
             return;
@@ -238,7 +240,7 @@ class ConsoleInput
     /**
      * @since ZC v3.0.0
      */
-    private function looksLikeOption(string $token): bool
+    private static function looksLikeOption(string $token): bool
     {
         return $token !== '-' && str_starts_with($token, '-');
     }

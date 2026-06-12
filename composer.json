@@ -34,7 +34,8 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pcre": "*",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-zlib": "*"
     },
     "require-dev": {
         "ext-pdo": "*",

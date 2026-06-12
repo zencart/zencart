@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Back-compat shim: App\Models\PluginControl is an alias of
  * Zencart\DbRepositories\PluginControlRepository.

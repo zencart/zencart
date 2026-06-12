@@ -147,7 +147,7 @@ class AdminRequestSanitizer extends base
         foreach ($this->requestParameterList as $parameterName => $parameterDefinitions) {
             $result = $this->findSanitizerFromContext($parameterDefinitions);
             if (!$result) {
-                $result = $this->findSanitizerFromRequestMethod($parameterName, $parameterDefinitions);
+                $result = self::findSanitizerFromRequestMethod($parameterName, $parameterDefinitions);
             }
             if ($result) {
                 $this->arrayName = '';
@@ -156,13 +156,13 @@ class AdminRequestSanitizer extends base
         }
         if ($this->doStrictSanitization) {
             $this->arrayName = '';
-            $this->filterStrictSanitizeKeys();
+            self::filterStrictSanitizeKeys();
             $this->filterStrictSanitizeValues();
         }
         $this->debugMessages[] = 'Outgoing GET Request ' . print_r($_GET, true);
         $this->debugMessages[] = 'Outgoing POST Request ' . print_r($_POST, true);
         if ($this->debug) {
-            $this->errorLog($this->debugMessages);
+            self::errorLog($this->debugMessages);
         }
     }
 
@@ -201,14 +201,14 @@ class AdminRequestSanitizer extends base
     /**
      * @since ZC v1.5.5a
      */
-    private function findSanitizerFromRequestMethod($parameterName, $parameterDefinitions): array|false
+    private static function findSanitizerFromRequestMethod($parameterName, $parameterDefinitions): array|false
     {
         $result = false;
         foreach ($parameterDefinitions as $parameterDefinition) {
             if (!empty($parameterDefinition['pages'])) {
                 continue;
             }
-            if ($this->parameterExistsForMethod($parameterName, $parameterDefinition)) {
+            if (self::parameterExistsForMethod($parameterName, $parameterDefinition)) {
                 $result = $parameterDefinition;
                 break;
             }
@@ -219,7 +219,7 @@ class AdminRequestSanitizer extends base
     /**
      * @since ZC v1.5.5a
      */
-    private function parameterExistsForMethod($parameterName, $parameterDefinition): bool
+    private static function parameterExistsForMethod($parameterName, $parameterDefinition): bool
     {
         $hasGet = isset($_GET[$parameterName]);
         $hasPost = isset($_POST[$parameterName]);
@@ -424,12 +424,12 @@ class AdminRequestSanitizer extends base
         if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $currentArrayName = $this->setCurrentArrayName($pKey);
-                $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], ENT_COMPAT, $this->charset, false);
+                $_POST[$parameterName][$pKey] = htmlspecialchars($_POST[$parameterName][$pKey], \ENT_COMPAT, $this->charset, false);
                 $this->postKeysAlreadySanitized[] = $currentArrayName;
             }
             return;
         }
-        $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, $this->charset, false);
+        $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], \ENT_COMPAT, $this->charset, false);
         $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
@@ -442,12 +442,12 @@ class AdminRequestSanitizer extends base
             // Add the parameterName to the base arrayname.
             $this->arrayName = $this->setCurrentArrayName($parameterName);
             $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL (POST) == ' . $this->arrayName;
-            $_POST[$parameterName] = filter_var($_POST[$parameterName], FILTER_SANITIZE_EMAIL);
+            $_POST[$parameterName] = filter_var($_POST[$parameterName], \FILTER_SANITIZE_EMAIL);
             $this->postKeysAlreadySanitized[] = $this->arrayName;
         }
         if (isset($_GET[$parameterName])) {
             $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL (GET) == ' . $parameterName;
-            $result = filter_var($_GET[$parameterName], FILTER_SANITIZE_EMAIL);
+            $result = filter_var($_GET[$parameterName], \FILTER_SANITIZE_EMAIL);
             $_GET[$parameterName] = $result;
             $this->getKeysAlreadySanitized[] = $parameterName;
         }
@@ -464,7 +464,7 @@ class AdminRequestSanitizer extends base
         // Add the parameterName to the base arrayname.
         $this->arrayName = $this->setCurrentArrayName($parameterName);
         $this->debugMessages[] = 'PROCESSING SANITIZE_EMAIL_AUDIENCE (POST) == ' . $this->arrayName;
-        $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], ENT_COMPAT, $this->charset, true);
+        $_POST[$parameterName] = htmlspecialchars($_POST[$parameterName], \ENT_COMPAT, $this->charset, true);
         $this->postKeysAlreadySanitized[] = $this->arrayName;
     }
 
@@ -483,7 +483,7 @@ class AdminRequestSanitizer extends base
         if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
                 $currentArrayName = $this->setCurrentArrayName($pKey);
-                $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
+                $newValue = filter_var($_POST[$parameterName][$pKey], \FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($urlRegex, '', $_POST[$parameterName][$pKey]);
                 }
@@ -493,7 +493,7 @@ class AdminRequestSanitizer extends base
             return;
         }
         // Perform similar sanitization for $_POST of non-array value.
-        $newValue = filter_var($_POST[$parameterName], FILTER_SANITIZE_URL);
+        $newValue = filter_var($_POST[$parameterName], \FILTER_SANITIZE_URL);
         if ($newValue === false) {
             $newValue = preg_replace($urlRegex, '', $_POST[$parameterName]);
         }
@@ -515,7 +515,7 @@ class AdminRequestSanitizer extends base
         $this->debugMessages[] = 'PROCESSING FILE_PATH_OR_URL_REGEX == ' . $this->arrayName;
         if (is_array($_POST[$parameterName])) {
             foreach ($_POST[$parameterName] as $pKey => $pValue) {
-                $newValue = filter_var($_POST[$parameterName][$pKey], FILTER_SANITIZE_URL);
+                $newValue = filter_var($_POST[$parameterName][$pKey], \FILTER_SANITIZE_URL);
                 if ($newValue === false) {
                     $newValue = preg_replace($regex, '', $_POST[$parameterName][$pKey]);
                 }
@@ -524,7 +524,7 @@ class AdminRequestSanitizer extends base
             }
             return;
         }
-        $newValue = filter_var($_POST[$parameterName], FILTER_SANITIZE_URL);
+        $newValue = filter_var($_POST[$parameterName], \FILTER_SANITIZE_URL);
         if ($newValue === false) {
             $newValue = preg_replace($regex, '', $_POST[$parameterName]);
         }
@@ -593,14 +593,14 @@ class AdminRequestSanitizer extends base
                 unset($_POST);
                 $_POST[$key] = $key;
                 // $this->arrayName = $currentArrayName; // Unnecessary as already set above.
-                $this->filterStrictSanitizeKeys();
+                self::filterStrictSanitizeKeys();
                 if (!array_key_exists($key, $_POST)) {
                     continue; // Key is "unclean" and therefore should use the next key.
                 }
                 $this->arrayName = $currentArrayName;
                 $currentPostKeysAlreadySanitized = $this->postKeysAlreadySanitized;
                 $this->filterStrictSanitizeValues();
-                unset($this->postKeysAlreadySanitized);
+                $this->postKeysAlreadySanitized = null;
                 $this->postKeysAlreadySanitized = $currentPostKeysAlreadySanitized;
                 unset($currentPostKeysAlreadySanitized);
                 $this->postKeysAlreadySanitized[] = $this->setCurrentArrayName($key);
@@ -636,7 +636,7 @@ class AdminRequestSanitizer extends base
                     unset($_POST);
                     $_POST[$pkey] = $pvalue;
                     // $this->arrayName = $newCurrentArrayName; // Unnecessary as set above
-                    $this->filterStrictSanitizeKeys();
+                    self::filterStrictSanitizeKeys();
                     if (array_key_exists($pkey, $_POST)) {
                         $this->filterStrictSanitizeValues();
                         // $this->arrayName = $newCurrentArrayName; // Unnecessary as set below or in next loop
@@ -682,12 +682,12 @@ class AdminRequestSanitizer extends base
                 unset($requestPost[$parameterName][$pkey]);
                 unset($_POST);
                 $_POST[$pkey] = $pkey;
-                $this->filterStrictSanitizeKeys();
+                self::filterStrictSanitizeKeys();
                 if (array_key_exists(/*$parameterName*/ $pkey, $_POST)) {
                     $this->arrayName = $currentArrayName;
                     $currentPostKeysAlreadySanitized = $this->postKeysAlreadySanitized;
                     $this->filterStrictSanitizeValues();
-                    unset($this->postKeysAlreadySanitized);
+                    $this->postKeysAlreadySanitized = null;
                     $this->postKeysAlreadySanitized = $currentPostKeysAlreadySanitized;
                     unset($currentPostKeysAlreadySanitized);
                     $this->postKeysAlreadySanitized[] = $this->setCurrentArrayName($pkey);
@@ -702,13 +702,13 @@ class AdminRequestSanitizer extends base
                 unset($_POST);
                 $_POST[$pkey] = $requestPost[$parameterName][$pkey];
                 unset($requestPost[$parameterName][$pkey]);
-                $this->filterStrictSanitizeKeys();
+                self::filterStrictSanitizeKeys();
                 if (array_key_exists($pkey, $_POST)) {
                     $this->arrayName = $currentArrayName;
                     $currentPostKeysAlreadySanitized = $this->postKeysAlreadySanitized;
                     $this->filterStrictSanitizeValues();
                     // $this->arrayName = $currentArrayName; // Unnecessary as set below or in next loop.
-                    unset($this->postKeysAlreadySanitized);
+                    $this->postKeysAlreadySanitized = null;
                     $this->postKeysAlreadySanitized = $currentPostKeysAlreadySanitized;
                     unset($currentPostKeysAlreadySanitized);
                     $this->postKeysAlreadySanitized[] = $this->setCurrentArrayName($pkey);
@@ -779,7 +779,7 @@ class AdminRequestSanitizer extends base
                     if (!in_array($this->arrayName, $ignore, false)) {
                         $this->debugMessages[] = 'PROCESSING STRICT_SANITIZE_VALUES == ' . $this->arrayName;
                         if (!is_int($item[$k])) {
-                            $item[$k] = htmlspecialchars($item[$k], ENT_COMPAT, $this->charset, true);
+                            $item[$k] = htmlspecialchars($item[$k], \ENT_COMPAT, $this->charset, true);
                         }
                         if ($inner) {
                             if ($type === 'post') {
@@ -836,7 +836,7 @@ class AdminRequestSanitizer extends base
      *
      * @since ZC v1.5.5
      */
-    private function filterStrictSanitizeKeys(): void
+    private static function filterStrictSanitizeKeys(): void
     {
         if (isset($_POST)) {
             foreach ($_POST as $key => $value) {
@@ -870,7 +870,7 @@ class AdminRequestSanitizer extends base
     /**
      * @since ZC v1.5.5
      */
-    private function errorLog(array $errorMessages = []): void
+    private static function errorLog(array $errorMessages = []): void
     {
         $logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
         $message = date('M-d-Y h:i:s')

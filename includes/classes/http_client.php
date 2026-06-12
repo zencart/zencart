@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * httpClient Class.
  *
@@ -33,7 +35,7 @@ class httpClient extends base
     public array $responseHeaders;
     /** @var resource|bool */
     public $socket = false;
-// proxy stuff
+    // proxy stuff
     public bool $useProxy = false;
     public string $proxyHost;
     public string|int $proxyPort;
@@ -219,8 +221,8 @@ class httpClient extends base
      * @return string response status code (200 if ok)
      * @since ZC v1.0.3
      **/
-// * $params = array( "login" => "tiger", "password" => "secret" );
-// * $http->post( "/login.php", $params );
+    // * $params = array( "login" => "tiger", "password" => "secret" );
+    // * $http->post( "/login.php", $params );
     public function Post(string $uri, array $query_params = []): string
     {
         $uri = $this->makeUri($uri);
@@ -378,7 +380,7 @@ class httpClient extends base
             }
 
             if (!empty($this->requestBody)) {
-                $this->addHeader('Content-Length', strlen($this->requestBody));
+                $this->addHeader('Content-Length', (string)strlen($this->requestBody));
             }
 
             $this->request = $command;
@@ -449,14 +451,14 @@ class httpClient extends base
                 break;
             }
 
-            $finished = ($str == $lastLine);
+            $finished = ($str === $lastLine);
             if (!$finished) {
                 $parts = explode(': ', $str, 2);
                 if (count($parts) < 2) {
                     continue;
                 }
                 [$hdr, $value] = $parts;
-// nasty workaround broken multiple same headers (eg. Set-Cookie headers) @FIXME
+                // nasty workaround broken multiple same headers (eg. Set-Cookie headers) @FIXME
                 if (isset($headers[$hdr])) {
                     $headers[$hdr] .= '; ' . trim($value);
                 } else {

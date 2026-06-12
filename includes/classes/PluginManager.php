@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2026 Zen Cart Development Team
@@ -20,9 +22,7 @@ class PluginManager
     public function __construct(
         private PluginControlRepository $pluginControl,
         private PluginControlVersionRepository $pluginControlVersion
-    )
-    {
-    }
+    ) {}
 
     /**
      * @since ZC v1.5.7

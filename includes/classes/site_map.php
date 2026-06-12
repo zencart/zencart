@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * site_map.php
  *
@@ -19,13 +21,10 @@ if (!defined('IS_ADMIN_FLAG')) {
  */
 class zen_SiteMapTree
 {
-
     /**
      * The root category name
-     *
-     * @var string|int
      */
-    protected $root_category_id = TOPMOST_CATEGORY_PARENT_ID;
+    protected int|string $root_category_id = 0;
     /**
      * The maximum number of levels to display 0 = all;
      */
@@ -77,14 +76,18 @@ class zen_SiteMapTree
 
     public function __construct()
     {
+        if (zen_config('TOPMOST_CATEGORY_PARENT_ID', 0) > 0) {
+            $this->root_category_id = zen_config('TOPMOST_CATEGORY_PARENT_ID');
+        }
+
         global $db;
         $this->data = [];
-        $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
-                      from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                      where c.categories_id = cd.categories_id
-                      and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                      and c.categories_status != '0'
-                      order by c.parent_id, c.sort_order, cd.categories_name";
+        $categories_query = "SELECT c.categories_id, cd.categories_name, c.parent_id
+                      FROM " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                      WHERE c.categories_id = cd.categories_id
+                      AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                      AND c.categories_status != '0'
+                      ORDER BY c.parent_id, c.sort_order, cd.categories_name";
         $categories = $db->Execute($categories_query);
         while (!$categories->EOF) {
             $this->data[$categories->fields['parent_id']][$categories->fields['categories_id']] = ['name' => $categories->fields['categories_name'], 'count' => 0];
@@ -124,9 +127,9 @@ class zen_SiteMapTree
                     $result .= $this->parent_end_string;
                 }
 
-//        $result .= $this->child_end_string;
+                //        $result .= $this->child_end_string;
 
-                if (isset($this->data[$category_id]) && (($this->max_level == '0') || ($this->max_level > $level + 1))) {
+                if (isset($this->data[$category_id]) && (empty($this->max_level) || ($this->max_level > $level + 1))) {
                     $result .= $this->buildBranch($category_id, $level + 1, $category_link . '_');
                 }
                 $result .= $this->child_end_string;

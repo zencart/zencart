@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -17,9 +19,7 @@ class VersionShowCommand extends ConsoleCommand
      *
      * @param null|callable(): array<string, ?array<string, mixed>> $versionProvider
      */
-    public function __construct(private $versionProvider = null)
-    {
-    }
+    public function __construct(private $versionProvider = null) {}
 
     /**
      * @since ZC v3.0.0
@@ -59,8 +59,8 @@ class VersionShowCommand extends ConsoleCommand
         $main = $rows['Zen-Cart Main'] ?? null;
         $database = $rows['Zen-Cart Database'] ?? null;
 
-        $output->writeln(sprintf('  %-12s %s', 'application', $this->formatVersion($main)));
-        $output->writeln(sprintf('  %-12s %s', 'database', $this->formatVersion($database)));
+        $output->writeln(sprintf('  %-12s %s', 'application', self::formatVersion($main)));
+        $output->writeln(sprintf('  %-12s %s', 'database', self::formatVersion($database)));
 
         return 0;
     }
@@ -68,7 +68,7 @@ class VersionShowCommand extends ConsoleCommand
     /**
      * @since ZC v3.0.0
      */
-    private function formatVersion(?array $version): string
+    private static function formatVersion(?array $version): string
     {
         if ($version === null) {
             return 'unavailable';

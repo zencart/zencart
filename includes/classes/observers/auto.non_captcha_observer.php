@@ -132,10 +132,10 @@ class zcObserverNonCaptchaObserver extends base
         foreach ($fields as $field) {
             if (!empty($_POST[$field])) {
                 if (is_array($_POST[$field])) {
-                   $array_found = true;
-                   $_POST[$field] = '';
+                    $array_found = true;
+                    $_POST[$field] = '';
                 } else {
-                   $test_string .= $_POST[$field];
+                    $test_string .= $_POST[$field];
                 }
             }
         }

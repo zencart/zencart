@@ -19,37 +19,36 @@ function zen_get_zcversion(): string
 
 /**
  * Set timeout for the current script.
- * @param int $limit seconds
+ * Usually only used to extend for things that might be longer-running than PHP's default (which is often 30 seconds)
+ *
  * @since ZC v1.0.3
  */
-function zen_set_time_limit($limit)
+function zen_set_time_limit(int $seconds = 120): void
 {
-    @set_time_limit((int)$limit);
+    @set_time_limit((int)$seconds);
 }
 
 /**
- * @param string $ip
- * @return boolean
  * @since ZC v1.5.7
  */
-function zen_is_whitelisted_admin_ip($ip = null)
+function zen_is_whitelisted_admin_ip(?string $ip = null): bool
 {
     if (empty($ip)) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    return strpos(zen_config('EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'), $ip) !== false;
+    return str_contains(zen_config('EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'), $ip);
 }
 
 
-////
-// Wrapper function for round()
 /**
+ * Wrapper function for round()
+ *
  * @since ZC v1.0.3
  */
-function zen_round($value, $precision)
+function zen_round($value, int $precision = 0): float|int
 {
-    $value = round($value * pow(10, $precision), 0);
-    $value = $value / pow(10, $precision);
+    $value = round($value * (10 ** $precision), 0);
+    $value /= 10 ** $precision;
     return $value;
 }
 
@@ -119,7 +118,7 @@ function convertToFloat($input = 0): float|int
  */
 function issetorArray(array $array, $key, $default = null)
 {
-    return isset($array[$key]) ? $array[$key] : $default;
+    return $array[$key] ?? $default;
 }
 
 /**

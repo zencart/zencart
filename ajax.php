@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * ajax front controller
  *
@@ -63,7 +65,7 @@ if (isset($spider_flag) && $spider_flag === true) {
 }
 
 // --- begin support functions ------------------
-function ajaxAbort($status = 400, $msg = null)
+function ajaxAbort($status = 400, $msg = null): void
 {
     global $zc_ajax_base_dir;
     http_response_code($status); // 400 = "Bad Request"

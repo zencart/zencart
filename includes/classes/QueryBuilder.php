@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Class QueryBuilder
  *
@@ -7,65 +9,48 @@
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
-/**
- * Class QueryBuilder
- */
-
 namespace Zencart\QueryBuilder;
 
+use queryFactory;
+
 /**
+ * Class QueryBuilder
+ *
  * @since ZC v1.5.7
  */
 class QueryBuilder extends \base
 {
-    /**
-     * @var
-     */
-    protected $dbConn;
-    /**
-     * query parts
-     *
-     * @var array
-     */
-    protected $parts;
-    /**
-     * query
-     *
-     * @var array
-     */
-    protected $query;
+    protected ?array $parts = null;
+    protected ?array $query = null;
 
-    /**
-     * @param array $listingQuery
-     */
-    public function __construct($dbConn, array $listingQuery = [])
+    public function __construct(protected queryFactory $dbConn, array $listingQuery = [])
     {
-        $this->dbConn = $dbConn;
         $this->parts = null;
         if (count($listingQuery) > 0) {
             $this->initParts($listingQuery);
         }
     }
+
     /**
      * @since ZC v1.5.7
      */
-    public function initParts(array $listingQuery)
+    public function initParts(array $listingQuery): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_INIT_START');
-        $this->parts ['bindVars'] = issetorArray($listingQuery, 'bindVars', array());
-        $this->parts ['selectList'] = issetorArray($listingQuery, 'selectList', array());
-        $this->parts ['orderBys'] = issetorArray($listingQuery, 'orderBys', array());
-        $this->parts ['groupBys'] = issetorArray($listingQuery, 'groupBys', array());
-        $this->parts ['filters'] = issetorArray($listingQuery, 'filters', array());
-        $this->parts ['derivedItems'] = issetorArray($listingQuery, 'derivedItems', array());
-        $this->parts ['joinTables'] = issetorArray($listingQuery, 'joinTables', array());
-        $this->parts ['whereClauses'] = issetorArray($listingQuery, 'whereClauses', array());
-        $this->parts ['mainTableName'] = TABLE_PRODUCTS;
-        $this->parts ['countField'] = 'products_id';
+        $this->parts['bindVars'] = issetorArray($listingQuery, 'bindVars', []);
+        $this->parts['selectList'] = issetorArray($listingQuery, 'selectList', []);
+        $this->parts['orderBys'] = issetorArray($listingQuery, 'orderBys', []);
+        $this->parts['groupBys'] = issetorArray($listingQuery, 'groupBys', []);
+        $this->parts['filters'] = issetorArray($listingQuery, 'filters', []);
+        $this->parts['derivedItems'] = issetorArray($listingQuery, 'derivedItems', []);
+        $this->parts['joinTables'] = issetorArray($listingQuery, 'joinTables', []);
+        $this->parts['whereClauses'] = issetorArray($listingQuery, 'whereClauses', []);
+        $this->parts['mainTableName'] = TABLE_PRODUCTS;
+        $this->parts['countField'] = 'products_id';
         if (isset($listingQuery['mainTable'])) {
-            $this->parts ['mainTableName'] = $listingQuery['mainTable'] ['table'];
-            $this->parts ['countField'] =
-                $listingQuery['mainTable'] ['countField'];
+            $this->parts['mainTableName'] = $listingQuery['mainTable']['table'];
+            $this->parts['countField'] =
+                $listingQuery['mainTable']['countField'];
         }
         $this->notify('NOTIFY_QUERYBUILDER_INIT_END');
     }
@@ -75,20 +60,22 @@ class QueryBuilder extends \base
      *
      * @since ZC v1.5.7
      */
-    public function processQuery($listingQuery)
+    public function processQuery($listingQuery): void
     {
         if (!isset($this->parts)) {
             $this->initParts($listingQuery);
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSQUERY_START');
-        $this->query ['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '');
-        if (count($this->parts ['groupBys']) == 0) $this->query ['select'] .= $this->parts ['mainTableName'] . ".*";
+        $this->query['select'] = "SELECT " . (issetorArray($listingQuery, 'isDistinct', false) ? ' DISTINCT ' : '');
+        if (count($this->parts['groupBys']) === 0) {
+            $this->query['select'] .= $this->parts['mainTableName'] . ".*";
+        }
         $this->processSelectList();
         $this->preProcessJoins();
-        $this->query ['joins'] = '';
-        $this->query ['table'] = ' FROM ';
+        $this->query['joins'] = '';
+        $this->query['table'] = ' FROM ';
         $this->processJoins();
-        $this->query ['table'] .= $this->parts ['mainTableName'] . " AS " . $this->parts ['mainTableName'] . " ";
+        $this->query['table'] .= $this->parts['mainTableName'] . " AS " . $this->parts['mainTableName'] . " ";
         $this->processWhereClause();
         $this->processGroupBys();
         $this->processOrderBys();
@@ -100,30 +87,31 @@ class QueryBuilder extends \base
     /**
      * @since ZC v1.5.7
      */
-    protected function setFinalQuery($listingQuery)
+    protected function setFinalQuery($listingQuery): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_START');
-        $this->query['mainSql'] = $this->query ['select'] . $this->query ['table'] .  $this->query ['joins'] .  $this->query ['where'] . $this->query ['groupBy'] . $this->query ['orderBy'];
+        $this->query['mainSql'] = $this->query['select'] . $this->query['table'] . $this->query['joins'] . $this->query['where'] . $this->query['groupBy'] . $this->query['orderBy'];
         if (!isset($this->query['countSql'])) {
             $this->query['countSql'] = "SELECT COUNT(" . (issetorArray($listingQuery, 'isDistinct', false) ? "DISTINCT " : '') .
-                $this->parts ['mainTableName'] . "." . $this->parts ['countField'] . ")
-                                 AS total " . $this->query ['table'] . $this->query ['joins'] .
-                $this->query ['where'];
+                $this->parts['mainTableName'] . "." . $this->parts['countField'] . ")
+                                 AS total " . $this->query['table'] . $this->query['joins'] .
+                $this->query['where'];
         }
         $this->notify('NOTIFY_QUERYBUILDER_SETFINALQUERY_END');
     }
+
     /**
      * preprocess joins
      *
      * @since ZC v1.5.7
      */
-    protected function preProcessJoins()
+    protected function preProcessJoins(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PREPROCESSJOINS_START');
-        if (count($this->parts ['joinTables']) == 0) {
+        if (count($this->parts['joinTables']) === 0) {
             return;
         }
-        $this->query ['joins'] = '';
+        $this->query['joins'] = '';
         $this->notify('NOTIFY_QUERYBUILDER_PREPROCESSJOINS_END');
     }
 
@@ -132,20 +120,20 @@ class QueryBuilder extends \base
      *
      * @since ZC v1.5.7
      */
-    protected function processJoins()
+    protected function processJoins(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINS_START');
-        if (count($this->parts ['joinTables']) == 0) {
+        if (count($this->parts['joinTables']) === 0) {
             return;
         }
-        foreach ($this->parts ['joinTables'] as $joinTable) {
-            $this->query ['joins'] .= strtoupper($joinTable ['type']) . " JOIN " . $joinTable ['table'] . ' AS ' . $joinTable ['table'];
+        foreach ($this->parts['joinTables'] as $joinTable) {
+            $this->query['joins'] .= strtoupper($joinTable ['type']) . " JOIN " . $joinTable ['table'] . ' AS ' . $joinTable ['table'];
             $this->processJoinFkeyField($joinTable);
             $this->processJoinCustomAnd($joinTable);
             $this->processJoinAddColumns($joinTable);
         }
-        $this->query ['table'] .= "(";
-        $this->query ['joins'] .= ")";
+        $this->query['table'] .= "(";
+        $this->query['joins'] .= ")";
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINS_END');
     }
 
@@ -155,11 +143,11 @@ class QueryBuilder extends \base
      * @param $joinTable
      * @since ZC v1.5.7
      */
-    protected function processJoinCustomAnd($joinTable)
+    protected function processJoinCustomAnd($joinTable): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINSCUSTOMAND_START');
         if (isset($joinTable ['customAnd'])) {
-            $this->query ['joins'] .= " " . $joinTable ['customAnd'] . " ";
+            $this->query['joins'] .= " " . $joinTable ['customAnd'] . " ";
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINSCUSTOMAND_END');
     }
@@ -170,15 +158,16 @@ class QueryBuilder extends \base
      * @param $joinTable
      * @since ZC v1.5.7
      */
-    protected function processJoinAddColumns($joinTable)
+    protected function processJoinAddColumns($joinTable): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINADDCOLUMN_START');
         if (isset($joinTable ['addColumns']) && $joinTable ['addColumns']) {
-            $this->query ['select'] .= ", " . $joinTable ['table'] . ".*";
+            $this->query['select'] .= ", " . $joinTable ['table'] . ".*";
         }
         if (isset($joinTable ['selectColumns'])) {
-            foreach ($joinTable ['selectColumns'] as $column)
-            $this->query ['select'] .= ", " . $joinTable ['table'] . "." . $column;
+            foreach ($joinTable ['selectColumns'] as $column) {
+                $this->query['select'] .= ", " . $joinTable ['table'] . "." . $column;
+            }
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINADDCOLUMN_ENDT');
     }
@@ -189,25 +178,24 @@ class QueryBuilder extends \base
      * @param $joinTable
      * @since ZC v1.5.7
      */
-    protected function processJoinFkeyField($joinTable)
+    protected function processJoinFkeyField($joinTable): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINFKEYFIELD_START');
-        $fkeyFieldLeft = $this->parts ['mainTableName'] . '.' . $this->parts ['countField'];
-        $fkeyFieldRight = $joinTable ['table'] . '.' . $this->parts ['countField'];
+        $fkeyFieldLeft = $this->parts['mainTableName'] . '.' . $this->parts['countField'];
+        $fkeyFieldRight = $joinTable ['table'] . '.' . $this->parts['countField'];
         if (!isset($joinTable ['fkeyFieldLeft'])) {
-            $this->query ['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
+            $this->query['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
             return;
-
         }
-        $fkeyFieldLeft = $this->parts ['mainTableName'] . '.' . $joinTable ['fkeyFieldLeft'];
+        $fkeyFieldLeft = $this->parts['mainTableName'] . '.' . $joinTable ['fkeyFieldLeft'];
         if (isset($joinTable ['fkeyTable'])) {
-            $fkeyFieldLeft =  constant($joinTable ['fkeyTable']) . '.' . $joinTable ['fkeyFieldLeft'];
+            $fkeyFieldLeft = constant($joinTable ['fkeyTable']) . '.' . $joinTable ['fkeyFieldLeft'];
         }
         $fkeyFieldRight = $joinTable ['table'] . '.' . $joinTable ['fkeyFieldLeft'];
         if (isset($joinTable ['fkeyFieldRight'])) {
             $fkeyFieldRight = $joinTable ['table'] . '.' . $joinTable ['fkeyFieldRight'];
         }
-        $this->query ['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
+        $this->query['joins'] .= " ON " . $fkeyFieldLeft . " = " . $fkeyFieldRight . " ";
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSJOINFKEYFIELD_END');
     }
 
@@ -215,16 +203,16 @@ class QueryBuilder extends \base
      * process where clauses
      * @since ZC v1.5.7
      */
-    protected function processWhereClause()
+    protected function processWhereClause(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSE_START');
-        $this->query ['where'] = ' WHERE 1';
-        if (count($this->parts ['whereClauses']) == 0) {
+        $this->query['where'] = ' WHERE 1';
+        if (count($this->parts['whereClauses']) === 0) {
             return;
         }
-        foreach ($this->parts ['whereClauses'] as $whereClause) {
+        foreach ($this->parts['whereClauses'] as $whereClause) {
             if (isset($whereClause ['custom'])) {
-                $this->query ['where'] .= " " . trim($whereClause ['custom']) . " ";
+                $this->query['where'] .= " " . trim($whereClause ['custom']) . " ";
                 continue;
             }
             $this->processWhereClauseTest($whereClause);
@@ -238,7 +226,7 @@ class QueryBuilder extends \base
      * @param $whereClause
      * @since ZC v1.5.7
      */
-    protected function processWhereClauseTest($whereClause)
+    protected function processWhereClauseTest($whereClause): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSETEST_START');
         if (!isset($whereClause ['test'])) {
@@ -248,10 +236,12 @@ class QueryBuilder extends \base
             $whereClause ['type'] = 'AND';
         }
         $default = ' ' . $whereClause ['test'] . ' ' . $whereClause ['value'];
-        $hashMap = array('IN' => " IN ( " . $whereClause ['value'] . " ) ",
-                         'LIKE' => " LIKE " . $whereClause ['value'] . " ");
+        $hashMap = [
+            'IN' => " IN ( " . $whereClause ['value'] . " ) ",
+            'LIKE' => " LIKE " . $whereClause ['value'] . " ",
+        ];
 
-        $addTest = (isset($hashMap[strtoupper($whereClause ['test'])])) ? $hashMap[strtoupper($whereClause ['test'])] : $default;
+        $addTest = $hashMap[strtoupper($whereClause ['test'])] ?? $default;
         $this->query['where'] .= " " . $whereClause ['type'] . " " . $whereClause ['table'] . "." . $whereClause ['field'] . $addTest;
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSWHERECLAUSETEST_END');
     }
@@ -260,22 +250,22 @@ class QueryBuilder extends \base
      * process orderBy clauses
      * @since ZC v1.5.7
      */
-    protected function processOrderBys()
+    protected function processOrderBys(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSORDERBYS_START');
-        $this->query ['orderBy'] = "";
-        if (count($this->parts ['orderBys']) == 0) {
+        $this->query['orderBy'] = "";
+        if (count($this->parts['orderBys']) === 0) {
             return;
         }
-        $this->query ['orderBy'] = " ORDER BY ";
-        foreach ($this->parts ['orderBys'] as $orderBy) {
+        $this->query['orderBy'] = " ORDER BY ";
+        foreach ($this->parts['orderBys'] as $orderBy) {
             $result = $this->processOrderByEntry($orderBy);
             if ($result) {
                 continue;
             }
         }
-        if (substr($this->query ['orderBy'], strlen($this->query ['orderBy']) - 2) == ', ') {
-            $this->query ['orderBy'] = substr($this->query ['orderBy'], 0, strlen($this->query ['orderBy']) - 2) . " ";
+        if (str_ends_with($this->query['orderBy'], ', ')) {
+            $this->query['orderBy'] = substr($this->query['orderBy'], 0, -2) . " ";
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSORDERBYS_END');
     }
@@ -284,22 +274,22 @@ class QueryBuilder extends \base
      * process orderBy clauses
      * @since ZC v1.5.7
      */
-    protected function processGroupBys()
+    protected function processGroupBys(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSGROUPBYS_START');
-        $this->query ['groupBy'] = "";
-        if (count($this->parts ['groupBys']) == 0) {
+        $this->query['groupBy'] = "";
+        if (count($this->parts['groupBys']) === 0) {
             return;
         }
-        $this->query ['groupBy'] = " GROUP BY ";
-        foreach ($this->parts ['groupBys'] as $groupBy) {
+        $this->query['groupBy'] = " GROUP BY ";
+        foreach ($this->parts['groupBys'] as $groupBy) {
             $result = $this->processGroupByEntry($groupBy);
             if ($result) {
                 continue;
             }
         }
-        if (substr($this->query ['groupBy'], strlen($this->query ['groupBy']) - 2) == ', ') {
-            $this->query ['groupBy'] = substr($this->query ['groupBy'], 0, strlen($this->query ['groupBy']) - 2) . " ";
+        if (str_ends_with($this->query['groupBy'], ', ')) {
+            $this->query['groupBy'] = substr($this->query['groupBy'], 0, -2) . " ";
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSGROUPBYS_END');
     }
@@ -307,25 +297,25 @@ class QueryBuilder extends \base
     /**
      * @since ZC v1.5.7
      */
-    protected function processGroupByEntry($groupBy)
+    protected function processGroupByEntry($groupBy): false
     {
-        $this->query ['groupBy'] .= $groupBy . ", ";
+        $this->query['groupBy'] .= $groupBy . ", ";
         return false;
     }
 
     /**
      * @since ZC v1.5.7
      */
-    protected function processOrderByEntry($orderBy)
+    protected function processOrderByEntry($orderBy): bool
     {
-        if ($orderBy ['type'] == 'mysql') {
-            $this->query ['orderBy'] .= ' ' . $orderBy ['field'] . ', ';
+        if ($orderBy['type'] === 'mysql') {
+            $this->query['orderBy'] .= ' ' . $orderBy['field'] . ', ';
             return true;
         }
-        if (isset($orderBy ['table'])) {
-            $this->query ['orderBy'] .= $orderBy ['table'] . ".";
+        if (isset($orderBy['table'])) {
+            $this->query['orderBy'] .= $orderBy['table'] . ".";
         }
-        $this->query ['orderBy'] .= $orderBy ['field'] . ", ";
+        $this->query['orderBy'] .= $orderBy['field'] . ", ";
         return false;
     }
 
@@ -333,15 +323,17 @@ class QueryBuilder extends \base
      * process select list entries
      * @since ZC v1.5.7
      */
-    protected function processSelectList()
+    protected function processSelectList(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSSELECTLIST_START');
-        if (count($this->parts ['selectList']) == 0) {
+        if (count($this->parts['selectList']) === 0) {
             return;
         }
-        foreach ($this->parts ['selectList'] as $selectList) {
-            if (trim($this->query ['select']) != 'SELECT') $this->query ['select'] .= ", ";
-            $this->query ['select'] .= $selectList;
+        foreach ($this->parts['selectList'] as $selectList) {
+            if (trim($this->query['select']) !== 'SELECT') {
+                $this->query['select'] .= ", ";
+            }
+            $this->query['select'] .= $selectList;
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSSELECTLIST_END');
     }
@@ -350,50 +342,41 @@ class QueryBuilder extends \base
      * process bindVars clauses
      * @since ZC v1.5.7
      */
-    protected function processBindVars()
+    protected function processBindVars(): void
     {
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSBINDVARS_START');
-        if (count($this->parts ['bindVars']) == 0) {
+        if (count($this->parts['bindVars']) === 0) {
             return;
         }
-        foreach ($this->parts ['bindVars'] as $bindVars) {
-            $this->query['mainSql'] = $this->dbConn->bindVars($this->query['mainSql'], $bindVars [0], $bindVars [1], $bindVars [2]);
+        foreach ($this->parts['bindVars'] as $bindVars) {
+            $this->query['mainSql'] = $this->dbConn->bindVars($this->query['mainSql'], $bindVars[0], $bindVars[1], $bindVars[2]);
             if (isset($this->query['countSql'])) {
-                $this->query['countSql'] = $this->dbConn->bindVars($this->query['countSql'], $bindVars [0], $bindVars [1], $bindVars [2]);
+                $this->query['countSql'] = $this->dbConn->bindVars($this->query['countSql'], $bindVars[0], $bindVars[1], $bindVars[2]);
             }
         }
         $this->notify('NOTIFY_QUERYBUILDER_PROCESSBINDVARS_END');
     }
 
     /**
-     * getter
-     *
-     * @return mixed
      * @since ZC v1.5.7
      */
-    public function getParts()
+    public function getParts(): ?array
     {
         return $this->parts;
     }
 
     /**
-     * getter
-     *
-     * @return mixed
      * @since ZC v1.5.7
      */
-    public function getQuery()
+    public function getQuery(): ?array
     {
         return $this->query;
     }
 
     /**
-     * setter
-     *
-     * @param $value
      * @since ZC v1.5.7
      */
-    public function setParts($value)
+    public function setParts($value): void
     {
         $this->parts = $value;
         $this->notify('NOTIFY_QUERYBUILDER_SETPARTS_START');

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Zen Cart console entry point.
  *
@@ -21,9 +23,7 @@ $pluginDiscovery = new \Zencart\Console\PluginCommandDiscovery(
     $psr4Autoloader,
     $trustedPluginContext['plugins']
 );
-$pluginListProvider = static function () use ($pluginRepositoryContext): ?array {
-    return $pluginRepositoryContext['repository']?->getAll();
-};
+$pluginListProvider = static fn(): ?array => $pluginRepositoryContext['repository']?->getAll();
 $versionProvider = static function () use ($dbContext): array {
     if ($dbContext['db'] === null) {
         return [];
