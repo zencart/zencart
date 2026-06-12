@@ -91,7 +91,7 @@
         }
         // if email name is empty or the same as email address, use the Store Name as the senders 'Name'
         if (empty($from_email_name) || $from_email_name === $from_email_address) {
-            $from_email_name = STORE_NAME;
+            $from_email_name = zen_config('STORE_NAME');
         }
 
         // loop thru multiple email recipients if more than one listed  --- (esp for the admin's "Extra" emails)...

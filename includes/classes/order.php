@@ -1366,7 +1366,7 @@ class order extends base
 
         $html_msg['EMAIL_TEXT_HEADER'] = EMAIL_TEXT_HEADER;
         $html_msg['EMAIL_TEXT_FROM'] = EMAIL_TEXT_FROM;
-        $html_msg['INTRO_STORE_NAME'] = STORE_NAME;
+        $html_msg['INTRO_STORE_NAME'] = zen_config('STORE_NAME');
         $html_msg['EMAIL_THANKS_FOR_SHOPPING'] = EMAIL_THANKS_FOR_SHOPPING;
         $html_msg['EMAIL_DETAILS_FOLLOW'] = EMAIL_DETAILS_FOLLOW;
         $html_msg['INTRO_ORDER_NUM_TITLE'] = EMAIL_TEXT_ORDER_NUMBER;

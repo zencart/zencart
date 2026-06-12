@@ -21,7 +21,7 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
     $results = $db->Execute("SELECT currencies_id, code, title, decimal_places FROM " . TABLE_CURRENCIES);
 
     foreach ($results as $result) {
-        $server_used = CURRENCY_SERVER_PRIMARY;
+        $server_used = zen_config('CURRENCY_SERVER_PRIMARY');
         $rate = '';
         $quote_function = 'quote_' . zen_config('CURRENCY_SERVER_PRIMARY') . '_currency';
         if (function_exists($quote_function)) {
@@ -40,7 +40,7 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
             if (function_exists($quote_function)) {
                 $rate = $quote_function($result['code']);
             }
-            $server_used = CURRENCY_SERVER_BACKUP;
+            $server_used = zen_config('CURRENCY_SERVER_BACKUP');
         }
         if (!empty($rate)) {
             /* Add currency uplift, because exchange rates quoted aren't always the same as what your own bank gives you */
@@ -95,8 +95,11 @@ function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
  * @return int|float
  * @since ZC v1.5.0
  */
-function quote_ecb_currency(string $currencyCode = '', string $base = DEFAULT_CURRENCY): float|int|string
+function quote_ecb_currency(string $currencyCode = '', string $base = ''): float|int|string
 {
+    if ($base === '') {
+        $base = zen_config('DEFAULT_CURRENCY', '');
+    }
     if ($currencyCode === $base) {
         return 1;
     }
@@ -137,8 +140,11 @@ function quote_ecb_currency(string $currencyCode = '', string $base = DEFAULT_CU
  * @return bool|float
  * @since ZC v1.5.0
  */
-function quote_boc_currency(string $currencyCode = '', string $base = DEFAULT_CURRENCY): float|bool|int|string
+function quote_boc_currency(string $currencyCode = '', string $base = ''): float|bool|int|string
 {
+    if ($base === '') {
+        $base = zen_config('DEFAULT_CURRENCY', '');
+    }
     if ($currencyCode === $base) {
         return 1;
     }

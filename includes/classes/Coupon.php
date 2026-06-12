@@ -191,10 +191,9 @@ class Coupon extends base
      * @return string (new coupon code) (will be blank if the function failed)
      * @since ZC v2.0.0
      */
-    //- TODO: SECURITY_CODE_LENGTH is a configuration setting, needs to be accessed by zen_config
-    public static function generateRandomCouponCode(string $salt = "secret", $length = SECURITY_CODE_LENGTH, string $prefix = ''): string
+    public static function generateRandomCouponCode(string $salt = "secret", $length = null, string $prefix = ''): string
     {
-        $length = (int)$length;
+        $length = (int)($length ?? zen_config('SECURITY_CODE_LENGTH'));
         static $max_db_length;
 
         if (!isset($max_db_length)) {

@@ -147,7 +147,7 @@ $listing_sql .= ' ' . $where_str . ' ' . $order_by;
 
 
 // optional Product List Filter
-if (PRODUCT_LIST_FILTER > 0) {
+if (zen_config('PRODUCT_LIST_FILTER') > 0) {
     if (!empty($_GET['music_genre_id'])) {
         $filterlist_sql = "SELECT c.categories_id AS id, cd.categories_name AS name
                        FROM " . TABLE_PRODUCTS . " p

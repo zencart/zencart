@@ -267,8 +267,8 @@ class Search extends \base
 
         if ($displaying_prices_with_tax && (!empty($this->searchOptions->pfrom) || !empty($this->searchOptions->pto))) {
             if (empty($_SESSION['customer_country_id'])) {
-                $_SESSION['customer_country_id'] = STORE_COUNTRY;
-                $_SESSION['customer_zone_id'] = STORE_ZONE;
+                $_SESSION['customer_country_id'] = zen_config('STORE_COUNTRY');
+                $_SESSION['customer_zone_id'] = zen_config('STORE_ZONE');
             }
             $from_str .=
                 " LEFT JOIN (

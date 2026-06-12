@@ -30,7 +30,7 @@ if (isset($cPath_array, $cPath)) {
 
         if (!$categories->EOF) {
             $breadcrumb->add($categories->fields['categories_name'], zen_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i + 1)))));
-        } elseif (SHOW_CATEGORIES_ALWAYS === '0') {
+        } elseif (zen_config('SHOW_CATEGORIES_ALWAYS') === '0') {
             // if invalid, set the robots noindex/nofollow for this page
             $robotsNoIndex = true;
             break;

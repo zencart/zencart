@@ -174,7 +174,7 @@ class shoppingCart extends base
             foreach ($attributes as $next_att) {
                 $this->contents[$uprid]['attributes'][$next_att['products_options_id']] = $next_att['products_options_value_id'];
                 // text attributes set additional information
-                if ($next_att['products_options_value_id'] === PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
+                if ($next_att['products_options_value_id'] === zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')) {
                     $this->contents[$uprid]['attributes_values'][$next_att['products_options_id']] = $next_att['products_options_value_text'];
                 }
             }
@@ -306,13 +306,13 @@ class shoppingCart extends base
                     //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                     $attr_value = null;
                     $blank_value = false;
-                    if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX'))) {
+                    if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX', ''))) {
                         if (trim($value) === '') {
                             $blank_value = true;
                         } else {
-                            $option = substr((string)$option, strlen(zen_config('TEXT_PREFIX')));
+                            $option = substr((string)$option, strlen(zen_config('TEXT_PREFIX', '')));
                             $attr_value = stripslashes($value);
-                            $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
+                            $value = zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID');
 
                             // Validate max-length of TEXT attribute
                             $check = $db->Execute("SELECT products_options_length FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option . " LIMIT 1");
@@ -434,13 +434,13 @@ class shoppingCart extends base
                 //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                 $attr_value = null;
                 $blank_value = false;
-                if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX'))) {
+                if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX', ''))) {
                     if (trim($value) === '') {
                         $blank_value = true;
                     } else {
-                        $option = substr($option, strlen(zen_config('TEXT_PREFIX')));
+                        $option = substr($option, strlen(zen_config('TEXT_PREFIX', '')));
                         $attr_value = stripslashes($value);
-                        $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
+                        $value = zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID');
                         $this->contents[$uprid]['attributes_values'][$option] = $attr_value;
                     }
                 }
@@ -1933,7 +1933,7 @@ class shoppingCart extends base
                 //
                 foreach ($_POST['id'] as $key => $value) {
                     if (zen_get_attributes_valid($_POST['products_id'], $key, $value) === false) {
-                        if (str_starts_with($key, zen_config('TEXT_PREFIX')) === true && $value === '') {
+                        if (str_starts_with($key, zen_config('TEXT_PREFIX', '')) === true && $value === '') {
                             $selection_text = '';
                             $value_text = ' ' . ltrim(TEXT_INVALID_USER_INPUT, ' ');
                         } else {
@@ -2033,9 +2033,9 @@ class shoppingCart extends base
                          * Need the upload class for attribute type that allows user uploads. Now psr4Autoloaded!
                          */
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
-                            $upload_prefix = UPLOAD_PREFIX . $i;    //- e.g. upload_2, contains the associated options_id, e.g. 8
-                            $text_prefix = TEXT_PREFIX . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8, the array index for the $_FILES array
-                            $text_upload_prefix = TEXT_PREFIX . $upload_prefix; //- e.g. txt_upload_2, is either an empty string or contains a previously uploaded file-name
+                            $upload_prefix = zen_config('UPLOAD_PREFIX') . $i;    //- e.g. upload_2, contains the associated options_id, e.g. 8
+                            $text_prefix = zen_config('TEXT_PREFIX') . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8, the array index for the $_FILES array
+                            $text_upload_prefix = zen_config('TEXT_PREFIX') . $upload_prefix; //- e.g. txt_upload_2, is either an empty string or contains a previously uploaded file-name
                             if (isset($_POST[$upload_prefix]) && empty($_POST[$text_upload_prefix])) {
                                 $products_options_file = new upload('id');
                                 $products_options_file->set_destination(DIR_FS_UPLOADS);
@@ -2066,7 +2066,7 @@ class shoppingCart extends base
                                         '</span>' .
                                         TEXT_INVALID_SELECTION .
                                         '<span class="alertBlack">' .
-                                            ((int)$_POST[$text_prefix] === (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID) ? TEXT_INVALID_USER_INPUT : zen_values_name($value) .
+                                            ((int)$_POST[$text_prefix] === (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')) ? TEXT_INVALID_USER_INPUT : zen_values_name($value) .
                                         '</span>' .
                                         '<br>';
                                     $new_qty = 0; // Don't increase the quantity of product in the cart.
