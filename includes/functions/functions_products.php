@@ -830,7 +830,7 @@ function zen_remove_product($product_id, $ptc = 'true'): void
           WHERE products_id = $product_id
             AND products_image IS NOT NULL
             AND products_image != ''
-            AND products_image NOT LIKE '%" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE')) . "'
+            AND products_image NOT LIKE '%" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) . "'
           LIMIT 1"
     );
 
