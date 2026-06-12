@@ -15,26 +15,33 @@ class zcDate extends base
     /**
      * Only used when $this->useIntlDate is true
      */
-    protected string $locale;
+    protected string $locale = '0';
     /**
      * Only used when $this->useStrftime is false
      */
-    protected array $strftime2date;
+    protected array $strftime2date = ['from' => [], 'to' => []];
     /**
      * Only used when $this->useStrftime is false
      */
-    protected array $strftime2intl;
+    protected array $strftime2intl = ['from' => [], 'to' => []];
 
     protected bool $debug = false;
-    protected IntlDateFormatter $dateObject;
 
-    // -----
-    // Initial construction; initializes the conversion arrays and determines which PHP
-    // base function will be used by the output method.
-    //
-    // The $zen_date_debug is a "soft" configuration setting that can be forced (defaults to false)
-    // via the site's /includes/extra_datafiles/site_specific_overrides.php
-    //
+    /** @var object|null */
+    protected ?object $dateObject = null;
+
+    /**
+     * Initializes the conversion arrays and determines which PHP
+     * base function will be used by the output method.
+     *
+     * 1. If PHP 8.1 or greater, use the IntlDateFormatter class.
+     * 2. If PHP 8.0 or greater, use the datefmt_create function.
+     * 3. Otherwise, use the strftime function.
+     *
+     * The $zen_date_debug is a "soft" configuration setting that can be forced (defaults to false)
+     * via the site's /includes/extra_datafiles/site_specific_overrides.php
+     *
+    */
     public function __construct()
     {
         global $zen_date_debug;
@@ -198,8 +205,8 @@ class zcDate extends base
             //
         } else {
             // -----
-            // If the locale has changes (as it might between the class construction and
-            // this method, re-initialize the conversion arrays for the current locale.
+            // If the locale has changed (as it might between the class construction and
+            // this method), re-initialize the conversion arrays for the current locale.
             //
             if ($this->locale !== setlocale(\LC_TIME, '0')) {
                 $this->initializeConversionArrays();

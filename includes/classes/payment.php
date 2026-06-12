@@ -30,23 +30,23 @@ class payment
     /**
      * $doesCollectsCardDataOnsite is a flag to indicate if card details are collected on site
      */
-    public bool $doesCollectsCardDataOnsite;
+    public bool $doesCollectsCardDataOnsite = false;
     /**
      * $form_action_url is the URL to process the payment or not set for local processing
      */
-    public string $form_action_url;
+    public string $form_action_url = '';
     /**
      * $modules array of payment module names
      */
-    public array $modules;
+    public array $modules = [];
     /**
      * $paymentClass is a payment class
      */
-    public object $paymentClass;
+    public ?object $paymentClass = null;
     /**
      * $selected_module is the selected payment module
      */
-    public string $selected_module;
+    public string $selected_module = '';
 
     public function __construct(string $module = '')
     {
@@ -105,8 +105,8 @@ class payment
                 $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $next_module['file'], 'false');
 
                 // -----
-                // If the language file's name doesn't start with 'lang.' (which they do,
-                // as of zc300), add that prefix for the cautionary message.
+                // If the language file's name doesn't start with 'lang.' (which they do, as of zc300),
+                // add that prefix for the cautionary message.
                 //
                 if (!str_starts_with($next_module['file'], 'lang.')) {
                     $lang_file = str_replace($lang_file, $next_module['file'], 'lang.' . $next_module['file']);

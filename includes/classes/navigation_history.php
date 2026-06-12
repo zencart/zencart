@@ -13,8 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 /**
- * Navigation_history Class.
- * This class is used to manage navigation snapshots
+ * Manage navigation snapshots
  *
  * @since ZC v1.0.3
  */
@@ -86,7 +85,7 @@ class navigationHistory extends base
 
                     $exit_loop = false;
                     for ($j = 0, $n2 = count($old_cPath); $j < $n2; $j++) {
-                        if ($old_cPath[$j] !== $new_cPath[$j]) {
+                        if (!isset($new_cPath[$j]) || $old_cPath[$j] !== $new_cPath[$j]) {
                             array_splice($this->path, ($outerKey));
                             $set = true;
                             $exit_loop = true;

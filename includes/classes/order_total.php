@@ -32,7 +32,7 @@ class order_total
     /**
      * $modules is an array of installed order totals module names
      */
-    public array $modules;
+    public array $modules = [];
 
     /**
      * $module_order_total_installed indicates whether at least one order-total module is installed.

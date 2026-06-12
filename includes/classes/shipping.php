@@ -18,8 +18,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 /**
- * shipping class
- * Class used for interfacing with shipping modules
+ * This class proxies methods for configured shipping modules
  *
  * @since ZC v1.0.3
  */
@@ -30,15 +29,15 @@ class shipping
     /**
      * $enabled public property used by notifiers to allow notifier to turn off a shipping method when querying available modules
      */
-    public bool $enabled;
+    public bool $enabled = false;
     /**
      * $modules is an array of installed shipping module names; notifier hook exists to alter if needed
      */
-    public array $modules;
+    public array $modules = [];
     /**
      * $abort_legacy_calculations public property allows a notifier to intercept the calculate_boxes_weight_and_tare method
      */
-    public bool $abort_legacy_calculations;
+    public bool $abort_legacy_calculations = false;
     /**
      * Initialized modules whose status is "enabled"
      */
