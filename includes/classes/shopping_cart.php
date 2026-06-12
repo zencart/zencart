@@ -2434,7 +2434,7 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_check_attrib_quantity(int $check_option_id, int $check_option_values_id): float|int
+    public function in_cart_check_attrib_quantity(int|string $check_option_id, int|string $check_option_values_id): float|int
     {
         // if nothing is in cart return 0
         if (!is_array($this->contents)) {
@@ -2523,12 +2523,12 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_weight_category(int $category_id): float|int
+    public function in_cart_product_total_weight_category(int|string $category_id): float|int
     {
         $products = $this->get_products();
         $in_cart_product_weight = 0;
         foreach ($products as $product) {
-            if ($product['category'] === $category_id) {
+            if ((int)$product['category'] === (int)$category_id) {
                 $in_cart_product_weight += $product['weight'] * $product['quantity'];
             }
         }
@@ -2542,7 +2542,7 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_price_category(int $category_id): float|int
+    public function in_cart_product_total_price_category(int|string $category_id): float|int
     {
         $products = $this->get_products();
         $in_cart_product_price = 0;
@@ -2562,7 +2562,7 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_quantity_category(int $category_id): float|int
+    public function in_cart_product_total_quantity_category(int|string $category_id): float|int
     {
         $products = $this->get_products();
 
@@ -2582,7 +2582,7 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_weight_category_sub(int $category_id): float|int
+    public function in_cart_product_total_weight_category_sub(int|string $category_id): float|int
     {
         if (!zen_has_category_subcategories($category_id)) {
             return $this->in_cart_product_total_weight_category($category_id);
@@ -2604,7 +2604,7 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_price_category_sub(int $category_id): float|int
+    public function in_cart_product_total_price_category_sub(int|string $category_id): float|int
     {
         if (!zen_has_category_subcategories($category_id)) {
             return $this->in_cart_product_total_price_category($category_id);
@@ -2626,7 +2626,7 @@ class shoppingCart extends base
      *
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_quantity_category_sub(int $category_id): float|int
+    public function in_cart_product_total_quantity_category_sub(int|string $category_id): float|int
     {
         if (!zen_has_category_subcategories($category_id)) {
             return $this->in_cart_product_total_quantity_category($category_id);

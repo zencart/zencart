@@ -158,7 +158,7 @@ class WhosOnline extends base
             // if a session_id has been passed, we inspect it now to save re-querying and re-processing
             $result['cart'] = null;
             if (!empty($sessionToInspect) && $sessionToInspect === $result['session_id']) {
-                $result['cart'] = $this->inspectSessionCart($result['session_id'], $result['session_data']);
+                $result['cart'] = $this->inspectSessionCart($result['session_id'], $result['session_data'] ?? '');
             }
             unset($result['session_data']);
 
