@@ -60,7 +60,7 @@ class CheckoutPaymentApprovalReversed extends WebhookHandlerContract
         $comments = "Notice: PAYMENT REVERSAL. Order ID: $oID \n$summary\n";
         $admin_message = MODULE_PAYMENT_PAYPALR_CAPTURE_ERROR;
         // downgrade order status to payment-pending
-        $status = (int)MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID;
+        $status = (int)zen_config('MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID');
         $status = ($status > 0) ? $status : 1;
         // Save update and notify customer
         zen_update_orders_history($oID, $comments, 'webhook', $status, 1);

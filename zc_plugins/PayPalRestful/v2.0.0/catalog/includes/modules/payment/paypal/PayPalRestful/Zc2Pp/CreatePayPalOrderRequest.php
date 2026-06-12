@@ -85,7 +85,7 @@ class CreatePayPalOrderRequest extends ErrorInfo
             'ot_diffs: ' . Logger::logJSON($ot_diffs)
         );
 
-        if (MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE === 'Final Sale' || ($ppr_type !== 'card' && MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE === 'Auth Only (Card-Only)')) {
+        if (zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') === 'Final Sale' || ($ppr_type !== 'card' && zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') === 'Auth Only (Card-Only)')) {
             $intent = 'CAPTURE';
         } else {
             $intent = 'AUTHORIZE';
@@ -108,8 +108,8 @@ class CreatePayPalOrderRequest extends ErrorInfo
 
         // -----
         // Set soft-descriptor override if defined. Else it will use the branding details already in the PayPal account.
-        if (defined('MODULE_PAYMENT_PAYPALR_SOFT_DESCRIPTOR') && MODULE_PAYMENT_PAYPALR_SOFT_DESCRIPTOR !== '') {
-            $this->request['purchase_units'][0]['soft_descriptor'] = substr(MODULE_PAYMENT_PAYPALR_SOFT_DESCRIPTOR, 0, 22);
+        if (zen_config('MODULE_PAYMENT_PAYPALR_SOFT_DESCRIPTOR', '') !== '') {
+            $this->request['purchase_units'][0]['soft_descriptor'] = substr(zen_config('MODULE_PAYMENT_PAYPALR_SOFT_DESCRIPTOR'), 0, 22);
         }
 
         // -----
@@ -404,15 +404,15 @@ class CreatePayPalOrderRequest extends ErrorInfo
     //
     protected function calculateHandling(array $ot_diffs): float
     {
-        return $this->itemBreakdown['item_onetime_charges'] + $this->calculateOrderElementValue(MODULE_PAYMENT_PAYPALR_HANDLING_OT . ', ot_loworderfee', $ot_diffs);
+        return $this->itemBreakdown['item_onetime_charges'] + $this->calculateOrderElementValue(zen_config('MODULE_PAYMENT_PAYPALR_HANDLING_OT') . ', ot_loworderfee', $ot_diffs);
     }
     protected function calculateInsurance(array $ot_diffs): float
     {
-        return $this->calculateOrderElementValue(MODULE_PAYMENT_PAYPALR_INSURANCE_OT, $ot_diffs);
+        return $this->calculateOrderElementValue(zen_config('MODULE_PAYMENT_PAYPALR_INSURANCE_OT', ''), $ot_diffs);
     }
     protected function calculateDiscount(array $ot_diffs): float
     {
-        return abs($this->calculateOrderElementValue(MODULE_PAYMENT_PAYPALR_DISCOUNT_OT . ', ot_coupon, ot_gv, ot_group_pricing', $ot_diffs));
+        return abs($this->calculateOrderElementValue(zen_config('MODULE_PAYMENT_PAYPALR_DISCOUNT_OT') . ', ot_coupon, ot_gv, ot_group_pricing', $ot_diffs));
     }
     protected function calculateOrderElementValue(string $ot_class_names, array $ot_diffs): float
     {
@@ -487,7 +487,7 @@ class CreatePayPalOrderRequest extends ErrorInfo
                 'cancel_url' => $cc_info['redirect'] . '?op=3ds_cancel',
             ],
         ];
-        if (isset($_POST['ppr_cc_sca_always']) || (defined('MODULE_PAYMENT_PAYPALR_SCA_ALWAYS') && MODULE_PAYMENT_PAYPALR_SCA_ALWAYS === 'true')) {
+        if (isset($_POST['ppr_cc_sca_always']) || zen_config('MODULE_PAYMENT_PAYPALR_SCA_ALWAYS', '') === 'true') {
             $payment_source['attributes']['verification']['method'] = 'SCA_ALWAYS'; //- Defaults to 'SCA_WHEN_REQUIRED' for live environment
         }
         return $payment_source;
@@ -506,8 +506,8 @@ class CreatePayPalOrderRequest extends ErrorInfo
         // Note: Although undocumented in PayPal's API, apparently their endpoint
         // "doesn't like" values with intervening spaces!
         //
-        if (SHIPPING_ORIGIN_ZIP !== '') {
-            $level_3['ships_from_postal_code'] = str_replace(' ', '', SHIPPING_ORIGIN_ZIP);
+        if (zen_config('SHIPPING_ORIGIN_ZIP', '') !== '') {
+            $level_3['ships_from_postal_code'] = str_replace(' ', '', zen_config('SHIPPING_ORIGIN_ZIP'));
         }
         if (!empty($purchase_unit['items'])) {
             $level_3['line_items'] = $purchase_unit['items'];

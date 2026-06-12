@@ -55,7 +55,7 @@ class PaymentAuthorizationVoided extends WebhookHandlerContract
             "Notice: VOIDED. Trans ID: $txnID \n" .
             "Amount: $amount\n$summary\n";
 
-        $status = (int)MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID;
+        $status = (int)zen_config('MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID');
         $status = ($status > 0) ? $status : 1;
 
         // Save update without notifying customer

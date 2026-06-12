@@ -62,7 +62,7 @@ abstract class WebhookHandlerContract
 
         [$client_id, $secret] = \paypalr::getEnvironmentInfo();
         if ($client_id !== '' && $secret !== '') {
-            $this->ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
+            $this->ppr = new PayPalRestfulApi(zen_config('MODULE_PAYMENT_PAYPALR_SERVER'), $client_id, $secret);
             return true;
         }
 
