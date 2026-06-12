@@ -59,7 +59,7 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected function getNotificationInfo(): array|false
+    protected function getNotificationInfo()
     {
         if (empty($this->projectNotificationServer)) {
             return [];

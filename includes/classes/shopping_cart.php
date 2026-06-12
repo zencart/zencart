@@ -1366,10 +1366,10 @@ class shoppingCart extends base
             if ($precision < 0) {
                 $precision = 0;
             }
-            if ($precision === 0 || !str_contains($data['qty'], '.')) {
+            if ($precision === 0 || !str_contains((string)$data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
-                $new_qty = rtrim($data['qty'], '0');
+                $new_qty = rtrim((string)$data['qty'], '0');
             }
             $check_unit_decimals = $product['products_quantity_order_units'];
             if (!str_contains($check_unit_decimals, '.')) {
