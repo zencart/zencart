@@ -37,9 +37,13 @@ if (!empty($action)) {
                 $config_id = (int)substr($key, 4);
                 $configuration_value = zen_db_prepare_input($value);
 
-                // See if there are any configuration checks
+                // See for a valid configuration_id and the presence of a 'val_function'.
                 $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
-                if (!$checks->EOF && $checks->fields['val_function'] !== null) {
+                if ($checks->EOF) {
+                    continue;
+                }
+
+                if ($checks->fields['val_function'] !== null) {
                     if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'], $checks->fields['configuration_title'])) {
                         $cID_param ??= "&cID=$config_id";
                         continue;
@@ -54,8 +58,13 @@ if (!empty($action)) {
                       LIMIT 1"
                 );
                 $messageStack->add_session(
-                    sprintf(TEXT_VALUE_SAVED, $checks->fields['configuration_title'], zen_output_string_protected($_POST['original'][$key]), zen_output_string_protected($configuration_value)),
-                    'success');
+                    sprintf(TEXT_VALUE_SAVED,
+                        zen_output_string_protected($checks->fields['configuration_title']),
+                        '<code>' . zen_output_string_protected($_POST['original'][$key]) . '</code>',
+                        '<code>' . zen_output_string_protected($configuration_value) . '</code>'
+                    ),
+                    'success'
+                );
 
                 $result = $db->Execute(
                     "SELECT configuration_key
@@ -190,7 +199,7 @@ echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'
 <?php
 foreach ($configuration as $item) {
     $fieldName = 'cfg_' . $item['configuration_id'];
-    if (isset($_GET['cID']) && $_GET['cID'] === $item['configuration_id']) {
+    if (isset($_GET['cID']) && (int)$_GET['cID'] === (int)$item['configuration_id']) {
         $focusField = 'configuration[' . $fieldName . ']';
     }
 
@@ -205,7 +214,7 @@ foreach ($configuration as $item) {
     <div class="row row-hover align-items-center py-2">
         <div class="col-md-3">
             <?php
-            echo '<strong>' . $item['configuration_title'] . '</strong>';
+            echo '<strong>' . zen_output_string_protected($item['configuration_title']) . '</strong>';
             if (zen_config('ADMIN_CONFIGURATION_KEY_ON') == 1) {
                 echo '<br>Key: ' . $item['configuration_key'];
             }
