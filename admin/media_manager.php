@@ -155,7 +155,7 @@
               </tr>
 <?php
   $media_query_raw = "SELECT * FROM " . TABLE_MEDIA_MANAGER . " ORDER BY media_name";
-  $media_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $media_query_raw, $media_query_numrows);
+  $media_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $media_query_raw, $media_query_numrows);
   $media = $db->Execute($media_query_raw);
   $mManager_parameter = '';
   while (!$media->EOF) {

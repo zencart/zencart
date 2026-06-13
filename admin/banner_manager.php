@@ -514,7 +514,7 @@ if (mb_strlen($abbrev_dir_name) > 45) {
                     $_GET['page'] = 1;
                   }
                 }
-                $banners_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $banners_query_raw, $banners_query_numrows);
+                $banners_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $banners_query_raw, $banners_query_numrows);
                 $banners = $db->Execute($banners_query_raw);
                 foreach ($banners as $banner) {
                   $info = $db->Execute("SELECT SUM(banners_shown) AS banners_shown,

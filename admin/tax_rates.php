@@ -114,7 +114,7 @@ if (!empty($action)) {
                                     LEFT JOIN " . TABLE_GEO_ZONES . " z ON (r.tax_zone_id = z.geo_zone_id)
                                     WHERE r.tax_class_id = tc.tax_class_id AND rd.language_id = " . (int)$_SESSION['languages_id'];
                 $rates_query_numrows = $rates_query_numrows ?? 0;
-                $rates_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $rates_query_raw, $rates_query_numrows);
+                $rates_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $rates_query_raw, $rates_query_numrows);
                 $rates = $db->Execute($rates_query_raw);
                 foreach ($rates as $rate) {
                   if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $rate['tax_rates_id']))) && !isset($trInfo) && (substr($action, 0, 3) != 'new')) {

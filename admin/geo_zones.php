@@ -194,7 +194,7 @@ if (!empty($action)) {
                       $_GET['spage'] = 1;
                     }
                   }
-                  $zones_split = new splitPageResults($_GET['spage'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows);
+                  $zones_split = new splitPageResults($_GET['spage'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows);
                   $zones = $db->Execute($zones_query_raw);
                   foreach ($zones as $zone) {
                     if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ($_GET['sID'] == $zone['association_id']))) && !isset($sInfo) && (substr($action, 0, 3) != 'new')) {
@@ -263,7 +263,7 @@ if (!empty($action)) {
                         $_GET['zpage'] = 1;
                       }
                     }
-                    $zones_split = new splitPageResults($_GET['zpage'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows);
+                    $zones_split = new splitPageResults($_GET['zpage'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $zones_query_raw, $zones_query_numrows);
                     $zones = $db->Execute($zones_query_raw);
                     foreach ($zones as $zone) {
                       $num_zones = $db->Execute("SELECT COUNT(*) AS num_zones

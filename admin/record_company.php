@@ -147,7 +147,7 @@ if (!empty($action)) {
                 $record_company_query_raw = "SELECT *
                                              FROM " . TABLE_RECORD_COMPANY . "
                                              ORDER BY record_company_name";
-                $record_company_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $record_company_query_raw, $record_company_query_numrows);
+                $record_company_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $record_company_query_raw, $record_company_query_numrows);
                 $record_companies = $db->Execute($record_company_query_raw);
                 $rCompany_parameter = '';
                 foreach ($record_companies as $record_company) {

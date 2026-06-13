@@ -135,7 +135,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
     // 2 = Can browse but no prices
     // verify display of prices
     $auth_pending_link =
-        '<a href="' . zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL') . '" rel="noindex nofollow">' .
+        '<a href="' . zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), '', 'SSL') . '" rel="noindex nofollow">' .
             TEXT_AUTHORIZATION_PENDING_BUTTON_REPLACE .
         '</a>';
     switch (true) {
@@ -194,7 +194,7 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
             global $template;
             $image = BUTTON_IMAGE_SOLD_OUT;
             $alt = BUTTON_SOLD_OUT_ALT;
-            if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'yes' || strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'found') {
+            if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found') {
                 $return_button = zen_image_button($image, $alt);
             } else {
                 $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>';

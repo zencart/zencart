@@ -107,7 +107,7 @@ $paypal_ipn_sort_order_array = [
   } else {
         $ipn_query_raw = "SELECT p.order_id, p.paypal_ipn_id, p.txn_type, p.payment_type, p.payment_status, p.pending_reason, p.payer_status, p.mc_currency, p.date_added, p.mc_gross, p.first_name, p.last_name, p.payer_business_name, p.parent_txn_id, p.txn_id FROM " . TABLE_PAYPAL . " AS p LEFT JOIN " .TABLE_ORDERS . " AS o ON o.orders_id = p.order_id" . $order_by;
   }
-  $ipn_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), $ipn_query_raw, $ipn_query_numrows);
+  $ipn_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), $ipn_query_raw, $ipn_query_numrows);
   $ipn_trans = $db->Execute($ipn_query_raw);
   foreach ($ipn_trans as $ipn_tran) {
     if ((!isset($_GET['ipnID']) || (isset($_GET['ipnID']) && ($_GET['ipnID'] == $ipn_tran['paypal_ipn_id']))) && !isset($ipnInfo)) {

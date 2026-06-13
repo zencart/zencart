@@ -81,7 +81,7 @@ if (!empty($action)) {
                     $media_type_query_raw = "SELECT *
                                          FROM " . TABLE_MEDIA_TYPES . "
                                          ORDER BY type_name";
-                    $media_type_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $media_type_query_raw, $media_type_query_numrows);
+                    $media_type_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $media_type_query_raw, $media_type_query_numrows);
                     $media_types = $db->Execute($media_type_query_raw);
                     $mType_parameter = '';
                     foreach ($media_types as $media_type) {

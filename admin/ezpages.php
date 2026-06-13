@@ -611,7 +611,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         }
                     }
 
-                    $pages_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE'), $pages_query_raw, $pages_query_numrows);
+                    $pages_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE'), $pages_query_raw, $pages_query_numrows);
                     $pages = $db->Execute($pages_query_raw);
 
                     foreach ($pages as $page) {
