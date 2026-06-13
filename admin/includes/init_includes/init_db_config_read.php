@@ -33,3 +33,5 @@ define('PROJECT_DB_VERSION_MINOR', $versionInfo['project_version_minor']);
 
 $productTypeLayoutRepository = new ProductTypeLayoutRepository($db);
 $productTypeLayoutRepository->loadConfigSettings();
+
+require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_config.php';

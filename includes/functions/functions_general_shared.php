@@ -721,26 +721,3 @@ function zen_add_filemtime(string $relative_path, ?string $absolute_path = null)
     }
     return $relative_path . '?' . $mtime;
 }
-
-/**
- * A helper function to retrieve a specific database constant (either in
- * the configuration or product_type_layout tables).
- *
- * The 2nd parameter ($default) identifies the value to be returned if
- * no match is found in either table. The (er) default value of null enables
- * the use of the PHP null-coalesce operator on the returned value, e.g.
- *
- * $value = zen_config('CONFIG_VALUE') ?? 'value not set';
- *
- * That's now equivalent to
- *
- * $value = zen_config('CONFIG_VALUE, 'value not set');
- *
- * @since ZC v3.0.0
- */
-function zen_config(string $key, mixed $default = null): mixed
-{
-    global $configurationRepository, $productTypeLayoutRepository;
-
-    return $configurationRepository->get($key) ?? $productTypeLayoutRepository->get($key) ?? $default;
-}
