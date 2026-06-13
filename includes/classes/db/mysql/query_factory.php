@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * MySQL query_factory class.
  * Class used for database abstraction to MySQL via mysqli procedural interface.
@@ -93,11 +95,11 @@ class queryFactory extends base
         $dbCharset = $options['dbCharset'] ?? (defined('DB_CHARSET') ? DB_CHARSET : null);
 
         if (!function_exists('mysqli_connect')) {
-            die ('Call to undefined function: mysqli_connect().  Please install the MySQL Connector for PHP');
+            die('Call to undefined function: mysqli_connect().  Please install the MySQL Connector for PHP');
         }
 
         // use default reporting setting, so exceptions aren't thrown, since we attempt to catch errors here procedurally.
-        mysqli_report(MYSQLI_REPORT_OFF);
+        mysqli_report(\MYSQLI_REPORT_OFF);
 
         $connectionRetry = 10;
         while ($this->link === false && $connectionRetry > 0) {
@@ -171,7 +173,7 @@ class queryFactory extends base
     public function simpleConnect(string $db_host, string $db_user, string $db_password, string $db_name): bool
     {
         // use default reporting setting, so exceptions aren't thrown, since we attempt to catch errors here procedurally.
-        mysqli_report(MYSQLI_REPORT_OFF);
+        mysqli_report(\MYSQLI_REPORT_OFF);
 
         $this->database = $db_name;
         $this->user = $db_user;
@@ -179,7 +181,7 @@ class queryFactory extends base
         $this->password = $db_password;
 
         // temporarily suppress E_WARNING in case of connection failure
-        $error_level = error_reporting(E_ERROR | E_PARSE);
+        $error_level = error_reporting(\E_ERROR | \E_PARSE);
         $this->link = mysqli_connect($db_host, $db_user, $db_password, $db_name, (defined('DB_PORT') ? DB_PORT : null), (defined('DB_SOCKET') ? DB_SOCKET : null));
         error_reporting($error_level);
 
@@ -247,7 +249,7 @@ class queryFactory extends base
      * @see $this->prepare_input()
      * @since ZC v1.3.0
      */
-    function prepareInput(string $string)
+    public function prepareInput(string $string)
     {
         return $this->prepare_input($string);
     }
@@ -464,9 +466,9 @@ class queryFactory extends base
      * @deprecated since 1.5.8 use ExecuteRandomMulti
      * @since ZC v1.5.5f
      */
-    function ExecuteRandomMultiNoCache($sqlQuery)
+    public function ExecuteRandomMultiNoCache($sqlQuery)
     {
-        trigger_error('Call to deprecated function ExecuteRandomMultiNoCache. Use ExecuteRandomMulti() instead', E_USER_DEPRECATED);
+        trigger_error('Call to deprecated function ExecuteRandomMultiNoCache. Use ExecuteRandomMulti() instead', \E_USER_DEPRECATED);
 
         return $this->ExecuteRandomMulti($sqlQuery, 0);
     }
@@ -618,8 +620,9 @@ class queryFactory extends base
         switch (strtolower($performType)) {
             case 'insertignore':
                 $insertString = 'INSERT IGNORE';
+                // no break
             case 'insert':
-                $insertString = $insertString ?? 'INSERT';
+                $insertString ??= 'INSERT';
                 $insertString .= " INTO $tableName (";
                 foreach ($tableData as $key => $value) {
                     if ($debug === true) {
@@ -644,8 +647,9 @@ class queryFactory extends base
 
             case 'updateignore':
                 $updateString = 'UPDATE IGNORE ';
+                // no break
             case 'update':
-                $updateString = $updateString ?? 'UPDATE ';
+                $updateString ??= 'UPDATE ';
                 $updateString .= " $tableName SET ";
                 foreach ($tableData as $key => $value) {
                     $bindVarValue = $this->getBindVarValue($value['value'], $value['type']);
@@ -679,7 +683,7 @@ class queryFactory extends base
     public function bindVars(string $sql, string $parameterToReplace, $valueToBind, string $bindingRule): string
     {
         $sqlNew = $this->getBindVarValue($valueToBind, $bindingRule);
-        $sqlNew = str_replace($parameterToReplace, $sqlNew, $sql);
+        $sqlNew = str_replace($parameterToReplace, (string)$sqlNew, $sql);
         return $sqlNew;
     }
 
@@ -697,19 +701,15 @@ class queryFactory extends base
         $type = $typeArray[0];
         switch ($type) {
             case 'inConstructInteger':
-                $list = explode(',', $value);
-                $newList = array_map(function ($value) {
-                    return (int)$value;
-                }, $list);
+                $list = explode(',', (string)$value);
+                $newList = array_map(static fn($value) => (int)$value, $list);
                 $value = implode(',', $newList);
 
                 return $value;
 
             case 'inConstructString':
-                $list = explode(',', $value);
-                $newList = array_map(function ($value) {
-                    return '\'' . $this->prepare_input($value) . '\'';
-                }, $list);
+                $list = explode(',', (string)$value);
+                $newList = array_map(fn($value) => '\'' . $this->prepare_input($value) . '\'', $list);
                 $value = implode(',', $newList);
 
                 return $value;
@@ -721,31 +721,31 @@ class queryFactory extends base
                 return $value;
 
             case 'float':
-                return (!zen_not_null($value) || $value == '' || $value == 0) ? 0 : (float)$value;
+                return (!zen_not_null($value) || $value === '' || $value === 0) ? 0 : (float)$value;
 
             case 'integer':
                 return (int)$value;
 
             case 'string':
-                if (preg_match('/NULL/', $value)) {
+                if (preg_match('/NULL/', (string)$value)) {
                     return 'null';
                 }
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'stringIgnoreNull':
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'noquotestring':
-                return $this->prepare_input($value);
+                return $this->prepare_input((string)$value);
 
             case 'currency':
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'date':
-                if (preg_match('/null/i', $value)) {
+                if (preg_match('/null/i', (string)$value)) {
                     return 'null';
                 }
-                return '\'' . $this->prepare_input($value) . '\'';
+                return '\'' . $this->prepare_input((string)$value) . '\'';
 
             case 'enum':
                 if (isset($typeArray[1])) {
@@ -761,7 +761,7 @@ class queryFactory extends base
                 return $this->prepare_input($value);
 
             default:
-                trigger_error("FATAL ERROR: var-type undefined: $type ($value).", E_USER_WARNING);
+                trigger_error("FATAL ERROR: var-type undefined: $type ($value).", \E_USER_WARNING);
                 exit();
         }
     }
@@ -844,7 +844,7 @@ class queryFactory extends base
         if (file_exists(FILENAME_DATABASE_TEMPORARILY_DOWN)) {
             if (($this->error_number == 0 && $this->error_text == DB_ERROR_NOT_CONNECTED)
                 || in_array($this->error_number, [2002, 2003])) {
-                include(FILENAME_DATABASE_TEMPORARILY_DOWN);
+                include FILENAME_DATABASE_TEMPORARILY_DOWN;
             }
         }
 
@@ -875,7 +875,7 @@ class queryFactory extends base
                 break;
             }
         }
-        trigger_error('FATAL MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, E_USER_WARNING);
+        trigger_error('FATAL MySQL error ' . $this->error_number . ': ' . $this->error_text . ' :: ' . $this->zf_sql . $query_factory_caller, \E_USER_WARNING);
         exit();
     }
 
@@ -922,18 +922,18 @@ class queryFactory extends base
         if (strtoupper(substr($sqlQuery, 0, 6)) !== 'SELECT' /*&& strstr($sqlQuery,'products_id')*/) {
             return;
         }
-// optional isolation
-//        if (strpos($sqlQuery, 'products_id') === false) {
-//            return;
-//        }
+        // optional isolation
+        //        if (strpos($sqlQuery, 'products_id') === false) {
+        //            return;
+        //        }
 
         $f = @fopen(DIR_FS_LOGS . '/query_selects_' . $current_page_base . '_' . time() . '.txt', 'ab');
         if ($f) {
             $backtrace = '';
 
-            if (STORE_DB_TRANSACTIONS === 'backtrace') {
+            if (zen_config('STORE_DB_TRANSACTIONS') === 'backtrace') {
                 ob_start();
-                debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+                debug_print_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
                 $backtrace = ob_get_clean();
                 $backtrace = preg_replace('/^#0\s+' . __FUNCTION__ . '[^\n]*\n/', '', $backtrace, 1);
                 $backtrace = 'query trace: ' . "\n" . $backtrace . "\n";
@@ -1002,9 +1002,7 @@ class queryFactoryResult implements Countable, Iterator
 
     public string $sql_query = '';
 
-    public function __construct(public ?mysqli $link)
-    {
-    }
+    public function __construct(public ?mysqli $link) {}
 
     /* (non-PHPdoc)
      * @see Iterator::current()
@@ -1141,6 +1139,7 @@ class queryFactoryResult implements Countable, Iterator
         if (!empty($this->resource) && $this->resource instanceof mysqli_result) {
             return @mysqli_num_rows($this->resource);
         }
+
         return 0;
     }
 

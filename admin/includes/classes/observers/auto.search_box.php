@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -10,18 +12,15 @@ class zcObserverSearchBox extends base
 {
     public function __construct()
     {
-        $this->attach(
-            $this,
-            [
-                'NOTIFY_BUILD_KEYWORD_SEARCH',
-            ]
-        );
+        $this->attach($this, [
+            'NOTIFY_BUILD_KEYWORD_SEARCH',
+            ]);
     }
 
     /**
      * @since ZC v1.5.8a
      */
-    public function update(&$class, $eventID, &$p1, &$p2, &$p3, &$p4)
+    public function update(&$class, $eventID, &$p1, &$p2, &$p3, &$p4): void
     {
         switch ($eventID) {
             case 'NOTIFY_BUILD_KEYWORD_SEARCH':

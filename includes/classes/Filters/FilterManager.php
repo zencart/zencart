@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -14,21 +16,14 @@ use Zencart\Request\Request;
  */
 class FilterManager
 {
+    protected array $filters = [];
 
-    protected $filterDefinitions = [];
-    protected $filterFactory;
-    protected $filters = [];
-
-    public function __construct(array $filterDefinitions, FilterFactory $filterFactory)
-    {
-        $this->filterDefinitions = $filterDefinitions;
-        $this->filterFactory = $filterFactory;
-    }
+    public function __construct(protected array $filterDefinitions, protected FilterFactory $filterFactory) {}
 
     /**
      * @since ZC v1.5.8
      */
-    public function build() : void
+    public function build(): void
     {
         $this->filters = [];
         if (!$this->hasFilters()) {
@@ -58,7 +53,7 @@ class FilterManager
     /**
      * @since ZC v1.5.8
      */
-    public function hasFilters() : bool
+    public function hasFilters(): bool
     {
         if (!count($this->filterDefinitions)) {
             return false;
@@ -69,7 +64,7 @@ class FilterManager
     /**
      * @since ZC v1.5.8
      */
-    public function getFilters() : array
+    public function getFilters(): array
     {
         return $this->filters;
     }

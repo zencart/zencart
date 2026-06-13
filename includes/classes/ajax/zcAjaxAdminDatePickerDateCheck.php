@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * zcAjaxAdminDateCheck
  *
@@ -10,11 +12,12 @@
 class zcAjaxAdminDatePickerDateCheck extends base
 {
     /**
-     * check.  Checks a 'datepicker' date for validity
+     * Checks a 'datepicker' date for validity
      *
+     * @return string 'true' or 'false' (as a string for ease of use in JavaScript)
      * @since ZC v2.0.0
      */
-    public function check()
+    public function check(): string
     {
         // -----
         // Deny access unless running under the admin.
@@ -33,10 +36,10 @@ class zcAjaxAdminDatePickerDateCheck extends base
 
         if (DATE_FORMAT_DATE_PICKER !== 'yy-mm-dd') {
             $local_fmt = zen_datepicker_format_fordate();
-            $dt = DateTime::createFromFormat($local_fmt, $date_raw);
+            $dt = DateTimeImmutable::createFromFormat($local_fmt, $date_raw);
             $date_raw = false;
-            if (!empty($dt)) {
-              $date_raw = $dt->format('Y-m-d');
+            if ($dt !== false) {
+                $date_raw = $dt->format('Y-m-d');
             }
         }
         return ($date_raw !== false && zcDate::validateDate($date_raw) === true) ? 'true' : 'false';

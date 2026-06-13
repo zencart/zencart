@@ -84,7 +84,7 @@ class DoVoid
         if (count($captured_txns) !== 0) {
             $voided_status = -1;
         } else {
-            $voided_status = (int)MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID;
+            $voided_status = (int)zen_config('MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID');
             $voided_status = ($voided_status > 0) ? $voided_status : 1;
         }
 

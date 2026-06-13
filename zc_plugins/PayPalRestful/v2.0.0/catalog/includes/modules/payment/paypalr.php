@@ -203,43 +203,44 @@ class paypalr extends \base
 
         $this->detectZcPluginDetails(__DIR__);
 
-        $this->sort_order = defined('MODULE_PAYMENT_PAYPALR_SORT_ORDER') ? ((int)MODULE_PAYMENT_PAYPALR_SORT_ORDER) : null;
+        $sort_order = zen_config('MODULE_PAYMENT_PAYPALR_SORT_ORDER');
+        $this->sort_order = ($sort_order === null) ? null : (int)$sort_order;
         if (null === $this->sort_order) {
             return;
         }
 
         // @TODO - "Retired" check should accommodate 'webhook' mode too, because we do want to still respond to webhooks when in Retired mode.
-        $this->enabled = (MODULE_PAYMENT_PAYPALR_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALR_STATUS === 'Retired'));
+        $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALR_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALR_STATUS') === 'Retired'));
 
         $this->errorInfo = new ErrorInfo();
 
         $this->log = new Logger();
-        $debug = (strpos(MODULE_PAYMENT_PAYPALR_DEBUGGING, 'Log') !== false);
+        $debug = (str_contains(zen_config('MODULE_PAYMENT_PAYPALR_DEBUGGING', 'Off'), 'Log'));
         if ($debug === true) {
             $this->log->enableDebug();
         }
-        $this->emailAlerts = (MODULE_PAYMENT_PAYPALR_DEBUGGING === 'Alerts Only' || MODULE_PAYMENT_PAYPALR_DEBUGGING === 'Log and Email');
+        $this->emailAlerts = (zen_config('MODULE_PAYMENT_PAYPALR_DEBUGGING') === 'Alerts Only' || zen_config('MODULE_PAYMENT_PAYPALR_DEBUGGING') === 'Log and Email');
 
         // -----
         // An order's *initial* order-status depending on the mode in which the PayPal transaction
         // is to be performed.
         //
         $ppr_type = $_SESSION['PayPalRestful']['ppr_type'] ?? 'paypal';
-        if (MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE === 'Final Sale' || ($ppr_type !== 'card' && MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE === 'Auth Only (Card-Only)')) {
-            $order_status = (int)MODULE_PAYMENT_PAYPALR_ORDER_STATUS_ID;
+        if (zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') === 'Final Sale' || ($ppr_type !== 'card' && zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') === 'Auth Only (Card-Only)')) {
+            $order_status = (int)zen_config('MODULE_PAYMENT_PAYPALR_ORDER_STATUS_ID');
         } else {
-            $order_status = (int)MODULE_PAYMENT_PAYPALR_ORDER_PENDING_STATUS_ID;
+            $order_status = (int)zen_config('MODULE_PAYMENT_PAYPALR_ORDER_PENDING_STATUS_ID');
         }
-        $this->order_status = ($order_status > 1) ? $order_status : (int)DEFAULT_ORDERS_STATUS_ID;
+        $this->order_status = ($order_status > 1) ? $order_status : (int)zen_config('DEFAULT_ORDERS_STATUS_ID');
 
-        $this->zone = (int)MODULE_PAYMENT_PAYPALR_ZONE;
+        $this->zone = (int)zen_config('MODULE_PAYMENT_PAYPALR_ZONE');
 
         if (IS_ADMIN_FLAG === true) {
             if ($uninstalling === false) {
-                if (MODULE_PAYMENT_PAYPALR_STATUS === 'Retired') {
+                if (zen_config('MODULE_PAYMENT_PAYPALR_STATUS') === 'Retired') {
                     $this->title .= ' <strong>(Retired)</strong>';
                 }
-                if (MODULE_PAYMENT_PAYPALR_SERVER === 'sandbox') {
+                if (zen_config('MODULE_PAYMENT_PAYPALR_SERVER') === 'sandbox') {
                     $this->title .= $this->alertMsg(' (sandbox active)');
                 }
                 if ($debug === true) {
@@ -294,8 +295,8 @@ class paypalr extends \base
             // If enabled via configuration, further check to see that at least one of the card types
             // supported by PayPal is also supported by the site.
             //
-            $cards_accepted = (MODULE_PAYMENT_PAYPALR_ACCEPT_CARDS === 'true' || (MODULE_PAYMENT_PAYPALR_ACCEPT_CARDS === 'Account-Holders Only' && !zen_in_guest_checkout()));
-            $this->cardsAccepted = ($cards_accepted === true && (MODULE_PAYMENT_PAYPALR_SERVER === 'sandbox' || strpos(HTTP_SERVER, 'https://') === 0));
+            $cards_accepted = (zen_config('MODULE_PAYMENT_PAYPALR_ACCEPT_CARDS') === 'true' || (zen_config('MODULE_PAYMENT_PAYPALR_ACCEPT_CARDS') === 'Account-Holders Only' && !zen_in_guest_checkout()));
+            $this->cardsAccepted = ($cards_accepted === true && (zen_config('MODULE_PAYMENT_PAYPALR_SERVER') === 'sandbox' || strpos(HTTP_SERVER, 'https://') === 0));
             if ($this->cardsAccepted === true) {
                 $this->cardsAccepted = $this->checkCardsAcceptedForSite();
             }
@@ -361,8 +362,8 @@ class paypalr extends \base
         //
         // Determine the currency to be used to send the order to PayPal and whether it's usable.
         //
-        $order_currency = $order->info['currency'] ?? $_SESSION['currency'] ?? DEFAULT_CURRENCY;
-        $paypal_default_currency = (MODULE_PAYMENT_PAYPALR_CURRENCY === 'Selected Currency') ? $order_currency : str_replace('Only ', '', MODULE_PAYMENT_PAYPALR_CURRENCY);
+        $order_currency = $order->info['currency'] ?? $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
+        $paypal_default_currency = (zen_config('MODULE_PAYMENT_PAYPALR_CURRENCY') === 'Selected Currency') ? $order_currency : str_replace('Only ', '', zen_config('MODULE_PAYMENT_PAYPALR_CURRENCY', ''));
         $amount = new Amount($paypal_default_currency);
 
         $paypal_currency = $amount->getDefaultCurrencyCode();
@@ -411,10 +412,12 @@ class paypalr extends \base
     //
     protected function tableCheckup(): void
     {
+        $installed_version = zen_config('MODULE_PAYMENT_PAYPALR_VERSION');
+
         // -----
         // Remove any PayPal RESTful storefront logs that were created for v1.0.3 (202408).
         //
-        if (defined('MODULE_PAYMENT_PAYPALR_VERSION') && version_compare(MODULE_PAYMENT_PAYPALR_VERSION, '1.0.2', '>') && version_compare(MODULE_PAYMENT_PAYPALR_VERSION, '1.0.4-beta3', '<')) {
+        if ($installed_version !== null && version_compare($installed_version, '1.0.2', '>') && version_compare($installed_version, '1.0.4-beta3', '<')) {
             $logfiles = glob(DIR_FS_LOGS . '/paypalr-c-*-202408*.log');
             foreach ($logfiles as $next_log) {
                 unlink($next_log);
@@ -425,7 +428,7 @@ class paypalr extends \base
         // If the payment module is installed and at the current version, nothing to be done.
         //
         $current_version = self::CURRENT_VERSION;
-        if (defined('MODULE_PAYMENT_PAYPALR_VERSION') && MODULE_PAYMENT_PAYPALR_VERSION === $current_version) {
+        if ($installed_version === $current_version) {
             return;
         }
 
@@ -434,9 +437,9 @@ class paypalr extends \base
         // -----
         // Check for version-specific configuration updates.
         //
-        if (defined('MODULE_PAYMENT_PAYPALR_VERSION')) {
+        if ($installed_version !== null) {
             switch (true) {
-                case version_compare(MODULE_PAYMENT_PAYPALR_VERSION, '1.1.1', '<'):
+                case version_compare($installed_version, '1.1.1', '<'):
                     $db->Execute(
                         "UPDATE " . TABLE_CONFIGURATION . "
                             SET set_function = 'zen_cfg_select_option([\'Auth Only (All Txns)\', \'Final Sale\', \'Auth Only (Card-Only)\'] ,'
@@ -451,7 +454,7 @@ class paypalr extends \base
                     );
 
                 /* falls through */
-                case version_compare(MODULE_PAYMENT_PAYPALR_VERSION, '1.2.0', '<'): //- Fall through from above
+                case version_compare($installed_version, '1.2.0', '<'): //- Fall through from above
                     $db->Execute(
                         "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
                             (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added)
@@ -460,7 +463,7 @@ class paypalr extends \base
                     );
 
                 /* falls through */
-                case version_compare(MODULE_PAYMENT_PAYPALR_VERSION, '1.3.0', '<'): //- Fall through from above
+                case version_compare($installed_version, '1.3.0', '<'): //- Fall through from above
                     $db->Execute(
                         "INSERT IGNORE INTO " . TABLE_CONFIGURATION . "
                             (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added)
@@ -550,12 +553,12 @@ class paypalr extends \base
         // -----
         // Determine and return which (live vs. sandbox) credentials are in use.
         //
-        if (MODULE_PAYMENT_PAYPALR_SERVER === 'live') {
-            $client_id = MODULE_PAYMENT_PAYPALR_CLIENTID_L;
-            $secret = MODULE_PAYMENT_PAYPALR_SECRET_L;
+        if (zen_config('MODULE_PAYMENT_PAYPALR_SERVER') === 'live') {
+            $client_id = zen_config('MODULE_PAYMENT_PAYPALR_CLIENTID_L');
+            $secret = zen_config('MODULE_PAYMENT_PAYPALR_SECRET_L');
         } else {
-            $client_id = MODULE_PAYMENT_PAYPALR_CLIENTID_S;
-            $secret = MODULE_PAYMENT_PAYPALR_SECRET_S;
+            $client_id = zen_config('MODULE_PAYMENT_PAYPALR_CLIENTID_S');
+            $secret = zen_config('MODULE_PAYMENT_PAYPALR_SECRET_S');
         }
 
         return [
@@ -598,15 +601,15 @@ class paypalr extends \base
         //
         $error_message = '';
         if ($client_id === '' || $secret === '') {
-            $error_message = ($uninstalling === false) ? sprintf(MODULE_PAYMENT_PAYPALR_ERROR_CREDS_NEEDED, MODULE_PAYMENT_PAYPALR_SERVER) : 'no-client';
+            $error_message = ($uninstalling === false) ? sprintf(MODULE_PAYMENT_PAYPALR_ERROR_CREDS_NEEDED, zen_config('MODULE_PAYMENT_PAYPALR_SERVER')) : 'no-client';
         } else {
-            $this->ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
+            $this->ppr = new PayPalRestfulApi(zen_config('MODULE_PAYMENT_PAYPALR_SERVER'), $client_id, $secret);
 
             global $current_page;
             $use_saved_credentials = (IS_ADMIN_FLAG === false || $current_page === FILENAME_MODULES);
             $this->log->write("validateCredentials: Checking ($use_saved_credentials).", true, 'before');
             if ($this->ppr->validatePayPalCredentials($use_saved_credentials) === false) {
-                $error_message = ($uninstalling === false) ? sprintf(MODULE_PAYMENT_PAYPALR_ERROR_INVALID_CREDS, MODULE_PAYMENT_PAYPALR_SERVER) : 'invalid-creds';
+                $error_message = ($uninstalling === false) ? sprintf(MODULE_PAYMENT_PAYPALR_ERROR_INVALID_CREDS, zen_config('MODULE_PAYMENT_PAYPALR_SERVER')) : 'invalid-creds';
             }
             $this->log->write('', false, 'after');
         }
@@ -736,11 +739,11 @@ class paypalr extends \base
                     'var cc_owner = document.checkout_payment.paypalr_cc_owner.value;' . "\n" .
                     'var cc_number = document.checkout_payment.paypalr_cc_number.value;' . "\n" .
                     'var cc_cvv = document.checkout_payment.paypalr_cc_cvv.value;' . "\n" .
-                    'if (cc_owner == "" || eval(cc_owner.length) < ' . CC_OWNER_MIN_LENGTH . ') {' . "\n" .
+                    'if (cc_owner == "" || eval(cc_owner.length) < ' . zen_config('CC_OWNER_MIN_LENGTH') . ') {' . "\n" .
                         'error_message = error_message + "' . MODULE_PAYMENT_PAYPALR_TEXT_JS_CC_OWNER . '";' . "\n" .
                         'error = 1;' . "\n" .
                     '}' . "\n" .
-                    'if (cc_number == "" || cc_number.length < ' . CC_NUMBER_MIN_LENGTH . ') {' . "\n" .
+                    'if (cc_number == "" || cc_number.length < ' . zen_config('CC_NUMBER_MIN_LENGTH') . ') {' . "\n" .
                         'error_message = error_message + "' . MODULE_PAYMENT_PAYPALR_TEXT_JS_CC_NUMBER . '";' . "\n" .
                         'error = 1;' . "\n" .
                     '}' . "\n" .
@@ -948,7 +951,7 @@ class paypalr extends \base
         // If running in the sandbox environment, add a checkbox input to enable SCA
         // testing.
         //
-        if (MODULE_PAYMENT_PAYPALR_SERVER === 'sandbox') {
+        if (zen_config('MODULE_PAYMENT_PAYPALR_SERVER') === 'sandbox') {
             if ($is_bootstrap_template === false) {
                 $selection['fields'][] = [
                     'title' => 'Enable SCA Always?',
@@ -1149,7 +1152,7 @@ class paypalr extends \base
         }
 
         $cc_owner = $_POST[$postvar_prefix . '_cc_owner'] ?? '';
-        if (strlen($cc_owner) < CC_OWNER_MIN_LENGTH) {
+        if (strlen($cc_owner) < zen_config('CC_OWNER_MIN_LENGTH')) {
             $messageStack->add_session('checkout_payment', trim(MODULE_PAYMENT_PAYPALR_TEXT_JS_CC_OWNER, '* \\n'), 'error');
             return false;
         }
@@ -1289,7 +1292,7 @@ class paypalr extends \base
     {
         $_SESSION['PayPalRestful']['CompletedOrders'] = $_SESSION['PayPalRestful']['CompletedOrders'] ?? 0;
         unset($order->info['ip_address']);
-        $hash_data = MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE . json_encode($order) . $_SESSION['securityToken'] . $_SESSION['PayPalRestful']['CompletedOrders'];
+        $hash_data = zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') . json_encode($order) . $_SESSION['securityToken'] . $_SESSION['PayPalRestful']['CompletedOrders'];
         if ($ppr_type !== 'paypal') {
             $hash_data .= json_encode($this->ccInfo);
         }
@@ -1464,7 +1467,7 @@ class paypalr extends \base
         // changed from that at the start of the process-phase.
         //
         if ($this->paymentIsPending === true) {
-            $pending_status = (int)MODULE_PAYMENT_PAYPALR_HELD_STATUS_ID;
+            $pending_status = (int)zen_config('MODULE_PAYMENT_PAYPALR_HELD_STATUS_ID');
             if ($pending_status > 0) {
                 $this->order_status = $pending_status;
                 $order->info['order_status'] = $pending_status;
@@ -1502,7 +1505,7 @@ class paypalr extends \base
         if ($payment_status !== PayPalRestfulApi::STATUS_CAPTURED && $payment_status !== PayPalRestfulApi::STATUS_CREATED) {
             global $order;
 
-            $this->order_status = (int)MODULE_PAYMENT_PAYPALR_ORDER_PENDING_STATUS_ID;
+            $this->order_status = (int)zen_config('MODULE_PAYMENT_PAYPALR_ORDER_PENDING_STATUS_ID');
             $order->info['order_status'] = $this->order_status;
             $this->orderInfo['admin_alert_needed'] = true;
 
@@ -1515,7 +1518,7 @@ class paypalr extends \base
     {
         $paypal_id = $_SESSION['PayPalRestful']['Order']['id'];
         $this->ppr->setPayPalRequestId($_SESSION['PayPalRestful']['Order']['guid']);
-        if (MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE === 'Final Sale' || ($payment_source !== 'card' && MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE === 'Auth Only (Card-Only)')) {
+        if (zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') === 'Final Sale' || ($payment_source !== 'card' && zen_config('MODULE_PAYMENT_PAYPALR_TRANSACTION_MODE') === 'Auth Only (Card-Only)')) {
             $response = $this->ppr->captureOrder($paypal_id);
         } else {
             $response = $this->ppr->authorizeOrder($paypal_id);
@@ -2133,7 +2136,7 @@ class paypalr extends \base
     {
         global $db, $sniffer;
 
-        $amount = new Amount(DEFAULT_CURRENCY);
+        $amount = new Amount(zen_config('DEFAULT_CURRENCY'));
         $supported_currencies = $amount->getSupportedCurrencyCodes();
         $currencies_list = '';
         foreach ($supported_currencies as $next_currency) {
@@ -2371,12 +2374,12 @@ class paypalr extends \base
     {
         if ($this->emailAlerts === true || $force_send === true) {
             zen_mail(
-                STORE_NAME,
-                STORE_OWNER_EMAIL_ADDRESS,
+                zen_config('STORE_NAME'),
+                zen_config('STORE_OWNER_EMAIL_ADDRESS'),
                 sprintf(MODULE_PAYMENT_PAYPALR_ALERT_SUBJECT, $subject_detail),
                 $message,
-                STORE_OWNER,
-                STORE_OWNER_EMAIL_ADDRESS,
+                zen_config('STORE_OWNER'),
+                zen_config('STORE_OWNER_EMAIL_ADDRESS'),
                 ['EMAIL_MESSAGE_HTML' => nl2br($message, false)],   //- Replace new-lines with HTML5 <br>
                 'paymentalert'
             );

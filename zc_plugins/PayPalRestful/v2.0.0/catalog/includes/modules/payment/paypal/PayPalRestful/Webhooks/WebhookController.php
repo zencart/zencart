@@ -38,7 +38,7 @@ class WebhookController
         $this->ppr_logger = new Logger($logIdentifier);
 
         // Enable logging, if enabled via configuration
-        if (strpos(MODULE_PAYMENT_PAYPALR_DEBUGGING, 'Log') === 0) {
+        if (str_starts_with(zen_config('MODULE_PAYMENT_PAYPALR_DEBUGGING', 'Off'), 'Log')) {
             $this->ppr_logger->enableDebug();
         }
 

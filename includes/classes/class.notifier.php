@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * File contains just the notifier class
  *
@@ -11,9 +13,7 @@
  * NOTE: It is preferred to use Zencart\Traits\NotifierManager trait instead of extending this class.
  *
  * class notifier is a concrete implemetation of the abstract base class
- *
  * it can be used in procedural (non OOP) code to set up an observer.
- *
  * see the observer/notifier tutorial for more details.
  *
  * @since ZC v1.3.0
@@ -22,6 +22,4 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
-class notifier extends base
-{
-}
+class notifier extends base {}

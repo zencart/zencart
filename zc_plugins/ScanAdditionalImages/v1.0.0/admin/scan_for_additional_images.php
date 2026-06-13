@@ -12,7 +12,7 @@ $products_query = $db->Execute(
     "SELECT count(products_id) AS total
         FROM " . TABLE_PRODUCTS . "
         WHERE products_image IS NOT NULL AND products_image != ''
-        AND products_image != '" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'"
+        AND products_image != '" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) . "'"
 );
 $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['total'];
 

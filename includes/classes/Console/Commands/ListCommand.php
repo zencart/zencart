@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -16,9 +18,7 @@ class ListCommand extends ConsoleCommand
     /**
      * @since ZC v3.0.0
      */
-    public function __construct(private CommandRegistry $registry)
-    {
-    }
+    public function __construct(private CommandRegistry $registry) {}
 
     /**
      * @since ZC v3.0.0

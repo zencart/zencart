@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * cc_validation Class.
  *
@@ -8,17 +10,20 @@
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 /**
  * cc_validation Class.
- * Class to validate credit card numbers etc
+ * Class to validate credit card numbers against the Luhn algorithm.
  *
  * @since ZC v1.0.3
  */
 class cc_validation
 {
-    public $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
+    public string $cc_type;
+    public string $cc_number;
+    public string|int $cc_expiry_month;
+    public string|int $cc_expiry_year;
 
     /**
     * @since ZC v1.0.3
@@ -72,15 +77,15 @@ class cc_validation
 
         $current_year = date('Y');
         if (strlen($expiry_y) === 2) {
-            $expiry_y = intval(substr($current_year, 0, 2) . $expiry_y);
+            $expiry_y = (int)(substr($current_year, 0, 2) . $expiry_y);
         }
-        if (is_numeric($expiry_y) && $expiry_y >= $current_year && $expiry_y <= ($current_year + 10)) {
+        if (is_numeric($expiry_y) && $expiry_y >= $current_year && $expiry_y <= ((int)$current_year + 10)) {
             $this->cc_expiry_year = $expiry_y;
         } else {
             return -3;
         }
 
-        if ($expiry_y == $current_year) {
+        if ((int)$expiry_y === (int)$current_year) {
             if ($expiry_m < date('n')) {
                 return -4;
             }
@@ -94,9 +99,9 @@ class cc_validation
 
             if (strlen($start_y) === 2) {
                 if ($start_y > 80) {
-                    $start_y = intval('19' . $start_y);
+                    $start_y = (int)('19' . $start_y);
                 } else {
-                    $start_y = intval('20' . $start_y);
+                    $start_y = (int)('20' . $start_y);
                 }
             }
 
@@ -118,11 +123,11 @@ class cc_validation
         $cardNumber = strrev($this->cc_number);
         $numSum = 0;
 
-        for ($i = 0; $i < strlen($cardNumber); $i++) {
+        for ($i = 0, $j = strlen($cardNumber); $i < $j; $i++) {
             $currentNum = substr($cardNumber, $i, 1);
 
             // Double every second digit
-            if ($i % 2 == 1) {
+            if ($i % 2 === 1) {
                 $currentNum *= 2;
             }
 

@@ -99,7 +99,7 @@ function zen_has_product_attributes(mixed $product_id, bool|string $not_readonly
                         ON pa.options_id = po.products_options_id
                        AND po.language_id = " . (int)$_SESSION['languages_id'] . "
               WHERE pa.products_id = " . (int)$product_id . "
-                AND po.products_options_type != '" . $db->prepare_input(zen_config('PRODUCTS_OPTIONS_TYPE_READONLY')) . "'";
+                AND po.products_options_type != '" . $db->prepare_input(zen_config('PRODUCTS_OPTIONS_TYPE_READONLY', '')) . "'";
     } else {
         // regardless of READONLY attributes, at least one *valid* option must exist
         $sql =
@@ -151,7 +151,7 @@ function zen_requires_attribute_selection($products_id)
         zen_config('PRODUCTS_OPTIONS_TYPE_TEXT'),
     ];
     if (zen_config('PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED') === '0') {
-        $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
+        $noSingles[] = zen_config('PRODUCTS_OPTIONS_TYPE_READONLY');
     }
 
     $query =
@@ -273,7 +273,7 @@ function zen_has_product_attributes_values($product_id)
  */
 function zen_has_product_attributes_downloads_status($product_id)
 {
-    if (DOWNLOAD_ENABLED !== 'true') {
+    if (zen_config('DOWNLOAD_ENABLED') !== 'true') {
         return false;
     }
 

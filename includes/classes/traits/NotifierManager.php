@@ -62,8 +62,7 @@ trait NotifierManager
         mixed &$param7 = null,
         mixed &$param8 = null,
         mixed &$param9 = null
-    ): void
-    {
+    ): void {
         // first log that the notifier was triggered:
         $this->logNotifier($eventID, $param1, $param2, $param3, $param4, $param5, $param6, $param7, $param8, $param9);
 
@@ -115,7 +114,7 @@ trait NotifierManager
             }
             // If no update handler method exists then trigger an error so the problem is logged
             $className = (is_object($obs['obs'])) ? get_class($obs['obs']) : $obs['obs'];
-            trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, E_USER_WARNING);
+            trigger_error('WARNING: No update() method (or matching alternative) found in the ' . $className . ' class for event ' . $actualEventId, \E_USER_WARNING);
         }
     }
 

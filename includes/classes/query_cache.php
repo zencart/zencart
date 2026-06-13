@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Memoization cache for MySQL SELECT queries
  *
@@ -59,6 +61,7 @@ class QueryCache
 
     /**
      * ensure the query is a SELECT query
+     * (Technically, other "read" queries include SHOW, DESCRIBE, EXPLAIN, but we're not caching those.)
      *
      * @since ZC v1.5.1
      */
@@ -78,7 +81,7 @@ class QueryCache
             $this->queries = [];
             return false;
         }
-        unset ($this->queries[$query]);
+        unset($this->queries[$query]);
         return true;
     }
 }

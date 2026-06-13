@@ -24,7 +24,7 @@
   global $db;
   $count_array = array();
   $count = 0;
-  if ($display_count == '') $display_count = AUDIENCE_SELECT_DISPLAY_COUNTS;
+  if ($display_count == '') $display_count = zen_config('AUDIENCE_SELECT_DISPLAY_COUNTS');
 
   // get list of queries in database table, based on category supplied
   $queries_list = $db->Execute("select query_name, query_string from " . TABLE_QUERY_BUILDER . " " .

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -70,9 +72,9 @@ class zcAjaxSelect2Lookups extends base
             $exclude_gv = " AND p.products_model NOT LIKE 'GIFT%' ";
         }
 
-// @TODO:optionally offer exclusion of products that cannot be added to cart:
-//        LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON p.products_type = pt.type_id
-//        WHERE pt.allow_add_to_cart = 'N'
+        // @TODO:optionally offer exclusion of products that cannot be added to cart:
+        //        LEFT JOIN " . TABLE_PRODUCT_TYPES . " pt ON p.products_type = pt.type_id
+        //        WHERE pt.allow_add_to_cart = 'N'
 
         $search_query = '';
         if ($lookup !== '') {
@@ -104,8 +106,7 @@ class zcAjaxSelect2Lookups extends base
                 'text' => ($this->stripTags ? strip_tags($result['products_name']) : $result['products_name']) .
                     ' (' . $currencies->format($display_price) . ')' .
                     ($show_model ? ' [' . $result['products_model'] . '] ' : '') .
-                    ($show_id ? ' - ID# ' . $result['products_id'] : '')
-                ,
+                    ($show_id ? ' - ID# ' . $result['products_id'] : ''),
             ];
         }
 

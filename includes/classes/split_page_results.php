@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * split_page_results Class.
  *
@@ -9,7 +11,7 @@
  */
 
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
 /**
  * Split Page Result Class
@@ -18,289 +20,317 @@ if (!defined('IS_ADMIN_FLAG')) {
  * Overhaul scheduled for subsequent release
  *
  */
-class splitPageResults extends base {
-
+class splitPageResults extends base
+{
     /**
      * Database field used to define unique item to count. Becomes the sql query.
      */
-    private $countQuery;
+    private string $countQuery;
     /**
      * Current page number
      */
-    public $current_page_number;
+    public int $current_page_number;
     /**
      * Total number of pages;
      */
-    public $number_of_pages;
+    public int $number_of_pages;
     /**
      * Total Number of unique rows from $countQuery
      */
-    public $number_of_rows;
+    public int $number_of_rows;
     /**
      * maximum number of rows to display on a page
      */
-    private $number_of_rows_per_page;
+    private int $number_of_rows_per_page;
     /**
      *  The form name of field that holds the current page number
      */
-    private $page_name;
+    private ?string $page_name;
     /**
      * Query used to select items for page
      */
-    public $sql_query;
+    public string $sql_query;
 
     private bool $legacyArgumentMode = false;
 
-  /* class constructor */
-  function __construct($query, $max_rows, $count_key = '*', $page_holder = 'page', $debug = false, $countQuery = "") {
-    global $db;
-    $max_rows = ($max_rows == '' || $max_rows == 0) ? 20 : $max_rows;
+    public function __construct(?string $query, int $max_rows, string $count_key = '*', ?string $page_holder = 'page', bool $debug = false, string $countQuery = "")
+    {
+        global $db;
+        $max_rows = empty($max_rows) ? 20 : (int)$max_rows;
 
-    $legacyPageNumber = null;
-    if ($this->isLegacyConstructorCall($query, $count_key)) {
-      $this->legacyArgumentMode = true;
-      $legacyPageNumber = $query;
-      $query = is_string($count_key) ? $count_key : '';
-      $count_key = is_string($debug) && $debug !== '' ? $debug : '*';
-      $page_holder = 'page';
-      $debug = is_bool($countQuery) ? $countQuery : ((int)$countQuery === 1);
-      $countQuery = '';
+        $legacyPageNumber = null;
+        if (self::isLegacyConstructorCall($query, $count_key)) {
+            $this->legacyArgumentMode = true;
+            $legacyPageNumber = $query;
+            $query = is_string($count_key) ? $count_key : '';
+            $count_key = is_string($debug) && $debug !== '' ? $debug : '*';
+            $page_holder = 'page';
+            $debug = is_bool($countQuery) ? $countQuery : ((int)$countQuery === 1);
+            $countQuery = '';
+        }
+
+        $query = (string)$query;
+        $this->sql_query = preg_replace("/\n\r|\r\n|\n|\r/", " ", $query);
+        if ($countQuery !== "") {
+            $countQuery = preg_replace("/\n\r|\r\n|\n|\r/", " ", (string)$countQuery);
+        }
+        $this->countQuery = ($countQuery !== "") ? $countQuery : $this->sql_query;
+        $this->page_name = $page_holder;
+
+        if ($debug) {
+            echo '<br><br>';
+            echo 'original_query=' . $query . '<br><br>';
+            echo 'original_count_query=' . $countQuery . '<br><br>';
+            echo 'sql_query=' . $this->sql_query . '<br><br>';
+            echo 'count_query=' . $this->countQuery . '<br><br>';
+        }
+        if ($legacyPageNumber !== null && $legacyPageNumber !== '' && is_numeric($legacyPageNumber)) {
+            $page = $legacyPageNumber;
+        } elseif (isset($_GET[$page_holder])) {
+            $page = $_GET[$page_holder];
+        } elseif (isset($_POST[$page_holder])) {
+            $page = $_POST[$page_holder];
+        } else {
+            $page = '';
+        }
+
+        if (empty($page) || !is_numeric($page)) {
+            $page = 1;
+        }
+        $this->current_page_number = (int)$page;
+
+        $this->number_of_rows_per_page = $max_rows;
+
+        $pos_to = strlen($this->countQuery);
+
+        $query_lower = strtolower($this->countQuery);
+        $pos_from = strpos($query_lower, ' from', 0);
+
+        $pos_group_by = strpos($query_lower, ' group by', $pos_from);
+        if (($pos_group_by < $pos_to) && ($pos_group_by !== false)) {
+            $pos_to = $pos_group_by;
+        }
+
+        $pos_having = strpos($query_lower, ' having', $pos_from);
+        if (($pos_having < $pos_to) && ($pos_having !== false)) {
+            $pos_to = $pos_having;
+        }
+
+        $pos_order_by = strrpos($query_lower, ' order by', $pos_from);
+        if (($pos_order_by < $pos_to) && ($pos_order_by !== false)) {
+            $pos_to = $pos_order_by;
+        }
+
+        if (strpos($query_lower, 'distinct') !== false || strpos($query_lower, 'group by') !== false || strpos($query_lower, ' having') !== false) {
+            $count_query = 'SELECT count(*) AS total FROM (' . substr($this->countQuery, 0, ($pos_order_by !== false ? $pos_order_by : strlen($this->countQuery))) . ') split_count';
+        } else {
+            $count_string = zen_db_input($count_key);
+            $count_query = "SELECT count(" . $count_string . ") AS total " . substr($this->countQuery, $pos_from, ($pos_to - $pos_from));
+        }
+        if ($debug) {
+            echo 'count_query=' . $count_query . '<br><br>';
+        }
+        $count = $db->Execute($count_query);
+
+        $this->number_of_rows = (int)$count->fields['total'];
+
+        $this->number_of_pages = (int)ceil($this->number_of_rows / $this->number_of_rows_per_page);
+
+        if ($this->current_page_number > $this->number_of_pages) {
+            $this->current_page_number = $this->number_of_pages;
+        }
+
+        $offset = ($this->number_of_rows_per_page * ($this->current_page_number - 1));
+
+        // fix offset error on some versions
+        if ($offset <= 0) {
+            $offset = 0;
+        }
+
+        $this->sql_query .= " limit " . ($offset > 0 ? $offset . ", " : '') . $this->number_of_rows_per_page;
+
     }
 
-    $query = (string)$query;
-    $this->sql_query = preg_replace("/\n\r|\r\n|\n|\r/", " ", $query);
-    if ($countQuery != "") {
-      $countQuery = preg_replace("/\n\r|\r\n|\n|\r/", " ", (string)$countQuery);
-    }
-    $this->countQuery = ($countQuery != "") ? $countQuery : $this->sql_query;
-    $this->page_name = $page_holder;
+    /**
+     * display split-page-number-links
+     */
+    public function display_links($max_page_links, $parameters = '', bool $outputAsUnorderedList = false, ?string $navElementLabel = ''): string
+    {
+        global $request_type;
+        $args = func_get_args();
 
-    if ($debug) {
-      echo '<br><br>';
-      echo 'original_query=' . $query . '<br><br>';
-      echo 'original_count_query=' . $countQuery . '<br><br>';
-      echo 'sql_query=' . $this->sql_query . '<br><br>';
-      echo 'count_query=' . $this->countQuery . '<br><br>';
-    }
-    if ($legacyPageNumber !== null && $legacyPageNumber !== '' && is_numeric($legacyPageNumber)) {
-      $page = $legacyPageNumber;
-    } elseif (isset($_GET[$page_holder])) {
-      $page = $_GET[$page_holder];
-    } elseif (isset($_POST[$page_holder])) {
-      $page = $_POST[$page_holder];
-    } else {
-      $page = '';
-    }
+        if ($this->legacyArgumentMode && count($args) >= 3) {
+            $max_page_links = $args[2] ?? 1;
+            $parameters = $args[4] ?? '';
+            $outputAsUnorderedList = false;
+            $navElementLabel = '';
 
-    if (empty($page) || !is_numeric($page)) $page = 1;
-    $this->current_page_number = $page;
+            if (!empty($args[5]) && is_string($args[5])) {
+                $this->page_name = $args[5];
+            }
+            if (isset($args[3]) && is_numeric($args[3]) && (int)$args[3] > 0) {
+                $this->current_page_number = (int)$args[3];
+            }
+        }
 
-    $this->number_of_rows_per_page = $max_rows;
+        if (empty($max_page_links)) {
+            $max_page_links = 1;
+        }
 
-    $pos_to = strlen($this->countQuery);
+        if ($this->number_of_pages <= 1) {
+            return '';
+        }
 
-    $query_lower = strtolower($this->countQuery);
-    $pos_from = strpos($query_lower, ' from', 0);
+        $display_links_string = $ul_elements = '';
+        $counter_actual_page_links = 0;
 
-    $pos_group_by = strpos($query_lower, ' group by', $pos_from);
-    if (($pos_group_by < $pos_to) && ($pos_group_by != false)) $pos_to = $pos_group_by;
+        $class = '';
 
-    $pos_having = strpos($query_lower, ' having', $pos_from);
-    if (($pos_having < $pos_to) && ($pos_having != false)) $pos_to = $pos_having;
+        if (!empty($parameters) && !str_ends_with($parameters, '&') && $this->current_page_number > 1) {
+            $parameters .= '&';
+        }
 
-    $pos_order_by = strrpos($query_lower, ' order by', $pos_from);
-    if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
-
-    if (strpos($query_lower, 'distinct') !== false || strpos($query_lower, 'group by') !== false || strpos($query_lower, ' having') !== false) {
-      $count_query = 'select count(*) as total from (' . substr($this->countQuery, 0, ($pos_order_by !== false ? $pos_order_by : strlen($this->countQuery))) . ') split_count';
-    } else {
-      $count_string = zen_db_input($count_key);
-      $count_query = "select count(" . $count_string . ") as total " . substr($this->countQuery, $pos_from, ($pos_to - $pos_from));
-    }
-    if ($debug) {
-      echo 'count_query=' . $count_query . '<br><br>';
-    }
-    $count = $db->Execute($count_query);
-
-    $this->number_of_rows = $count->fields['total'];
-
-    $this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);
-
-    if ($this->current_page_number > $this->number_of_pages) {
-      $this->current_page_number = $this->number_of_pages;
-    }
-
-    $offset = ($this->number_of_rows_per_page * ($this->current_page_number - 1));
-
-    // fix offset error on some versions
-    if ($offset <= 0) { $offset = 0; }
-
-    $this->sql_query .= " limit " . ($offset > 0 ? $offset . ", " : '') . $this->number_of_rows_per_page;
-
-  }
-
-  /* class functions */
-
-  // display split-page-number-links
-  function display_links($max_page_links, $parameters = '', $outputAsUnorderedList = false, $navElementLabel = '') {
-    global $request_type;
-    $args = func_get_args();
-
-    if ($this->legacyArgumentMode && count($args) >= 3) {
-      $max_page_links = $args[2] ?? 1;
-      $parameters = $args[4] ?? '';
-      $outputAsUnorderedList = false;
-      $navElementLabel = '';
-
-      if (!empty($args[5]) && is_string($args[5])) {
-        $this->page_name = $args[5];
-      }
-      if (isset($args[3]) && is_numeric($args[3]) && (int)$args[3] > 0) {
-        $this->current_page_number = (int)$args[3];
-      }
-    }
-
-    if ($max_page_links == '') $max_page_links = 1;
-
-    if ($this->number_of_pages <= 1) return;
-
-    $display_links_string = $ul_elements = '';
-    $counter_actual_page_links = 0;
-
-    $class = '';
-
-    if (!empty($parameters) && (substr($parameters, -1) != '&') && ($this->current_page_number > 1)) $parameters .= '&';
-
-    // previous button - not displayed on first page
-    $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ($this->current_page_number > 2 ? $this->page_name . '=' . ($this->current_page_number - 1) : ''), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';
-    if ($this->current_page_number > 1) {
-      $display_links_string .= $link . '&nbsp;&nbsp;';
-      $ul_elements .= '  <li class="pagination-previous" aria-label="' . ARIA_PAGINATION_PREVIOUS_PAGE . '">' . $link . '</li>' . "\n";
-    } else {
-      // $ul_elements .= '  <li class="disabled pagination-previous">' . $link . '</li>' . "\n";
-    }
+        // previous button - not displayed on first page
+        $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ($this->current_page_number > 2 ? $this->page_name . '=' . ($this->current_page_number - 1) : ''), $request_type) . '" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';
+        if ($this->current_page_number > 1) {
+            $display_links_string .= $link . '&nbsp;&nbsp;';
+            $ul_elements .= '  <li class="pagination-previous" aria-label="' . ARIA_PAGINATION_PREVIOUS_PAGE . '">' . $link . '</li>' . "\n";
+        } else {
+            // $ul_elements .= '  <li class="disabled pagination-previous">' . $link . '</li>' . "\n";
+        }
 
 
-    // check if number_of_pages > $max_page_links
-    $cur_window_num = intval($this->current_page_number / $max_page_links);
-    if ($this->current_page_number % $max_page_links) $cur_window_num++;
+        // check if number_of_pages > $max_page_links
+        $cur_window_num = (int)($this->current_page_number / $max_page_links);
+        if ($this->current_page_number % $max_page_links) {
+            $cur_window_num++;
+        }
 
-    $max_window_num = intval($this->number_of_pages / $max_page_links);
-    if ($this->number_of_pages % $max_page_links) $max_window_num++;
+        $max_window_num = (int)($this->number_of_pages / $max_page_links);
+        if ($this->number_of_pages % $max_page_links) {
+            $max_window_num++;
+        }
 
-    // previous group of pages
-    $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ((($cur_window_num - 1) * $max_page_links) > 1 ? $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links) : ''), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_PREVIOUS . '">...</a>';
-    if ($cur_window_num > 1) {
-      $display_links_string .= $link;
-      $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
-    } else {
-      // $ul_elements .= '  <li class="ellipsis" aria-hidden="true">' . $link . '</li>' . "\n";
+        // previous group of pages
+        $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ((($cur_window_num - 1) * $max_page_links) > 1 ? $this->page_name . '=' . (($cur_window_num - 1) * $max_page_links) : ''), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_PREVIOUS . '">...</a>';
+        if ($cur_window_num > 1) {
+            $display_links_string .= $link;
+            $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
+        } else {
+            // $ul_elements .= '  <li class="ellipsis" aria-hidden="true">' . $link . '</li>' . "\n";
+        }
+
+        // page nn button
+        for ($jump_to_page = 1 + (($cur_window_num - 1) * $max_page_links); ($jump_to_page <= ($cur_window_num * $max_page_links)) && ($jump_to_page <= $this->number_of_pages); $jump_to_page++) {
+            if ($jump_to_page === $this->current_page_number) {
+                $display_links_string .= '&nbsp;<strong class="current" aria-current="true" aria-label="' . ARIA_PAGINATION_CURRENT_PAGE . ', ' . sprintf(ARIA_PAGINATION_PAGE_NUM, $jump_to_page) . '">' . $jump_to_page . '</strong>&nbsp;';
+                $ul_elements .= '  <li class="current active">' . $jump_to_page . '</li>' . "\n";
+                $counter_actual_page_links++;
+            } else {
+                $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ($jump_to_page > 1 ? $this->page_name . '=' . $jump_to_page : ''), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '" aria-label="' . ARIA_PAGINATION_GOTO . sprintf(ARIA_PAGINATION_PAGE_NUM, $jump_to_page) . '">' . $jump_to_page . '</a>';
+                $display_links_string .= '&nbsp;' . $link . '&nbsp;';
+                $ul_elements .= '  <li>' . $link . '</li>' . "\n";
+                $counter_actual_page_links++;
+            }
+        }
+
+        // next group of pages
+        if ($cur_window_num < $max_window_num) {
+            $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_NEXT . '">...</a>';
+            $display_links_string .= $link . '&nbsp;';
+            $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
+        } else {
+            // $ul_elements .= '  <li class="ellipsis" aria-hidden="true">' . $link . '</li>' . "\n";
+        }
+
+        // next button
+        if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages !== 1)) {
+            $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . ($this->current_page_number + 1), $request_type) . '" title="' . PREVNEXT_TITLE_NEXT_PAGE . '" aria-label="' . ARIA_PAGINATION_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
+            $display_links_string .= '&nbsp;' . $link . '&nbsp;';
+            $ul_elements .= '  <li class="pagination-next">' . $link . '</li>' . "\n";
+        } else {
+            // $ul_elements .= '  <li class="disabled pagination-next">' . $link . '</li>' . "\n";
+        }
+
+        // if no pagination needed, return blank
+        if ($counter_actual_page_links === 0) {
+            return '';
+        }
+
+        // return <nav><ul> format with a-hrefs wrapped in <li>
+        // not setting role="navigation" because we're using a <nav> element already.
+        if ($outputAsUnorderedList) {
+            $aria_label = empty($navElementLabel) ? ARIA_PAGINATION_ROLE_LABEL_GENERAL : sprintf(ARIA_PAGINATION_ROLE_LABEL_FOR, zen_output_string_protected($navElementLabel));
+            $aria_label .= sprintf(ARIA_PAGINATION_CURRENTLY_ON, $this->current_page_number);
+            return  '<nav class="pagination" aria-label="' . $aria_label . '">' . "\n" .
+                '<ul class="pagination">' . "\n" .
+                $ul_elements .
+                '</ul>' . "\n" .
+                '</nav>';
+        }
+        // return unformatted collection of a-hrefs
+        return $display_links_string;
     }
 
-    // page nn button
-    for ($jump_to_page = 1 + (($cur_window_num - 1) * $max_page_links); ($jump_to_page <= ($cur_window_num * $max_page_links)) && ($jump_to_page <= $this->number_of_pages); $jump_to_page++) {
-      if ($jump_to_page == $this->current_page_number) {
-        $display_links_string .= '&nbsp;<strong class="current" aria-current="true" aria-label="' . ARIA_PAGINATION_CURRENT_PAGE . ', ' . sprintf(ARIA_PAGINATION_PAGE_NUM, $jump_to_page) . '">' . $jump_to_page . '</strong>&nbsp;';
-        $ul_elements .= '  <li class="current active">' . $jump_to_page . '</li>' . "\n";
-        $counter_actual_page_links++;
-      } else {
-        $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . ($jump_to_page > 1 ? $this->page_name . '=' . $jump_to_page : ''), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '" aria-label="' . ARIA_PAGINATION_GOTO . sprintf(ARIA_PAGINATION_PAGE_NUM, $jump_to_page) . '">' . $jump_to_page . '</a>';
-        $display_links_string .= '&nbsp;' . $link . '&nbsp;';
-        $ul_elements .= '  <li>' . $link . '</li>' . "\n";
-        $counter_actual_page_links++;
-      }
+    /**
+     * display number of total products found
+     */
+    public function display_count($text_output): string
+    {
+        $args = func_get_args();
+        if ($this->legacyArgumentMode && count($args) >= 4) {
+            $text_output = $args[3];
+            if (isset($args[2]) && is_numeric($args[2]) && (int)$args[2] > 0) {
+                $this->current_page_number = (int)$args[2];
+            }
+        }
+
+        $to_num = ($this->number_of_rows_per_page * $this->current_page_number);
+        if ($to_num > $this->number_of_rows) {
+            $to_num = $this->number_of_rows;
+        }
+
+        $from_num = ($this->number_of_rows_per_page * ($this->current_page_number - 1));
+
+        if ($to_num == 0) {
+            $from_num = 0;
+        } else {
+            $from_num++;
+        }
+
+        if ($to_num <= 1) {
+            // don't show count when 1
+            return '';
+        }
+
+        return sprintf($text_output, $from_num, $to_num, $this->number_of_rows);
     }
 
-    // next group of pages
-    if ($cur_window_num < $max_window_num) {
-      $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '" aria-label="' . ARIA_PAGINATION_ELLIPSIS_NEXT . '">...</a>';
-      $display_links_string .= $link . '&nbsp;';
-      $ul_elements .= '  <li class="ellipsis">' . $link . '</li>' . "\n";
-    } else {
-      // $ul_elements .= '  <li class="ellipsis" aria-hidden="true">' . $link . '</li>' . "\n";
+    /**
+     * @since ZC v1.5.7
+     */
+    public function getSqlQuery(): string
+    {
+        return $this->sql_query;
     }
 
-    // next button
-    if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) {
-      $link = '<a href="' . zen_href_link($_GET['main_page'], $parameters . $this->page_name . '=' . ($this->current_page_number + 1), $request_type) . '" title="' . PREVNEXT_TITLE_NEXT_PAGE . '" aria-label="' . ARIA_PAGINATION_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
-      $display_links_string .= '&nbsp;' . $link . '&nbsp;';
-      $ul_elements .= '  <li class="pagination-next">' . $link . '</li>' . "\n";
-    } else {
-      // $ul_elements .= '  <li class="disabled pagination-next">' . $link . '</li>' . "\n";
+    private static function isLegacyConstructorCall($query, $count_key): bool
+    {
+        if (!is_string($count_key)) {
+            return false;
+        }
+
+        $trimmedCountKey = ltrim($count_key);
+        if ($trimmedCountKey === '' || stripos($trimmedCountKey, 'select') !== 0) {
+            return false;
+        }
+
+        if (!is_scalar($query) && $query !== null) {
+            return false;
+        }
+
+        $queryString = ltrim((string)$query);
+
+        return $queryString === '' || stripos($queryString, 'select') !== 0;
     }
-
-    // if no pagination needed, return blank
-    if ($counter_actual_page_links == 0) return;
-
-    // return <nav><ul> format with a-hrefs wrapped in <li>
-    // not setting role="navigation" because we're using a <nav> element already.
-    if ($outputAsUnorderedList) {
-        $aria_label = empty($navElementLabel) ? ARIA_PAGINATION_ROLE_LABEL_GENERAL : sprintf(ARIA_PAGINATION_ROLE_LABEL_FOR, zen_output_string_protected($navElementLabel));
-        $aria_label .= sprintf(ARIA_PAGINATION_CURRENTLY_ON, $this->current_page_number);
-        return  '<nav class="pagination" aria-label="' . $aria_label . '">' . "\n" .
-            '<ul class="pagination">' . "\n" .
-            $ul_elements .
-            '</ul>' . "\n" .
-            '</nav>';
-    }
-    // return unformatted collection of a-hrefs
-    return $display_links_string;
-  }
-
-  // display number of total products found
-  function display_count($text_output) {
-    $args = func_get_args();
-    if ($this->legacyArgumentMode && count($args) >= 4) {
-      $text_output = $args[3];
-      if (isset($args[2]) && is_numeric($args[2]) && (int)$args[2] > 0) {
-        $this->current_page_number = (int)$args[2];
-      }
-    }
-
-    $to_num = ($this->number_of_rows_per_page * $this->current_page_number);
-    if ($to_num > $this->number_of_rows) $to_num = $this->number_of_rows;
-
-    $from_num = ($this->number_of_rows_per_page * ($this->current_page_number - 1));
-
-    if ($to_num == 0) {
-      $from_num = 0;
-    } else {
-      $from_num++;
-    }
-
-    if ($to_num <= 1) {
-      // don't show count when 1
-      return '';
-    } else {
-      return sprintf($text_output, $from_num, $to_num, $this->number_of_rows);
-    }
-  }
-
-  /**
-   * @since ZC v1.5.7
-   */
-  public function getSqlQuery()
-  {
-      return $this->sql_query;
-  }
-
-  private function isLegacyConstructorCall($query, $count_key): bool
-  {
-      if (!is_string($count_key)) {
-          return false;
-      }
-
-      $trimmedCountKey = ltrim($count_key);
-      if ($trimmedCountKey === '' || stripos($trimmedCountKey, 'select') !== 0) {
-          return false;
-      }
-
-      if (!is_scalar($query) && $query !== null) {
-          return false;
-      }
-
-      $queryString = ltrim((string)$query);
-
-      return $queryString === '' || stripos($queryString, 'select') !== 0;
-  }
 }

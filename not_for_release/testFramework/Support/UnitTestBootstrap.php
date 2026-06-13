@@ -67,6 +67,7 @@ class UnitTestBootstrap
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/ObserverManager.php';
         require_once DIR_FS_CATALOG . 'includes/functions/php_polyfills.php';
         require_once DIR_FS_CATALOG . 'includes/functions/zen_define_default.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/zen_config.php';
     }
 
     private static function initializeNotifier(): void

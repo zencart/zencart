@@ -18,18 +18,18 @@ function product_has_pos_attributes($products_id): bool
 
     $and_clause = '';
     $products_id = (int)$products_id;
-    if (POSM_OPTIONAL_OPTION_TYPES_LIST !== '') {
-        $and_clause .= " AND po.products_options_type NOT IN (" . POSM_OPTIONAL_OPTION_TYPES_LIST . ")";
+    if (zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') !== '') {
+        $and_clause .= " AND po.products_options_type NOT IN (" . zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') . ")";
     }
-    if (POSM_OPTIONAL_OPTION_NAMES_LIST !== '') {
-        $and_clause .= " AND po.products_options_id NOT IN (" . POSM_OPTIONAL_OPTION_NAMES_LIST . ")";
+    if (zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') !== '') {
+        $and_clause .= " AND po.products_options_id NOT IN (" . zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') . ")";
     }
     $check = $db->Execute(
         "SELECT pa.products_attributes_id
            FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                 INNER JOIN " . TABLE_PRODUCTS_OPTIONS . " po
                     ON po.products_options_id = pa.options_id
-                   AND po.products_options_type IN (" . POSM_OPTIONS_TYPES_TO_MANAGE . ")$and_clause
+                   AND po.products_options_type IN (" . zen_config('POSM_OPTIONS_TYPES_TO_MANAGE') . ")$and_clause
           WHERE pa.products_id = $products_id
           LIMIT 1"
     );
@@ -69,10 +69,10 @@ function generate_pos_option_hash($pID, $options_array): string
     }
 
     $optional_options_ids = [];
-    if (POSM_OPTIONAL_OPTION_NAMES_LIST !== '') {
-        $optional_options_ids = explode(',', POSM_OPTIONAL_OPTION_NAMES_LIST);
+    if (zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') !== '') {
+        $optional_options_ids = explode(',', zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST', ''));
     }
-    $and_clause = (POSM_OPTIONAL_OPTION_TYPES_LIST !== '') ? (" AND products_options_type NOT IN (" . POSM_OPTIONAL_OPTION_TYPES_LIST . ")") : '';
+    $and_clause = (zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') !== '') ? (" AND products_options_type NOT IN (" . zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') . ")") : '';
 
     ksort($options_array);
     $hash_in = (int)$pID;
@@ -82,11 +82,11 @@ function generate_pos_option_hash($pID, $options_array): string
             $checkbox_options = explode('_chk', $key);
             $key = $checkbox_options[0];
             $value = $checkbox_options[1];
-        } elseif (strpos($key, TEXT_PREFIX) !== false || strpos($key, 'file_') !== false) {
+        } elseif (strpos($key, zen_config('TEXT_PREFIX', '')) !== false || strpos($key, 'file_') !== false) {
             if ($value == '') {
                 continue;
             }
-            $key = str_replace([TEXT_PREFIX, 'file_'], '', $key);
+            $key = str_replace([zen_config('TEXT_PREFIX', ''), 'file_'], '', $key);
         }
         if (!in_array($key, $optional_options_ids)) {
             $check = $db->Execute(

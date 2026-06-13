@@ -91,55 +91,55 @@ class AdminNotificationsTest extends zcUnitTestCase
     }
 
 
-    public function testBasicMock()
+    public function testBasicMock(): void
     {
         $r = $this->an->getNotifications('', 1);
         // no store country will be set as we are not mocking it so result will only return
         // notifications with no countries.
-        $this->assertTrue(count($r) == 0);
+        $this->assertEmpty($r);
     }
 
-    public function testWithSimpleLocationNoCountry()
+    public function testWithSimpleLocationNoCountry(): void
     {
         $r = $this->an->getNotifications('payment', 1);
         // no store country will be set as we are not mocking it so result will only return
         // notifications with no countries.
-        $this->assertTrue(count($r) == 1);
+        $this->assertCount(1, $r);
     }
 
-    public function testWithSimpleLocationWithCountry()
+    public function testWithSimpleLocationWithCountry(): void
     {
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
         $this->an->method('getCurrentDate')->willReturn(new DateTime("now"));
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 5);
+        $this->assertCount(5, $r);
     }
 
-    public function testWithComplexLocationWithCountry()
+    public function testWithComplexLocationWithCountry(): void
     {
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
         $this->an->method('getCurrentDate')->willReturn(new DateTime("now"));
 
         $r = $this->an->getNotifications('payment-square', 1);
 
-        $this->assertTrue(count($r) == 1);
+        $this->assertCount(1, $r);
     }
 
-    public function testWithDateYesterday()
+    public function testWithDateYesterday(): void
     {
-        $datetime = (new DateTime())->sub(new DateInterval('P1D'));
+        $yesterday = (new DateTime())->sub(new DateInterval('P1D'));
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
-        $this->an->method('getCurrentDate')->willReturn($datetime);
+        $this->an->method('getCurrentDate')->willReturn($yesterday);
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 6);
+        $this->assertCount(6, $r);
     }
 
-    public function testWithDateTomorrow()
+    public function testWithDateTomorrow(): void
     {
-        $datetime = (new DateTime())->add(new DateInterval('P1D'));
+        $tomorrow = (new DateTime())->add(new DateInterval('P1D'));
         $this->an->method('getStoreCountryIso3')->willReturn('USA');
-        $this->an->method('getCurrentDate')->willReturn($datetime);
+        $this->an->method('getCurrentDate')->willReturn($tomorrow);
         $r = $this->an->getNotifications('payment', 1);
-        $this->assertTrue(count($r) == 4);
+        $this->assertCount(4, $r);
     }
 }

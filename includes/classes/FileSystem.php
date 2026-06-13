@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
+
 namespace Zencart\FileSystem;
 
 /**
@@ -25,7 +28,7 @@ class FileSystem
         }
         while ($file = $dir->read()) {
             if (preg_match($fileRegx, $file) > 0) {
-                require_once($rootDir . '/' . $file);
+                require_once $rootDir . '/' . $file;
             }
         }
         $dir->close();
@@ -112,10 +115,8 @@ class FileSystem
             return false;
         }
         $test = str_replace(DIR_FS_ADMIN, '', $filePath);
-        if ($test != $filePath) {
-            return false;
-        }
-        return true;
+
+        return $test === $filePath;
     }
 
     /**
@@ -160,8 +161,8 @@ class FileSystem
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path)) as $file) {
             $bytes += $file->getSize();
         }
-        $size = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
-        $factor = floor((strlen($bytes) - 1) / 3);
+        $size = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        $factor = floor((strlen((string)$bytes) - 1) / 3);
         $suffix = 'bloody huge!';
         if (isset($size[$factor])) {
             $suffix = $size[$factor];
@@ -232,7 +233,7 @@ class FileSystem
      */
     protected function realpath(string $path): string
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (strtoupper(substr(\PHP_OS, 0, 3)) === 'WIN') {
             return str_replace('\\', '/', realpath($path));
         }
         return realpath($path);
@@ -257,7 +258,7 @@ class FileSystem
                 continue;
             }
 
-            $path = $directory . DIRECTORY_SEPARATOR . $item;
+            $path = $directory . \DIRECTORY_SEPARATOR . $item;
             if (is_dir($path)) {
                 $this->deleteDirectory($path);
                 continue;
