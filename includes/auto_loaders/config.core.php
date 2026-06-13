@@ -79,7 +79,7 @@ $autoLoadConfig[30][] = [
  * Breakpoint 40.
  *
  * require 'includes/init_includes/init_db_config_read.php';
- *
+ * .. which in turn loads functions/zen_config.php
  */
 $autoLoadConfig[40][] = [
     'autoType' => 'init_script',
