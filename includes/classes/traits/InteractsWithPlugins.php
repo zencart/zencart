@@ -118,7 +118,7 @@ trait InteractsWithPlugins
      *
      * @since ZC v3.0.0
      */
-    protected function linkCatalogJscript(string $jsFilename, ?string $current_page): bool
+    protected function linkCatalogJscript(string $jsFilename): bool
     {
         global $pageLoader;
         if (!$pageLoader) {
@@ -126,17 +126,26 @@ trait InteractsWithPlugins
         }
 
         $jsFilename = basename($jsFilename);
-        if (file_exists($file = $pageLoader->getTemplatePluginDir($jsFilename, 'jscript', $this->zcPluginDirName) . $jsFilename)) {
-            if (str_ends_with($jsFilename, '.js')) {
-                echo '<script title="' . \zen_output_string_protected($this->zcPluginDirName) . '" src="' . $file . '">' . "\n";
-                return true;
-            }
-
-            if (str_ends_with($jsFilename, '.php')) {
-                require_once $file;
-                return true;
-            }
+        $pluginDir = $pageLoader->getTemplatePluginDir($jsFilename, 'jscript', $this->zcPluginDirName);
+        if ($pluginDir === false) {
+            return false;
         }
+
+        $file = $pluginDir . $jsFilename;
+        if (!file_exists($file)) {
+            return false;
+        }
+
+        if (str_ends_with($jsFilename, '.js')) {
+            echo '<script title="' . \zen_output_string_protected($this->zcPluginDirName) . '" src="' . $file . '"></script>' . "\n";
+            return true;
+        }
+
+        if (str_ends_with($jsFilename, '.php')) {
+            require_once $file;
+            return true;
+        }
+
         return false;
     }
 }
