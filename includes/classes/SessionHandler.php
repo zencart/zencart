@@ -46,9 +46,13 @@ class SessionHandler implements \SessionHandlerInterface
     {
         global $db;
         $sql = "DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < " . time();
-        $db->Execute($sql);
+        $result = $db->Execute($sql);
 
-        return $db->affectedRows() ?? false;
+        if ($result->resource === false) {
+            return false;
+        }
+
+        return $db->affectedRows();
     }
 
     /**
