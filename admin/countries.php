@@ -155,7 +155,7 @@ if (!empty($action)) {
                                       FROM " . TABLE_COUNTRIES . "
                                       ORDER BY countries_name";
               $countries_query_numrows = $countries_query_numrows ?? 0;
-              $countries_split = new splitPageResults($currentPage, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
+              $countries_split = new splitPageResults($currentPage, (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $countries_query_raw, $countries_query_numrows, 'countries_name', 1);
               $countries = $db->Execute($countries_query_raw);
               foreach ($countries as $country) {
                 if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $country['countries_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {

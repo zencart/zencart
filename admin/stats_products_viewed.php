@@ -44,7 +44,7 @@ $sql = "SELECT p.products_id, pd.products_name, sum(v.views) as total_views, l.n
 $sql = $db->bindVars($sql, ':startdate', $startdate, 'string');
 $sql = $db->bindVars($sql, ':enddate', $enddate, 'string');
 
-$products_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $sql, $products_query_numrows);
+$products_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $sql, $products_query_numrows);
 $products = $db->Execute($sql);
 
 ?>

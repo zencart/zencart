@@ -1028,7 +1028,7 @@ function zen_admin_authorized_to_place_order(): bool
     global $db;
     $admin_in_profile = false;
     if (!empty(zen_config('EMP_LOGIN_ADMIN_PROFILE_ID'))) {
-        $admin_profiles = explode(',', str_replace(' ', '', zen_config('EMP_LOGIN_ADMIN_PROFILE_ID')));
+        $admin_profiles = explode(',', str_replace(' ', '', zen_config('EMP_LOGIN_ADMIN_PROFILE_ID', '')));
         $profile_list = [];
         foreach ($admin_profiles as $current_profile) {
             if (((int)$current_profile) !== 0) {

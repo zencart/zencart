@@ -269,7 +269,7 @@ if ($action == 'preview') {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_input_field('from', htmlspecialchars(zen_config('EMAIL_FROM'), ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_input_field('from', htmlspecialchars(zen_config('EMAIL_FROM', ''), ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="col-sm-3 control-label"'); ?>

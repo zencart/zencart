@@ -489,7 +489,7 @@ function translate_type_to_name($opt_type)
                                 FROM " . TABLE_PRODUCTS_OPTIONS . "
                                 WHERE language_id = " . (int)$_SESSION['languages_id'] . "
                                 ORDER BY " . ($option_order_by === 'id' ? 'products_options_id' : 'products_options_name');
-        $options_split = new splitPageResults($currentPage, zen_config('MAX_ROW_LISTS_OPTIONS'), $options_query_raw, $options_query_numrows);
+        $options_split = new splitPageResults($currentPage, (int)zen_config('MAX_ROW_LISTS_OPTIONS'), $options_query_raw, $options_query_numrows);
         $options_names = $db->Execute($options_query_raw);
         if ($options_names->RecordCount() > 1) {
             echo zen_draw_form('option_order_by_form', FILENAME_OPTIONS_NAME_MANAGER, '', 'get', 'class="form-horizontal"'); ?>

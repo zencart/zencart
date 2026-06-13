@@ -157,7 +157,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                                          FROM " . TABLE_CURRENCIES . "
                                          ORDER BY title";
                 $currency_query_numrows = $currency_query_numrows ?? 0;
-                $currency_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currencies_query_raw, $currency_query_numrows);
+                $currency_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currencies_query_raw, $currency_query_numrows);
                 $currencies_all = $db->Execute($currencies_query_raw);
                 foreach ($currencies_all as $currency) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && $_GET['cID'] == $currency['currencies_id'])) && !isset($cInfo) && (!str_starts_with($action, 'new'))) {
@@ -272,7 +272,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places];
                         $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_LAST_UPDATED . ': ' . zen_datetime_short($cInfo->last_updated)];
                         $contents[] = ['text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format((float)$cInfo->value, 8)];
-                        $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, zen_config('DEFAULT_CURRENCY')) . ' = ' . $currencies->format('30', true, $cInfo->code)];
+                        $contents[] = ['text' => '<br>' . TEXT_INFO_CURRENCY_EXAMPLE . '<br>' . $currencies->format('30', false, zen_config('DEFAULT_CURRENCY', '')) . ' = ' . $currencies->format('30', true, $cInfo->code)];
                     }
                     break;
             }

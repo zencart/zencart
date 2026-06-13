@@ -165,7 +165,7 @@ function zen_cfg_pull_down_zone_list(string $zone_id, string $key = ''): string
 {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
     $none = [['id' => 0, 'text' => TEXT_NONE]];
-    $zones = zen_get_country_zones(zen_config('STORE_COUNTRY'));
+    $zones = zen_get_country_zones(zen_config('STORE_COUNTRY', ''));
     return zen_draw_pull_down_menu($name, array_merge($none, $zones), $zone_id, 'class="form-control"');
 }
 

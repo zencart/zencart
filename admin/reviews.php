@@ -388,7 +388,7 @@ if ($action === 'edit') {
         }
     }
 
-    $reviews_split = new splitPageResults($currentPage, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $reviews_query_raw, $reviews_query_numrows);
+    $reviews_split = new splitPageResults($currentPage, (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $reviews_query_raw, $reviews_query_numrows);
     $reviews = $db->Execute($reviews_query_raw);
     foreach ($reviews as $review) {
         if ((!isset($_GET['rID']) || (int)$_GET['rID'] === (int)$review['reviews_id']) && !isset($rInfo)) {

@@ -49,7 +49,7 @@ require('includes/application_top.php');
                                    WHERE p.products_id = pd.products_id
                                    AND pd.language_id = " . (int)$_SESSION['languages_id'] . "
                                    ORDER BY p.products_quantity, pd.products_name";
-            $products_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $products_query_raw, $products_query_numrows);
+            $products_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $products_query_raw, $products_query_numrows);
             $products = $db->Execute($products_query_raw);
 
             foreach ($products as $productRecord) {

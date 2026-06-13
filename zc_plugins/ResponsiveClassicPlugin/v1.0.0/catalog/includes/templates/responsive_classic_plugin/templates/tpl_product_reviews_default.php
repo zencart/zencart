@@ -51,7 +51,7 @@
 
 <?php
   if ($reviews_split->number_of_rows > 0) {
-    if ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3')) {
+    if (in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['1', '3'], true)) {
 ?>
 <div class="prod-list-wrap group">
 <div id="productReviewsDefaultListingTopNumber" class="navSplitPagesResult"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
@@ -70,7 +70,7 @@
 <div class="reviews-right">
 <div class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $reviews['reviewsRating'] . '.png', sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating'])), sprintf(TEXT_OF_5_STARS, $reviews['reviewsRating']); ?></div>
 
-<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)MAX_PREVIEW); ?></div>
+<div class="productReviewsDefaultProductMainContent content"><?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)zen_config('MAX_PREVIEW')); ?></div>
 
 <div class="productReviewsDefaultReviewer"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($reviews['dateAdded'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($reviews['customersName'])); ?></div>
 </div>
@@ -84,12 +84,12 @@
   } else {
 ?>
 
-<div id="productReviewsDefaultNoReviews" class="content group"><?php echo TEXT_NO_REVIEWS . (REVIEWS_APPROVAL == '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
+<div id="productReviewsDefaultNoReviews" class="content group"><?php echo TEXT_NO_REVIEWS . (zen_config('REVIEWS_APPROVAL') == '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
 
 <?php
   }
 
-  if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
+  if ($reviews_split->number_of_rows > 0 && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['2', '3'], true)) {
 ?>
 
 <div class="prod-list-wrap group prod-list-bottom">

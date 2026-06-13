@@ -267,7 +267,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           <div class="form-group">
             <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="control-label col-sm-3"'); ?>
             <div class="col-sm-9 col-md-6">
-              <?php echo zen_draw_input_field('from', htmlspecialchars(zen_config('EMAIL_FROM'), ENT_COMPAT, CHARSET, true), 'size="50" class="form-control" id="from"'); ?>
+              <?php echo zen_draw_input_field('from', htmlspecialchars(zen_config('EMAIL_FROM', ''), ENT_COMPAT, CHARSET, true), 'size="50" class="form-control" id="from"'); ?>
             </div>
           </div>
           <hr>

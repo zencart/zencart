@@ -115,7 +115,7 @@ if ($query->fields['count'] > 0 && (zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING
                   }
                 }
 
-                $groups_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $groups_query_raw, $groups_query_numrows);
+                $groups_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $groups_query_raw, $groups_query_numrows);
                 $groups = $db->Execute($groups_query_raw);
                 foreach ($groups as $group) {
                   if ((!isset($_GET['gID']) || (isset($_GET['gID']) && ($_GET['gID'] == $group['group_id']))) && !isset($gInfo) && (substr($action, 0, 3) != 'new')) {

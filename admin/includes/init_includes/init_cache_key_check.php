@@ -11,7 +11,7 @@
  *  else it uses the /cache/ directory.)
  */
 
-if (!file_exists(zen_config('SESSION_WRITE_DIRECTORY')) || !is_writable(zen_config('SESSION_WRITE_DIRECTORY'))) {
+if (!file_exists(zen_config('SESSION_WRITE_DIRECTORY', '')) || !is_writable(zen_config('SESSION_WRITE_DIRECTORY', ''))) {
   zen_record_admin_activity('Session directory folder not found. Will attempt to re-detect and update configuration. Old value: ' . zen_config('SESSION_WRITE_DIRECTORY'), 'notice');
   define('DIR_FS_ROOT', realpath(dirname($_SERVER['SCRIPT_FILENAME']) . '/../') . '/');
 

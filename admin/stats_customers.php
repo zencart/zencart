@@ -42,7 +42,7 @@ $currencies = new currencies();
                                     AND o.orders_id = op.orders_id
                                     GROUP BY c.customers_id, c.customers_firstname, c.customers_lastname
                                     ORDER BY ordersum DESC";
-            $customers_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $customers_query_raw, $customers_query_numrows);
+            $customers_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $customers_query_raw, $customers_query_numrows);
 // fix counted customers
             $customers_query_m = $db->Execute("SELECT customers_id
                                                FROM " . TABLE_ORDERS . "
