@@ -53,7 +53,7 @@ function zen_db_output(string $string)
  *
  * @since ZC v1.0.3
  */
-function zen_db_prepare_input(array|string|int|float|null $input, bool $trimspace = true): array|string|int|float|null
+function zen_db_prepare_input(array|string|int|float|bool|null $input, bool $trimspace = true): array|string|int|float|bool|null
 {
     if (!IS_ADMIN_FLAG && is_string($input)) {
         $input = zen_sanitize_string($input);
