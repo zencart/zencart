@@ -22,7 +22,9 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
         $this->setGiftVoucherCoverageOptions(includeTax: false, includeShipping: true);
         $this->setConfiguration('MODULE_ORDER_TOTAL_GV_CALC_TAX', 'None');
         $this->setConfiguration('DEFAULT_CURRENCY', 'USD');
+        $this->switchToTaxNonInclusive();
         $this->switchFlatShippingTax('off');
+        $this->switchItemShippingTax('off');
     }
 
     /**
@@ -152,6 +154,37 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
+    public function testPurchaseWithGiftVoucherExcludesShippingTaxWhenShippingIsTaxable(): void
+    {
+        $this->setGiftVoucherCoverageOptions(includeTax: true, includeShipping: false);
+        $this->switchItemShippingTax('on');
+        $profile = $this->createCustomerAccountOrLogin('florida-basic1');
+        $this->setExactGiftVoucherBalance($profile, 1000);
+
+        $response = $this->runGiftVoucherCheckout(['cot_gv' => '100.00', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
+        $this->assertCheckoutTotalsContain($response->content, ['&#8209;$42.79', '2.75']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function testPurchaseWithGiftVoucherExcludesShippingTaxWhenShippingIsTaxableAndDisplayIsTaxInclusive(): void
+    {
+        $this->setGiftVoucherCoverageOptions(includeTax: true, includeShipping: false);
+        $this->switchToTaxInclusive();
+        $this->switchItemShippingTax('on');
+        $profile = $this->createCustomerAccountOrLogin('florida-basic1');
+        $this->setExactGiftVoucherBalance($profile, 1000);
+
+        $response = $this->runGiftVoucherCheckout(['cot_gv' => '100.00', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
+        $this->assertCheckoutTotalsContain($response->content, ['&#8209;$42.54', '3.00']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
     public function testPurchaseWithGiftVoucherExcludesTaxAndShippingWhenConfigured(): void
     {
         $this->setGiftVoucherCoverageOptions(includeTax: false, includeShipping: false);
@@ -178,6 +211,22 @@ class GiftVoucherRedeemTest extends zcInProcessFeatureTestCaseStore
             ->assertSee('Please select a payment method for your order');
 
         $this->assertCheckoutTotalsContain($response->content, ['&#8209;$10.00', '34.63']);
+    }
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function testPurchaseWithGiftVoucherStandardTaxDoesNotRecalculateExcludedShippingTax(): void
+    {
+        $this->setGiftVoucherCoverageOptions(includeTax: true, includeShipping: false);
+        $this->setConfiguration('MODULE_ORDER_TOTAL_GV_CALC_TAX', 'Standard');
+        $this->switchItemShippingTax('on');
+        $profile = $this->createCustomerAccountOrLogin('florida-basic1');
+        $this->setExactGiftVoucherBalance($profile, 1000);
+
+        $response = $this->runGiftVoucherCheckout(['cot_gv' => '10.00', 'payment' => ''])
+            ->assertOk()
+            ->assertSee('Please select a payment method for your order');
+
+        $this->assertCheckoutTotalsContain($response->content, ['&#8209;$10.00', '34.89']);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
