@@ -20,11 +20,11 @@
 
 <h2 id="maintenanceDefaultMainContent"><?php echo DOWN_FOR_MAINTENANCE_TEXT_INFORMATION; ?></h2>
 
-<?php if (DISPLAY_MAINTENANCE_TIME == 'true') { ?>
+<?php if (zen_config('DISPLAY_MAINTENANCE_TIME') === 'true') { ?>
 <h3 id="maintenanceDefaultTime"><?php echo TEXT_MAINTENANCE_ON_AT_TIME . '<br>' . TEXT_DATE_TIME; ?></h3>
 <?php } ?>
-<?php if (DISPLAY_MAINTENANCE_PERIOD == 'true') { ?>
-<h3 id="maintenanceDefaultPeriod"><?php echo TEXT_MAINTENANCE_PERIOD . TEXT_MAINTENANCE_PERIOD_TIME; ?></h3>
+<?php if (zen_config('DISPLAY_MAINTENANCE_PERIOD') === 'true') { ?>
+<h3 id="maintenanceDefaultPeriod"><?php echo TEXT_MAINTENANCE_PERIOD . zen_config('TEXT_MAINTENANCE_PERIOD_TIME'); ?></h3>
 <?php } ?>
 <br class="clearBoth">
 

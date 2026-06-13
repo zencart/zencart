@@ -11,7 +11,7 @@
 <div class="centerColumn" id="pageTwo">
 <h1 id="pageTwoHeading"><?php echo HEADING_TITLE; ?></h1>
 
-<?php if (DEFINE_PAGE_2_STATUS >= 1 and DEFINE_PAGE_2_STATUS <= 2) { ?>
+<?php if ((int)zen_config('DEFINE_PAGE_2_STATUS') >= 1 && (int)zen_config('DEFINE_PAGE_2_STATUS') <= 2) { ?>
 <div id="pageTwoMainContent" class="content">
 <?php
 /**

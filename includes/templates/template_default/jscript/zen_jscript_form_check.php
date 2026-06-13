@@ -155,56 +155,56 @@
         error_message = "<?= JS_ERROR ?>";
 
         <?php
-        if (ACCOUNT_GENDER === 'true') { ?>
+        if (zen_config('ACCOUNT_GENDER') === 'true') { ?>
             check_radio("gender", "<?= ENTRY_GENDER_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_FIRST_NAME_MIN_LENGTH > 0) { ?>
-        check_input("firstname", <?= (int)ENTRY_FIRST_NAME_MIN_LENGTH ?>, "<?= ENTRY_FIRST_NAME_ERROR ?>");
+        if ((int)zen_config('ENTRY_FIRST_NAME_MIN_LENGTH') > 0) { ?>
+        check_input("firstname", <?= (int)zen_config('ENTRY_FIRST_NAME_MIN_LENGTH') ?>, "<?= ENTRY_FIRST_NAME_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_LAST_NAME_MIN_LENGTH > 0) { ?>
-        check_input("lastname", <?= (int)ENTRY_LAST_NAME_MIN_LENGTH ?>, "<?= ENTRY_LAST_NAME_ERROR ?>");
+        if ((int)zen_config('ENTRY_LAST_NAME_MIN_LENGTH') > 0) { ?>
+        check_input("lastname", <?= (int)zen_config('ENTRY_LAST_NAME_MIN_LENGTH') ?>, "<?= ENTRY_LAST_NAME_ERROR ?>");
         <?php }
 
-        if (ACCOUNT_DOB === 'true' && (int)ENTRY_DOB_MIN_LENGTH != 0) { ?>
-        check_input("dob", <?= (int)ENTRY_DOB_MIN_LENGTH ?>, "<?= ENTRY_DATE_OF_BIRTH_ERROR ?>");
+        if (zen_config('ACCOUNT_DOB') === 'true' && (int)zen_config('ENTRY_DOB_MIN_LENGTH') !== 0) { ?>
+        check_input("dob", <?= (int)zen_config('ENTRY_DOB_MIN_LENGTH') ?>, "<?= ENTRY_DATE_OF_BIRTH_ERROR ?>");
         <?php }
 
-        if (ACCOUNT_COMPANY === 'true' && (int)ENTRY_COMPANY_MIN_LENGTH != 0) { ?>
-        check_input("company", <?= (int)ENTRY_COMPANY_MIN_LENGTH ?>, "<?= ENTRY_COMPANY_ERROR ?>");
+        if (zen_config('ACCOUNT_COMPANY') === 'true' && (int)zen_config('ENTRY_COMPANY_MIN_LENGTH') !== 0) { ?>
+        check_input("company", <?= (int)zen_config('ENTRY_COMPANY_MIN_LENGTH') ?>, "<?= ENTRY_COMPANY_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_EMAIL_ADDRESS_MIN_LENGTH > 0) { ?>
-        check_input("email_address", <?= (int)ENTRY_EMAIL_ADDRESS_MIN_LENGTH ?>, "<?= ENTRY_EMAIL_ADDRESS_ERROR ?>");
+        if ((int)zen_config('ENTRY_EMAIL_ADDRESS_MIN_LENGTH') > 0) { ?>
+        check_input("email_address", <?= (int)zen_config('ENTRY_EMAIL_ADDRESS_MIN_LENGTH') ?>, "<?= ENTRY_EMAIL_ADDRESS_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_STREET_ADDRESS_MIN_LENGTH > 0) { ?>
-        check_input("street_address", <?= (int)ENTRY_STREET_ADDRESS_MIN_LENGTH ?>, "<?= ENTRY_STREET_ADDRESS_ERROR ?>");
+        if ((int)zen_config('ENTRY_STREET_ADDRESS_MIN_LENGTH') > 0) { ?>
+        check_input("street_address", <?= (int)zen_config('ENTRY_STREET_ADDRESS_MIN_LENGTH') ?>, "<?= ENTRY_STREET_ADDRESS_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_POSTCODE_MIN_LENGTH > 0) { ?>
-        check_input("postcode", <?= (int)ENTRY_POSTCODE_MIN_LENGTH ?>, "<?= ENTRY_POST_CODE_ERROR ?>");
+        if ((int)zen_config('ENTRY_POSTCODE_MIN_LENGTH') > 0) { ?>
+        check_input("postcode", <?= (int)zen_config('ENTRY_POSTCODE_MIN_LENGTH') ?>, "<?= ENTRY_POST_CODE_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_CITY_MIN_LENGTH > 0) { ?>
-        check_input("city", <?= (int)ENTRY_CITY_MIN_LENGTH ?>, "<?= ENTRY_CITY_ERROR ?>");
+        if ((int)zen_config('ENTRY_CITY_MIN_LENGTH') > 0) { ?>
+        check_input("city", <?= (int)zen_config('ENTRY_CITY_MIN_LENGTH') ?>, "<?= ENTRY_CITY_ERROR ?>");
         <?php }
 
-        if (ACCOUNT_STATE === 'true') { ?>
-        check_state(<?= (int)ENTRY_STATE_MIN_LENGTH ?>, "<?= ENTRY_STATE_ERROR ?>", "<?= ENTRY_STATE_ERROR_SELECT ?>");
+        if (zen_config('ACCOUNT_STATE') === 'true') { ?>
+        check_state(<?= (int)zen_config('ENTRY_STATE_MIN_LENGTH') ?>, "<?= ENTRY_STATE_ERROR ?>", "<?= ENTRY_STATE_ERROR_SELECT ?>");
         <?php } ?>
 
         check_select("country", "", "<?= ENTRY_COUNTRY_ERROR ?>");
 
         <?php
-        if ((int)ENTRY_TELEPHONE_MIN_LENGTH > 0) { ?>
-        check_input("telephone", <?= (int)ENTRY_TELEPHONE_MIN_LENGTH ?>, "<?= ENTRY_TELEPHONE_NUMBER_ERROR ?>");
+        if ((int)zen_config('ENTRY_TELEPHONE_MIN_LENGTH') > 0) { ?>
+        check_input("telephone", <?= (int)zen_config('ENTRY_TELEPHONE_MIN_LENGTH') ?>, "<?= ENTRY_TELEPHONE_NUMBER_ERROR ?>");
         <?php }
 
-        if ((int)ENTRY_PASSWORD_MIN_LENGTH > 0) { ?>
-        check_password("password", "confirmation", <?= (int)ENTRY_PASSWORD_MIN_LENGTH ?>, "<?= ENTRY_PASSWORD_ERROR ?>", "<?= ENTRY_PASSWORD_ERROR_NOT_MATCHING ?>");
-        check_password_new("password_current", "password_new", "password_confirmation", <?= (int)ENTRY_PASSWORD_MIN_LENGTH ?>, "<?= ENTRY_PASSWORD_ERROR ?>", "<?= ENTRY_PASSWORD_NEW_ERROR ?>", "<?= ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING ?>");
+        if ((int)zen_config('ENTRY_PASSWORD_MIN_LENGTH') > 0) { ?>
+        check_password("password", "confirmation", <?= (int)zen_config('ENTRY_PASSWORD_MIN_LENGTH') ?>, "<?= ENTRY_PASSWORD_ERROR ?>", "<?= ENTRY_PASSWORD_ERROR_NOT_MATCHING ?>");
+        check_password_new("password_current", "password_new", "password_confirmation", <?= (int)zen_config('ENTRY_PASSWORD_MIN_LENGTH') ?>, "<?= ENTRY_PASSWORD_ERROR ?>", "<?= ENTRY_PASSWORD_NEW_ERROR ?>", "<?= ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING ?>");
         <?php } ?>
 
         if (error === true) {

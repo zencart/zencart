@@ -20,7 +20,7 @@ include DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING);
     } // show top submit
 ?>
 
-<?php if ( $listing_split->number_of_rows > 0 && (PREV_NEXT_BAR_LOCATION === '1' || PREV_NEXT_BAR_LOCATION === '3') ) {
+<?php if ( $listing_split->number_of_rows > 0 && (zen_config('PREV_NEXT_BAR_LOCATION') === '1' || zen_config('PREV_NEXT_BAR_LOCATION') === '3') ) {
 ?>
 <div id="productsListingTopNumber" class="navSplitPagesResult back"><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
 <div id="productsListingListingTopLinks" class="navSplitPagesLinks forward"><?php echo TEXT_RESULT_PAGE . $listing_split->display_links($max_display_page_links, zen_get_all_get_params(['page', 'info', 'x', 'y', 'main_page']), $paginateAsUL); ?></div>
@@ -40,7 +40,7 @@ if (in_array($product_listing_layout_style, ['columns', 'fluid'])) {
 }
 ?>
 
-<?php if ( $listing_split->number_of_rows > 0 && (PREV_NEXT_BAR_LOCATION === '2' || PREV_NEXT_BAR_LOCATION === '3') ) {
+<?php if ( $listing_split->number_of_rows > 0 && (zen_config('PREV_NEXT_BAR_LOCATION') === '2' || zen_config('PREV_NEXT_BAR_LOCATION') === '3') ) {
 ?>
 <div id="productsListingBottomNumber" class="navSplitPagesResult back"><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
 <div  id="productsListingListingBottomLinks" class="navSplitPagesLinks forward"><?php echo TEXT_RESULT_PAGE . $listing_split->display_links($max_display_page_links, zen_get_all_get_params(['page', 'info', 'x', 'y']), $paginateAsUL); ?></div>
@@ -61,7 +61,7 @@ if (in_array($product_listing_layout_style, ['columns', 'fluid'])) {
 </div>
 
 <?php
-// if ($show_top_submit_button || $show_bottom_submit_button || (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit && $listing_split->number_of_rows > 0)) {
+// if ($show_top_submit_button || $show_bottom_submit_button || PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit && $listing_split->number_of_rows > 0)) {
   if ($show_top_submit_button || $show_bottom_submit_button) {
 ?>
 </form>

@@ -103,7 +103,7 @@
 <br class="clearBoth">
 
 <?php  if ($flagAnyOutOfStock) { ?>
-<?php    if (STOCK_ALLOW_CHECKOUT == 'true') {  ?>
+<?php    if (zen_config('STOCK_ALLOW_CHECKOUT') === 'true') {  ?>
 <div class="messageStackError"><?php echo OUT_OF_STOCK_CAN_CHECKOUT; ?></div>
 <?php    } else { ?>
 <div class="messageStackError"><?php echo OUT_OF_STOCK_CANT_CHECKOUT; ?></div>
@@ -161,7 +161,7 @@
       <hr>
 
 <?php
-  if (MODULE_ORDER_TOTAL_INSTALLED) {
+  if (zen_config('MODULE_ORDER_TOTAL_INSTALLED')) {
     $order_totals = $order_total_modules->process();
 ?>
 <div id="orderTotals"><?php $order_total_modules->output(); ?></div>

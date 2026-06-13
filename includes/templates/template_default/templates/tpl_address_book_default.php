@@ -24,7 +24,7 @@
 
 <fieldset>
 <legend><?php echo ADDRESS_BOOK_TITLE; ?></legend>
-<div class="alert forward"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
+<div class="alert forward"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, zen_config('MAX_ADDRESS_BOOK_ENTRIES')); ?></div>
 <br class="clearBoth">
 <?php
 /**
@@ -44,7 +44,7 @@
 </fieldset>
 
 <?php
-  if (count($addressArray) < MAX_ADDRESS_BOOK_ENTRIES) {
+  if (count($addressArray) < zen_config('MAX_ADDRESS_BOOK_ENTRIES')) {
 ?>
    <div class="buttonRow forward"><?php echo '<a href="' . zen_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL') . '">' . zen_image_button(BUTTON_IMAGE_ADD_ADDRESS, BUTTON_ADD_ADDRESS_ALT) . '</a>'; ?></div>
 <?php

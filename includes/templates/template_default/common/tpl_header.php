@@ -42,7 +42,7 @@ if (isset($flag_disable_header) && $flag_disable_header === true) {
     <li><a href="<?php echo zen_href_link(FILENAME_ACCOUNT, '', 'SSL'); ?>"><?php echo HEADER_TITLE_MY_ACCOUNT; ?></a></li>
 <?php
       } else {
-        if (STORE_STATUS == '0') {
+        if (zen_config('STORE_STATUS') === '0') {
 ?>
     <li><a href="<?php echo zen_href_link(FILENAME_LOGIN, '', 'SSL'); ?>"><?php echo HEADER_TITLE_LOGIN; ?></a></li>
 <?php } } ?>
@@ -63,7 +63,7 @@ if (isset($flag_disable_header) && $flag_disable_header === true) {
 <!--bof-branding display-->
 <div id="logoWrapper">
     <div id="logo"><?php echo '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">' . zen_image($template->get_template_dir(HEADER_LOGO_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT) . '</a>'; ?></div>
-<?php if (HEADER_SALES_TEXT != '' || (SHOW_BANNERS_GROUP_SET2 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET2))) { ?>
+<?php if (HEADER_SALES_TEXT != '' || (zen_config('SHOW_BANNERS_GROUP_SET2') !== '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET2')))) { ?>
     <div id="taglineWrapper">
 <?php
               if (HEADER_SALES_TEXT != '') {
@@ -73,7 +73,7 @@ if (isset($flag_disable_header) && $flag_disable_header === true) {
               }
 ?>
 <?php
-              if (SHOW_BANNERS_GROUP_SET2 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET2)) {
+              if (zen_config('SHOW_BANNERS_GROUP_SET2') !== '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET2'))) {
                 if ($banner->RecordCount() > 0) {
 ?>
       <div id="bannerTwo" class="banners"><?php echo zen_display_banner('static', $banner);?></div>
@@ -94,7 +94,7 @@ if (isset($flag_disable_header) && $flag_disable_header === true) {
 <!--eof-optional categories tabs navigation display-->
 
 <!--bof-header ezpage links-->
-<?php if (EZPAGES_STATUS_HEADER == '1' or (EZPAGES_STATUS_HEADER == '2' && zen_is_whitelisted_admin_ip())) { ?>
+<?php if (zen_config('EZPAGES_STATUS_HEADER') === '1' or (zen_config('EZPAGES_STATUS_HEADER') === '2' && zen_is_whitelisted_admin_ip())) { ?>
 <?php require($template->get_template_dir('tpl_ezpages_bar_header.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_ezpages_bar_header.php'); ?>
 <?php } ?>
 <!--eof-header ezpage links-->

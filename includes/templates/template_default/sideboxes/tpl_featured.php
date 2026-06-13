@@ -17,7 +17,7 @@ while (!$random_featured_product->EOF) {
     $featured_box_price = zen_get_products_display_price($data['products_id']);
     $content .= "\n" . '  <div class="sideBoxContentItem">';
     $content .= '<a href="' . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . zen_get_generated_category_path_rev($data["master_categories_id"]) . '&products_id=' . $data["products_id"]) . '">'
-        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], (int)zen_config('SMALL_IMAGE_WIDTH'), (int)zen_config('SMALL_IMAGE_HEIGHT'));
     $content .= '<br>' . $data['products_name'] . '</a>';
     $content .= '<div>' . $featured_box_price . '</div>';
     $content .= '</div>';
