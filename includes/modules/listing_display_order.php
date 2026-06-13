@@ -14,14 +14,14 @@ if (empty($_GET['main_page'])) {
     $_GET['main_page'] = 'index';
 }
 if (empty($disp_order_default)) {
-    if (PRODUCT_LISTING_DEFAULT_SORT_ORDER === '') {
+    if (zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER') === '') {
         // blank means products_sort_order
         $disp_order_default = 8; // see 'case 8' below
-    } elseif (strlen(PRODUCT_LISTING_DEFAULT_SORT_ORDER) > 1) {
+    } elseif (strlen(zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER', '')) > 1) {
         // if it is set to the legacy multi-column selector, ie "2a", ignore it and treat it as though blank
         $disp_order_default = 8;
     } else {
-        $disp_order_default = (int)PRODUCT_LISTING_DEFAULT_SORT_ORDER;
+        $disp_order_default = (int)zen_config('PRODUCT_LISTING_DEFAULT_SORT_ORDER');
     }
 }
 if (empty($_GET['disp_order'])) {

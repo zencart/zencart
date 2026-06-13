@@ -50,7 +50,7 @@ if (Customer::getAuthTokenValid($token) === false) {
 
 $name = $customer->getData('customers_firstname') . ' ' . $customer->getData('customers_lastname');
 
-$reset_url = zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, "reset_token=$token", 'SSL');
+$reset_url = zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), "reset_token=$token", 'SSL');
 
 $body = sprintf(EMAIL_AUTH_TOKEN_BODY, $reset_url, Customer::getAuthTokenMinutesValid());
 

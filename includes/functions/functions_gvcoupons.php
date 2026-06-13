@@ -72,7 +72,7 @@ function zen_user_has_gv_account(int $customer_id)
  * @deprecated v2.0.0; use Coupon::generateRandomCouponCode() instead.
  * @since ZC v1.0.3
  */
-function zen_create_coupon_code(string $salt = "secret", $length = SECURITY_CODE_LENGTH, string $prefix = '')
+function zen_create_coupon_code(string $salt = "secret", $length = null, string $prefix = '')
 {
     return Coupon::generateRandomCouponCode($salt, $length, $prefix);
 }

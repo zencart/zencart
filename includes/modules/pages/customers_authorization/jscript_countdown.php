@@ -31,7 +31,7 @@ window.onload = function() {
             display.textContent = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 
             if (--timer < 0) {
-                window.location.replace("<?= zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL') ?>");
+                window.location.replace("<?= zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), '', 'SSL') ?>");
             }
         }, 1000); // Update every 1 second
     }

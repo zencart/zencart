@@ -914,7 +914,10 @@ class queryFactory extends base
      */
     protected function logQuery(string $sqlQuery): void
     {
-        if (!defined('STORE_DB_TRANSACTIONS') || STORE_DB_TRANSACTIONS === 'false' || STORE_DB_TRANSACTIONS === false) {
+        if (!function_exists('zen_config')) {
+            return;
+        }
+        if (zen_config('STORE_DB_TRANSACTIONS', 'false') === 'false' || zen_config('STORE_DB_TRANSACTIONS', false) === false) {
             return;
         }
         global $PHP_SELF, $box_id, $current_page_base;

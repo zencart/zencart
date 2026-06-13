@@ -366,7 +366,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
-    if ((strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'found' && !is_file(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
+    if ((strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found' && !is_file(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language']) . '/' . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -392,12 +392,11 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS')) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
+    if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
         if (preg_match('/\.(png|gif|jpe?g|webp)/i', $image)) {
             return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
-        } else {
-            return zen_draw_button($image, $sec_class, '', $parameters, $alt, 'button');
         }
+        return zen_draw_button($image, $sec_class, '', $parameters, $alt, 'button');
     }
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
@@ -960,7 +959,7 @@ function zen_get_country_list($name, $selected = '', $parameters = '')
     $countries = zen_get_countries();
 
     // Set some default entries at top of list:
-    if (zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY') !== '' && zen_config('STORE_COUNTRY') !== zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY')) $countriesAtTopOfList[] = SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
+    if (zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY') !== '' && zen_config('STORE_COUNTRY') !== zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY')) $countriesAtTopOfList[] = zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY');
     $countriesAtTopOfList[] = zen_config('STORE_COUNTRY');
     // IF YOU WANT TO ADD MORE DEFAULTS TO THE TOP OF THIS LIST, SIMPLY ENTER THEIR NUMBERS HERE.
     // Duplicate more lines as needed
