@@ -25,6 +25,8 @@ $configurationRepository->loadConfigSettings();
 $productTypeLayoutRepository = new ProductTypeLayoutRepository($db);
 $productTypeLayoutRepository->loadConfigSettings();
 
+require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'zen_config.php';
+
 if (file_exists(DIR_WS_CLASSES . 'db/' . DB_TYPE . '/define_queries.php')) {
     /**
      * Load the database dependant query defines
