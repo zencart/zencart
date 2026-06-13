@@ -129,10 +129,10 @@ if ($flag_show_accessibility_sidebox_link === true) {
 <?php if (zen_config('DEFINE_SITE_MAP_STATUS') <= 1) { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_SITE_MAP); ?>"><?php echo BOX_INFORMATION_SITE_MAP; ?></a></li>
 <?php } ?>
-<?php if (defined('MODULE_ORDER_TOTAL_GV_STATUS') && zen_config('MODULE_ORDER_TOTAL_GV_STATUS') === 'true') { ?>
+<?php if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') === 'true') { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_GV_FAQ); ?>"><?php echo BOX_INFORMATION_GV; ?></a></li>
 <?php } ?>
-<?php if (zen_config('DEFINE_DISCOUNT_COUPON_STATUS') <= 1 && defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') === 'true') { ?>
+<?php if (zen_config('DEFINE_DISCOUNT_COUPON_STATUS') <= 1 && zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') === 'true') { ?>
         <li><a href="<?php echo zen_href_link(FILENAME_DISCOUNT_COUPON); ?>"><?php echo BOX_INFORMATION_DISCOUNT_COUPONS; ?></a></li>
 <?php } ?>
 <?php if (zen_config('SHOW_NEWSLETTER_UNSUBSCRIBE_LINK') === 'true') { ?>

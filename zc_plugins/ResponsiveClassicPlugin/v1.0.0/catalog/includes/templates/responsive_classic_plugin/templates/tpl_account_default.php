@@ -64,7 +64,7 @@
 
 
 <?php
-  if ((int)zen_config('ACCOUNT_NEWSLETTER_STATUS') > 0 or zen_config('CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS') !='0') {
+  if ((int)zen_config('ACCOUNT_NEWSLETTER_STATUS') > 0 || zen_config('CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS') !== '0') {
 ?>
 <h2><?php echo EMAIL_NOTIFICATIONS_TITLE; ?></h2>
 <ul id="myAccountNotify" class="list">

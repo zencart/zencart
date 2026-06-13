@@ -14,7 +14,7 @@ include DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING);
 <div id="productListing" class="group">
 
 <?php
-  if ($listing_split->number_of_rows && (zen_config('PREV_NEXT_BAR_LOCATION') === '1' || zen_config('PREV_NEXT_BAR_LOCATION') === '3') ) {
+  if ($listing_split->number_of_rows && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['1', '3'], true)) {
 ?>
 <div class="prod-list-wrap group">
   <div id="productsListingListingTopLinks" class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . $listing_split->display_links($max_display_page_links, zen_get_all_get_params(['page', 'info', 'x', 'y', 'main_page']), $paginateAsUL); ?></div>
@@ -39,7 +39,7 @@ include DIR_WS_MODULES . zen_get_module_directory(FILENAME_PRODUCT_LISTING);
     } // show top submit
 ?>
 
-<?php if ($listing_split->number_of_rows && (zen_config('PREV_NEXT_BAR_LOCATION') === '1' || zen_config('PREV_NEXT_BAR_LOCATION') === '3') ) { ?>
+<?php if ($listing_split->number_of_rows && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['1', '3'], true)) { ?>
 </div>
 <?php } ?>
 
@@ -55,7 +55,7 @@ if (in_array($product_listing_layout_style, ['columns', 'fluid'])) {
 }
 ?>
 
-<?php if ($listing_split->number_of_rows && (zen_config('PREV_NEXT_BAR_LOCATION') == '2' || zen_config('PREV_NEXT_BAR_LOCATION') == '3') ) { ?>
+<?php if ($listing_split->number_of_rows && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['2', '3'], true)) { ?>
 <div class="prod-list-wrap group">
   <div id="productsListingListingBottomLinks"  class="navSplitPagesLinks back"><?php echo TEXT_RESULT_PAGE . $listing_split->display_links($max_display_page_links, zen_get_all_get_params(['page', 'info', 'x', 'y', 'main_page']), $paginateAsUL); ?></div>
   <div id="productsListingBottomNumber" class="navSplitPagesResult back<?php echo $listing_split->number_of_pages == 1 ? ' navSplitEmpty3rdColumn' : ''; ?>"><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
@@ -79,7 +79,7 @@ if (in_array($product_listing_layout_style, ['columns', 'fluid'])) {
 <?php
     } // show_bottom_submit_button
 ?>
-<?php if ($listing_split->number_of_rows && (zen_config('PREV_NEXT_BAR_LOCATION') === '2' || zen_config('PREV_NEXT_BAR_LOCATION') === '3') ) { ?>
+<?php if ($listing_split->number_of_rows && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['2', '3'], true)) { ?>
 </div>
 <?php } ?>
 

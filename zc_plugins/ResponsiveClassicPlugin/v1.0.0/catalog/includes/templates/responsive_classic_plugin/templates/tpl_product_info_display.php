@@ -40,7 +40,7 @@ if ($module_show_categories != 0) {
 
 <!--bof Prev/Next top position -->
 <?php
-if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '1' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
+if (in_array(zen_config('PRODUCT_INFO_PREVIOUS_NEXT'), ['1', '3'], true)) {
     /**
      * display the product previous/next helper
      */
@@ -223,7 +223,7 @@ if ($products_description != '') {
 
 <!--bof Prev/Next bottom position -->
 <?php
-if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '2' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
+if (in_array(zen_config('PRODUCT_INFO_PREVIOUS_NEXT'), ['2', '3'], true)) {
     /**
      * display the product previous/next helper
      */

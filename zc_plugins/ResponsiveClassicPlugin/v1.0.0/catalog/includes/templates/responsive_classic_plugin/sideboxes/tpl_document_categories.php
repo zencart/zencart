@@ -48,7 +48,7 @@
 
 
       if (zen_config('SHOW_COUNTS') == 'true') {
-        if ((zen_config('CATEGORIES_COUNT_ZERO') == '1' and $box_categories_array[$i]['count'] == 0) or $box_categories_array[$i]['count'] >= 1) {
+        if ((zen_config('CATEGORIES_COUNT_ZERO') === '1' && $box_categories_array[$i]['count'] == 0) || $box_categories_array[$i]['count'] >= 1) {
           $content .= '<span class="forward cat-count">' . zen_config('CATEGORIES_COUNT_PREFIX') . $box_categories_array[$i]['count'] . zen_config('CATEGORIES_COUNT_SUFFIX') . '</span>';
         }
       }

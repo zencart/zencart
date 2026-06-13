@@ -61,7 +61,7 @@ if (in_array($current_page_base,explode(",",'list_pages_to_skip_all_right_sidebo
 }
 
 // ZCAdditions.com, Responsive Template Default (BOF-addition 1 of 1)
-if ($flag_disable_right or zen_config('COLUMN_RIGHT_STATUS') == '0') {
+if ($flag_disable_right || zen_config('COLUMN_RIGHT_STATUS') === '0') {
   $box_width_right = preg_replace('/[^0-9]/', '', '0');
   $box_width_right_new = '';
 } else {
@@ -70,7 +70,7 @@ if ($flag_disable_right or zen_config('COLUMN_RIGHT_STATUS') == '0') {
   $box_width_right_new = 'col' . $box_width_right;
 }
 
-if ($flag_disable_left or zen_config('COLUMN_LEFT_STATUS') == '0') {
+if ($flag_disable_left || zen_config('COLUMN_LEFT_STATUS') === '0') {
   $box_width_left = preg_replace('/[^0-9]/', '', '0');
   $box_width_left_new = '';
 } else {
@@ -111,7 +111,7 @@ $zco_notifier->notify('NOTIFY_PAGE_BODY_BEGIN', $current_page);
 ?>
 
 <?php
-  if (zen_config('SHOW_BANNERS_GROUP_SET1') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET1'))) {
+  if (zen_config('SHOW_BANNERS_GROUP_SET1', '') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET1', ''))) {
     if ($banner->RecordCount() > 0) {
 ?>
 <div id="bannerOne" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
@@ -126,7 +126,7 @@ $zco_notifier->notify('NOTIFY_PAGE_BODY_BEGIN', $current_page);
   * prepares and displays header output
   *
   */
-  if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == 1 && zen_config('CUSTOMERS_AUTHORIZATION_HEADER_OFF') == 'true' and ($_SESSION['customers_authorization'] != 0 or !zen_is_logged_in())) {
+  if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && zen_config('CUSTOMERS_AUTHORIZATION_HEADER_OFF') === 'true' && ($_SESSION['customers_authorization'] != 0 || !zen_is_logged_in())) {
     $flag_disable_header = true;
   }
   require($template->get_template_dir('tpl_header.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_header.php');?>
@@ -134,7 +134,7 @@ $zco_notifier->notify('NOTIFY_PAGE_BODY_BEGIN', $current_page);
 <div id="contentMainWrapper">
 
 <?php
-if (zen_config('COLUMN_LEFT_STATUS') == 0 || (zen_config('CUSTOMERS_APPROVAL') == '1' and !zen_is_logged_in()) || (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == 1 && zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF') == 'true' and ($_SESSION['customers_authorization'] != 0 or !zen_is_logged_in()))) {
+if (zen_config('COLUMN_LEFT_STATUS') === '0' || (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()) || (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_LEFT_OFF') === 'true' && ($_SESSION['customers_authorization'] != 0 || !zen_is_logged_in()))) {
   // global disable of column_left
   $flag_disable_left = true;
 }
@@ -163,7 +163,7 @@ if (!$flag_disable_left) {
 <!-- eof breadcrumb -->
 
 <?php
-  if (zen_config('SHOW_BANNERS_GROUP_SET3') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET3'))) {
+  if (zen_config('SHOW_BANNERS_GROUP_SET3', '') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET3', ''))) {
     if ($banner->RecordCount() > 0) {
 ?>
     <div id="bannerThree" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>
@@ -199,7 +199,7 @@ if (!$flag_disable_left) {
 
 <?php
 //if (COLUMN_RIGHT_STATUS == 0 || (CUSTOMERS_APPROVAL == '1' and $_SESSION['customer_id'] == '') || (CUSTOMERS_APPROVAL_AUTHORIZATION == 1 && CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF == 'true' && $_SESSION['customers_authorization'] != 0)) {
-if (zen_config('COLUMN_RIGHT_STATUS') == 0 || (zen_config('CUSTOMERS_APPROVAL') == '1' and !zen_is_logged_in()) || (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == 1 && zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF') == 'true' and ($_SESSION['customers_authorization'] != 0 or !zen_is_logged_in()))) {
+if (zen_config('COLUMN_RIGHT_STATUS') === '0' || (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()) || (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF') === 'true' && ($_SESSION['customers_authorization'] != 0 || !zen_is_logged_in()))) {
   // global disable of column_right
   $flag_disable_right = true;
 }
@@ -226,7 +226,7 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
   * prepares and displays footer output
   *
   */
-  if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == 1 && zen_config('CUSTOMERS_AUTHORIZATION_FOOTER_OFF') == 'true' and ($_SESSION['customers_authorization'] != 0 or $_SESSION['customer_id'] == '')) {
+  if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && zen_config('CUSTOMERS_AUTHORIZATION_FOOTER_OFF') === 'true' && ($_SESSION['customers_authorization'] != 0 || $_SESSION['customer_id'] == '')) {
     $flag_disable_footer = true;
   }
   require($template->get_template_dir('tpl_footer.php',DIR_WS_TEMPLATE, $current_page_base,'common'). '/tpl_footer.php');
@@ -235,7 +235,7 @@ if (!isset($flag_disable_right) || !$flag_disable_right) {
 </div>
 <!--bof- banner #6 display -->
 <?php
-  if (zen_config('SHOW_BANNERS_GROUP_SET6') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET6'))) {
+  if (zen_config('SHOW_BANNERS_GROUP_SET6', '') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET6', ''))) {
     if ($banner->RecordCount() > 0) {
 ?>
 <div id="bannerSix" class="banners"><?php echo zen_display_banner('static', $banner); ?></div>

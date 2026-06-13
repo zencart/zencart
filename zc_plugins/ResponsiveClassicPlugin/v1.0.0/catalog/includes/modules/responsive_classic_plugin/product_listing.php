@@ -21,7 +21,7 @@ $error_categories = false;
 
 $show_submit = zen_run_normal();
 
-$columns_per_row = defined('PRODUCT_LISTING_COLUMNS_PER_ROW') ? (int)zen_config('PRODUCT_LISTING_COLUMNS_PER_ROW') : 1;
+$columns_per_row = (int)(zen_config('PRODUCT_LISTING_COLUMNS_PER_ROW')  ?? 1);
 if (empty($product_listing_layout_style) || !in_array($product_listing_layout_style, ['columns', 'table', 'fluid'])) {
     $product_listing_layout_style = $columns_per_row > 1 ? 'columns' : 'table';
     if (empty($columns_per_row)) {
@@ -432,7 +432,7 @@ if ($num_products_count > 0) {
     $error_categories = true;
 }
 
-if (($how_many > 0 && $show_submit && $num_products_count > 0) && (zen_config('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART') == 1 || zen_config('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART') == 3)) {
+if ($how_many > 0 && $show_submit && $num_products_count > 0 && in_array(zen_config('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART'), ['1', '3'], true)) {
     $show_top_submit_button = true;
 }
 if ($how_many > 0 && $show_submit && $num_products_count > 0 && zen_config('PRODUCT_LISTING_MULTIPLE_ADD_TO_CART') >= 2) {

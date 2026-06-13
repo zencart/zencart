@@ -25,7 +25,7 @@
 
 <?php
   if ($reviews_split->number_of_rows > 0) {
-    if ((zen_config('PREV_NEXT_BAR_LOCATION') == '1') || (zen_config('PREV_NEXT_BAR_LOCATION') == '3')) {
+    if (in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['1', '3'], true)) {
 ?>
 <div class="prod-list-wrap group">
 <div id="reviewsDefaultListingTopNumber" class="navSplitPagesResult back"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
@@ -75,7 +75,7 @@
 
 
 <?php
-  if (($reviews_split->number_of_rows > 0) && ((zen_config('PREV_NEXT_BAR_LOCATION') == '2') || (zen_config('PREV_NEXT_BAR_LOCATION') == '3'))) {
+  if ($reviews_split->number_of_rows > 0 && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['2', '3'], true)) {
 ?>
 <div class="prod-list-wrap group">
 <div id="reviewsDefaultListingBottomNumber" class="navSplitPagesResult back"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>

@@ -169,7 +169,7 @@
 <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_CONTINUE_SHOPPING, BUTTON_CONTINUE_SHOPPING_ALT) . '</a>'; ?></div>
 <?php
 // show update cart button
-  if (zen_config('SHOW_SHOPPING_CART_UPDATE') == 2 or zen_config('SHOW_SHOPPING_CART_UPDATE') == 3) {
+  if (in_array(zen_config('SHOW_SHOPPING_CART_UPDATE'), ['2', '3'], true)) {
 ?>
 <div class="buttonRow back"><?php echo zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT); ?></div>
 <?php
@@ -194,7 +194,7 @@
 
 <!-- ** BEGIN PAYPAL EXPRESS CHECKOUT ** -->
 <?php  // the tpl_ec_button template only displays EC option if cart contents >0 and value >0
-if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') == 'True') {
+if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True') {
   include(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/paypal/tpl_ec_button.php');
 }
 ?>

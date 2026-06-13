@@ -20,7 +20,7 @@
 <h2 class="greeting"><?php echo zen_customer_greeting(); ?></h2>
 <?php } ?>
 
-<?php if (zen_config('DEFINE_MAIN_PAGE_STATUS') >= 1 and zen_config('DEFINE_MAIN_PAGE_STATUS') <= 2) { ?>
+<?php if (in_array(zen_config('DEFINE_MAIN_PAGE_STATUS'), ['1', '2'], true)) { ?>
 <div id="indexCategoriesMainContent" class="content"><?php
 /**
  * require the html_define for the index/categories page
