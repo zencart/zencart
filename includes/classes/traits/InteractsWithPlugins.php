@@ -110,4 +110,43 @@ trait InteractsWithPlugins
 
         return $found;
     }
+
+    /**
+     * Link/output a javascript file from the plugin's jscript directory.
+     * If the filename ends with .js it is loaded as src=
+     * If the filename ends with .php it is executed via require_once().
+     *
+     * @param string|null $current_page Optional page-name passed from plugin, which could be used by the js .php file if required.
+     * @since ZC v3.0.0
+     */
+    protected function linkCatalogJscript(string $jsFilename, ?string $current_page = null): bool
+    {
+        global $pageLoader;
+        if (!$pageLoader) {
+            $pageLoader = PageLoader::getInstance();
+        }
+
+        $jsFilename = basename($jsFilename);
+        $pluginDir = $pageLoader->getTemplatePluginDir($jsFilename, 'jscript', $this->zcPluginDirName);
+        if ($pluginDir === false) {
+            return false;
+        }
+
+        $file = $pluginDir . $jsFilename;
+        if (!file_exists($file)) {
+            return false;
+        }
+
+        if (str_ends_with($jsFilename, '.js')) {
+            echo '<script title="' . \zen_output_string_protected($this->zcPluginDirName) . '" src="' . $file . '"></script>' . "\n";
+            return true;
+        }
+
+        if (str_ends_with($jsFilename, '.php')) {
+            require_once $file;
+            return true;
+        }
+
+        return false;
+    }
 }
