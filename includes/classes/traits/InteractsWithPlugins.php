@@ -110,11 +110,11 @@ trait InteractsWithPlugins
 
         return $found;
     }
-    
+
     /**
      * Link/output a javascript file from the plugin's jscript directory.
      * If the filename ends with .js it is loaded as src=
-     * If the filename ends with .php it is executed via include_once().
+     * If the filename ends with .php it is executed via require_once().
      *
      * @since ZC v3.0.0
      */
@@ -133,7 +133,7 @@ trait InteractsWithPlugins
             }
 
             if (str_ends_with($jsFilename, '.php')) {
-                include_once $file;
+                require_once $file;
                 return true;
             }
         }
