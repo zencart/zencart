@@ -25,7 +25,7 @@ if (!isset($flag_disable_footer) || !$flag_disable_footer) {
         <ul>
             <li><a href="<?= HTTP_SERVER . DIR_WS_CATALOG ?>"><?= HEADER_TITLE_CATALOG ?></a></li>
 <?php
-    if (EZPAGES_STATUS_FOOTER === '1' || (EZPAGES_STATUS_FOOTER === '2' && zen_is_whitelisted_admin_ip())) {
+    if (zen_config('EZPAGES_STATUS_FOOTER') === '1' || (zen_config('EZPAGES_STATUS_FOOTER') === '2' && zen_is_whitelisted_admin_ip())) {
         require $template->get_template_dir('tpl_ezpages_bar_footer.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_ezpages_bar_footer.php';
     }
 ?>
@@ -41,7 +41,7 @@ if (!isset($flag_disable_footer) || !$flag_disable_footer) {
 ?>
 <!--bof-ip address display -->
 <?php
-    if (SHOW_FOOTER_IP === '1') {
+    if (zen_config('SHOW_FOOTER_IP') === '1') {
 ?>
 <div id="siteinfoIP"><?= TEXT_YOUR_IP_ADDRESS . ' ' . $_SERVER['REMOTE_ADDR'] ?></div>
 <?php
@@ -51,7 +51,7 @@ if (!isset($flag_disable_footer) || !$flag_disable_footer) {
 
 <!--bof-banner #5 display -->
 <?php
-    if (SHOW_BANNERS_GROUP_SET5 != '' && $banner = zen_banner_exists('dynamic', SHOW_BANNERS_GROUP_SET5)) {
+    if (zen_config('SHOW_BANNERS_GROUP_SET5') != '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET5'))) {
         if (!$banner->EOF) {
 ?>
 <div id="bannerFive" class="banners"><?= zen_display_banner('static', $banner) ?></div>
