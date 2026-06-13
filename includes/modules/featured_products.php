@@ -47,7 +47,7 @@ if ((($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['music
     }
 }
 if ($sql !== '') {
-    $featured_products = $db->ExecuteRandomMulti($sql, MAX_DISPLAY_SEARCH_RESULTS_FEATURED);
+    $featured_products = $db->ExecuteRandomMulti($sql, (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED'));
 }
 
 $row = 0;
@@ -59,10 +59,10 @@ $num_products_count = ($sql === '') ? 0 : $featured_products->RecordCount();
 
 // show only when 1 or more
 if ($num_products_count > 0) {
-    if ($num_products_count < SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS || SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS == 0) {
+    if ($num_products_count < zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') || zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') == 0) {
         $col_width = floor(100 / $num_products_count);
     } else {
-        $col_width = floor(100 / SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
+        $col_width = floor(100 / zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS', 1));
     }
     while (!$featured_products->EOF) {
         $product_info = new Product((int)$featured_products->fields['products_id']);
@@ -77,17 +77,17 @@ if ($num_products_count > 0) {
 
         $list_box_contents[$row][$col] = [
             'params' => 'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
-            'text' => (($data['products_image'] === '' and PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
+            'text' => (($data['products_image'] === '' and zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') == 0) ? ''
                     : '<a href="'
                         . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . $productsInCategory[$data['products_id']] . '&products_id=' . $data['products_id']) . '">'
-                        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT)
+                        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH'), zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT'))
                     . '</a><br>')
                 . '<a href="' . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . $productsInCategory[$data['products_id']] . '&products_id=' . $data['products_id']) . '">' . $data['products_name']
                 . '</a><br>' . $products_price,
         ];
 
         $col++;
-        if ($col > (SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS - 1)) {
+        if ($col > (zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') - 1)) {
             $col = 0;
             $row++;
         }

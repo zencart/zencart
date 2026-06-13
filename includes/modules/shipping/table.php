@@ -61,7 +61,7 @@ class table extends ZenShipping
             return;
         }
 
-        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_TABLE_ZONE'));
+        $this->checkEnabledForZone(zen_config('MODULE_SHIPPING_TABLE_ZONE', ''));
 
         if ($this->enabled) {
             // -----
@@ -97,7 +97,7 @@ class table extends ZenShipping
 
         $order_total_amount = $_SESSION['cart']->show_total() - $_SESSION['cart']->free_shipping_prices();
 
-        $table_cost = preg_split("/[:,]/", zen_config('MODULE_SHIPPING_TABLE_COST'));
+        $table_cost = preg_split("/[:,]/", zen_config('MODULE_SHIPPING_TABLE_COST', ''));
         $size = count($table_cost);
         $shipping = 0;
         for ($i = 0, $n = $size; $i < $n; $i += 2) {
@@ -115,7 +115,7 @@ class table extends ZenShipping
         if (MODULE_SHIPPING_TABLE_MODE === 'weight') {
             $shipping = $shipping * $shipping_num_boxes;
             // show boxes if weight
-            switch (SHIPPING_BOX_WEIGHT_DISPLAY) {
+            switch (zen_config('SHIPPING_BOX_WEIGHT_DISPLAY')) {
                 case 0:
                     $show_box_weight = '';
                     break;

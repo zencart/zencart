@@ -44,7 +44,7 @@ if ((($manufacturers_id > 0 && empty($_GET['filter_id'])) || !empty($_GET['music
 
 $num_products_count = 0;
 if ($new_products_query !== '') {
-    $new_products = $db->ExecuteRandomMulti($new_products_query, MAX_DISPLAY_NEW_PRODUCTS);
+    $new_products = $db->ExecuteRandomMulti($new_products_query, (int)zen_config('MAX_DISPLAY_NEW_PRODUCTS'));
     $num_products_count = $new_products->RecordCount();
 }
 
@@ -56,10 +56,10 @@ $title = '';
 
 // show only when 1 or more
 if ($num_products_count > 0) {
-    if ($num_products_count < SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS || SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS === '0') {
+    if ($num_products_count < zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS') || zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS') === '0') {
         $col_width = floor(100/$num_products_count);
     } else {
-        $col_width = floor(100/SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS);
+        $col_width = floor(100/zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS', 1));
     }
 
     while (!$new_products->EOF) {
@@ -72,12 +72,12 @@ if ($num_products_count > 0) {
         $new_products_link = zen_href_link(zen_get_info_page($new_products_id), 'cPath=' . $productsInCategory[$new_products_id] . '&products_id=' . $new_products_id);
         $new_products_name = zen_get_products_name($new_products->fields['products_id']);
 
-        if ($new_products->fields['products_image'] === '' && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '0') {
+        if ($new_products->fields['products_image'] === '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '0') {
             $new_products_image = '';
         } else {
             $new_products_image =
                 '<a href="' . $new_products_link . '">' .
-                    zen_image(DIR_WS_IMAGES . $new_products->fields['products_image'], $new_products_name, IMAGE_PRODUCT_NEW_WIDTH, IMAGE_PRODUCT_NEW_HEIGHT) .
+                    zen_image(DIR_WS_IMAGES . $new_products->fields['products_image'], $new_products_name, zen_config('IMAGE_PRODUCT_NEW_WIDTH'), zen_config('IMAGE_PRODUCT_NEW_HEIGHT')) .
                 '</a><br>';
         }
 
@@ -89,7 +89,7 @@ if ($num_products_count > 0) {
         ];
 
         $col++;
-        if ($col >= SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS) {
+        if ($col >= zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS')) {
             $col = 0;
             $row++;
         }

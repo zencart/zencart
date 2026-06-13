@@ -24,7 +24,7 @@ $columns = 0;
 $list_box_contents = [];
 $title = '';
 
-$columns_per_row = defined('MAX_DISPLAY_CATEGORIES_PER_ROW') ? (int)MAX_DISPLAY_CATEGORIES_PER_ROW : 0;
+$columns_per_row = (int)zen_config('MAX_DISPLAY_CATEGORIES_PER_ROW', 0);
 if (empty($category_row_layout_style) || !in_array($category_row_layout_style, ['columns', 'fluid'])) {
     $category_row_layout_style = $columns_per_row > 0 ? 'columns' : 'fluid';
 }
@@ -89,7 +89,7 @@ foreach ($categories as $next_category) {
         'params' => 'class="' . $grid_category_card_params . '"' . $style,
         'text' =>
             '<a href="' . zen_href_link(FILENAME_DEFAULT, $cPath_new) . '">' .
-            zen_image(DIR_WS_IMAGES . $next_category['categories_image'], $next_category['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT, 'loading="lazy"') .
+            zen_image(DIR_WS_IMAGES . $next_category['categories_image'], $next_category['categories_name'], zen_config('SUBCATEGORY_IMAGE_WIDTH'), zen_config('SUBCATEGORY_IMAGE_HEIGHT'), 'loading="lazy"') .
             '<br>' .
             $next_category['categories_name'] .
             '</a>',
