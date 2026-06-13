@@ -116,9 +116,10 @@ trait InteractsWithPlugins
      * If the filename ends with .js it is loaded as src=
      * If the filename ends with .php it is executed via require_once().
      *
+     * @param string|null $current_page Optional page-name passed from plugin, which could be used by the js .php file if required.
      * @since ZC v3.0.0
      */
-    protected function linkCatalogJscript(string $jsFilename): bool
+    protected function linkCatalogJscript(string $jsFilename, ?string $current_page = null): bool
     {
         global $pageLoader;
         if (!$pageLoader) {
