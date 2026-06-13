@@ -248,7 +248,6 @@ class ot_gv {
       }
       // if tax is to be calculated on purchased GVs, calculate it
       if ($this->credit_tax=='true') $gv_order_amount = $gv_order_amount * (100 + $order->products[$i]['tax']) / 100;
-      $gv_order_amount = $gv_order_amount * 100 / 100;
 
       if (MODULE_ORDER_TOTAL_GV_QUEUE == 'false') {
         // GV_QUEUE is false so release amount to account immediately
@@ -352,6 +351,11 @@ class ot_gv {
     }
     if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) $_SESSION['cot_gv'] = '0.00';
 
+    if (!empty($_POST['submit_redeem_x']) && empty($_POST['gv_redeem_code'])) {
+      $messageStack->add_session('checkout_payment', ERROR_NO_REDEEM_CODE, 'error');
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    }
+
     // if we have a GV redemption code submitted, process it
     if (!empty($_POST['gv_redeem_code'])) {
       // check for validity
@@ -398,7 +402,6 @@ class ot_gv {
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL',true, false));
       }
     }
-    if (isset($_POST['submit_redeem_x']) && $_POST['submit_redeem_x'] && $gv_result->fields['coupon_type'] == 'G') zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
   }
   /**
    * Calculate GV claim amount (GV amounts are always based on the STORE's default currency value)
@@ -442,7 +445,7 @@ class ot_gv {
       if ($od_amount['total'] >= $order_total) {
         $ratio = 1;
       } else {
-        $ratio = ($od_amount['total'] / ($order_total - $order->info['tax']));
+        $ratio = ($order_total > 0) ? ($od_amount['total'] / $order_total) : 0;
       }
       $tax_deduct = 0;
       foreach ($order->info['tax_groups'] as $key=>$value) {
@@ -486,7 +489,6 @@ class ot_gv {
     if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
     // if we are not supposed to include shipping amount in credit calcs, subtract it out
     if ($this->include_shipping != 'true') $order_total -= $order->info['shipping_cost'];
-    $order_total = $order->info['total'];
 
     // check gv_amount in cart and do not allow GVs to pay for GVs
     $chk_gv_amount = 0;
