@@ -188,7 +188,7 @@ function zen_get_categories(array $categories_array = [], $parent_id = TOPMOST_C
  * @param int $parent_id
  * @since ZC v1.0.3
  */
-function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID): void
+function zen_get_subcategories(array &$subcategories_array, int|string $parent_id = TOPMOST_CATEGORY_PARENT_ID): void
 {
     global $db;
     $subcategories_query = "SELECT categories_id

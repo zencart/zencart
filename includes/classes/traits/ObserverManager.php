@@ -37,7 +37,7 @@ trait ObserverManager
 
             // handle deprecations
             if (array_key_exists($eventID, self::$deprecatedNotifications)) {
-                trigger_error("Use of deprecated notification '$eventID'.  Consider using '" . self::$deprecatedNotifications[$eventID] . "' instead.", E_USER_WARNING);
+                trigger_error("Use of deprecated notification '$eventID'.  Consider using '" . self::$deprecatedNotifications[$eventID] . "' instead.", \E_USER_WARNING);
                 continue;
             }
 

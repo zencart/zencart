@@ -69,7 +69,7 @@ class PaymentCaptureCompleted extends WebhookHandlerContract
             $status = -1;
         } else {
             $admin_message = MODULE_PAYMENT_PAYPALR_FINAL_CAPTURE;
-            $status = (int)MODULE_PAYMENT_PAYPALR_ORDER_STATUS_ID;
+            $status = (int)zen_config('MODULE_PAYMENT_PAYPALR_ORDER_STATUS_ID');
             $status = ($status > 0) ? $status : 2;
         }
 

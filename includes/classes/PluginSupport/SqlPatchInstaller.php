@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -12,7 +14,6 @@ namespace Zencart\PluginSupport;
  */
 class SqlPatchInstaller
 {
-
     /**
      * $dbConn is a database object
      * @var object
@@ -24,10 +25,9 @@ class SqlPatchInstaller
      */
     protected $errorContainer;
     /**
-     * $sqlFunctionMap is a list of acceptable SQL
-     * @var array
+     * @var array $sqlFunctionMap is a list of acceptable SQL
      */
-    protected $sqlFunctionMap = [
+    protected array $sqlFunctionMap = [
         ['find' => 'DROP TABLE IF EXISTS ', 'length' => 21, 'method' => 'basic', 'tableParamsOffset' => 4],
         ['find' => 'DROP TABLE ', 'length' => 11, 'method' => 'basic', 'tableParamsOffset' => 2],
         ['find' => 'CREATE TABLE IF NOT EXISTS ', 'length' => 27, 'method' => 'basic', 'tableParamsOffset' => 5],
@@ -55,7 +55,7 @@ class SqlPatchInstaller
     /**
      * @since ZC v1.5.7
      */
-    public function parse($lines)
+    public function parse($lines): array
     {
         $builtLines = $this->getFullLines($lines);
         $paramLines = [];
@@ -68,7 +68,7 @@ class SqlPatchInstaller
     /**
      * @since ZC v1.5.7
      */
-    public function executePatchSql($paramLines)
+    public function executePatchSql($paramLines): void
     {
         $this->dbConn->dieOnErrors = false;
         foreach ($paramLines as $line) {
@@ -85,14 +85,14 @@ class SqlPatchInstaller
     /**
      * @since ZC v1.5.7
      */
-    protected function getFullLines($lines)
+    protected function getFullLines($lines): array
     {
         $fullLine = '';
         $builtLines = [];
         foreach ($lines as $line) {
             $line = str_replace('`', '', trim($line));
             $fullLine .= ' ' . $line;
-            if (substr($line, -1) == ';') {
+            if (str_ends_with($line, ';')) {
                 $builtLines[] = ltrim($fullLine);
                 $fullLine = '';
             }
@@ -103,13 +103,13 @@ class SqlPatchInstaller
     /**
      * @since ZC v1.5.7
      */
-    protected function processLine($line)
+    protected function processLine($line): array
     {
         $params = explode(" ", (substr($line, -1) == ';') ? substr($line, 0, strlen($line) - 1) : $line);
         $type = $this->findSqlLineType(strtoupper($line));
 
         if (count($type) === 0) {
-             $this->errorContainer->addError(0, ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP. $line, true);
+            $this->errorContainer->addError(0, ERROR_NOT_FOUND_IN_SQL_FUNCTIONS_MAP . $line, true);
             return [];
         }
         $method = 'processLine' . ucfirst($type['method']);
@@ -118,7 +118,7 @@ class SqlPatchInstaller
          * if empty the line could not be correctly parsed
          */
         if (empty($newParams)) {
-             $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);
+            $this->errorContainer->addError(0, ERROR_INVALID_SYNTAX . $line, true);
         }
         return $newParams;
     }
@@ -153,7 +153,7 @@ class SqlPatchInstaller
      */
     protected function processLineSelect($params, $typeEntry)
     {
-        $fromKey = array_search('FROM', $params);
+        $fromKey = array_search('FROM', $params, true);
         if ($fromKey === false) {
             return [];
         }
@@ -172,7 +172,7 @@ class SqlPatchInstaller
      */
     protected function processLineIndex($params, $typeEntry)
     {
-        $fromKey = array_search('ON', $params);
+        $fromKey = array_search('ON', $params, true);
         if ($fromKey === false) {
             return [];
         }

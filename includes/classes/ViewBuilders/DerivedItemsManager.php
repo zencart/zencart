@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -53,7 +55,9 @@ class DerivedItemsManager
         $params = $columnInfo['derivedItem']['params'];
         $listValue = $tableRow[$colName];
         $result = $params['false'];
-        if ($listValue) $result = $params['true'];
+        if ($listValue) {
+            $result = $params['true'];
+        }
         return $result;
     }
 
@@ -74,7 +78,7 @@ class DerivedItemsManager
     protected function getPluginFileSize($tableRow, string $colName, array $columnInfo): string
     {
         $filePath = DIR_FS_CATALOG . 'zc_plugins/' . $tableRow['unique_key'] . '/';
-        $fs = new FileSystem;
+        $fs = new FileSystem();
         $dirSize = $fs->getDirectorySize($filePath);
         return $dirSize;
     }

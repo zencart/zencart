@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * language Class.
  *
@@ -140,7 +142,7 @@ class language extends base
     public function set_language(string $language): void
     {
         if (empty($language) || !isset($this->languages_by_code[$language])) {
-            $language = DEFAULT_LANGUAGE;
+            $language = zen_config('DEFAULT_LANGUAGE');
         }
 
         $this->language = $this->languages_by_code[$language];

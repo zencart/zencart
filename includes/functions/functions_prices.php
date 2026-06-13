@@ -1193,23 +1193,17 @@ function zen_get_products_actual_price($product_id)
 
 /**
  * Calculate attribute price based on specified factors
- * @param float $price
- * @param float $special
- * @param float $factor
- * @param float $offset
- * @return float|int
  * @since ZC v1.2.0d
  */
-function zen_get_attributes_price_factor($price, $special, $factor, $offset)
+function zen_get_attributes_price_factor(float $price, float|false $special, float $factor, float $offset): float|int
 {
     if (defined('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL') && ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL == 1 && $special) {
         // calculate from specials_new_products_price
-        $calculated_price = $special * ($factor - $offset);
-    } else {
-        // calculate from products_price
-        $calculated_price = $price * ($factor - $offset);
+        return $calculated_price = $special * ($factor - $offset);
     }
-    return $calculated_price;
+
+    // calculate from products_price
+    return $price * ($factor - $offset);
 }
 
 /**

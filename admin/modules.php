@@ -53,7 +53,7 @@ $modules_found = $moduleFinder->findFromFilesystem($installedPlugins);
 
 $notificationType = $module_type . (($_GET['module']) ? '-' . $_GET['module'] : '') ;
 $notifications = new AdminNotifications();
-$availableNotifications = $notifications->getNotifications($notificationType, $_SESSION['admin_id']);
+$availableNotifications = $notifications->getNotifications($notificationType, (int)$_SESSION['admin_id']);
 
 $action = $_GET['action'] ?? '';
 if (!empty($action)) {

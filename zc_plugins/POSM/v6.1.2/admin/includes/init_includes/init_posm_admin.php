@@ -32,18 +32,18 @@ if (defined('EO_VERSION') && version_compare(EO_VERSION, '4.2.0', '<')) {
 // -----
 // Starting with v2.3.0 of POSM, check (if enabled) to see if any back-in-stock dates are within the expiration period.
 //
-if (((int)POSM_BIS_DATE_REMINDER) !== 0) {
+if (((int)zen_config('POSM_BIS_DATE_REMINDER')) !== 0) {
     $posm_check = $db->Execute(
         "SELECT pos.pos_id
            FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . " pos
              LEFT JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK_NAMES . " posn
                 ON posn.pos_name_id = pos.pos_name_id
           WHERE posn.pos_name LIKE '%[date]%'
-            AND pos.pos_date < DATE_SUB(now(), INTERVAL " . (int)POSM_BIS_DATE_REMINDER . " DAY)
+            AND pos.pos_date < DATE_SUB(now(), INTERVAL " . (int)zen_config('POSM_BIS_DATE_REMINDER') . " DAY)
           LIMIT 1"
     );
     if (!$posm_check->EOF) {
-        $messageStack->add(sprintf(POSM_BIS_DATES_EXPIRED, (int)POSM_BIS_DATE_REMINDER, zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK)), 'warning');
+        $messageStack->add(sprintf(POSM_BIS_DATES_EXPIRED, (int)zen_config('POSM_BIS_DATE_REMINDER'), zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK)), 'warning');
     }
 }
 

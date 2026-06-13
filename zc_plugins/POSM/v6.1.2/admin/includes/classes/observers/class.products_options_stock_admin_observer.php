@@ -54,9 +54,9 @@ class products_options_stock_observer extends base
         $languageLoader->makeCatalogArrayConstants(FILENAME_CATALOG_POS_EXTRA_DEFINITIONS, '/extra_definitions');
 
         $this->enabled = true;
-        $this->debug = (POSM_ENABLE_DEBUG === 'true');
+        $this->debug = (zen_config('POSM_ENABLE_DEBUG') === 'true');
         $this->debug_log_file = DIR_FS_LOGS . '/posm-adm-' . $_SESSION['admin_id'] . date('-Ymd') . '.log';
-        $this->show_stock_messages = (POSM_SHOW_STOCK_MESSAGES === 'Both' || POSM_SHOW_STOCK_MESSAGES === 'Admin Only');
+        $this->show_stock_messages = (zen_config('POSM_SHOW_STOCK_MESSAGES') === 'Both' || zen_config('POSM_SHOW_STOCK_MESSAGES') === 'Admin Only');
 
         // -----
         // Set the indicator, used when an order is queried, to identify whether/not a product's stock-level
@@ -1125,7 +1125,7 @@ class products_options_stock_observer extends base
             $msg_text = $msg_text_override;
             $this->debug("getProductsStockMessage($prid), stock message overridden ($msg_text_override).");
         } elseif ($pos_record === false) {
-            if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
+            if (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true') {
                 if ($available_qty >= $addl_qty_needed) {
                     $msg_text = PRODUCTS_OPTIONS_STOCK_IN_STOCK;
                 } elseif ($available_qty == 0) {
@@ -1137,7 +1137,7 @@ class products_options_stock_observer extends base
             }
             $this->debug("getProductsStockMessage ($original_name [$prid]) is not a POSM product, message = $msg_text");
         } elseif ($pos_record->EOF || $force_out_of_stock_message !== false) {
-            if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true' || $force_out_of_stock_message !== false) {
+            if (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true' || $force_out_of_stock_message !== false) {
                 $msg_text = PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK;
                 $this->debug("getProductsStockMessage ($original_name [$prid]), is not a POSM variant or overridden ($force_out_of_stock_message).");
             }
@@ -1582,7 +1582,7 @@ class products_options_stock_observer extends base
             $this->debug("getInStockMessage($pid), stock message overridden ($msg_text_override).");
         } elseif ($check === false) {
             $quantity = $prod_info->fields['products_quantity'];
-            if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
+            if (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true') {
                 if ($quantity >= $ordered_quantity) {
                     $msg_text = PRODUCTS_OPTIONS_STOCK_IN_STOCK;
                 } elseif ($quantity == 0) {
@@ -1595,7 +1595,7 @@ class products_options_stock_observer extends base
         } else {
             if ($check->EOF || $force_out_of_stock_message) {
                 $this->debug("getInStockMessage ($orders_products_id), not POSM variant or overridden ($force_out_of_stock_message).");
-                if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true' || $force_out_of_stock_message !== false) {
+                if (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true' || $force_out_of_stock_message !== false) {
                     $msg_text = PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK;
                 }
             } else {

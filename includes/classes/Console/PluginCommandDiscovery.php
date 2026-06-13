@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -23,8 +25,7 @@ class PluginCommandDiscovery
         private string $pluginRootPath,
         private ?\Aura\Autoload\Loader $autoloader = null,
         private ?array $allowedPluginVersions = null
-    ) {
-    }
+    ) {}
 
     /**
      * @since ZC v3.0.0
@@ -111,7 +112,7 @@ class PluginCommandDiscovery
             return;
         }
 
-        $namespace = 'Zencart\\Plugins\\Console\\' . $this->normalizePluginNamespace($pluginKey);
+        $namespace = 'Zencart\\Plugins\\Console\\' . self::normalizePluginNamespace($pluginKey);
         $this->autoloader->addPrefix($namespace, $consolePath);
     }
 
@@ -126,7 +127,7 @@ class PluginCommandDiscovery
         }
 
         try {
-            $this->includePhpFile($autoloadFile, ['psr4Autoloader' => $this->autoloader]);
+            self::includePhpFile($autoloadFile, ['psr4Autoloader' => $this->autoloader]);
         } catch (Throwable $exception) {
             $pluginReference = $pluginKey . '/' . $pluginVersion;
             $this->errors[] = sprintf(
@@ -150,8 +151,7 @@ class PluginCommandDiscovery
         string $pluginVersion,
         string $versionPath,
         ?string $commandFile = null
-    ): array
-    {
+    ): array {
         $commandFile ??= $versionPath . '/Console/commands.php';
         if (!file_exists($commandFile)) {
             return [];
@@ -160,7 +160,7 @@ class PluginCommandDiscovery
         $definitionReference = $pluginKey . '/' . $pluginVersion . '/Console/commands.php';
 
         try {
-            $definitions = $this->includePhpFile($commandFile);
+            $definitions = self::includePhpFile($commandFile);
         } catch (Throwable $exception) {
             $this->errors[] = sprintf(
                 'Failed loading plugin commands from %s: %s',
@@ -178,7 +178,7 @@ class PluginCommandDiscovery
         $commands = [];
         foreach ($definitions as $definition) {
             try {
-                $commands[] = $this->resolveCommandDefinition($definition);
+                $commands[] = self::resolveCommandDefinition($definition);
             } catch (Throwable $exception) {
                 $this->errors[] = sprintf(
                     'Invalid plugin command definition in %s: %s',
@@ -206,9 +206,9 @@ class PluginCommandDiscovery
     /**
      * @since ZC v3.0.0
      */
-    private function includePhpFile(string $file, array $scopeVariables = []): mixed
+    private static function includePhpFile(string $file, array $scopeVariables = []): mixed
     {
-        extract($scopeVariables, EXTR_SKIP);
+        extract($scopeVariables, \EXTR_SKIP);
 
         if (!is_file($file) || !is_readable($file)) {
             throw new \RuntimeException('PHP file is not readable: ' . $file);
@@ -232,12 +232,12 @@ class PluginCommandDiscovery
         $absolutePathPattern = implode(
             '[\\\\/]',
             array_map(
-                static fn (string $segment): string => preg_quote($segment, '~'),
+                static fn(string $segment): string => preg_quote($segment, '~'),
                 explode('/', $normalizedAbsolutePath)
             )
         );
 
-        return (string) preg_replace_callback(
+        return (string)preg_replace_callback(
             '~' . $absolutePathPattern . '(?:[\\\\/][^\s\'":]+)*~',
             static function (array $matches) use ($normalizedAbsolutePath, $normalizedRelativePath): string {
                 $path = str_replace('\\', '/', $matches[0]);
@@ -250,7 +250,7 @@ class PluginCommandDiscovery
     /**
      * @since ZC v3.0.0
      */
-    private function resolveCommandDefinition(mixed $definition): ConsoleCommand
+    private static function resolveCommandDefinition(mixed $definition): ConsoleCommand
     {
         if ($definition instanceof ConsoleCommand) {
             return $definition;
@@ -266,15 +266,15 @@ class PluginCommandDiscovery
     /**
      * @since ZC v3.0.0
      */
-    private function normalizePluginNamespace(string $pluginKey): string
+    private static function normalizePluginNamespace(string $pluginKey): string
     {
         $segments = preg_split('/[^a-zA-Z0-9]+/', $pluginKey) ?: [];
-        $segments = array_filter($segments, static fn ($segment) => $segment !== '');
+        $segments = array_filter($segments, static fn($segment) => $segment !== '');
 
         if ($segments === []) {
             return 'Plugin';
         }
 
-        return implode('', array_map(static fn ($segment) => ucfirst((string) $segment), $segments));
+        return implode('', array_map(static fn($segment) => ucfirst((string)$segment), $segments));
     }
 }

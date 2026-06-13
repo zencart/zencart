@@ -1327,7 +1327,7 @@ if ($action === 'edit' || $action === 'update') {
             $_GET['page'] = round(
                 (($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER')) + (fmod_round(
                         $check_count,
-                        MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER
+                        zen_config('MAX_DISPLAY_SEARCH_RESULTS_CUSTOMER')
                     ) != 0 ? .5 : 0)),
                 0
             );

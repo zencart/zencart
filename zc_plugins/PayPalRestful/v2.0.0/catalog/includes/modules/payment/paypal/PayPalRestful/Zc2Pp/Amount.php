@@ -94,12 +94,12 @@ class Amount
             $default_currency = $currency_code;
         } else {
             $this->log->write("Amount::setDefaultCurrency, requested default ($currency_code) not found, trying backups");
-            if (in_array(DEFAULT_CURRENCY, $this->getSupportedCurrencyCodes())) {
-                $this->log->write('  --> Using store default currency (' . DEFAULT_CURRENCY . ')');
-                $default_currency = DEFAULT_CURRENCY;
+            if (in_array(zen_config('DEFAULT_CURRENCY'), $this->getSupportedCurrencyCodes())) {
+                $this->log->write('  --> Using store default currency (' . zen_config('DEFAULT_CURRENCY') . ')');
+                $default_currency = zen_config('DEFAULT_CURRENCY');
             } else {
-                $this->log->write('  --> Using configured back-up currency (' . MODULE_PAYMENT_PAYPALR_CURRENCY_FALLBACK . ')');
-                $default_currency = MODULE_PAYMENT_PAYPALR_CURRENCY_FALLBACK;
+                $this->log->write('  --> Using configured back-up currency (' . zen_config('MODULE_PAYMENT_PAYPALR_CURRENCY_FALLBACK') . ')');
+                $default_currency = zen_config('MODULE_PAYMENT_PAYPALR_CURRENCY_FALLBACK');
             }
         }
 

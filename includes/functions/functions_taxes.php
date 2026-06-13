@@ -47,8 +47,8 @@ function zen_get_tax_rate($class_id, $country_id = -1, $zone_id = -1)
             $country_id = $_SESSION['customer_country_id'];
             $zone_id = $_SESSION['customer_zone_id'];
         } else {
-            $country_id = STORE_COUNTRY;
-            $zone_id = STORE_ZONE;
+            $country_id = zen_config('STORE_COUNTRY');
+            $zone_id = zen_config('STORE_ZONE');
         }
     }
 
@@ -115,8 +115,8 @@ function zen_get_tax_description($class_id, $country_id = -1, $zone_id = -1)
             $country_id = $_SESSION['customer_country_id'];
             $zone_id = $_SESSION['customer_zone_id'];
         } else {
-            $country_id = STORE_COUNTRY;
-            $zone_id = STORE_ZONE;
+            $country_id = zen_config('STORE_COUNTRY');
+            $zone_id = zen_config('STORE_ZONE');
         }
     }
 
@@ -191,8 +191,8 @@ function zen_get_multiple_tax_rates($class_id, $country_id = -1, $zone_id = -1, 
             $country_id = $_SESSION['customer_country_id'];
             $zone_id = $_SESSION['customer_zone_id'];
         } else {
-            $country_id = STORE_COUNTRY;
-            $zone_id = STORE_ZONE;
+            $country_id = zen_config('STORE_COUNTRY');
+            $zone_id = zen_config('STORE_ZONE');
         }
     }
 
@@ -280,8 +280,10 @@ function zen_calculate_tax($price, $tax_percentage = 1)
  * @return float|string
  * @since ZC v1.0.3
  */
-function zen_display_tax_value($value, $padding = TAX_DECIMAL_PLACES)
+function zen_display_tax_value($value, $padding = null)
 {
+    $padding ??= zen_config('TAX_DECIMAL_PLACES');
+
     if (strpos($value, '.')) {
         $loop = true;
         while ($loop) {
@@ -469,8 +471,8 @@ function zen_get_all_tax_descriptions($country_id = -1, $zone_id = -1)
             $country_id = $_SESSION['customer_country_id'];
             $zone_id = $_SESSION['customer_zone_id'];
         } else {
-            $country_id = STORE_COUNTRY;
-            $zone_id = STORE_ZONE;
+            $country_id = zen_config('STORE_COUNTRY');
+            $zone_id = zen_config('STORE_ZONE');
         }
     }
 

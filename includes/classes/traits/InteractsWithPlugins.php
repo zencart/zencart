@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -77,17 +79,15 @@ trait InteractsWithPlugins
     }
 
     /**
-     * @param string $stylesheet_filename
-     * @param string|null $current_page
-     * @return bool
+     * Link/output a stylesheet file from the plugin's css directory.
+     * Checks first in the plugin's own css directory, then in the active template's css directory.
      *
-     * @var \template_func $template
-     * @var PageLoader $pageLoader
      * @since ZC v2.1.0
      */
     protected function linkCatalogStylesheet(string $stylesheet_filename, ?string $current_page): bool
     {
-        global $template, $pageLoader;
+        /** @var \template_func $template */
+        global $template, $pageLoader, $current_page_base;
         if (!$pageLoader) {
             $pageLoader = PageLoader::getInstance();
         }
@@ -102,7 +102,7 @@ trait InteractsWithPlugins
         }
 
         // if catalog template contains a stylesheet of the same name, load it as well, to apply any overrides it may contain
-        $stylesheet_dir = $template->get_template_dir($stylesheet_filename, DIR_WS_TEMPLATE, $current_page, 'css') . '/';
+        $stylesheet_dir = $template->get_template_dir($stylesheet_filename, DIR_WS_TEMPLATE, $current_page ?? $current_page_base, 'css') . '/';
         if (!str_contains($stylesheet_dir, $this->zcPluginCatalogPath) && file_exists($stylesheet_dir . $stylesheet_filename)) {
             echo '<link rel="stylesheet" href="' . $stylesheet_dir . $stylesheet_filename . '">' . "\n";
             $found = true;

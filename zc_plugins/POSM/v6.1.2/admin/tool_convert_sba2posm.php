@@ -16,7 +16,7 @@ $conversion = [];
 if ($sniffer->table_exists(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK)) {
     $convert = (isset($_GET['action']) && $_GET['action'] === 'convert');
     $sba_info = $db->Execute("SELECT * FROM " . TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK);
-    $posm_options_types = explode(',', POSM_OPTIONS_TYPES_TO_MANAGE);
+    $posm_options_types = explode(',', zen_config('POSM_OPTIONS_TYPES_TO_MANAGE', ''));
     foreach ($sba_info as $sba_next) {
         $products_id = $sba_next['products_id'];
         if (!isset($conversion[$products_id])) {
@@ -25,7 +25,7 @@ if ($sniffer->table_exists(TABLE_PRODUCTS_WITH_ATTRIBUTES_STOCK)) {
                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS . " po
                   WHERE pa.products_id = $products_id
                     AND pa.options_id = po.products_options_id
-                    AND po.products_options_type IN (" . POSM_OPTIONS_TYPES_TO_MANAGE . ")"
+                    AND po.products_options_type IN (" . zen_config('POSM_OPTIONS_TYPES_TO_MANAGE') . ")"
             );
             $options_array = [];
             foreach ($option_info as $next_option) {

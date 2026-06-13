@@ -30,21 +30,22 @@ function zen_create_sort_heading($sortby, $colnum, $heading)
 }
 
 /**
- * Count number of modules of a certain type are enabled
- * @param string $modules
- * @return int
+ * Count the number of modules of a certain type which are enabled
+ *
  * @since ZC v1.0.3
  */
-function zen_count_modules($modules = '')
+function zen_count_modules(string $modules = ''): int
 {
     $count = 0;
 
-    if (empty($modules)) return $count;
+    if (empty($modules)) {
+        return 0;
+    }
 
     $modules_array = preg_split('/;/', $modules);
 
-    for ($i = 0, $n = count($modules_array); $i < $n; $i++) {
-        $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
+    foreach ($modules_array as $module) {
+        $class = substr($module, 0, strrpos($module, '.'));
 
         if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
             if ($GLOBALS[$class]->enabled) {
@@ -58,7 +59,7 @@ function zen_count_modules($modules = '')
 /**
  * @since ZC v1.0.3
  */
-function zen_count_payment_modules()
+function zen_count_payment_modules(): int
 {
     return zen_count_modules(zen_config('MODULE_PAYMENT_INSTALLED'));
 }
@@ -66,7 +67,7 @@ function zen_count_payment_modules()
 /**
  * @since ZC v1.0.3
  */
-function zen_count_shipping_modules()
+function zen_count_shipping_modules(): int
 {
     return zen_count_modules(zen_config('MODULE_SHIPPING_INSTALLED'));
 }
@@ -75,12 +76,9 @@ function zen_count_shipping_modules()
 /**
  * Checks to see if the currency code exists as a currency
  * @TODO - move into currencies class
- * @param string $code
- * @param bool $getFirstDefault
- * @return false|string
  * @since ZC v1.0.3
  */
-function zen_currency_exists(string $code, bool $getFirstDefault = false)
+function zen_currency_exists(string $code, bool $getFirstDefault = false): false|string
 {
     global $db;
 

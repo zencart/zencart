@@ -182,7 +182,7 @@ require 'includes/application_top.php';
             <h3><?= BOX_MODULES_PAYMENT ?></h3>
             <ul>
                 <?php
-                $list = explode(';', MODULE_PAYMENT_INSTALLED);
+                $list = explode(';', zen_config('MODULE_PAYMENT_INSTALLED', ''));
                 $i = 0;
                 foreach ($list as $item) {
                     $message = '';
@@ -207,7 +207,7 @@ require 'includes/application_top.php';
             <h3><?= BOX_MODULES_SHIPPING ?></h3>
             <ul>
                 <?php
-                $list = explode(';', MODULE_SHIPPING_INSTALLED);
+                $list = explode(';', zen_config('MODULE_SHIPPING_INSTALLED', ''));
                 $i = 0;
                 foreach ($list as $item) {
                     $message = '';
@@ -232,7 +232,7 @@ require 'includes/application_top.php';
             <h3><?= BOX_MODULES_ORDER_TOTAL ?></h3>
             <ul>
                 <?php
-                $list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+                $list = explode(';', zen_config('MODULE_ORDER_TOTAL_INSTALLED', ''));
                 $i = 0;
                 foreach ($list as $item) {
                     $message = '';

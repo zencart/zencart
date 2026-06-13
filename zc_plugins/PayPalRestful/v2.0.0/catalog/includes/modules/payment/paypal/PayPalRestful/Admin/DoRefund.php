@@ -102,7 +102,7 @@ class DoRefund
             $total_amount_refunded += $next_txn['mc_gross'];
         }
         if ($amount->getValueFromFloat((float)$total_amount_refunded) === $amount->getValueFromFloat((float)$total_amount_captured)) {
-            $refund_status = (int)MODULE_PAYMENT_PAYPALR_REFUNDED_STATUS_ID;
+            $refund_status = (int)zen_config('MODULE_PAYMENT_PAYPALR_REFUNDED_STATUS_ID');
             $refund_status = ($refund_status > 0) ? $refund_status : 1;
         }
 

@@ -51,7 +51,7 @@ class PaymentCaptureDeclined extends WebhookHandlerContract
             "Amount: $amount\n$summary\n";
 
         $admin_message = MODULE_PAYMENT_PAYPALR_CAPTURE_ERROR;
-        $status = (int)MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID;
+        $status = (int)zen_config('MODULE_PAYMENT_PAYPALR_VOIDED_STATUS_ID');
         $status = ($status > 0) ? $status : 1;
 
         // Save update without notifying customer

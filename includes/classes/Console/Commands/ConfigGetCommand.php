@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -17,9 +19,7 @@ class ConfigGetCommand extends ConsoleCommand
      *
      * @param null|callable(string): ?array<string, mixed> $configurationProvider
      */
-    public function __construct(private $configurationProvider = null)
-    {
-    }
+    public function __construct(private $configurationProvider = null) {}
 
     /**
      * @since ZC v3.0.0

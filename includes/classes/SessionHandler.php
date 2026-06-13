@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Zen Cart Database Session Handler
  *
@@ -14,7 +16,6 @@ namespace Zencart;
  */
 class SessionHandler implements \SessionHandlerInterface
 {
-
     /**
      * @inheritDoc
      * @since ZC v2.0.0

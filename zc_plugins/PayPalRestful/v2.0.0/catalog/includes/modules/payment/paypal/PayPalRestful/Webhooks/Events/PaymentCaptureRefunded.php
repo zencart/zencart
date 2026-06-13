@@ -51,7 +51,7 @@ class PaymentCaptureRefunded extends WebhookHandlerContract
             "Notice: REFUNDED/REVERSED. Trans ID: $txnID \n" .
             "Amount: $amount\n$summary\n";
         $admin_message = sprintf(MODULE_PAYMENT_PAYPALR_REFUND_COMPLETE, $amount);
-        $status = (int)MODULE_PAYMENT_PAYPALR_REFUNDED_STATUS_ID;
+        $status = (int)zen_config('MODULE_PAYMENT_PAYPALR_REFUNDED_STATUS_ID');
         $status = ($status > 0) ? $status : 1;
 
         // Save update and notify customer

@@ -51,7 +51,7 @@ class zcObserverPaypalrestful extends \base
         // If the paypalr payment-module isn't installed or isn't configured to be
         // enabled, nothing further to do here.
         //
-        if (!defined('MODULE_PAYMENT_PAYPALR_STATUS') || MODULE_PAYMENT_PAYPALR_STATUS !== 'True') {
+        if (zen_config('MODULE_PAYMENT_PAYPALR_STATUS', 'False') !== 'True') {
             return;
         }
 
@@ -283,9 +283,9 @@ class zcObserverPaypalrestful extends \base
         $js_fields = [];
         $js_scriptparams = [];
 
-        $js_fields['client-id'] = MODULE_PAYMENT_PAYPALR_SERVER === 'live' ? MODULE_PAYMENT_PAYPALR_CLIENTID_L : MODULE_PAYMENT_PAYPALR_CLIENTID_S;
+        $js_fields['client-id'] = zen_config('MODULE_PAYMENT_PAYPALR_SERVER') === 'live' ? zen_config('MODULE_PAYMENT_PAYPALR_CLIENTID_L') : zen_config('MODULE_PAYMENT_PAYPALR_CLIENTID_S');
 
-        if (MODULE_PAYMENT_PAYPALR_SERVER === 'sandbox') {
+        if (zen_config('MODULE_PAYMENT_PAYPALR_SERVER') === 'sandbox') {
             $js_fields['client-id'] = 'sb'; // 'sb' for sandbox
             $js_fields['debug'] = 'true'; // sandbox only, un-minifies the JS
             $buyerCountry = CountryCodes::ConvertCountryCode($order->delivery['country']['iso_code_2'] ?? 'US');
@@ -491,22 +491,23 @@ class zcObserverPaypalrestful extends \base
     {
         global $current_page_base, $this_is_home_page, $category_depth, $tpl_page_body;
 
-        if (!defined('MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT')) {
+        $button_placement = zen_config('MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT');
+        if ($button_placement === null) {
             return 'None';
         }
 
         switch (true) {
             case str_starts_with($current_page_base, 'checkout'):
                 return 'checkout';
-            case str_contains(MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT, 'Cart') && $current_page_base === 'shopping_cart':
+            case str_contains($button_placement, 'Cart') && $current_page_base === 'shopping_cart':
                 return 'cart';
-            case str_contains(MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT, 'Cart') && $current_page_base === 'mini-cart':
+            case str_contains($button_placement, 'Cart') && $current_page_base === 'mini-cart':
                 return 'mini-cart';
-            case str_contains(MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT, 'Product') && in_array($current_page_base, zen_get_buyable_product_type_handlers(), true):
+            case str_contains($button_placement, 'Product') && in_array($current_page_base, zen_get_buyable_product_type_handlers(), true):
                 return 'product-details';
-            case str_contains(MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT, 'Listing') && $category_depth === 'products':
+            case str_contains($button_placement, 'Listing') && $category_depth === 'products':
                 return 'product-listing';
-            case str_contains(MODULE_PAYMENT_PAYPALR_BUTTON_PLACEMENT, 'Search') && str_ends_with($current_page_base, 'search_result'):
+            case str_contains($button_placement, 'Search') && str_ends_with($current_page_base, 'search_result'):
                 return 'search-results';
             default:
                 return 'None';
@@ -516,7 +517,7 @@ class zcObserverPaypalrestful extends \base
     {
         global $current_page_base, $this_is_home_page, $category_depth, $tpl_page_body;
 
-        $limit = defined('MODULE_PAYMENT_PAYPALR_PAYLATER_MESSAGING') ? MODULE_PAYMENT_PAYPALR_PAYLATER_MESSAGING : 'All';
+        $limit = zen_config('MODULE_PAYMENT_PAYPALR_PAYLATER_MESSAGING', 'All');
         $limit = explode(', ', $limit);
 
         switch (true) {

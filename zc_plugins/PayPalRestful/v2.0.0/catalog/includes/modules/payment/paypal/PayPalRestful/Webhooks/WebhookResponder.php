@@ -136,8 +136,8 @@ class WebhookResponder
 
         // Load the PayPal RESTful API class and get the credentials, so we can make the postback using the current access token
         require FILENAME_PAYPALR_MODULE;
-        list($client_id, $secret) = \paypalr::getEnvironmentInfo();
-        $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
+        [$client_id, $secret] = \paypalr::getEnvironmentInfo();
+        $ppr = new PayPalRestfulApi(zen_config('MODULE_PAYMENT_PAYPALR_SERVER'), $client_id, $secret);
 
         // We pass true here because we can only get an access token if it is valid; else we must just say the webhook validation failed
         if ($ppr->validatePayPalCredentials(true) === false) {
@@ -156,9 +156,7 @@ class WebhookResponder
      */
     protected function setWebhookSubscribeId(): void
     {
-        if (defined('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS')) {
-            $this->webhook_listener_subscribe_id = MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS;
-        }
+        $this->webhook_listener_subscribe_id = zen_config('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS', null);
     }
 
     /**

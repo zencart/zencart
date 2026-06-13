@@ -57,11 +57,11 @@ function get_pos_options($pID)
 
     $pID = (int)$pID;
     $and_clause = '';
-    if (POSM_OPTIONAL_OPTION_TYPES_LIST !== '') {
-        $and_clause .= " AND po.products_options_type NOT IN (" . POSM_OPTIONAL_OPTION_TYPES_LIST . ")";
+    if (zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') !== '') {
+        $and_clause .= " AND po.products_options_type NOT IN (" . zen_config('POSM_OPTIONAL_OPTION_TYPES_LIST') . ")";
     }
-    if (POSM_OPTIONAL_OPTION_NAMES_LIST !== '') {
-        $and_clause .= " AND po.products_options_id NOT IN (" . POSM_OPTIONAL_OPTION_NAMES_LIST . ")";
+    if (zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') !== '') {
+        $and_clause .= " AND po.products_options_id NOT IN (" . zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') . ")";
     }
     return $db->Execute(
         "SELECT DISTINCT pa.options_id, po.products_options_name as options_name, LPAD(po.products_options_sort_order, 11, '0') as sort_order
@@ -69,7 +69,7 @@ function get_pos_options($pID)
                 INNER JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                     ON pa.options_id = po.products_options_id
                    AND pa.products_id = $pID
-          WHERE po.products_options_type  IN (" . POSM_OPTIONS_TYPES_TO_MANAGE . ")$and_clause
+          WHERE po.products_options_type  IN (" . zen_config('POSM_OPTIONS_TYPES_TO_MANAGE') . ")$and_clause
             AND po.language_id = " . (int)$_SESSION['languages_id'] . "
        ORDER BY sort_order ASC, po.products_options_name ASC"
     );
@@ -238,7 +238,7 @@ function posm_product_has_oos_options($pID, $reminder_date, $names_with_dates)
         "SELECT products_quantity
            FROM " . TABLE_PRODUCTS_OPTIONS_STOCK . "
           WHERE products_id = " . (int)$pID . "
-            AND ( products_quantity <= " . (int)POSM_STOCK_REORDER_LEVEL . "$additional_clause )
+            AND ( products_quantity <= " . (int)zen_config('POSM_STOCK_REORDER_LEVEL') . "$additional_clause )
          LIMIT 1"
     );
     return !$check->EOF;

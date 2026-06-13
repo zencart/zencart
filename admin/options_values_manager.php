@@ -25,7 +25,7 @@ $ary = [];
 $chk_option_values = $db->Execute(
     "SELECT *
        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-      WHERE products_options_values_id = " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID
+      WHERE products_options_values_id = " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')
 );
 foreach ($chk_option_values as $item) {
     $ary[] = $item['language_id'];

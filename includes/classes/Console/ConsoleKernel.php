@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -76,16 +78,16 @@ class ConsoleKernel
         }
 
         if ($input->getCommandName() === null && $input->isHelpRequested()) {
-            return $this->executeCommand($command, $input, $output);
+            return self::executeCommand($command, $input, $output);
         }
 
         if ($input->isHelpRequested() && $command->getName() !== 'help') {
             $helpInput = new ConsoleInput([$input->getScriptName(), 'help', $command->getName()]);
             $helpCommand = $this->registry->find('help');
-            return $helpCommand === null ? 1 : $this->executeCommand($helpCommand, $helpInput, $output);
+            return $helpCommand === null ? 1 : self::executeCommand($helpCommand, $helpInput, $output);
         }
 
-        return $this->executeCommand($command, $input, $output);
+        return self::executeCommand($command, $input, $output);
     }
 
     /**
@@ -134,7 +136,7 @@ class ConsoleKernel
     /**
      * @since ZC v3.0.0
      */
-    private function executeCommand(ConsoleCommand $command, ConsoleInput $input, ConsoleOutput $output): int
+    private static function executeCommand(ConsoleCommand $command, ConsoleInput $input, ConsoleOutput $output): int
     {
         try {
             return $command->handle($input, $output);

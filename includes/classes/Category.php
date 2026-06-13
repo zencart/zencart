@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -197,4 +198,3 @@ class Category
         $this->languages = $lng->get_language_list();  // [1 => 'en', 2 => 'fr']
     }
 }
-

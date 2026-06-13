@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -14,19 +16,18 @@
 #[AllowDynamicProperties]
 class objectInfo
 {
-    /**
-     * @param $object_array
-     */
+    private array $object_array;
+
     public function __construct($object_array)
     {
         $this->updateObjectInfo($object_array);
     }
 
     /**
-     * @param $object_array array
+     * @param array $object_array
      * @since ZC v1.0.3
      */
-    public function objectInfo($object_array)
+    public function objectInfo($object_array): void
     {
         if (!is_array($object_array)) {
             return;
@@ -39,10 +40,10 @@ class objectInfo
     }
 
     /**
-     * @param $object_array array
+     * @param array $object_array
      * @since ZC v1.5.5
      */
-    public function updateObjectInfo($object_array)
+    public function updateObjectInfo($object_array): void
     {
         if (!is_array($object_array)) {
             return;
@@ -56,7 +57,7 @@ class objectInfo
     /**
      * @since ZC v1.5.6
      */
-    public function __isset($field)
+    public function __isset(string $field)
     {
         return isset($this->$field);
     }
@@ -64,23 +65,22 @@ class objectInfo
     /**
      * @since ZC v1.5.6
      */
-    public function __set($field, $value)
+    public function __set(string $field, mixed $value)
     {
         $this->$field = $value;
     }
 
     /**
-     * @param $field
-     * @return array|string
+     * @return array|string|null
      * @since ZC v1.5.6
      */
-    public function __get($field)
+    public function __get(string $field): mixed
     {
         if (isset($this->$field)) {
             return $this->$field;
         }
 
-        if ($field == 'keys') {
+        if ($field === 'keys') {
             return [];
         }
 

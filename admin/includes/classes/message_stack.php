@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -85,7 +87,7 @@ class messageStack extends boxTableBlock
     /**
      * @since ZC v1.0.3
      */
-    public function output(string $class='')
+    public function output(string $class = '')
     {
         $this->table_data_parameters = 'class="messageBox"';
         return $this->tableBlock($this->errors);

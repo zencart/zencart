@@ -41,7 +41,7 @@ class zen_categories_ul_generator
     /**
      * @since ZC v1.5.5
      */
-    public function buildBranch($parent_id, $level = 0, $submenu = true, string $parent_link = ''): string
+    public function buildBranch($parent_id, $level = 0, bool $submenu = true, string $parent_link = ''): string
     {
         $parent_id = (int)$parent_id;
         $level = (int)$level;
@@ -75,7 +75,7 @@ class zen_categories_ul_generator
     /**
      * @since ZC v1.5.5
      */
-    public function buildTree($submenu = false, ?int $max_levels = null): string
+    public function buildTree(bool $submenu = false, ?int $max_levels = null): string
     {
         if (empty($this->data)) {
             return '';

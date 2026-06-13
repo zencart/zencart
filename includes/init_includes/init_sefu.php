@@ -10,7 +10,7 @@
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
-if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
+if (zen_config('SEARCH_ENGINE_FRIENDLY_URLS') == 'true') {
   if (strlen($_SERVER['REQUEST_URI']) > 1) {
     $GET_array = array();
     $PHP_SELF = $_SERVER['SCRIPT_NAME'];
