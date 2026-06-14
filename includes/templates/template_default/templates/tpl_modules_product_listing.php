@@ -61,7 +61,7 @@ if (in_array($product_listing_layout_style, ['columns', 'fluid'])) {
 </div>
 
 <?php
-// if ($show_top_submit_button || $show_bottom_submit_button || PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit && $listing_split->number_of_rows > 0)) {
+// if ($show_top_submit_button || $show_bottom_submit_button || (PRODUCT_LISTING_MULTIPLE_ADD_TO_CART != 0 && $show_submit && $listing_split->number_of_rows > 0)) {
   if ($show_top_submit_button || $show_bottom_submit_button) {
 ?>
 </form>
