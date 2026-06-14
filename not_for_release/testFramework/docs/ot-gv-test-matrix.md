@@ -299,7 +299,8 @@ Primary direct coverage lives in:
   - Forces `get_shipping_tax_details()` to bypass the normal session-backed description path.
   - Recomputes shipping tax details from the selected shipping module and zone data.
   - Verifies recomputed tax details of `0.50` and `SHIPPING TAX 10%`.
-  - Verifies `get_order_total()` then excludes taxable flat shipping correctly: `48.29 - 5.00 - 0.50 = 42.79`.
+  - Verifies the public `get_order_total()` API still returns the numeric eligible total: `48.29 - 5.00 - 0.50 = 42.79`.
+  - Verifies the internal `get_order_total_details()` helper carries the adjusted `tax_groups`.
   - Verifies excluded shipping tax is removed from `tax_groups` while merchandise tax remains intact.
 
 ### Coupon / Redemption Validation Behavior
@@ -473,6 +474,8 @@ Verification status:
   - result: `OK (3 tests, 75 assertions)`
 - `ddev composer exec phpunit -- not_for_release/testFramework/FeatureStore/GVCoupons/GiftVoucherRedeemTest.php not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTest.php`
   - result: `OK (23 tests, 775 assertions)`
+- `vendor/bin/phpunit --filter OtGvShippingDetailsTest not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTest.php`
+  - result: `OK (1 test, 6 assertions)`
 
 ## Suggested Targeted Test Command
 
