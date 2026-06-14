@@ -28,6 +28,9 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
 
     public function setUp(): void
     {
+        if (!defined('DISPLAY_PRICE_WITH_TAX')) {
+            define('DISPLAY_PRICE_WITH_TAX', 'false');
+        }
         parent::setUp();
 
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'db/mysql/query_factory.php';
@@ -35,9 +38,6 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         require_once DIR_FS_CATALOG . 'includes/functions/functions_taxes.php';
         require_once DIR_FS_CATALOG . 'includes/modules/order_total/ot_gv.php';
 
-        if (!defined('DISPLAY_PRICE_WITH_TAX')) {
-            define('DISPLAY_PRICE_WITH_TAX', 'false');
-        }
         if (!defined('TEXT_UNKNOWN_TAX_RATE')) {
             define('TEXT_UNKNOWN_TAX_RATE', 'Unknown Tax');
         }
@@ -109,7 +109,11 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         $this->assertSame('SHIPPING TAX 10%', $shippingTaxDetails['description']);
 
         $orderTotal = $module->fetchOrderTotal();
-        $this->assertSame(42.79, round($orderTotal['total'], 2));
+        $expectedTotal = 48.29 - 5.00;
+        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
+            $expectedTotal -= 0.50;
+        }
+        $this->assertSame($expectedTotal, round($orderTotal['total'], 2));
         $this->assertSame(0.0, (float) $orderTotal['tax_groups']['SHIPPING TAX 10%']);
         $this->assertSame(2.80, $orderTotal['tax_groups']['FL TAX 7.0%']);
     }
