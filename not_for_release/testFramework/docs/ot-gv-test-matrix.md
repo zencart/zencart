@@ -85,6 +85,7 @@ Primary direct coverage lives in:
 - [GiftVoucherRedeemReadOnlyTest.php](/home/wilt/Projects/zencart/not_for_release/testFramework/FeatureStore/GVCoupons/GiftVoucherRedeemReadOnlyTest.php:1)
 - [GiftVoucherRedeemTest.php](/home/wilt/Projects/zencart/not_for_release/testFramework/FeatureStore/GVCoupons/GiftVoucherRedeemTest.php:1)
 - [OtGvShippingDetailsTest.php](/home/wilt/Projects/zencart/not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTest.php:1)
+- [OtGvShippingDetailsTaxInclusiveTest.php](/home/wilt/Projects/zencart/not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTaxInclusiveTest.php:1)
 
 ### Read-only / Access Behavior
 
@@ -303,6 +304,24 @@ Primary direct coverage lives in:
   - Verifies the internal `get_order_total_details()` helper carries the adjusted `tax_groups`.
   - Verifies excluded shipping tax is removed from `tax_groups` while merchandise tax remains intact.
 
+`testGetOrderTotalUsesStoredShippingTaxAmountWhenSessionDescriptionIsMissing`
+
+- File: [OtGvShippingDetailsTaxInclusiveTest.php](/home/wilt/Projects/zencart/not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTaxInclusiveTest.php:1)
+- Flags:
+  - `INC_TAX = true`
+  - `INC_SHIPPING = false`
+  - `DISPLAY_PRICE_WITH_TAX = true`
+  - shipping selection mocked as `flat_flat`
+  - `order->info['shipping_tax'] = 0.50`
+  - `$_SESSION['shipping_tax_description']` intentionally unset
+- Calculation path:
+  - Forces `get_shipping_tax_details()` to resolve the missing description while preserving the stored shipping-tax amount.
+  - Verifies the fallback does not recompute tax from the tax-inclusive `shipping_cost` amount.
+  - Verifies recomputed description `SHIPPING TAX 10%` is paired with the stored `0.50` shipping tax.
+  - Verifies the public `get_order_total()` API still returns the numeric eligible total: `48.29 - 5.50 = 42.79`.
+  - Verifies the internal `get_order_total_details()` helper carries the adjusted `tax_groups`.
+  - Verifies excluded shipping tax is removed from `tax_groups` while merchandise tax remains intact.
+
 ### Coupon / Redemption Validation Behavior
 
 `testSubmittingRedeemWithoutVoucherCodeShowsErrorWithoutLogs`
@@ -476,6 +495,10 @@ Verification status:
   - result: `OK (23 tests, 775 assertions)`
 - `vendor/bin/phpunit --filter OtGvShippingDetailsTest not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTest.php`
   - result: `OK (1 test, 6 assertions)`
+- `vendor/bin/phpunit --filter OtGvShippingDetailsTaxInclusiveTest not_for_release/testFramework/Unit/testsSundry/OtGvShippingDetailsTaxInclusiveTest.php`
+  - result: `OK (1 test, 6 assertions)`
+- `ddev composer tests-ci -- --dry-run --filter OtGvShippingDetails`
+  - result: `PASS` for `OtGvShippingDetailsTest.php` and `OtGvShippingDetailsTaxInclusiveTest.php`; parallel unit summary `OK (2 tests, 12 assertions)`
 
 ## Suggested Targeted Test Command
 

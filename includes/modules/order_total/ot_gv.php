@@ -589,10 +589,10 @@ class ot_gv {
       $shipping_tax_description = '';
     }
 
-    $shipping_tax_details = [
-      'amount' => zen_calculate_tax($order->info['shipping_cost'], $shipping_tax),
-      'description' => $shipping_tax_description,
-    ];
+    if ($shipping_tax_details['amount'] <= 0) {
+      $shipping_tax_details['amount'] = zen_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+    }
+    $shipping_tax_details['description'] = $shipping_tax_description;
 
     return $shipping_tax_details;
   }

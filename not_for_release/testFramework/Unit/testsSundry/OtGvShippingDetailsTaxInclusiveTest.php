@@ -8,7 +8,7 @@ namespace Tests\Unit\testsSundry;
 
 use Tests\Support\zcUnitTestCase;
 
-class OtGvShippingDetailsTest extends zcUnitTestCase
+class OtGvShippingDetailsTaxInclusiveTest extends zcUnitTestCase
 {
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
@@ -27,7 +27,7 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
     public function setUp(): void
     {
         if (!defined('DISPLAY_PRICE_WITH_TAX')) {
-            define('DISPLAY_PRICE_WITH_TAX', 'false');
+            define('DISPLAY_PRICE_WITH_TAX', 'true');
         }
         parent::setUp();
 
@@ -54,7 +54,7 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         $GLOBALS['order']->info = [
             'total' => 48.29,
             'tax' => 3.30,
-            'shipping_cost' => 5.00,
+            'shipping_cost' => 5.50,
             'shipping_tax' => 0.50,
             'tax_groups' => [
                 'FL TAX 7.0%' => 2.80,
@@ -96,7 +96,7 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         );
     }
 
-    public function testGetOrderTotalRecomputesShippingTaxDetailsWhenSessionDescriptionIsMissing(): void
+    public function testGetOrderTotalUsesStoredShippingTaxAmountWhenSessionDescriptionIsMissing(): void
     {
         $module = new class extends \ot_gv {
             public function __construct()
@@ -127,12 +127,8 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
 
         $orderTotal = $module->fetchOrderTotal();
         $orderTotalDetails = $module->fetchOrderTotalDetails();
-        $expectedTotal = 48.29 - 5.00;
-        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
-            $expectedTotal -= 0.50;
-        }
-        $this->assertSame($expectedTotal, round($orderTotal, 2));
-        $this->assertSame($expectedTotal, round($orderTotalDetails['total'], 2));
+        $this->assertSame(42.79, round($orderTotal, 2));
+        $this->assertSame(42.79, round($orderTotalDetails['total'], 2));
         $this->assertSame(0.0, (float) $orderTotalDetails['tax_groups']['SHIPPING TAX 10%']);
         $this->assertSame(2.80, $orderTotalDetails['tax_groups']['FL TAX 7.0%']);
     }
