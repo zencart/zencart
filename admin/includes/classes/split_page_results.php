@@ -54,7 +54,7 @@ class splitPageResults
      * @param string $letterGroupColumn column name to build letter-nav from (optional)
      * @param int $letterGroupLength number of characters to sort/filter on for letterGroupColumn
      */
-    public function __construct(int|string &$current_page_number, int $max_rows_per_page, string &$sql_query, ?int &$query_num_rows, string $letterGroupColumn = '', int $letterGroupLength = 0)
+    public function __construct(int|string|null &$current_page_number, int $max_rows_per_page, string &$sql_query, ?int &$query_num_rows, string $letterGroupColumn = '', int $letterGroupLength = 0)
     {
         global $db;
 
