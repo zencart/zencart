@@ -8,19 +8,6 @@ namespace Tests\Unit\testsSundry;
 
 use Tests\Support\zcUnitTestCase;
 
-class TestableOtGvShippingDetails extends \ot_gv
-{
-    public function fetchShippingTaxDetails(): array
-    {
-        return $this->get_shipping_tax_details();
-    }
-
-    public function fetchOrderTotal(): array
-    {
-        return $this->get_order_total();
-    }
-}
-
 class OtGvShippingDetailsTest extends zcUnitTestCase
 {
     protected $runTestInSeparateProcess = true;
@@ -115,9 +102,21 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
 
     public function testGetOrderTotalRecomputesShippingTaxDetailsWhenSessionDescriptionIsMissing(): void
     {
-        $reflection = new \ReflectionClass(TestableOtGvShippingDetails::class);
-        /** @var TestableOtGvShippingDetails $module */
-        $module = $reflection->newInstanceWithoutConstructor();
+        $module = new class extends \ot_gv {
+            public function __construct()
+            {
+            }
+
+            public function fetchShippingTaxDetails(): array
+            {
+                return $this->get_shipping_tax_details();
+            }
+
+            public function fetchOrderTotal(): array
+            {
+                return $this->get_order_total();
+            }
+        };
         $module->include_tax = 'true';
         $module->include_shipping = 'false';
 
