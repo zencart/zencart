@@ -30,6 +30,16 @@ class ArraysLanguageLoader extends BaseLanguageLoader
 
         $constants_made = false;
         foreach ($defines as $defineKey => $defineValue) {
+            // -----
+            // If the language-constant 'key' isn't a string, there's some problem
+            // with a loaded language file. Any non-string key is, thus, ignored
+            // here so that the code associated with the language file will error-out
+            // with an undefined-constant error rather than a hard-stop here.
+            //
+            if (!is_string($defineKey)) {
+                continue;
+            }
+
             if (defined($defineKey)) {
                 $constants_made = true;
                 continue;
