@@ -488,15 +488,31 @@ class ot_gv {
     $order_total = $order->info['total'];
     $tax_groups = $order->info['tax_groups'] ?? [];
     $shipping_tax_details = $this->get_shipping_tax_details();
+    $shipping_tax_amount = $shipping_tax_details['amount'];
+    $shipping_cost = (float)$order->info['shipping_cost'];
+    $shipping_cost_ex_tax = $shipping_cost;
+
+    if (DISPLAY_PRICE_WITH_TAX === 'true' && $shipping_tax_amount > 0) {
+      $shipping_cost_ex_tax -= $shipping_tax_amount;
+    }
+
     // if we are not supposed to include tax in credit calculations, subtract it out
     if ($this->include_tax != 'true') $order_total -= $order->info['tax'];
     // if we are not supposed to include shipping amount in credit calcs, subtract it out
     if ($this->include_shipping != 'true') {
-      $order_total -= $order->info['shipping_cost'];
-      if ($this->include_tax == 'true' && $shipping_tax_details['amount'] > 0) {
-        $order_total -= $shipping_tax_details['amount'];
-        if ($shipping_tax_details['description'] !== '' && isset($tax_groups[$shipping_tax_details['description']])) {
-          $tax_groups[$shipping_tax_details['description']] -= $shipping_tax_details['amount'];
+      if ($this->include_tax == 'true') {
+        $order_total -= $shipping_cost;
+        if (DISPLAY_PRICE_WITH_TAX !== 'true' && $shipping_tax_amount > 0) {
+          $order_total -= $shipping_tax_amount;
+        }
+      } else {
+        $order_total -= $shipping_cost_ex_tax;
+      }
+
+      if ($shipping_tax_details['description'] !== '' && isset($tax_groups[$shipping_tax_details['description']])) {
+        $tax_groups[$shipping_tax_details['description']] -= $shipping_tax_amount;
+        if ($tax_groups[$shipping_tax_details['description']] < 0) {
+          $tax_groups[$shipping_tax_details['description']] = 0;
         }
       }
     }
