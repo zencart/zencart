@@ -43,9 +43,7 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         $_SESSION['languages_id'] = 1;
         $_SESSION['shipping'] = ['id' => 'flat_flat'];
         unset($_SESSION['shipping_tax_description']);
-        $_SESSION['cart'] = $this->getMockBuilder(\shoppingCart::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $_SESSION['cart'] = $this->createStub(\shoppingCart::class);
         $_SESSION['cart']->method('get_products')->willReturn([]);
 
         $GLOBALS['flat'] = new \stdClass();
@@ -82,9 +80,7 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
 
         $emptyResult = $this->createResult([]);
 
-        $GLOBALS['db'] = $this->getMockBuilder('queryFactory')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $GLOBALS['db'] = $this->createStub('queryFactory');
         $GLOBALS['db']->method('Execute')->willReturnCallback(
             static function (string $sql) use ($rateResult, $descriptionResult, $emptyResult) {
                 if (str_contains($sql, 'sum(tax_rate) AS tax_rate')) {
@@ -112,9 +108,14 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
                 return $this->get_shipping_tax_details();
             }
 
-            public function fetchOrderTotal(): array
+            public function fetchOrderTotal(): float
             {
                 return $this->get_order_total();
+            }
+
+            public function fetchOrderTotalDetails(): array
+            {
+                return $this->get_order_total_details();
             }
         };
         $module->include_tax = 'true';
@@ -125,12 +126,14 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         $this->assertSame('SHIPPING TAX 10%', $shippingTaxDetails['description']);
 
         $orderTotal = $module->fetchOrderTotal();
+        $orderTotalDetails = $module->fetchOrderTotalDetails();
         $expectedTotal = 48.29 - 5.00;
         if (DISPLAY_PRICE_WITH_TAX !== 'true') {
             $expectedTotal -= 0.50;
         }
-        $this->assertSame($expectedTotal, round($orderTotal['total'], 2));
-        $this->assertSame(0.0, (float) $orderTotal['tax_groups']['SHIPPING TAX 10%']);
-        $this->assertSame(2.80, $orderTotal['tax_groups']['FL TAX 7.0%']);
+        $this->assertSame($expectedTotal, round($orderTotal, 2));
+        $this->assertSame($expectedTotal, round($orderTotalDetails['total'], 2));
+        $this->assertSame(0.0, (float) $orderTotalDetails['tax_groups']['SHIPPING TAX 10%']);
+        $this->assertSame(2.80, $orderTotalDetails['tax_groups']['FL TAX 7.0%']);
     }
 }

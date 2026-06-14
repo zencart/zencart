@@ -140,8 +140,8 @@ class ot_gv {
   function process() {
     global $order, $currencies;
     if ($_SESSION['cot_gv']) {
-      $order_total = $this->get_order_total();
-      $od_amount = $this->calculate_deductions($order_total);
+      $order_total_details = $this->get_order_total_details();
+      $od_amount = $this->calculate_deductions($order_total_details);
       $this->deduction = $od_amount['total'];
       if ($od_amount['total'] > 0) {
         $tax = 0;
@@ -205,7 +205,7 @@ class ot_gv {
         $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, 'error');
         zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
-      $od_amount = $this->calculate_deductions($this->get_order_total());
+      $od_amount = $this->calculate_deductions($this->get_order_total_details());
       $order->info['total'] = $order->info['total'] - $od_amount['total'];
       if (DISPLAY_PRICE_WITH_TAX != 'true') {
         $order->info['total'] -= $od_amount['tax'];
@@ -484,6 +484,14 @@ class ot_gv {
    * @since ZC v1.0.3
    */
   function get_order_total() {
+    return $this->get_order_total_details()['total'];
+  }
+
+  /**
+   * Recalculates order-total details for use in deduction calculations.
+   */
+  protected function get_order_total_details(): array
+  {
     global $order;
     $order_total = $order->info['total'];
     $tax_groups = $order->info['tax_groups'] ?? [];
