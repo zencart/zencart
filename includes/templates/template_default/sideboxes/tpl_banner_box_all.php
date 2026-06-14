@@ -10,7 +10,7 @@
   $content = '';
 
   // select banners_group to be used
-  $new_banner_search = zen_build_banners_group(zen_config('SHOW_BANNERS_GROUP_SET_ALL'));
+  $new_banner_search = zen_build_banners_group(zen_config('SHOW_BANNERS_GROUP_SET_ALL', ''));
 
   $my_banner_filter = '';
 

@@ -23,7 +23,7 @@ if (count($listing) === 0) {
         'text' => defined('TEXT_NO_FEATURED_CATEGORIES') ? TEXT_NO_FEATURED_CATEGORIES : 'No products to show.',
     ];
 } else {
-    $col_width = floor(100 / (int)zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS'));
+    $col_width = floor(100 / (int)zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS', 1));
 
     foreach ($listing as $record) {
         $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . zen_get_generated_category_path_rev($record['categories_id'])) . '">'
