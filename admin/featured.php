@@ -427,7 +427,7 @@ if (!empty($action)) {
                 }
 
                 // create split page control
-                $featured_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN'), $featured_query_raw, $featured_query_numrows);
+                $featured_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN'), $featured_query_raw, $featured_query_numrows);
                 $featureds = $db->Execute($featured_query_raw);
                 foreach ($featureds as $featured) {
                   if ((!isset($_GET['fID']) || (isset($_GET['fID']) && ((int)$_GET['fID'] === (int)$featured['featured_id']))) && !isset($fInfo)) {

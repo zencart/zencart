@@ -536,7 +536,7 @@ if (!empty($action)) {
                 }
 
                 // create split page control
-                $specials_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $specials_query_raw, $specials_query_numrows);
+                $specials_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $specials_query_raw, $specials_query_numrows);
                 $specials = $db->Execute($specials_query_raw);
                 foreach ($specials as $special) {
                   if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ((int)$_GET['sID'] === (int)$special['specials_id']))) && !isset($sInfo)) {

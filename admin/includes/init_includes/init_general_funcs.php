@@ -73,7 +73,7 @@ if (zen_config('SSLPWSTATUSCHECK') === '') {
     header('Location: ' . $_SERVER['REQUEST_URI']);
     die('<meta http-equiv="refresh" content="0; url=' . $_SERVER['REQUEST_URI'] . '">One-time auto-configuration completed. Please refresh the page.');
 }
-[$a, $c] = explode(':', zen_config('SSLPWSTATUSCHECK')); $a = (int)$a; $c = (int)$c;
+[$a, $c] = explode(':', zen_config('SSLPWSTATUSCHECK', '')); $a = (int)$a; $c = (int)$c;
 if ($a === 0) {
     if ($c === 0 && (int)$e === 1) { // was nonSSL but now is SSL, so need to exp pwds
         $sql = "UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:" . $e . "', last_modified = now() WHERE configuration_key = 'SSLPWSTATUSCHECK'";

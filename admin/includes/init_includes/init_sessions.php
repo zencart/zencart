@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'sessions.php';
 
 zen_session_name('zenAdminID');
-zen_session_save_path(zen_config('SESSION_WRITE_DIRECTORY'));
+zen_session_save_path(zen_config('SESSION_WRITE_DIRECTORY', ''));
 
 // set the session cookie parameters
 $path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));

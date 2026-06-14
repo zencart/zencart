@@ -73,7 +73,7 @@ if (empty($order->info)) {
       <!-- body_text //-->
       <table class="table">
         <tr>
-          <td class="pageHeading"><?php echo nl2br(zen_config('STORE_NAME_ADDRESS'), false); ?></td>
+          <td class="pageHeading"><?php echo nl2br(zen_config('STORE_NAME_ADDRESS', ''), false); ?></td>
           <td class="pageHeading text-right"><?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT); ?></td>
         </tr>
       </table>

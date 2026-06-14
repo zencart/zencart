@@ -146,7 +146,7 @@ if (!empty($action)) {
                 $artists_query_raw = "SELECT *
                                       FROM " . TABLE_RECORD_ARTISTS . "
                                       ORDER BY artists_name";
-                $artists_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $artists_query_raw, $artists_query_numrows);
+                $artists_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $artists_query_raw, $artists_query_numrows);
                 $artists = $db->Execute($artists_query_raw);
                 $rArtists_parameter = '';
                 foreach ($artists as $artist) {

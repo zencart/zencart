@@ -344,7 +344,7 @@ if (!empty($action)) {
                                                    length(content_html) AS content_html_length, module, date_added, date_sent, status
                                             FROM " . TABLE_NEWSLETTERS . "
                                             ORDER BY date_added desc";
-                  $newsletters_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $newsletters_query_raw, $newsletters_query_numrows);
+                  $newsletters_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $newsletters_query_raw, $newsletters_query_numrows);
                   $newsletters = $db->Execute($newsletters_query_raw);
                   foreach ($newsletters as $newsletter) {
                     if ((!isset($_GET['nID']) || (isset($_GET['nID']) && ($_GET['nID'] == $newsletter['newsletters_id']))) && !isset($nInfo) && (substr($action, 0, 3) != 'new')) {

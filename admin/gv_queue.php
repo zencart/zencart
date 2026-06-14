@@ -151,7 +151,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
                                WHERE (gv.customer_id = c.customers_id
                                  AND gv.release_flag = 'N')
                                ORDER BY gv.order_id, gv.unique_id";
-              $gv_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $gv_query_raw, $gv_query_numrows);
+              $gv_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $gv_query_raw, $gv_query_numrows);
               $gv_lists = $db->Execute($gv_query_raw);
               foreach ($gv_lists as $gv_list) {
                 if ((!isset($_GET['gid']) || $_GET['gid'] == $gv_list['unique_id']) && (!isset($gInfo))) {

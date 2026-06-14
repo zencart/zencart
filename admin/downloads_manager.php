@@ -124,7 +124,7 @@ if (!empty($action)) {
                       WHERE pa.products_attributes_id = pad.products_attributes_id
                       " . $search . "
                       " . $order_by;
-              $products_downloads_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER'), $sql, $products_downloads_query_numrows);
+              $products_downloads_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER'), $sql, $products_downloads_query_numrows);
               $products_downloads_query = $db->Execute($sql);
 
               foreach ($products_downloads_query as $products_downloads) {

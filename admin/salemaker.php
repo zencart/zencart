@@ -461,7 +461,7 @@ if (!empty($action)) {
                                                      sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change
                                               FROM " . TABLE_SALEMAKER_SALES . "
                                               ORDER BY sale_name";
-                $salemaker_sales_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $salemaker_sales_query_raw, $salemaker_sales_query_numrows);
+                $salemaker_sales_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $salemaker_sales_query_raw, $salemaker_sales_query_numrows);
                 $salemaker_sales = $db->Execute($salemaker_sales_query_raw);
 
                 foreach ($salemaker_sales as $salemaker_sale) {

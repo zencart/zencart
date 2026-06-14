@@ -87,7 +87,7 @@ if (!empty($action)) {
                 $music_genre_query_raw = "SELECT *
                                           FROM " . TABLE_MUSIC_GENRE . "
                                           ORDER BY music_genre_name";
-                $music_genre_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $music_genre_query_raw, $music_genre_query_numrows);
+                $music_genre_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $music_genre_query_raw, $music_genre_query_numrows);
                 $music_genres = $db->Execute($music_genre_query_raw);
                 $mGenre_parameter = '';
                 foreach ($music_genres as $music_genre) {

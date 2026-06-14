@@ -237,7 +237,7 @@ if (is_array($extra_headings)) {
                 }
               }
 
-              $manufacturers_split = new splitPageResults($_GET['page'], zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $manufacturers_query_raw, $manufacturers_query_numrows);
+              $manufacturers_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $manufacturers_query_raw, $manufacturers_query_numrows);
               $manufacturers = $db->Execute($manufacturers_query_raw);
               foreach ($manufacturers as $manufacturer) {
                 if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $manufacturer['manufacturers_id']))) && !isset($mInfo) && (substr($action, 0, 3) !== 'new')) {
