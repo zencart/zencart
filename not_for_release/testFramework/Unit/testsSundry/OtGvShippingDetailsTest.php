@@ -26,6 +26,17 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
 
+    private function createResult(array $rows): \queryFactoryResult
+    {
+        $result = new \queryFactoryResult(null);
+        $result->is_cached = true;
+        $result->result = $rows;
+        $result->EOF = empty($rows);
+        $result->fields = $rows[0] ?? [];
+
+        return $result;
+    }
+
     public function setUp(): void
     {
         if (!defined('DISPLAY_PRICE_WITH_TAX')) {
@@ -74,26 +85,32 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
             'zone_id' => 18,
         ];
 
-        $rateResult = $this->getMockBuilder('queryFactoryResult')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $rateResult->method('RecordCount')->willReturn(1);
-        $this->mockIterator($rateResult, [
+        $rateResult = $this->createResult([
             ['tax_rate' => 10.0],
         ]);
 
-        $descriptionResult = $this->getMockBuilder('queryFactoryResult')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $descriptionResult->method('RecordCount')->willReturn(1);
-        $this->mockIterator($descriptionResult, [
+        $descriptionResult = $this->createResult([
             ['tax_description' => 'SHIPPING TAX 10%'],
         ]);
+
+        $emptyResult = $this->createResult([]);
 
         $GLOBALS['db'] = $this->getMockBuilder('queryFactory')
             ->disableOriginalConstructor()
             ->getMock();
-        $GLOBALS['db']->method('Execute')->willReturnOnConsecutiveCalls($rateResult, $descriptionResult);
+        $GLOBALS['db']->method('Execute')->willReturnCallback(
+            static function (string $sql) use ($rateResult, $descriptionResult, $emptyResult) {
+                if (str_contains($sql, 'sum(tax_rate) AS tax_rate')) {
+                    return $rateResult;
+                }
+
+                if (str_contains($sql, 'trd.tax_description')) {
+                    return $descriptionResult;
+                }
+
+                return $emptyResult;
+            }
+        );
     }
 
     public function testGetOrderTotalRecomputesShippingTaxDetailsWhenSessionDescriptionIsMissing(): void
