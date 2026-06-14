@@ -14,7 +14,7 @@ $define = [
 
     'TEXT_MAIN' => "Enter your email address below and we'll send you instructions on how to reset your password.",
 
-    'EMAIL_PASSWORD_RESET_SUBJECT' => STORE_NAME . ' - Password Reset',
+    'EMAIL_PASSWORD_RESET_SUBJECT' => zen_config('STORE_NAME') . ' - Password Reset',
 
     'EMAIL_PASSWORD_RESET_BODY' =>
         "Hello,\n\n" .
@@ -24,7 +24,7 @@ $define = [
         "This link is for password reset only. If you did not request this, you can safely ignore this email and your password will not be changed.\n\n" .
         "For your security, this request was made from IP address: %1\$s\n\n" .
         "Kind regards,\n" .
-        STORE_NAME . "\n",
+        zen_config('STORE_NAME') . "\n",
 
     'EMAIL_PASSWORD_RESET_HTML' =>
         '<p>Hello,</p>' .
