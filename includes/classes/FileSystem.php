@@ -90,12 +90,12 @@ class FileSystem
         foreach ($installedPlugins as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
             $resolvedPluginDir = $this->realpath($pluginDir);
-            if ($resolvedPluginDir === false) {
+            if ($resolvedPluginDir === null) {
                 continue;
             }
             $adminFile = $pluginDir . '/admin/' . $page . '.php';
             $realPath = $this->realpath($adminFile);
-            if ($realPath === false || strpos($realPath, $resolvedPluginDir) !== 0) {
+            if ($realPath === null || strpos($realPath, $resolvedPluginDir) !== 0) {
                 continue; // Skip this file if it's not under the intended directory
             }
             if (!file_exists($realPath)) {
@@ -231,12 +231,18 @@ class FileSystem
     /**
      * @since ZC v2.0.0
      */
-    protected function realpath(string $path): string
+    protected function realpath(string $path): ?string
     {
-        if (strtoupper(substr(\PHP_OS, 0, 3)) === 'WIN') {
-            return str_replace('\\', '/', realpath($path));
+        $resolvedPath = realpath($path);
+        if ($resolvedPath === false) {
+            return null;
         }
-        return realpath($path);
+
+        if (strtoupper(substr(\PHP_OS, 0, 3)) === 'WIN') {
+            return str_replace('\\', '/', $resolvedPath);
+        }
+
+        return $resolvedPath;
     }
 
     /**
