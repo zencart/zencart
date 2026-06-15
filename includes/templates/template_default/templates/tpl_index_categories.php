@@ -16,11 +16,11 @@
 <?php if ($show_welcome == true) { ?>
 <h1 id="indexCategoriesHeading"><?php echo HEADING_TITLE_NESTED; ?></h1>
 
-<?php if (SHOW_CUSTOMER_GREETING == 1) { ?>
+<?php if ((int)zen_config('SHOW_CUSTOMER_GREETING') === 1) { ?>
 <h2 class="greeting"><?php echo zen_customer_greeting(); ?></h2>
 <?php } ?>
 
-<?php if (DEFINE_MAIN_PAGE_STATUS >= 1 and DEFINE_MAIN_PAGE_STATUS <= 2) { ?>
+<?php if ((int)zen_config('DEFINE_MAIN_PAGE_STATUS') >= 1 && (int)zen_config('DEFINE_MAIN_PAGE_STATUS') <= 2) { ?>
 <div id="indexCategoriesMainContent" class="content"><?php
 /**
  * require the html_define for the index/categories page
@@ -36,11 +36,11 @@
 <?php } ?>
 
 <?php
-if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS_TOP == 'true') {
+if (zen_config('PRODUCT_LIST_CATEGORIES_IMAGE_STATUS_TOP') === 'true') {
 // categories_image
   if ($categories_image = zen_get_categories_image($current_category_id)) {
 ?>
-<div id="categoryImgListing" class="categoryImg"><?php echo zen_image(DIR_WS_IMAGES . $categories_image, '', SUBCATEGORY_IMAGE_TOP_WIDTH, SUBCATEGORY_IMAGE_TOP_HEIGHT); ?></div>
+<div id="categoryImgListing" class="categoryImg"><?php echo zen_image(DIR_WS_IMAGES . $categories_image, '', (int)zen_config('SUBCATEGORY_IMAGE_TOP_WIDTH'), (int)zen_config('SUBCATEGORY_IMAGE_TOP_HEIGHT')); ?></div>
 <?php
   }
 } // categories_image
@@ -54,7 +54,7 @@ if (PRODUCT_LIST_CATEGORIES_IMAGE_STATUS_TOP == 'true') {
 <?php } // categories_description ?>
 <!-- BOF: Display grid of available sub-categories, if any -->
 <?php
-  if (PRODUCT_LIST_CATEGORY_ROW_STATUS == 0) {
+  if ((int)zen_config('PRODUCT_LIST_CATEGORY_ROW_STATUS') === 0) {
     // do nothing
   } else {
     // display subcategories

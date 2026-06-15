@@ -42,7 +42,7 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_TAG_START', $current_page_base);
 <meta name="keywords" content="<?php echo META_TAG_KEYWORDS; ?>"/>
 <meta name="description" content="<?php echo META_TAG_DESCRIPTION; ?>"/>
 <meta http-equiv="imagetoolbar" content="no"/>
-<meta name="author" content="<?php echo STORE_NAME ?>"/>
+<meta name="author" content="<?php echo zen_config('STORE_NAME') ?>"/>
 <meta name="generator" content="shopping cart program by Zen Cart&reg;, https://www.zen-cart.com eCommerce"/>
 <?php if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base,explode(",",constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base=='down_for_maintenance' || $robotsNoIndex === true) { ?>
 <meta name="robots" content="noindex, nofollow"/>

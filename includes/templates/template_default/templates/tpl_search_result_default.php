@@ -21,7 +21,7 @@ if ($messageStack->size('search') > 0) {
 ?>
     <div id="filter-wrapper" class="group">
 <?php
-if ($do_filter_list || PRODUCT_LIST_ALPHA_SORTER === 'true') {
+if ($do_filter_list || zen_config('PRODUCT_LIST_ALPHA_SORTER') === 'true') {
     $form = zen_draw_form('filter', zen_href_link(FILENAME_SEARCH_RESULT), 'get');
     $form .= '<label class="inputLabel">' . TEXT_SHOW . '</label>';
     echo $form;

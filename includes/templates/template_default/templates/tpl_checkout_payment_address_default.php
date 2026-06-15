@@ -24,7 +24,7 @@
 <br class="clearBoth">
 
 <?php
-     if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
+     if ($addresses_count < (int)zen_config('MAX_ADDRESS_BOOK_ENTRIES')) {
        echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), 'post', 'class="group"');
 /**
  * require template to collect address details

@@ -43,7 +43,7 @@ if ($module_show_categories != 0) {
 
 <!--bof Prev/Next top position -->
 <?php
-if (PRODUCT_INFO_PREVIOUS_NEXT === '1' || PRODUCT_INFO_PREVIOUS_NEXT === '3') {
+if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '1' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
     /**
      * display the product previous/next helper
      */
@@ -111,7 +111,7 @@ if ($products_description != '') {
 
 <!--bof Add to Cart Box -->
 <?php
-if (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == '') {
+if (zen_config('CUSTOMERS_APPROVAL') === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == '') {
   // do nothing
 } else {
     $display_qty = (($flag_show_product_info_in_cart_qty == 1 && $_SESSION['cart']->in_cart($_GET['products_id'])) ? '<p>' . PRODUCTS_ORDER_QTY_TEXT_IN_CART . $_SESSION['cart']->get_quantity($_GET['products_id']) . '</p>' : '');
@@ -220,7 +220,7 @@ require $template->get_template_dir('/tpl_modules_additional_images.php', DIR_WS
 
 <!--bof Prev/Next bottom position -->
 <?php
-if (PRODUCT_INFO_PREVIOUS_NEXT === '2' || PRODUCT_INFO_PREVIOUS_NEXT === '3') {
+if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '2' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
     /**
      * display the product previous/next helper
      */

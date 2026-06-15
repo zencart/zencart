@@ -62,17 +62,17 @@
 
 
 <?php
-  if ((int)ACCOUNT_NEWSLETTER_STATUS > 0 or CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS !='0') {
+  if ((int)zen_config('ACCOUNT_NEWSLETTER_STATUS') > 0 || zen_config('CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS') !== '0') {
 ?>
 <h2><?php echo EMAIL_NOTIFICATIONS_TITLE; ?></h2>
 <ul id="myAccountNotify" class="list">
 <?php
-  if ((int)ACCOUNT_NEWSLETTER_STATUS > 0) {
+  if ((int)zen_config('ACCOUNT_NEWSLETTER_STATUS') > 0) {
 ?>
 <li><?php echo ' <a href="' . zen_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_NEWSLETTERS . '</a>'; ?></li>
 <?php } //endif newsletter unsubscribe ?>
 <?php
-  if (CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS == '1') {
+  if (zen_config('CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS') === '1') {
 ?>
 <li><?php echo ' <a href="' . zen_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_PRODUCTS . '</a>'; ?></li>
 

@@ -11,7 +11,7 @@
 <div class="centerColumn" id="privacy">
 <h1 id="privacyDefaultHeading"><?= HEADING_TITLE; ?></h1>
 
-<?php if (DEFINE_PRIVACY_STATUS >= 1 and DEFINE_PRIVACY_STATUS <= 2) { ?>
+<?php if ((int)zen_config('DEFINE_PRIVACY_STATUS') >= 1 && (int)zen_config('DEFINE_PRIVACY_STATUS') <= 2) { ?>
 <div id="privacyDefaultMainContent" class="content">
 <?php
 /**
