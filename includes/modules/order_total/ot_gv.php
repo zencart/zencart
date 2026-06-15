@@ -15,80 +15,64 @@
 class ot_gv
 {
     /**
-     * $_check is used to check the configuration key set up
-     * @var int
+     * $_check is used to check that configuration keys are set up
      */
-    protected $_check;
+    protected int $_check = 0;
     /**
      * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
-     * @var string
      */
     protected string $calculate_tax;
     /**
      * $checkbox is the output to request the amount of gift vouchers the user wants to redeem
-     * @var string
      */
-    protected string $checkbox;
+    protected string $checkbox = '';
     /**
      * $code determines the internal 'code' name used to designate "this" order total module
-     * @var string
      */
-    public string $code;
+    public string $code = 'ot_gv';
     /**
      * $credit_class flag to indicate order totals method is a credit class
-     * @var boolean
      */
     public bool $credit_class = true;
     /**
-     * $credit_tax if 'true' tax is to be calculated on purchased GVs
-     * @var string
+     * $credit_tax: if 'true' tax is to be calculated on purchased GVs
      */
     protected string $credit_tax;
     /**
      * $deduction amount of deduction calculated/afforded while being applied to an order
-     * @var float|null
      */
-    protected $deduction;
+    protected float|int $deduction = 0;
     /**
      * $description is a soft name for this order total method
-     * @var string
      */
-    public string $description;
+    public string $description = 'Gift Voucher Handling';
     /**
      * $include_shipping allow shipping costs to be discounted by coupon if 'true'
-     * @var string
      */
     public string $include_shipping = 'false';
     /**
      * $include_tax allow tax to be discounted by coupon if 'true'
-     * @var string
      */
     public string $include_tax = 'false';
     /**
      * $sort_order is the order priority of this order total module when displayed
-     * @var int
      */
-    public ?int $sort_order;
+    public ?int $sort_order = null;
     /**
      * $tax_class is the Tax class to be applied to the coupon cost
-     * @var
      */
     public int $tax_class = 0;
     /**
      * $title is the displayed name for this order total method
-     * @var string
      */
-    public string $title;
+    public string $title = 'Gift Vouchers';
     /**
      * $output is an array of the display elements used on checkout pages
-     * @var array
      */
     public array $output = [];
 
     /**
-     * process gift vouchers
-     *
-     * @return ot_gv
+     * Gift Vouchers
      */
     public function __construct()
     {
@@ -138,11 +122,11 @@ class ot_gv
     }
 
     /**
-     * Enter description here...
+     * Calculate totals for display
      *
      * @since ZC v1.0.3
      */
-    public function process()
+    public function process(): void
     {
         global $order, $currencies;
 
@@ -178,10 +162,10 @@ class ot_gv
     }
 
     /**
-     * This is called to reset any GV values, effectively cancelling all GV's applied during current login session
+     * Reset any GV values, effectively cancelling all GV's applied during current login session
      * @since ZC v1.3.0
      */
-    public function clear_posts()
+    public function clear_posts(): void
     {
         unset($_SESSION['cot_gv']);
     }
@@ -192,7 +176,7 @@ class ot_gv
      * @TODO - Per order_total class, this function is not used. See process() instead.
      * @since ZC v1.0.3
      */
-    public function pre_confirmation_check($order_total)
+    public function pre_confirmation_check($order_total): int|float
     {
         global $order, $currencies, $messageStack;
 
@@ -226,7 +210,7 @@ class ot_gv
      * if customer has a GV balance, then we display the input field to allow entry of desired GV redemption amount
      * @since ZC v1.0.3
      */
-    public function use_credit_amount()
+    public function use_credit_amount(): string
     {
         if ($this->user_has_gv_account($_SESSION['customer_id'])) {
             return $this->checkbox;
@@ -238,7 +222,7 @@ class ot_gv
      * queue or release newly-purchased GV's
      * @since ZC v1.0.3
      */
-    public function update_credit_account($i)
+    public function update_credit_account($i): void
     {
         global $db, $order, $insert_id;
 
@@ -248,7 +232,7 @@ class ot_gv
         if (str_starts_with($ordered_product['model'] ?? '', 'GIFT')) {
             // determine how much GV was purchased
             // check if GV was purchased on Special
-            $gv_original_price = new Product((int)$ordered_product['id'])->get('products_price');
+            $gv_original_price = (new Product((int)$ordered_product['id']))->get('products_price');
             // if prices differ assume Special and get Special Price
 
             // Do not use this on GVs Priced by Attribute
@@ -297,7 +281,7 @@ class ot_gv
     * check system to see if GVs should be made available or not. If true, then supply GV-selection fields on checkout pages
      * @since ZC v1.0.3
     */
-    function credit_selection()
+    public function credit_selection(): array
     {
         global $db, $order;
 
@@ -340,7 +324,7 @@ class ot_gv
      * Verify that the customer has entered a valid redemption amount, and return the amount that can be applied to this order
      * @since ZC v1.0.3
      */
-    public function apply_credit()
+    public function apply_credit(): float|int|null
     {
         global $db, $order;
 
@@ -367,7 +351,7 @@ class ot_gv
      * Check to see if redemption code has been entered and redeem if valid
      * @since ZC v1.0.3
      */
-    public function collect_posts()
+    public function collect_posts(): void
     {
         global $db, $currencies, $messageStack;
 
@@ -411,7 +395,7 @@ class ot_gv
             }
 
             // if valid, add redeemed amount to customer's GV balance and mark as redeemed
-            if ($gv_result->fields['coupon_type'] == 'G') {
+            if ($gv_result->fields['coupon_type'] === 'G') {
                 $gv_amount = $gv_result->fields['coupon_amount'];
                 $coupon_id = (int)$gv_result->fields['coupon_id'];
                 // Things to set
@@ -456,7 +440,7 @@ class ot_gv
      * Calculate GV claim amount (GV amounts are always based on the STORE's default currency value)
      * @since ZC v1.0.3
      */
-    protected function calculate_credit($save_total_cost)
+    protected function calculate_credit($save_total_cost): float|int
     {
         global $db, $order, $currencies;
 
@@ -473,7 +457,7 @@ class ot_gv
     /**
      * @since ZC v1.3.8
      */
-    protected function calculate_deductions($order_total)
+    protected function calculate_deductions($order_total): array
     {
         global $order;
 
@@ -520,11 +504,11 @@ class ot_gv
     }
 
     /**
-     * Check to see whether current customer has a GV balance available
+     * Check to see whether the current customer has a GV balance available
      * Returns amount of GV balance on account
      * @since ZC v1.0.3
      */
-    protected function user_has_gv_account($c_id)
+    protected function user_has_gv_account($c_id): float|int|string
     {
         global $db;
         $gv_result = $db->ExecuteNoCache("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$c_id . " LIMIT 1");
@@ -664,12 +648,11 @@ class ot_gv
     }
 
     /**
-     * Enter description here...
+     * Check whether the module is configured as enabled.
      *
-     * @return unknown
      * @since ZC v1.0.3
      */
-    public function check()
+    public function check(): int
     {
         global $db;
         if (!isset($this->_check)) {
@@ -693,12 +676,11 @@ class ot_gv
     }
 
     /**
-     * Enter description here...
+     * Configuration keys used for this module.
      *
-     * @return unknown
      * @since ZC v1.0.3
      */
-    public function keys()
+    public function keys(): array
     {
         return [
             'MODULE_ORDER_TOTAL_GV_STATUS',
@@ -716,11 +698,11 @@ class ot_gv
     }
 
     /**
-     * Enter description here...
+     * Install the module's configuration settings.
      *
      * @since ZC v1.0.3
      */
-    public function install()
+    public function install(): void
     {
         global $db;
         $db->Execute(
@@ -761,17 +743,17 @@ class ot_gv
     /**
      * @since ZC v1.5.8
      */
-    public function help()
+    public function help(): array
     {
         return ['link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/'];
     }
 
     /**
-     * Enter description here...
+     * Clear the module's configuration settings, which effectively removes the module from use.
      *
      * @since ZC v1.0.3
      */
-    public function remove()
+    public function remove(): void
     {
         global $db;
         $db->Execute("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
