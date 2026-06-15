@@ -62,6 +62,9 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
      */
     public function handle(ConsoleInput $input, ConsoleOutput $output): int
     {
+        if (!\function_exists('zenDoCurlRequest')) {
+            require_once \DIR_FS_CATALOG . 'includes/functions/functions_communications.php';
+        }
         if (!\function_exists('zen_update_currencies')) {
             require_once \DIR_FS_CATALOG . 'includes/functions/functions_exchange_rates.php';
         }

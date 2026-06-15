@@ -79,9 +79,33 @@ class CurrencyRatesUpdateCommandTest extends TestCase
         $this->assertSame('', stream_get_contents($stderr, -1, 0));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testCurrencyRatesUpdateLoadsCommunicationsHelpers(): void
+    {
+        $this->installCurrencyUpdateStubs();
+        [$stdout, $stderr, $output] = $this->makeOutput();
+        $command = new CurrencyRatesUpdateCommand($this->makeConfigurationProvider([
+            'DEFAULT_CURRENCY' => 'USD',
+            'CURRENCY_SERVER_PRIMARY' => 'boc',
+            'CURRENCY_SERVER_BACKUP' => '',
+            'CURRENCY_UPLIFT_RATIO' => '0',
+        ]));
+
+        $exitCode = $command->handle(new ConsoleInput(['zc_cli.php', 'currency-rates:update']), $output);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertTrue($GLOBALS['zcCurrencyUpdateInvoked'] ?? false);
+        $this->assertTrue($GLOBALS['zcCurrencyUpdateHasCurlHelper'] ?? false);
+        $this->assertSame('', stream_get_contents($stdout, -1, 0));
+        $this->assertSame('', stream_get_contents($stderr, -1, 0));
+    }
+
     private function installCurrencyUpdateStubs(): void
     {
         $GLOBALS['zcCurrencyUpdateInvoked'] = false;
+        $GLOBALS['zcCurrencyUpdateHasCurlHelper'] = false;
 
         if (!function_exists('zc_cli_get_db_context')) {
             eval(<<<'PHP'
@@ -100,6 +124,7 @@ namespace {
     function zen_update_currencies(bool $outputMessagesToCommandLine = false): void
     {
         $GLOBALS['zcCurrencyUpdateInvoked'] = true;
+        $GLOBALS['zcCurrencyUpdateHasCurlHelper'] = function_exists('zenDoCurlRequest');
     }
 }
 PHP);
