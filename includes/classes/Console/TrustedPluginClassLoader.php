@@ -33,6 +33,7 @@ class TrustedPluginClassLoader
     public function bootstrapTrustedPlugins(array $trustedPlugins): void
     {
         $this->errors = [];
+        $this->loadPluginBootstrapFiles($trustedPlugins);
         $this->registerPluginClassNamespaces($trustedPlugins);
         $this->loadPluginRootAutoloaders($trustedPlugins);
     }
@@ -92,6 +93,24 @@ class TrustedPluginClassLoader
         }
     }
 
+    /**
+     * @param array<string, string> $trustedPlugins
+     */
+    public function loadPluginBootstrapFiles(array $trustedPlugins): void
+    {
+        foreach ($trustedPlugins as $uniqueKey => $version) {
+            $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/' . $uniqueKey . '/' . $version;
+            $pluginReference = $uniqueKey . '/' . $version;
+
+            $this->loadPluginBootstrapDirectory($pluginRoot . '/catalog/includes/extra_configures', $pluginReference);
+            $this->loadPluginBootstrapDirectory($pluginRoot . '/catalog/includes/extra_datafiles', $pluginReference);
+            $this->loadPluginBootstrapDirectory($pluginRoot . '/admin/includes/extra_configures', $pluginReference);
+            $this->loadPluginBootstrapDirectory($pluginRoot . '/admin/includes/extra_datafiles', $pluginReference);
+            $this->loadPluginBootstrapFile($pluginRoot . '/database_tables.php', $pluginReference);
+            $this->loadPluginBootstrapFile($pluginRoot . '/filenames.php', $pluginReference);
+        }
+    }
+
     public static function loadPluginRootAutoloaderFile(string $autoloadFile, Loader $psr4Autoloader): void
     {
         $loaderId = spl_object_id($psr4Autoloader);
@@ -121,6 +140,45 @@ class TrustedPluginClassLoader
         }
 
         return $result;
+    }
+
+    private function loadPluginBootstrapDirectory(string $directory, string $pluginReference): void
+    {
+        if (!is_dir($directory)) {
+            return;
+        }
+
+        $directoryHandle = @dir($directory);
+        if ($directoryHandle === false) {
+            return;
+        }
+
+        while (($file = $directoryHandle->read()) !== false) {
+            if (preg_match('~^[^\._].*\.php$~i', $file) !== 1) {
+                continue;
+            }
+
+            $this->loadPluginBootstrapFile($directory . '/' . $file, $pluginReference);
+        }
+
+        $directoryHandle->close();
+    }
+
+    private function loadPluginBootstrapFile(string $file, string $pluginReference): void
+    {
+        if (!file_exists($file)) {
+            return;
+        }
+
+        try {
+            self::includePhpFile($file);
+        } catch (Throwable $exception) {
+            $this->errors[] = sprintf(
+                'Failed loading plugin bootstrap file from %s: %s',
+                $pluginReference . '/' . ltrim(str_replace('\\', '/', substr($file, strlen(DIR_FS_CATALOG . 'zc_plugins/' . $pluginReference))), '/'),
+                self::sanitizeErrorMessage($exception->getMessage(), dirname($file), $pluginReference)
+            );
+        }
     }
 
     private static function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string

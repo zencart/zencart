@@ -21,6 +21,10 @@ class ConsoleKernelTest extends TestCase
     protected $preserveGlobalState = false;
     private string $basePath = '';
     private string $catalogPath = '';
+    /**
+     * @var string[]
+     */
+    private array $pluginRootsToRemove = [];
 
     public static function setUpBeforeClass(): void
     {
@@ -44,6 +48,10 @@ class ConsoleKernelTest extends TestCase
     {
         $this->removeDirectory($this->basePath);
         (new TestFrameworkFilesystem())->removePlugin('zenTestPlugin', 'v1.0.0', DIR_FS_CATALOG);
+        foreach ($this->pluginRootsToRemove as $pluginRoot) {
+            $this->removeDirectory(dirname($pluginRoot));
+        }
+        $this->pluginRootsToRemove = [];
         parent::tearDown();
     }
 
@@ -200,6 +208,128 @@ class ConsoleKernelTest extends TestCase
         $this->assertSame('True', file_get_contents($markerFile));
         $this->assertStringContainsString('Available commands:', stream_get_contents($stdout, -1, 0));
         $this->assertSame('', stream_get_contents($stderr, -1, 0));
+    }
+
+    public function testTrustedPluginAutoloaderLoadsPluginDataFilesBeforeCommandDiscovery(): void
+    {
+        [$stdout, $stderr, $output] = $this->makeOutput();
+        $pluginKey = 'zenTestPluginBootstrapOrder';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+
+        mkdir($pluginRoot . '/catalog/includes/extra_configures', 0777, true);
+        mkdir($pluginRoot . '/Console/Commands', 0777, true);
+        mkdir($pluginRoot . '/support', 0777, true);
+
+        file_put_contents(
+            $pluginRoot . '/catalog/includes/extra_configures/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_BOOTSTRAP_READY', 'yes');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/filenames.php',
+            "<?php\ndefine('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP_READY', 'zen_test_bootstrap_ready.php');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/support/Status.php',
+            <<<'PHP'
+<?php
+
+namespace ZenTestPluginBootstrapOrder\Support;
+
+class Status
+{
+    public static function message(): string
+    {
+        return FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP_READY . ':' . ZEN_TEST_PLUGIN_BOOTSTRAP_READY;
+    }
+}
+PHP
+        );
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            <<<'PHP'
+<?php
+
+if (!defined('ZEN_TEST_PLUGIN_BOOTSTRAP_READY') || !defined('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP_READY')) {
+    throw new RuntimeException('plugin bootstrap constants missing');
+}
+
+/** @var \Aura\Autoload\Loader $psr4Autoloader */
+$psr4Autoloader->addPrefix('ZenTestPluginBootstrapOrder\\Support', __DIR__ . '/support/');
+PHP
+        );
+        file_put_contents(
+            $pluginRoot . '/Console/Commands/BootstrapAwareCommand.php',
+            <<<'PHP'
+<?php
+
+namespace Zencart\Plugins\Console\ZenTestPluginBootstrapOrder\Commands;
+
+use Zencart\Console\ConsoleCommand;
+use Zencart\Console\ConsoleInput;
+use Zencart\Console\ConsoleOutput;
+use ZenTestPluginBootstrapOrder\Support\Status;
+
+class BootstrapAwareCommand extends ConsoleCommand
+{
+    public function getName(): string
+    {
+        return 'zen-test:bootstrap-aware';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Uses plugin constants during trusted CLI bootstrap.';
+    }
+
+    public function handle(ConsoleInput $input, ConsoleOutput $output): int
+    {
+        $output->writeln(Status::message());
+
+        return 0;
+    }
+}
+PHP
+        );
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    \Zencart\Plugins\Console\ZenTestPluginBootstrapOrder\Commands\BootstrapAwareCommand::class,
+];
+PHP
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $discovery = new PluginCommandDiscovery(
+            DIR_FS_CATALOG . 'zc_plugins',
+            $psr4Autoloader,
+            [$pluginKey => 'v1.0.0']
+        );
+
+        $kernel = new ConsoleKernel(
+            null,
+            $discovery,
+            [],
+            null,
+            null,
+            null,
+            $psr4Autoloader,
+            [$pluginKey => 'v1.0.0']
+        );
+        $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'zen-test:bootstrap-aware']), $output);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertSame('', stream_get_contents($stderr, -1, 0));
+        $this->assertStringContainsString(
+            'zen_test_bootstrap_ready.php:yes',
+            stream_get_contents($stdout, -1, 0)
+        );
     }
 
     public function testPluginCommandDiscoveryCanUseTrustedCatalogPluginClasses(): void
@@ -458,6 +588,34 @@ PHP
         $stderr = fopen('php://temp', 'w+');
 
         return [$stdout, $stderr, new ConsoleOutput($stdout, $stderr)];
+    }
+
+    private function createPluginFixture(string $pluginKey): string
+    {
+        $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/v1.0.0';
+        mkdir($pluginRoot . '/Console', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/manifest.php',
+            <<<'PHP'
+<?php
+
+return [
+    'pluginVersion' => 'v1.0.0',
+    'pluginName' => 'Fixture Plugin',
+    'pluginDescription' => 'Fixture plugin',
+    'pluginAuthor' => 'Zen Cart Development Team',
+    'pluginId' => null,
+    'zcVersions' => [],
+    'changelog' => '',
+    'github_repo' => '',
+    'pluginGroups' => [],
+];
+PHP
+        );
+
+        $this->pluginRootsToRemove[] = $pluginRoot;
+
+        return $pluginRoot;
     }
 
     private function removeDirectory(string $path): void

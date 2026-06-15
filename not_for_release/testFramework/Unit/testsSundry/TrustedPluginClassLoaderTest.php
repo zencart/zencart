@@ -222,6 +222,81 @@ PHP
         $this->assertSame('2', file_get_contents($markerFile));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testBootstrapTrustedPluginsLoadsStandardPluginFilesBeforeRootAutoloader(): void
+    {
+        $pluginKey = 'zenTestPluginBootstrapOrder';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $markerFile = $pluginRoot . '/bootstrap-order.json';
+
+        mkdir($pluginRoot . '/catalog/includes/extra_configures', 0777, true);
+        mkdir($pluginRoot . '/catalog/includes/extra_datafiles', 0777, true);
+        mkdir($pluginRoot . '/admin/includes/extra_configures', 0777, true);
+        mkdir($pluginRoot . '/admin/includes/extra_datafiles', 0777, true);
+
+        file_put_contents(
+            $pluginRoot . '/catalog/includes/extra_configures/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_CONFIG', 'catalog-config');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/catalog/includes/extra_datafiles/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_DATAFILE', 'catalog-data');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/admin/includes/extra_configures/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_CONFIG', 'admin-config');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/admin/includes/extra_datafiles/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_DATAFILE', 'admin-data');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/database_tables.php',
+            "<?php\ndefine('TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP', 'zen_test_bootstrap');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/filenames.php',
+            "<?php\ndefine('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP', 'zen_test_bootstrap.php');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\n"
+            . "file_put_contents("
+            . var_export($markerFile, true)
+            . ", json_encode([\n"
+            . "    'config' => defined('ZEN_TEST_PLUGIN_CONFIG') ? ZEN_TEST_PLUGIN_CONFIG : null,\n"
+            . "    'datafile' => defined('ZEN_TEST_PLUGIN_DATAFILE') ? ZEN_TEST_PLUGIN_DATAFILE : null,\n"
+            . "    'admin_config' => defined('ZEN_TEST_PLUGIN_ADMIN_CONFIG') ? ZEN_TEST_PLUGIN_ADMIN_CONFIG : null,\n"
+            . "    'admin_datafile' => defined('ZEN_TEST_PLUGIN_ADMIN_DATAFILE') ? ZEN_TEST_PLUGIN_ADMIN_DATAFILE : null,\n"
+            . "    'table' => defined('TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP') ? TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP : null,\n"
+            . "    'filename' => defined('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP') ? FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP : null,\n"
+            . "]));\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $loader = new TrustedPluginClassLoader($psr4Autoloader);
+        $loader->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $this->assertSame([], $loader->getErrors());
+        $this->assertSame(
+            [
+                'config' => 'catalog-config',
+                'datafile' => 'catalog-data',
+                'admin_config' => 'admin-config',
+                'admin_datafile' => 'admin-data',
+                'table' => 'zen_test_bootstrap',
+                'filename' => 'zen_test_bootstrap.php',
+            ],
+            json_decode((string)file_get_contents($markerFile), true)
+        );
+    }
+
     private function createPluginFixture(string $pluginKey): string
     {
         $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/v1.0.0';
