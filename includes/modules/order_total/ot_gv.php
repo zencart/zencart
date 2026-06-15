@@ -96,7 +96,7 @@ class ot_gv
         $this->code = 'ot_gv';
         $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
         $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
-        
+
         $sort_order = zen_config('MODULE_ORDER_TOTAL_GV_SORT_ORDER');
         if (null === $sort_order) {
             $this->sort_order = null;
@@ -122,7 +122,8 @@ class ot_gv
             $this->checkbox =
                 MODULE_ORDER_TOTAL_GV_USER_PROMPT .
                 '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . $cot_gv . '" onfocus="if (this.value == \'' . $cot_gv . '\') this.value = \'\';">' .
-                ($gv_account_balance > 0
+                (
+                    $gv_account_balance > 0
                     ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($gv_account_balance)
                     : ''
                 );
@@ -151,7 +152,7 @@ class ot_gv
             $this->deduction = $od_amount['total'];
             if ($od_amount['total'] > 0) {
                 $tax = 0;
-                foreach($order->info['tax_groups'] as $key => $value) {
+                foreach ($order->info['tax_groups'] as $key => $value) {
                     if (isset($od_amount['tax_groups'][$key])) {
                         $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
                         $tax += $od_amount['tax_groups'][$key];
@@ -247,7 +248,7 @@ class ot_gv
         if (str_starts_with($ordered_product['model'] ?? '', 'GIFT')) {
             // determine how much GV was purchased
             // check if GV was purchased on Special
-            $gv_original_price = (new Product((int)$ordered_product['id']))->get('products_price');
+            $gv_original_price = new Product((int)$ordered_product['id'])->get('products_price');
             // if prices differ assume Special and get Special Price
 
             // Do not use this on GVs Priced by Attribute
@@ -327,7 +328,7 @@ class ot_gv
                     [
                         'title' => MODULE_ORDER_TOTAL_GV_TEXT_ENTER_CODE,
                         'field' => zen_draw_input_field('gv_redeem_code', '', 'id="disc-' . $this->code . '" onkeyup="submitFunction(0,0)"'),
-                        'tag' => 'disc-'.$this->code,
+                        'tag' => 'disc-' . $this->code,
                     ],
                 ],
             ];
@@ -419,7 +420,7 @@ class ot_gv
                 // date
                 // redemption flag
                 // now update customer account with gv_amount
-                $gv_amount_result=$db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id'] . " LIMIT 1");
+                $gv_amount_result = $db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id'] . " LIMIT 1");
                 $customer_gv = false;
                 $total_gv_amount = $gv_amount;
                 if (!$gv_amount_result->EOF) {
@@ -464,7 +465,7 @@ class ot_gv
         $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
         $full_cost = $save_total_cost - $gv_payment_amount;
         if ($full_cost < 0) {
-           $gv_payment_amount = $save_total_cost;
+            $gv_payment_amount = $save_total_cost;
         }
         return zen_round($gv_payment_amount, 2);
     }
@@ -487,7 +488,7 @@ class ot_gv
                 if ($order->info['tax'] <= 0) {
                     $ratio_tax = 0;
                 } else {
-                    $ratio_tax = $tax_deduct/$order->info['tax'];
+                    $ratio_tax = $tax_deduct / $order->info['tax'];
                 }
                 $tax_deduct = 0;
                 $od_amount['tax'] = $tax_deduct;
@@ -512,7 +513,7 @@ class ot_gv
                 $tax_description = zen_get_tax_description($this->tax_class);
                 $od_amount['tax_groups'][$tax_description] = $od_amount['tax'];
                 break;
-          default:
+            default:
                 break;
         }
         return $od_amount;
@@ -724,7 +725,7 @@ class ot_gv
         global $db;
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('This module is installed', 'MODULE_ORDER_TOTAL_GV_STATUS', 'true', '', 6, 1,'zen_cfg_select_option([\'true\'], ', now())"
-);
+        );
         $db->Execute(
             "INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Sort Order', 'MODULE_ORDER_TOTAL_GV_SORT_ORDER', '840', 'Sort order of display.', 6, 2, now())"
         );
@@ -762,7 +763,7 @@ class ot_gv
      */
     public function help()
     {
-       return ['link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/'];
+        return ['link' => 'https://docs.zen-cart.com/user/order_total/gift_certificates/'];
     }
 
     /**
