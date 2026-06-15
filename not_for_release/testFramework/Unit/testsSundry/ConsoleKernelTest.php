@@ -105,6 +105,42 @@ class ConsoleKernelTest extends TestCase
         $this->assertStringContainsString('Hello team', stream_get_contents($stdout, -1, 0));
     }
 
+    public function testBrokenTrustedPluginAutoloaderBecomesBootWarning(): void
+    {
+        [$stdout, $stderr, $output] = $this->makeOutput();
+        (new TestFrameworkFilesystem())->installPlugin('zenTestPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
+        $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/zenTestPlugin/v1.0.0';
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nthrow new RuntimeException('autoload exploded');\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $kernel = new ConsoleKernel(
+            null,
+            null,
+            [],
+            null,
+            null,
+            null,
+            $psr4Autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+        $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'list']), $output);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('Available commands:', stream_get_contents($stdout, -1, 0));
+        $this->assertStringContainsString(
+            'Failed loading plugin autoloader from zenTestPlugin/v1.0.0/psr4Autoload.php',
+            stream_get_contents($stderr, -1, 0)
+        );
+    }
+
     public function testPluginCommandDiscoveryCanUseTrustedCatalogPluginClasses(): void
     {
         [$stdout, , $output] = $this->makeOutput();

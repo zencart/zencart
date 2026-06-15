@@ -56,8 +56,9 @@ class ConsoleKernel
             return;
         }
 
-        (new TrustedPluginClassLoader($this->psr4Autoloader))
-            ->bootstrapTrustedPlugins($this->trustedPluginVersions);
+        $trustedPluginClassLoader = new TrustedPluginClassLoader($this->psr4Autoloader);
+        $trustedPluginClassLoader->bootstrapTrustedPlugins($this->trustedPluginVersions);
+        $this->bootWarnings = array_merge($this->bootWarnings, $trustedPluginClassLoader->getErrors());
         $this->registerCoreCommands();
         $this->registerPluginCommands();
         $this->booted = true;

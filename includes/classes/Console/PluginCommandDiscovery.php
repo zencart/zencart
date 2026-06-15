@@ -127,7 +127,7 @@ class PluginCommandDiscovery
         }
 
         try {
-            self::includePhpFile($autoloadFile, ['psr4Autoloader' => $this->autoloader]);
+            TrustedPluginClassLoader::loadPluginRootAutoloaderFile($autoloadFile, $this->autoloader);
         } catch (Throwable $exception) {
             $pluginReference = $pluginKey . '/' . $pluginVersion;
             $this->errors[] = sprintf(

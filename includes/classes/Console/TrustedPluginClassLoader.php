@@ -9,9 +9,20 @@ declare(strict_types=1);
 namespace Zencart\Console;
 
 use Aura\Autoload\Loader;
+use Throwable;
 
 class TrustedPluginClassLoader
 {
+    /**
+     * @var string[]
+     */
+    private array $errors = [];
+
+    /**
+     * @var array<string, true>
+     */
+    private static array $loadedAutoloaderFiles = [];
+
     public function __construct(private ?Loader $psr4Autoloader = null)
     {
     }
@@ -21,8 +32,17 @@ class TrustedPluginClassLoader
      */
     public function bootstrapTrustedPlugins(array $trustedPlugins): void
     {
+        $this->errors = [];
         $this->registerPluginClassNamespaces($trustedPlugins);
         $this->loadPluginRootAutoloaders($trustedPlugins);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 
     /**
@@ -59,8 +79,28 @@ class TrustedPluginClassLoader
                 continue;
             }
 
-            self::includePhpFile($autoloadFile, ['psr4Autoloader' => $this->psr4Autoloader]);
+            try {
+                self::loadPluginRootAutoloaderFile($autoloadFile, $this->psr4Autoloader);
+            } catch (Throwable $exception) {
+                $pluginReference = $uniqueKey . '/' . $version;
+                $this->errors[] = sprintf(
+                    'Failed loading plugin autoloader from %s: %s',
+                    $pluginReference . '/psr4Autoload.php',
+                    self::sanitizeErrorMessage($exception->getMessage(), dirname($autoloadFile), $pluginReference)
+                );
+            }
         }
+    }
+
+    public static function loadPluginRootAutoloaderFile(string $autoloadFile, Loader $psr4Autoloader): void
+    {
+        $normalizedPath = str_replace('\\', '/', realpath($autoloadFile) ?: $autoloadFile);
+        if (isset(self::$loadedAutoloaderFiles[$normalizedPath])) {
+            return;
+        }
+
+        self::includePhpFile($autoloadFile, ['psr4Autoloader' => $psr4Autoloader]);
+        self::$loadedAutoloaderFiles[$normalizedPath] = true;
     }
 
     /**
@@ -80,5 +120,27 @@ class TrustedPluginClassLoader
         }
 
         return $result;
+    }
+
+    private static function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string
+    {
+        $normalizedAbsolutePath = rtrim(str_replace('\\', '/', $absolutePath), '/');
+        $normalizedRelativePath = rtrim(str_replace('\\', '/', $relativePath), '/');
+        $absolutePathPattern = implode(
+            '[\\\\/]',
+            array_map(
+                static fn(string $segment): string => preg_quote($segment, '~'),
+                explode('/', $normalizedAbsolutePath)
+            )
+        );
+
+        return (string)preg_replace_callback(
+            '~' . $absolutePathPattern . '(?:[\\\\/][^:\s\'"]+)*~',
+            static function (array $matches) use ($normalizedAbsolutePath, $normalizedRelativePath): string {
+                $normalizedMatch = str_replace('\\', '/', $matches[0]);
+                return $normalizedRelativePath . substr($normalizedMatch, strlen($normalizedAbsolutePath));
+            },
+            $message
+        );
     }
 }
