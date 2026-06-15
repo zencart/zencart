@@ -36,7 +36,8 @@ class ConsoleKernel
         array $bootWarnings = [],
         private $pluginListProvider = null,
         private $versionProvider = null,
-        private $configurationProvider = null
+        private $configurationProvider = null,
+        private $psr4Autoloader = null
     ) {
         $this->registry = $registry ?? new CommandRegistry();
         $this->resolver = new CommandResolver($this->registry);

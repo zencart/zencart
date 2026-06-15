@@ -49,7 +49,8 @@ $kernel = new \Zencart\Console\ConsoleKernel(
     $trustedPluginContext['warnings'],
     $pluginListProvider,
     $versionProvider,
-    $configurationProvider
+    $configurationProvider,
+    $psr4Autoloader
 );
 
 exit($kernel->run($input, $output));
