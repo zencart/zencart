@@ -9,6 +9,7 @@ namespace Tests\Unit\testsSundry;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\TestFrameworkFilesystem;
 use Tests\Support\UnitTestBootstrap;
+use Zencart\Console\TrustedPluginClassLoader;
 use Zencart\Console\Commands\CurrencyRatesUpdateCommand;
 use Zencart\Console\ConsoleInput;
 use Zencart\Console\ConsoleOutput;
@@ -46,12 +47,13 @@ class CurrencyRatesUpdateCommandTest extends TestCase
             'CURRENCY_SERVER_PRIMARY' => 'zztestcli',
             'CURRENCY_SERVER_BACKUP' => '',
             'CURRENCY_UPLIFT_RATIO' => '0',
-        ]), null, static fn(): array => ['zenTestCurrencyPlugin' => 'v1.0.0']);
+        ]), null, static fn(): array => ['zenTestCurrencyPlugin' => 'v1.0.0'], $this->makeTrustedPluginClassLoader());
 
         $exitCode = $command->handle(new ConsoleInput(['zc_cli.php', 'currency-rates:update']), $output);
 
         $this->assertSame(0, $exitCode);
         $this->assertTrue($GLOBALS['zcCurrencyUpdateInvoked'] ?? false);
+        $this->assertSame('1.25', $GLOBALS['zcCurrencyUpdateRate'] ?? null);
         $this->assertSame('', stream_get_contents($stdout, -1, 0));
         $this->assertSame('', stream_get_contents($stderr, -1, 0));
     }
@@ -69,12 +71,13 @@ class CurrencyRatesUpdateCommandTest extends TestCase
             'CURRENCY_SERVER_PRIMARY' => 'missingprimary',
             'CURRENCY_SERVER_BACKUP' => 'zztestbackup',
             'CURRENCY_UPLIFT_RATIO' => '0',
-        ]), null, static fn(): array => ['zenTestCurrencyPlugin' => 'v1.0.0']);
+        ]), null, static fn(): array => ['zenTestCurrencyPlugin' => 'v1.0.0'], $this->makeTrustedPluginClassLoader());
 
         $exitCode = $command->handle(new ConsoleInput(['zc_cli.php', 'currency-rates:update']), $output);
 
         $this->assertSame(0, $exitCode);
         $this->assertTrue($GLOBALS['zcCurrencyUpdateInvoked'] ?? false);
+        $this->assertSame('1.25', $GLOBALS['zcCurrencyUpdateRate'] ?? null);
         $this->assertSame('', stream_get_contents($stdout, -1, 0));
         $this->assertSame('', stream_get_contents($stderr, -1, 0));
     }
@@ -106,6 +109,7 @@ class CurrencyRatesUpdateCommandTest extends TestCase
     {
         $GLOBALS['zcCurrencyUpdateInvoked'] = false;
         $GLOBALS['zcCurrencyUpdateHasCurlHelper'] = false;
+        $GLOBALS['zcCurrencyUpdateRate'] = null;
 
         if (!function_exists('zc_cli_get_db_context')) {
             eval(<<<'PHP'
@@ -125,6 +129,15 @@ namespace {
     {
         $GLOBALS['zcCurrencyUpdateInvoked'] = true;
         $GLOBALS['zcCurrencyUpdateHasCurlHelper'] = function_exists('zenDoCurlRequest');
+        $quoteFunction = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
+        $rate = function_exists($quoteFunction) ? $quoteFunction('EUR', DEFAULT_CURRENCY) : '';
+
+        if (($rate === '' || $rate === false) && CURRENCY_SERVER_BACKUP !== '') {
+            $quoteFunction = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
+            $rate = function_exists($quoteFunction) ? $quoteFunction('EUR', DEFAULT_CURRENCY) : '';
+        }
+
+        $GLOBALS['zcCurrencyUpdateRate'] = $rate;
     }
 }
 PHP);
@@ -158,5 +171,13 @@ PHP);
         $stderr = fopen('php://temp', 'w+');
 
         return [$stdout, $stderr, new ConsoleOutput($stdout, $stderr)];
+    }
+
+    private function makeTrustedPluginClassLoader(): TrustedPluginClassLoader
+    {
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+
+        return new TrustedPluginClassLoader($psr4Autoloader);
     }
 }

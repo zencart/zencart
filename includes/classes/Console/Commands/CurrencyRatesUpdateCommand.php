@@ -13,6 +13,7 @@ use Zencart\Console\ConsoleCommand;
 use Zencart\Console\ConsoleInput;
 use Zencart\Console\ConsoleOutput;
 use Zencart\Console\LegacyAdminFunctionLoader;
+use Zencart\Console\TrustedPluginClassLoader;
 
 class CurrencyRatesUpdateCommand extends ConsoleCommand
 {
@@ -25,7 +26,8 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
     public function __construct(
         private $configurationProvider = null,
         private ?LegacyAdminFunctionLoader $legacyAdminFunctionLoader = null,
-        private $trustedPluginResolver = null
+        private $trustedPluginResolver = null,
+        private ?TrustedPluginClassLoader $trustedPluginClassLoader = null
     ) {
     }
 
@@ -132,6 +134,7 @@ class CurrencyRatesUpdateCommand extends ConsoleCommand
             $trustedPlugins = $trustedPluginContext['plugins'] ?? [];
         }
 
+        ($this->trustedPluginClassLoader ?? new TrustedPluginClassLoader())->registerPluginClassNamespaces($trustedPlugins);
         ($this->legacyAdminFunctionLoader ?? new LegacyAdminFunctionLoader())->loadExtraFunctions($trustedPlugins);
 
         // NOTE: This isn't necessarily going to work since it's not running in a normal Admin context the way the legacy implementation did.
