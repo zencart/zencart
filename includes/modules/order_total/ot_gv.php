@@ -58,12 +58,12 @@ class ot_gv
      * $include_shipping allow shipping costs to be discounted by coupon if 'true'
      * @var string
      */
-    protected string $include_shipping;
+    public string $include_shipping = 'false';
     /**
      * $include_tax allow tax to be discounted by coupon if 'true'
      * @var string
      */
-    protected string $include_tax;
+    public string $include_tax = 'false';
     /**
      * $sort_order is the order priority of this order total module when displayed
      * @var int
