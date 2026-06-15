@@ -113,12 +113,35 @@ $psr4Autoloader->register();
 
 require DIR_FS_INCLUDES . 'psr4Autoload.php';
 
+if (!function_exists('zc_cli_load_core_file_db_name_preconditions')) {
+    function zc_cli_load_core_file_db_name_preconditions(): void
+    {
+        static $loaded = false;
+
+        if ($loaded) {
+            return;
+        }
+
+        $PHP_SELF = basename($_SERVER['SCRIPT_NAME'] ?? 'zc_cli.php');
+        require_once DIR_FS_INCLUDES . 'init_includes/init_file_db_names.php';
+        $loaded = true;
+    }
+}
+
+zc_cli_load_core_file_db_name_preconditions();
+
 if (!function_exists('zc_cli_get_db_context')) {
     /**
      * @return array{db: null|\queryFactory, warnings: string[]}
      */
     function zc_cli_get_db_context(): array
     {
+        static $context = null;
+
+        if (is_array($context)) {
+            return $context;
+        }
+
         $warnings = [];
 
         $configureFiles = [
@@ -136,12 +159,12 @@ if (!function_exists('zc_cli_get_db_context')) {
 
         if (!function_exists('mysqli_connect')) {
             $warnings[] = 'Command disabled: the MySQL connector for PHP is unavailable.';
-            return ['db' => null, 'warnings' => $warnings];
+            return $context = ['db' => null, 'warnings' => $warnings];
         }
 
         if (!$configureFileFound) {
             $warnings[] = 'Command disabled: store database configuration is unavailable.';
-            return ['db' => null, 'warnings' => $warnings];
+            return $context = ['db' => null, 'warnings' => $warnings];
         }
 
         foreach ($configureFiles as $configureFile) {
@@ -156,7 +179,7 @@ if (!function_exists('zc_cli_get_db_context')) {
 
         if (!defined('DB_TYPE') || !defined('DB_SERVER') || !defined('DB_SERVER_USERNAME') || !defined('DB_SERVER_PASSWORD') || !defined('DB_DATABASE')) {
             $warnings[] = 'Command disabled: store database configuration is unavailable.';
-            return ['db' => null, 'warnings' => $warnings];
+            return $context = ['db' => null, 'warnings' => $warnings];
         }
 
         require_once DIR_FS_INCLUDES . 'database_tables.php';
@@ -166,10 +189,10 @@ if (!function_exists('zc_cli_get_db_context')) {
         $db = new \queryFactory();
         if (!$db->connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD, DB_DATABASE, 'unused', false)) {
             $warnings[] = 'Command disabled: unable to connect to the store database.';
-            return ['db' => null, 'warnings' => $warnings];
+            return $context = ['db' => null, 'warnings' => $warnings];
         }
 
-        return ['db' => $db, 'warnings' => $warnings];
+        return $context = ['db' => $db, 'warnings' => $warnings];
     }
 }
 
@@ -177,9 +200,9 @@ if (!function_exists('zc_cli_get_plugin_repository_context')) {
     /**
      * @return array{repository: null|\Zencart\DbRepositories\PluginControlRepository, warnings: string[]}
      */
-    function zc_cli_get_plugin_repository_context(): array
+    function zc_cli_get_plugin_repository_context(?array $dbContext = null): array
     {
-        $context = zc_cli_get_db_context();
+        $context = $dbContext ?? zc_cli_get_db_context();
 
         return [
             'repository' => $context['db'] === null ? null : new \Zencart\DbRepositories\PluginControlRepository($context['db']),

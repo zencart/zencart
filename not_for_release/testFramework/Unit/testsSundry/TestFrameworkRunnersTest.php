@@ -1324,6 +1324,42 @@ PHP
         $this->assertSame('/store/|/store/secretadmin/|secretadmin', implode(PHP_EOL, $output));
     }
 
+    public function testApplicationCliBootstrapLoadsCoreFileDbNamePreconditions(): void
+    {
+        $tempRoot = $this->createMinimalCliRoot(
+            <<<'PHP'
+<?php
+define('HTTP_SERVER', 'http://localhost');
+define('DIR_WS_CATALOG', '/');
+define('DIR_FS_CATALOG', dirname(__FILE__) . '/../');
+define('DB_TYPE', 'mysql');
+define('DB_PREFIX', '');
+define('DB_SERVER', 'invalid-host-for-cli-tests');
+define('DB_SERVER_USERNAME', 'root');
+define('DB_SERVER_PASSWORD', 'root');
+define('DB_DATABASE', 'db');
+PHP
+        );
+
+        $script = $tempRoot . '/print_cli_preconditions.php';
+        file_put_contents(
+            $script,
+            <<<'PHP'
+<?php
+require __DIR__ . '/includes/application_cli_bootstrap.php';
+echo (defined('FILENAME_ACCOUNT') ? FILENAME_ACCOUNT : 'missing')
+    . '|'
+    . (defined('TABLE_PRODUCT_MUSIC_EXTRA') ? TABLE_PRODUCT_MUSIC_EXTRA : 'missing');
+PHP
+        );
+        $command = sprintf('%s %s', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
+        $this->assertSame('account|product_music_extra', implode(PHP_EOL, $output));
+    }
+
     public function testDescribeWorkerRuntimeUsesTestDatabaseBaseEnvironmentFallback(): void
     {
         $script = $this->rootPath . '/not_for_release/testFramework/describe-worker-runtime.php';
@@ -1349,6 +1385,8 @@ PHP
         mkdir($root . '/bin', 0777, true);
         mkdir($root . '/includes/functions', 0777, true);
         mkdir($root . '/includes/extra_configures', 0777, true);
+        mkdir($root . '/includes/extra_datafiles', 0777, true);
+        mkdir($root . '/includes/init_includes', 0777, true);
         mkdir($root . '/includes/classes/traits', 0777, true);
         mkdir($root . '/includes/classes/vendors/AuraAutoload/src', 0777, true);
         mkdir($root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata', 0777, true);
@@ -1359,15 +1397,20 @@ PHP
         copy($this->rootPath . '/bin/zencart', $root . '/bin/zencart');
         copy($this->rootPath . '/includes/application_cli_bootstrap.php', $root . '/includes/application_cli_bootstrap.php');
         copy($this->rootPath . '/includes/defined_paths.php', $root . '/includes/defined_paths.php');
+        copy($this->rootPath . '/includes/filenames.php', $root . '/includes/filenames.php');
         copy($this->rootPath . '/includes/psr4Autoload.php', $root . '/includes/psr4Autoload.php');
         copy($this->rootPath . '/includes/database_tables.php', $root . '/includes/database_tables.php');
         copy($this->rootPath . '/includes/functions/php_polyfills.php', $root . '/includes/functions/php_polyfills.php');
+        copy($this->rootPath . '/includes/functions/compatibility.php', $root . '/includes/functions/compatibility.php');
         copy($this->rootPath . '/includes/functions/zen_define_default.php', $root . '/includes/functions/zen_define_default.php');
         copy($this->rootPath . '/includes/functions/zen_config.php', $root . '/includes/functions/zen_config.php');
         copy($this->rootPath . '/includes/functions/functions_error_handling.php', $root . '/includes/functions/functions_error_handling.php');
+        copy($this->rootPath . '/includes/init_includes/init_file_db_names.php', $root . '/includes/init_includes/init_file_db_names.php');
         copy($this->rootPath . '/includes/extra_configures/set_time_zone.php', $root . '/includes/extra_configures/set_time_zone.php');
+        copy($this->rootPath . '/includes/extra_datafiles/music_type_database_names.php', $root . '/includes/extra_datafiles/music_type_database_names.php');
         copy($this->rootPath . '/includes/classes/class.base.php', $root . '/includes/classes/class.base.php');
         copy($this->rootPath . '/includes/classes/EventDto.php', $root . '/includes/classes/EventDto.php');
+        copy($this->rootPath . '/includes/classes/Request.php', $root . '/includes/classes/Request.php');
         copy($this->rootPath . '/includes/classes/traits/Singleton.php', $root . '/includes/classes/traits/Singleton.php');
         copy($this->rootPath . '/includes/classes/traits/NotifierManager.php', $root . '/includes/classes/traits/NotifierManager.php');
         copy($this->rootPath . '/includes/classes/traits/ObserverManager.php', $root . '/includes/classes/traits/ObserverManager.php');

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 $psr4Autoloader = require __DIR__ . '/includes/application_cli_bootstrap.php';
 $dbContext = zc_cli_get_db_context();
-$pluginRepositoryContext = zc_cli_get_plugin_repository_context();
+$pluginRepositoryContext = zc_cli_get_plugin_repository_context($dbContext);
 $trustedPluginContext = zc_cli_resolve_trusted_plugin_versions(
     $pluginRepositoryContext['repository'],
     $pluginRepositoryContext['warnings']
