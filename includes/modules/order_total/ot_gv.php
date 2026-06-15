@@ -23,12 +23,12 @@ class ot_gv
      * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
      * @var string
      */
-    public string $calculate_tax;
+    protected string $calculate_tax;
     /**
      * $checkbox is the output to request the amount of gift vouchers the user wants to redeem
      * @var string
      */
-    public string $checkbox;
+    protected string $checkbox;
     /**
      * $code determines the internal 'code' name used to designate "this" order total module
      * @var string
@@ -38,12 +38,12 @@ class ot_gv
      * $credit_class flag to indicate order totals method is a credit class
      * @var boolean
      */
-    public bool $credit_class;
+    public bool $credit_class = true;
     /**
      * $credit_tax if 'true' tax is to be calculated on purchased GVs
      * @var string
      */
-    public string $credit_tax;
+    protected string $credit_tax;
     /**
      * $deduction amount of deduction calculated/afforded while being applied to an order
      * @var float|null
@@ -55,20 +55,15 @@ class ot_gv
      */
     public string $description;
     /**
-     * $header the module box header
-     * @var string
-     */
-    public string $header;
-    /**
      * $include_shipping allow shipping costs to be discounted by coupon if 'true'
      * @var string
      */
-    public string $include_shipping;
+    protected string $include_shipping;
     /**
      * $include_tax allow tax to be discounted by coupon if 'true'
      * @var string
      */
-    public string $include_tax;
+    protected string $include_tax;
     /**
      * $sort_order is the order priority of this order total module when displayed
      * @var int
@@ -78,7 +73,7 @@ class ot_gv
      * $tax_class is the Tax class to be applied to the coupon cost
      * @var
      */
-    public int $tax_class;
+    public int $tax_class = 0;
     /**
      * $title is the displayed name for this order total method
      * @var string
@@ -100,11 +95,11 @@ class ot_gv
         global $currencies;
         $this->code = 'ot_gv';
         $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
-        $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
         $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
         
         $sort_order = zen_config('MODULE_ORDER_TOTAL_GV_SORT_ORDER');
         if (null === $sort_order) {
+            $this->sort_order = null;
             return;
         }
         $this->sort_order = (int)$sort_order;
@@ -242,7 +237,7 @@ class ot_gv
      * queue or release newly-purchased GV's
      * @since ZC v1.0.3
      */
-    function update_credit_account($i)
+    public function update_credit_account($i)
     {
         global $db, $order, $insert_id;
 
