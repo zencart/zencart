@@ -104,8 +104,6 @@ class TrustedPluginClassLoader
 
             $this->loadPluginBootstrapDirectory($pluginRoot . '/catalog/includes/extra_configures', $pluginReference);
             $this->loadPluginBootstrapDirectory($pluginRoot . '/catalog/includes/extra_datafiles', $pluginReference);
-            $this->loadPluginBootstrapDirectory($pluginRoot . '/admin/includes/extra_configures', $pluginReference);
-            $this->loadPluginBootstrapDirectory($pluginRoot . '/admin/includes/extra_datafiles', $pluginReference);
             $this->loadPluginBootstrapFile($pluginRoot . '/database_tables.php', $pluginReference);
             $this->loadPluginBootstrapFile($pluginRoot . '/filenames.php', $pluginReference);
         }

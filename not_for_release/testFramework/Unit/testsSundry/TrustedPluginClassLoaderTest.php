@@ -246,11 +246,11 @@ PHP
         );
         file_put_contents(
             $pluginRoot . '/admin/includes/extra_configures/bootstrap.php',
-            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_CONFIG', 'admin-config');\n"
+            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_CONFIG_SHOULD_NOT_LOAD', 'admin-config');\n"
         );
         file_put_contents(
             $pluginRoot . '/admin/includes/extra_datafiles/bootstrap.php',
-            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_DATAFILE', 'admin-data');\n"
+            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_DATAFILE_SHOULD_NOT_LOAD', 'admin-data');\n"
         );
         file_put_contents(
             $pluginRoot . '/database_tables.php',
@@ -268,8 +268,8 @@ PHP
             . ", json_encode([\n"
             . "    'config' => defined('ZEN_TEST_PLUGIN_CONFIG') ? ZEN_TEST_PLUGIN_CONFIG : null,\n"
             . "    'datafile' => defined('ZEN_TEST_PLUGIN_DATAFILE') ? ZEN_TEST_PLUGIN_DATAFILE : null,\n"
-            . "    'admin_config' => defined('ZEN_TEST_PLUGIN_ADMIN_CONFIG') ? ZEN_TEST_PLUGIN_ADMIN_CONFIG : null,\n"
-            . "    'admin_datafile' => defined('ZEN_TEST_PLUGIN_ADMIN_DATAFILE') ? ZEN_TEST_PLUGIN_ADMIN_DATAFILE : null,\n"
+            . "    'admin_config' => defined('ZEN_TEST_PLUGIN_ADMIN_CONFIG_SHOULD_NOT_LOAD') ? ZEN_TEST_PLUGIN_ADMIN_CONFIG_SHOULD_NOT_LOAD : null,\n"
+            . "    'admin_datafile' => defined('ZEN_TEST_PLUGIN_ADMIN_DATAFILE_SHOULD_NOT_LOAD') ? ZEN_TEST_PLUGIN_ADMIN_DATAFILE_SHOULD_NOT_LOAD : null,\n"
             . "    'table' => defined('TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP') ? TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP : null,\n"
             . "    'filename' => defined('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP') ? FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP : null,\n"
             . "]));\n"
@@ -288,8 +288,8 @@ PHP
             [
                 'config' => 'catalog-config',
                 'datafile' => 'catalog-data',
-                'admin_config' => 'admin-config',
-                'admin_datafile' => 'admin-data',
+                'admin_config' => null,
+                'admin_datafile' => null,
                 'table' => 'zen_test_bootstrap',
                 'filename' => 'zen_test_bootstrap.php',
             ],

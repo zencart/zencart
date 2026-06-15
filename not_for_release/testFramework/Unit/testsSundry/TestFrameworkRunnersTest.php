@@ -1280,6 +1280,50 @@ PHP
         );
     }
 
+    public function testApplicationCliBootstrapHonorsConfigurePathConstants(): void
+    {
+        $tempRoot = $this->createMinimalCliRoot(
+            <<<'PHP'
+<?php
+define('HTTP_SERVER', 'http://localhost');
+define('DIR_WS_CATALOG', '/store/');
+define('DIR_FS_CATALOG', __DIR__ . '/../');
+define('DB_TYPE', 'mysql');
+define('DB_SERVER', 'invalid-host-for-cli-tests');
+define('DB_SERVER_USERNAME', 'root');
+define('DB_SERVER_PASSWORD', 'root');
+define('DB_DATABASE', 'db');
+PHP
+        );
+
+        mkdir($tempRoot . '/secretadmin/includes', 0777, true);
+        file_put_contents($tempRoot . '/secretadmin/includes/application_bootstrap.php', "<?php\n");
+        file_put_contents(
+            $tempRoot . '/secretadmin/includes/configure.php',
+            <<<'PHP'
+<?php
+define('DIR_FS_ADMIN', dirname(__DIR__) . '/');
+define('DIR_WS_ADMIN', '/store/secretadmin/');
+PHP
+        );
+
+        $script = $tempRoot . '/print_cli_paths.php';
+        file_put_contents(
+            $script,
+            <<<'PHP'
+<?php
+require __DIR__ . '/includes/application_cli_bootstrap.php';
+echo DIR_WS_CATALOG . '|' . DIR_WS_ADMIN . '|' . basename(rtrim(DIR_FS_ADMIN, '/'));
+PHP
+        );
+        $command = sprintf('%s %s', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
+        $this->assertSame('/store/|/store/secretadmin/|secretadmin', implode(PHP_EOL, $output));
+    }
+
     public function testDescribeWorkerRuntimeUsesTestDatabaseBaseEnvironmentFallback(): void
     {
         $script = $this->rootPath . '/not_for_release/testFramework/describe-worker-runtime.php';
