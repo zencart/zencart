@@ -58,11 +58,11 @@ class ConsoleKernel
             return;
         }
 
-        ($this->cliConfigurationLoader ?? new CliConfigurationLoader())->bootstrap($this->db);
-
         $trustedPluginClassLoader = new TrustedPluginClassLoader($this->psr4Autoloader);
-        $trustedPluginClassLoader->bootstrapTrustedPlugins($this->trustedPluginVersions);
+        $trustedPluginClassLoader->loadPluginBootstrapFiles($this->trustedPluginVersions);
+        $trustedPluginClassLoader->registerPluginClassNamespaces($this->trustedPluginVersions);
         $this->bootWarnings = array_merge($this->bootWarnings, $trustedPluginClassLoader->getErrors());
+        ($this->cliConfigurationLoader ?? new CliConfigurationLoader())->bootstrap($this->db);
         $this->registerCoreCommands();
         $this->registerPluginCommands();
         $this->booted = true;

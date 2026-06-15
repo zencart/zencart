@@ -1360,6 +1360,45 @@ PHP
         $this->assertSame('account|product_music_extra', implode(PHP_EOL, $output));
     }
 
+    public function testApplicationCliBootstrapLoadsCoreExtraConfigureFiles(): void
+    {
+        $tempRoot = $this->createMinimalCliRoot(
+            <<<'PHP'
+<?php
+define('HTTP_SERVER', 'http://localhost');
+define('DIR_WS_CATALOG', '/');
+define('DIR_FS_CATALOG', dirname(__FILE__) . '/../');
+define('DB_TYPE', 'mysql');
+define('DB_PREFIX', '');
+define('DB_SERVER', 'invalid-host-for-cli-tests');
+define('DB_SERVER_USERNAME', 'root');
+define('DB_SERVER_PASSWORD', 'root');
+define('DB_DATABASE', 'db');
+PHP
+        );
+
+        file_put_contents(
+            $tempRoot . '/includes/extra_configures/test_cli_bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_CLI_EXTRA_CONFIGURE', 'loaded');\n"
+        );
+
+        $script = $tempRoot . '/print_cli_extra_configure.php';
+        file_put_contents(
+            $script,
+            <<<'PHP'
+<?php
+require __DIR__ . '/includes/application_cli_bootstrap.php';
+echo defined('ZEN_TEST_CLI_EXTRA_CONFIGURE') ? ZEN_TEST_CLI_EXTRA_CONFIGURE : 'missing';
+PHP
+        );
+        $command = sprintf('%s %s', escapeshellarg(PHP_BINARY), escapeshellarg($script));
+
+        exec($command . ' 2>&1', $output, $exitCode);
+
+        $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
+        $this->assertSame('loaded', implode(PHP_EOL, $output));
+    }
+
     public function testDescribeWorkerRuntimeUsesTestDatabaseBaseEnvironmentFallback(): void
     {
         $script = $this->rootPath . '/not_for_release/testFramework/describe-worker-runtime.php';
@@ -1406,7 +1445,6 @@ PHP
         copy($this->rootPath . '/includes/functions/zen_config.php', $root . '/includes/functions/zen_config.php');
         copy($this->rootPath . '/includes/functions/functions_error_handling.php', $root . '/includes/functions/functions_error_handling.php');
         copy($this->rootPath . '/includes/init_includes/init_file_db_names.php', $root . '/includes/init_includes/init_file_db_names.php');
-        copy($this->rootPath . '/includes/extra_configures/set_time_zone.php', $root . '/includes/extra_configures/set_time_zone.php');
         copy($this->rootPath . '/includes/extra_datafiles/music_type_database_names.php', $root . '/includes/extra_datafiles/music_type_database_names.php');
         copy($this->rootPath . '/includes/classes/class.base.php', $root . '/includes/classes/class.base.php');
         copy($this->rootPath . '/includes/classes/EventDto.php', $root . '/includes/classes/EventDto.php');
@@ -1443,6 +1481,10 @@ PHP
                 $this->rootPath . '/includes/classes/Console/Commands/' . $file,
                 $root . '/includes/classes/Console/Commands/' . $file
             );
+        }
+
+        foreach (glob($this->rootPath . '/includes/extra_configures/*.php') ?: [] as $file) {
+            copy($file, $root . '/includes/extra_configures/' . basename($file));
         }
 
         if ($configureContents !== null) {

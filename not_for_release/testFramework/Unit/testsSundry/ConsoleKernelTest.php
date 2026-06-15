@@ -123,15 +123,45 @@ class ConsoleKernelTest extends TestCase
             $pluginRoot . '/psr4Autoload.php',
             "<?php\nthrow new RuntimeException('autoload exploded');\n"
         );
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    new class extends \Zencart\Console\ConsoleCommand {
+        public function getName(): string
+        {
+            return 'zen-test:broken-autoload';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Triggers plugin autoloader loading during discovery.';
+        }
+
+        public function handle(\Zencart\Console\ConsoleInput $input, \Zencart\Console\ConsoleOutput $output): int
+        {
+            return 0;
+        }
+    },
+];
+PHP
+        );
 
         require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
         $psr4Autoloader = new \Aura\Autoload\Loader();
         $psr4Autoloader->register();
         require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+        $pluginDiscovery = new PluginCommandDiscovery(
+            DIR_FS_CATALOG . 'zc_plugins',
+            $psr4Autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
 
         $kernel = new ConsoleKernel(
             null,
-            null,
+            $pluginDiscovery,
             [],
             null,
             null,
@@ -149,7 +179,7 @@ class ConsoleKernelTest extends TestCase
         );
     }
 
-    public function testTrustedPluginAutoloaderCanReadCliConfigurationDuringBoot(): void
+    public function testTrustedPluginAutoloaderCanReadCliConfigurationDuringCommandDiscovery(): void
     {
         [$stdout, $stderr, $output] = $this->makeOutput();
         (new TestFrameworkFilesystem())->installPlugin('zenTestPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
@@ -159,6 +189,33 @@ class ConsoleKernelTest extends TestCase
         file_put_contents(
             $pluginRoot . '/psr4Autoload.php',
             "<?php\nfile_put_contents(" . var_export($markerFile, true) . ", (string) zen_config('CURL_PROXY_REQUIRED'));\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    new class extends \Zencart\Console\ConsoleCommand {
+        public function getName(): string
+        {
+            return 'zen-test:config-aware';
+        }
+
+        public function getDescription(): string
+        {
+            return 'Triggers plugin discovery autoloader boot.';
+        }
+
+        public function handle(\Zencart\Console\ConsoleInput $input, \Zencart\Console\ConsoleOutput $output): int
+        {
+            $output->writeln('ok');
+
+            return 0;
+        }
+    },
+];
+PHP
         );
 
         require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
@@ -189,10 +246,15 @@ class ConsoleKernelTest extends TestCase
                 }
             }
         );
+        $pluginDiscovery = new PluginCommandDiscovery(
+            DIR_FS_CATALOG . 'zc_plugins',
+            $psr4Autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
 
         $kernel = new ConsoleKernel(
             null,
-            null,
+            $pluginDiscovery,
             [],
             null,
             null,
@@ -202,11 +264,11 @@ class ConsoleKernelTest extends TestCase
             $db,
             $cliConfigurationLoader
         );
-        $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'list']), $output);
+        $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'zen-test:config-aware']), $output);
 
         $this->assertSame(0, $exitCode);
         $this->assertSame('True', file_get_contents($markerFile));
-        $this->assertStringContainsString('Available commands:', stream_get_contents($stdout, -1, 0));
+        $this->assertStringContainsString('ok', stream_get_contents($stdout, -1, 0));
         $this->assertSame('', stream_get_contents($stderr, -1, 0));
     }
 

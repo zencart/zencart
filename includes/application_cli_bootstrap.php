@@ -104,7 +104,9 @@ require_once DIR_FS_INCLUDES . 'functions/php_polyfills.php';
 require_once DIR_FS_INCLUDES . 'functions/zen_define_default.php';
 
 require_once DIR_FS_INCLUDES . 'functions/functions_error_handling.php';
-require_once DIR_FS_INCLUDES . 'extra_configures/set_time_zone.php';
+foreach (glob(DIR_FS_INCLUDES . 'extra_configures/*.php') ?: [] as $file) {
+    require_once $file;
+}
 
 require_once DIR_FS_INCLUDES . 'classes/vendors/AuraAutoload/src/Loader.php';
 
