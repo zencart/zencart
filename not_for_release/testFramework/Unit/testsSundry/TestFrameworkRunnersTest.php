@@ -1337,6 +1337,7 @@ PHP
         copy($this->rootPath . '/includes/classes/db/mysql/query_factory.php', $root . '/includes/classes/db/mysql/query_factory.php');
 
         foreach ([
+            'CliConfigurationLoader.php',
             'CommandRegistry.php',
             'CommandResolver.php',
             'ConsoleCommand.php',

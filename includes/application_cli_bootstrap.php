@@ -87,13 +87,13 @@ if (!function_exists('zc_cli_get_db_context')) {
             }
         }
 
-        if (!$configureFileFound) {
-            $warnings[] = 'Command disabled: store database configuration is unavailable.';
+        if (!function_exists('mysqli_connect')) {
+            $warnings[] = 'Command disabled: the MySQL connector for PHP is unavailable.';
             return ['db' => null, 'warnings' => $warnings];
         }
 
-        if (!function_exists('mysqli_connect')) {
-            $warnings[] = 'Command disabled: the MySQL connector for PHP is unavailable.';
+        if (!$configureFileFound) {
+            $warnings[] = 'Command disabled: store database configuration is unavailable.';
             return ['db' => null, 'warnings' => $warnings];
         }
 
