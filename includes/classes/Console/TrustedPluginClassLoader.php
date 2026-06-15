@@ -19,9 +19,9 @@ class TrustedPluginClassLoader
     private array $errors = [];
 
     /**
-     * @var array<int, array<string, true>>
+     * @var \WeakMap<Loader, array<string, true>>|null
      */
-    private static array $loadedAutoloaderFilesByLoader = [];
+    private static ?\WeakMap $loadedAutoloaderFilesByLoader = null;
 
     public function __construct(private ?Loader $psr4Autoloader = null)
     {
@@ -113,14 +113,16 @@ class TrustedPluginClassLoader
 
     public static function loadPluginRootAutoloaderFile(string $autoloadFile, Loader $psr4Autoloader): void
     {
-        $loaderId = spl_object_id($psr4Autoloader);
         $normalizedPath = str_replace('\\', '/', realpath($autoloadFile) ?: $autoloadFile);
-        if (isset(self::$loadedAutoloaderFilesByLoader[$loaderId][$normalizedPath])) {
+        $loadedFiles = self::getLoadedAutoloaderFiles($psr4Autoloader);
+
+        if (isset($loadedFiles[$normalizedPath])) {
             return;
         }
 
         self::includePhpFile($autoloadFile, ['psr4Autoloader' => $psr4Autoloader]);
-        self::$loadedAutoloaderFilesByLoader[$loaderId][$normalizedPath] = true;
+        $loadedFiles[$normalizedPath] = true;
+        self::getLoadedAutoloaderFilesByLoader()[$psr4Autoloader] = $loadedFiles;
     }
 
     /**
@@ -179,6 +181,22 @@ class TrustedPluginClassLoader
                 self::sanitizeErrorMessage($exception->getMessage(), dirname($file), $pluginReference)
             );
         }
+    }
+
+    /**
+     * @return array<string, true>
+     */
+    private static function getLoadedAutoloaderFiles(Loader $psr4Autoloader): array
+    {
+        return self::getLoadedAutoloaderFilesByLoader()[$psr4Autoloader] ?? [];
+    }
+
+    /**
+     * @return \WeakMap<Loader, array<string, true>>
+     */
+    private static function getLoadedAutoloaderFilesByLoader(): \WeakMap
+    {
+        return self::$loadedAutoloaderFilesByLoader ??= new \WeakMap();
     }
 
     private static function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string

@@ -19,17 +19,18 @@ class CliConfigurationLoader
     ) {
     }
 
-    public function bootstrap(mixed $db): void
+    public function bootstrap(mixed $database): void
     {
         global $configurationRepository;
         global $productTypeLayoutRepository;
 
-        if (!$db instanceof \queryFactory) {
+        if (!$database instanceof \queryFactory) {
             return;
         }
 
-        $configurationRepository = $this->configurationRepository ?? new ConfigurationRepository($db);
-        $productTypeLayoutRepository = $this->productTypeLayoutRepository ?? new ProductTypeLayoutRepository($db);
+        $GLOBALS['db'] = $database;
+        $configurationRepository = $this->configurationRepository ?? new ConfigurationRepository($database);
+        $productTypeLayoutRepository = $this->productTypeLayoutRepository ?? new ProductTypeLayoutRepository($database);
 
         $configurationRepository->loadConfigSettings();
         $productTypeLayoutRepository->loadConfigSettings();

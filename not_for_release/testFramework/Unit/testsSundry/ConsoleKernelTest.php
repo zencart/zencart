@@ -222,7 +222,7 @@ class ConsoleKernelTest extends TestCase
 
         file_put_contents(
             $pluginRoot . '/catalog/includes/extra_configures/bootstrap.php',
-            "<?php\ndefine('ZEN_TEST_PLUGIN_BOOTSTRAP_READY', 'yes');\n"
+            "<?php\nglobal \$db;\ndefine('ZEN_TEST_PLUGIN_BOOTSTRAP_READY', \$db instanceof queryFactory ? 'yes' : 'no');\n"
         );
         file_put_contents(
             $pluginRoot . '/filenames.php',
@@ -305,6 +305,29 @@ PHP
         $psr4Autoloader = new \Aura\Autoload\Loader();
         $psr4Autoloader->register();
         require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+        $db = new \queryFactory();
+        $cliConfigurationLoader = new \Zencart\Console\CliConfigurationLoader(
+            new class ($db) extends \Zencart\DbRepositories\ConfigurationRepository {
+                public function loadConfigSettings(): void
+                {
+                }
+
+                public function get(string $configurationKey): mixed
+                {
+                    return null;
+                }
+            },
+            new class ($db) extends \Zencart\DbRepositories\ProductTypeLayoutRepository {
+                public function loadConfigSettings(): void
+                {
+                }
+
+                public function get(string $configurationKey): mixed
+                {
+                    return null;
+                }
+            }
+        );
 
         $discovery = new PluginCommandDiscovery(
             DIR_FS_CATALOG . 'zc_plugins',
@@ -320,7 +343,9 @@ PHP
             null,
             null,
             $psr4Autoloader,
-            [$pluginKey => 'v1.0.0']
+            [$pluginKey => 'v1.0.0'],
+            $db,
+            $cliConfigurationLoader
         );
         $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'zen-test:bootstrap-aware']), $output);
 

@@ -60,6 +60,7 @@ class CliConfigurationLoaderTest extends TestCase
 
         $loader->bootstrap($db);
 
+        $this->assertSame($db, $GLOBALS['db']);
         $this->assertTrue($configurationRepository->loaded);
         $this->assertTrue($productTypeLayoutRepository->loaded);
         $this->assertTrue(function_exists('zen_config'));

@@ -297,6 +297,36 @@ PHP
         );
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testPluginRootAutoloaderCacheDoesNotOutliveLoaderInstance(): void
+    {
+        $pluginKey = 'zenTestPluginWeakMap';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $autoloadFile = $pluginRoot . '/psr4Autoload.php';
+
+        file_put_contents($autoloadFile, "<?php\n");
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $property = new \ReflectionProperty(TrustedPluginClassLoader::class, 'loadedAutoloaderFilesByLoader');
+        $weakMap = $property->getValue();
+        $baselineCount = $weakMap instanceof \WeakMap ? count($weakMap) : 0;
+
+        $loader = new \Aura\Autoload\Loader();
+        TrustedPluginClassLoader::loadPluginRootAutoloaderFile($autoloadFile, $loader);
+
+        $weakMap = $property->getValue();
+
+        $this->assertInstanceOf(\WeakMap::class, $weakMap);
+        $this->assertCount($baselineCount + 1, $weakMap);
+
+        unset($loader);
+        gc_collect_cycles();
+
+        $this->assertCount($baselineCount, $weakMap);
+    }
+
     private function createPluginFixture(string $pluginKey): string
     {
         $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/v1.0.0';
