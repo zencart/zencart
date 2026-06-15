@@ -39,7 +39,9 @@ class ConsoleKernel
         private $versionProvider = null,
         private $configurationProvider = null,
         private ?Loader $psr4Autoloader = null,
-        private array $trustedPluginVersions = []
+        private array $trustedPluginVersions = [],
+        private mixed $db = null,
+        private ?CliConfigurationLoader $cliConfigurationLoader = null
     ) {
         $this->registry = $registry ?? new CommandRegistry();
         $this->resolver = new CommandResolver($this->registry);
@@ -55,6 +57,8 @@ class ConsoleKernel
         if ($this->booted) {
             return;
         }
+
+        ($this->cliConfigurationLoader ?? new CliConfigurationLoader())->bootstrap($this->db);
 
         $trustedPluginClassLoader = new TrustedPluginClassLoader($this->psr4Autoloader);
         $trustedPluginClassLoader->bootstrapTrustedPlugins($this->trustedPluginVersions);

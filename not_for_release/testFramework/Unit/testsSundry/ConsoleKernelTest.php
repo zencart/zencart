@@ -141,6 +141,67 @@ class ConsoleKernelTest extends TestCase
         );
     }
 
+    public function testTrustedPluginAutoloaderCanReadCliConfigurationDuringBoot(): void
+    {
+        [$stdout, $stderr, $output] = $this->makeOutput();
+        (new TestFrameworkFilesystem())->installPlugin('zenTestPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
+        $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/zenTestPlugin/v1.0.0';
+        $markerFile = $pluginRoot . '/config-marker.txt';
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nfile_put_contents(" . var_export($markerFile, true) . ", (string) zen_config('CURL_PROXY_REQUIRED'));\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $db = new \queryFactory();
+        $cliConfigurationLoader = new \Zencart\Console\CliConfigurationLoader(
+            new class ($db) extends \Zencart\DbRepositories\ConfigurationRepository {
+                public function loadConfigSettings(): void
+                {
+                }
+
+                public function get(string $configurationKey): mixed
+                {
+                    return $configurationKey === 'CURL_PROXY_REQUIRED' ? 'True' : null;
+                }
+            },
+            new class ($db) extends \Zencart\DbRepositories\ProductTypeLayoutRepository {
+                public function loadConfigSettings(): void
+                {
+                }
+
+                public function get(string $configurationKey): mixed
+                {
+                    return null;
+                }
+            }
+        );
+
+        $kernel = new ConsoleKernel(
+            null,
+            null,
+            [],
+            null,
+            null,
+            null,
+            $psr4Autoloader,
+            ['zenTestPlugin' => 'v1.0.0'],
+            $db,
+            $cliConfigurationLoader
+        );
+        $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'list']), $output);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertSame('True', file_get_contents($markerFile));
+        $this->assertStringContainsString('Available commands:', stream_get_contents($stdout, -1, 0));
+        $this->assertSame('', stream_get_contents($stderr, -1, 0));
+    }
+
     public function testPluginCommandDiscoveryCanUseTrustedCatalogPluginClasses(): void
     {
         [$stdout, , $output] = $this->makeOutput();
