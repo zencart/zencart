@@ -12,7 +12,9 @@
  * look up page_id and create a storefront link for ez_pages
  * to use this link add '\<a href="' . zen_ez_pages_link($pages_id) . '">\</a>';
  *
- * Note that the $ez_pages_is_ssl input is no longer used, but is kept for backwards compatibility.
+ * Note:
+ *   - The $ez_pages_is_ssl input is no longer used, but is kept for backwards compatibility.
+ *   - The function is valid **only** on the storefront; use in the admin will result in a FATAL error.
  *
  * @since ZC v1.3.0
  */
@@ -23,12 +25,19 @@ function zen_ez_pages_link(
     bool $ez_pages_open_new_window = false,
     bool $ez_pages_return_full_url = false
 ): string {
+    // -----
+    // Function is only available on the storefront.
+    //
+    if (IS_ADMIN_FLAG !== false) {
+        trigger_error("FATAL ERROR: zen_ez_pages_link is a storefront-only function.", \E_USER_WARNING);
+        zen_exit();
+    }
+
     global $db;
     $ez_link = 'unknown';
     $ez_pages_name = 'Click Here';
 
     if ((int)$ez_pages_chapter === 0) {
-        $function_zen_href_link = (IS_ADMIN_FLAG === true) ? 'zen_catalog_href_link' : 'zen_href_link';
         $page_query = $db->Execute(
             "SELECT *
                FROM " . TABLE_EZPAGES . " e, " . TABLE_EZPAGES_CONTENT . " ec
@@ -47,9 +56,9 @@ function zen_ez_pages_link(
         if ($ez_pages_external !== '') {
             $ez_link = $ez_pages_external;
         } elseif ($ez_pages_alturl !== '') {
-            $ez_link = (str_starts_with($ez_pages_alturl, 'http')) ? $ez_pages_alturl : $function_zen_href_link($ez_pages_alturl);
+            $ez_link = (str_starts_with($ez_pages_alturl, 'http')) ? $ez_pages_alturl : zen_href_link($ez_pages_alturl, '', 'SSL', true, true, true);
         } else {
-            $ez_link = $function_zen_href_link(FILENAME_EZPAGES, 'id=' . $ez_pages_id . ((int)$ez_pages_chapter !== 0 ? '&chapter=' . $ez_pages_chapter : ''));
+            $ez_link = zen_href_link(FILENAME_EZPAGES, 'id=' . $ez_pages_id . ((int)$ez_pages_chapter !== 0 ? '&chapter=' . $ez_pages_chapter : ''));
         }
 
         $ez_link .= ($ez_pages_open_new_window === '1' ? '" rel="noopener" target="_blank' : '');
