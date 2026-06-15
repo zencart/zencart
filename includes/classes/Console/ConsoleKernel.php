@@ -58,6 +58,10 @@ class ConsoleKernel
             return;
         }
 
+        if ($this->db instanceof \queryFactory) {
+            $GLOBALS['db'] = $this->db;
+        }
+
         $trustedPluginClassLoader = new TrustedPluginClassLoader($this->psr4Autoloader);
         $trustedPluginClassLoader->loadPluginBootstrapFiles($this->trustedPluginVersions);
         $trustedPluginClassLoader->registerPluginClassNamespaces($this->trustedPluginVersions);

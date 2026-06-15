@@ -48,6 +48,7 @@ class ConsoleKernelTest extends TestCase
     {
         $this->removeDirectory($this->basePath);
         (new TestFrameworkFilesystem())->removePlugin('zenTestPlugin', 'v1.0.0', DIR_FS_CATALOG);
+        unset($GLOBALS['db']);
         foreach ($this->pluginRootsToRemove as $pluginRoot) {
             $this->removeDirectory(dirname($pluginRoot));
         }

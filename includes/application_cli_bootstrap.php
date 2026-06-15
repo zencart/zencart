@@ -49,13 +49,42 @@ function zc_cli_include_first_configure_file(array $configureFiles): void
 
 function zc_cli_find_admin_root(string $catalogRoot): ?string
 {
-    foreach (glob($catalogRoot . '*/includes/application_bootstrap.php') ?: [] as $applicationBootstrapFile) {
-        $adminRoot = dirname(dirname($applicationBootstrapFile)) . '/';
+    $candidates = [];
+
+    foreach (glob($catalogRoot . '*/includes/configure.php') ?: [] as $configureFile) {
+        $adminRoot = dirname(dirname($configureFile)) . '/';
         if ($adminRoot === $catalogRoot) {
             continue;
         }
 
-        return $adminRoot;
+        $basename = basename(rtrim($adminRoot, '/'));
+        $contents = file_get_contents($configureFile) ?: '';
+        $score = 0;
+
+        if (preg_match("~define\\(['\"]DIR_WS_ADMIN['\"],\\s*['\"]([^'\"]+)['\"]\\)~", $contents, $matches) === 1) {
+            $configuredBasename = basename(trim($matches[1], '/'));
+            if ($configuredBasename === $basename) {
+                $score += 2;
+            }
+        }
+
+        if ($basename !== 'admin') {
+            $score += 1;
+        }
+
+        $candidates[] = [
+            'path' => $adminRoot,
+            'score' => $score,
+        ];
+    }
+
+    usort(
+        $candidates,
+        static fn(array $left, array $right): int => $right['score'] <=> $left['score']
+    );
+
+    foreach ($candidates as $candidate) {
+        return $candidate['path'];
     }
 
     return null;
