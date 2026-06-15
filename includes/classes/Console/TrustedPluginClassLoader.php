@@ -19,6 +19,15 @@ class TrustedPluginClassLoader
     /**
      * @param array<string, string> $trustedPlugins
      */
+    public function bootstrapTrustedPlugins(array $trustedPlugins): void
+    {
+        $this->registerPluginClassNamespaces($trustedPlugins);
+        $this->loadPluginRootAutoloaders($trustedPlugins);
+    }
+
+    /**
+     * @param array<string, string> $trustedPlugins
+     */
     public function registerPluginClassNamespaces(array $trustedPlugins): void
     {
         if ($this->psr4Autoloader === null) {
@@ -33,5 +42,43 @@ class TrustedPluginClassLoader
             $this->psr4Autoloader->addPrefix($namespaceAdmin, $filePath . 'admin/includes/classes/');
             $this->psr4Autoloader->addPrefix($namespaceCatalog, $filePath . 'catalog/includes/classes/');
         }
+    }
+
+    /**
+     * @param array<string, string> $trustedPlugins
+     */
+    public function loadPluginRootAutoloaders(array $trustedPlugins): void
+    {
+        if ($this->psr4Autoloader === null) {
+            return;
+        }
+
+        foreach ($trustedPlugins as $uniqueKey => $version) {
+            $autoloadFile = DIR_FS_CATALOG . 'zc_plugins/' . $uniqueKey . '/' . $version . '/psr4Autoload.php';
+            if (!file_exists($autoloadFile)) {
+                continue;
+            }
+
+            self::includePhpFile($autoloadFile, ['psr4Autoloader' => $this->psr4Autoloader]);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $scopeVariables
+     */
+    private static function includePhpFile(string $file, array $scopeVariables = []): mixed
+    {
+        extract($scopeVariables, \EXTR_SKIP);
+
+        if (!is_file($file) || !is_readable($file)) {
+            throw new \RuntimeException('PHP file is not readable: ' . $file);
+        }
+
+        $result = include $file;
+        if ($result === false) {
+            throw new \RuntimeException('PHP file failed to include: ' . $file);
+        }
+
+        return $result;
     }
 }

@@ -57,7 +57,7 @@ class ConsoleKernel
         }
 
         (new TrustedPluginClassLoader($this->psr4Autoloader))
-            ->registerPluginClassNamespaces($this->trustedPluginVersions);
+            ->bootstrapTrustedPlugins($this->trustedPluginVersions);
         $this->registerCoreCommands();
         $this->registerPluginCommands();
         $this->booted = true;
