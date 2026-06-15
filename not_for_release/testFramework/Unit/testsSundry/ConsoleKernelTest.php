@@ -43,6 +43,7 @@ class ConsoleKernelTest extends TestCase
     protected function tearDown(): void
     {
         $this->removeDirectory($this->basePath);
+        (new TestFrameworkFilesystem())->removePlugin('zenTestPlugin', 'v1.0.0', DIR_FS_CATALOG);
         parent::tearDown();
     }
 
@@ -102,6 +103,102 @@ class ConsoleKernelTest extends TestCase
 
         $this->assertSame(0, $exitCode);
         $this->assertStringContainsString('Hello team', stream_get_contents($stdout, -1, 0));
+    }
+
+    public function testPluginCommandDiscoveryCanUseTrustedCatalogPluginClasses(): void
+    {
+        [$stdout, , $output] = $this->makeOutput();
+        (new TestFrameworkFilesystem())->installPlugin('zenTestPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
+        $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/zenTestPlugin/v1.0.0';
+
+        mkdir($pluginRoot . '/catalog/includes/classes/Support', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/catalog/includes/classes/Support/Label.php',
+            <<<'PHP'
+<?php
+
+namespace Zencart\Plugins\Catalog\ZenTestPlugin\Support;
+
+class Label
+{
+    public static function message(): string
+    {
+        return 'plugin-aware';
+    }
+}
+PHP
+        );
+
+        file_put_contents(
+            $pluginRoot . '/Console/Commands/PluginAwareCommand.php',
+            <<<'PHP'
+<?php
+
+namespace Zencart\Plugins\Console\ZenTestPlugin\Commands;
+
+use Zencart\Console\ConsoleCommand;
+use Zencart\Console\ConsoleInput;
+use Zencart\Console\ConsoleOutput;
+use Zencart\Plugins\Catalog\ZenTestPlugin\Support\Label;
+
+class PluginAwareCommand extends ConsoleCommand
+{
+    public function getName(): string
+    {
+        return 'zen-test:plugin-aware';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Uses normal catalog plugin classes during console discovery.';
+    }
+
+    public function handle(ConsoleInput $input, ConsoleOutput $output): int
+    {
+        $output->writeln(Label::message());
+
+        return 0;
+    }
+}
+PHP
+        );
+
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    \Zencart\Plugins\Console\ZenTestPlugin\Commands\PluginAwareCommand::class,
+];
+PHP
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $discovery = new PluginCommandDiscovery(
+            DIR_FS_CATALOG . 'zc_plugins',
+            $psr4Autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+
+        $kernel = new ConsoleKernel(
+            null,
+            $discovery,
+            [],
+            null,
+            null,
+            null,
+            $psr4Autoloader,
+            ['zenTestPlugin' => 'v1.0.0']
+        );
+        $exitCode = $kernel->run(new ConsoleInput(['zc_cli.php', 'zen-test:plugin-aware']), $output);
+
+        $this->assertSame(0, $exitCode);
+        $this->assertStringContainsString('plugin-aware', stream_get_contents($stdout, -1, 0));
     }
 
     public function testCommandExceptionReturnsControlledFailureWithoutRawTraceByDefault(): void

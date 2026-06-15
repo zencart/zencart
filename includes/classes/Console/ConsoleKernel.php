@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Zencart\Console;
 
+use Aura\Autoload\Loader;
 use Zencart\Console\Commands\HelpCommand;
 use Zencart\Console\Commands\ListCommand;
 use Zencart\Console\Commands\ConfigGetCommand;
@@ -37,7 +38,8 @@ class ConsoleKernel
         private $pluginListProvider = null,
         private $versionProvider = null,
         private $configurationProvider = null,
-        private $psr4Autoloader = null
+        private ?Loader $psr4Autoloader = null,
+        private array $trustedPluginVersions = []
     ) {
         $this->registry = $registry ?? new CommandRegistry();
         $this->resolver = new CommandResolver($this->registry);
@@ -54,6 +56,8 @@ class ConsoleKernel
             return;
         }
 
+        (new TrustedPluginClassLoader($this->psr4Autoloader))
+            ->registerPluginClassNamespaces($this->trustedPluginVersions);
         $this->registerCoreCommands();
         $this->registerPluginCommands();
         $this->booted = true;

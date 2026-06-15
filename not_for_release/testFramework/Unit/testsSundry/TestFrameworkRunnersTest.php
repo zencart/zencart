@@ -1344,6 +1344,7 @@ PHP
             'ConsoleKernel.php',
             'ConsoleOutput.php',
             'PluginCommandDiscovery.php',
+            'TrustedPluginClassLoader.php',
             'TrustedPluginVersionResolver.php',
         ] as $file) {
             copy($this->rootPath . '/includes/classes/Console/' . $file, $root . '/includes/classes/Console/' . $file);

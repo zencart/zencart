@@ -50,7 +50,8 @@ $kernel = new \Zencart\Console\ConsoleKernel(
     $pluginListProvider,
     $versionProvider,
     $configurationProvider,
-    $psr4Autoloader
+    $psr4Autoloader,
+    $trustedPluginContext['plugins']
 );
 
 exit($kernel->run($input, $output));
