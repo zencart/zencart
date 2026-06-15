@@ -58,10 +58,10 @@ function zen_ez_pages_link(
         } elseif ($ez_pages_alturl !== '') {
             $ez_link = (str_starts_with($ez_pages_alturl, 'http')) ? $ez_pages_alturl : zen_href_link($ez_pages_alturl, '', 'SSL', true, true, true);
         } else {
-            $ez_link = zen_href_link(FILENAME_EZPAGES, 'id=' . $ez_pages_id . ((int)$ez_pages_chapter !== 0 ? '&chapter=' . $ez_pages_chapter : ''));
+            $ez_link = zen_href_link(FILENAME_EZPAGES, 'id=' . (int)$ez_pages_id . ((int)$ez_pages_chapter !== 0 ? '&chapter=' . (int)$ez_pages_chapter : ''));
         }
 
-        $ez_link .= ($ez_pages_open_new_window === '1' ? '" rel="noopener" target="_blank' : '');
+        $ez_link .= ($ez_pages_open_new_window === true ? '" rel="noopener" target="_blank' : '');
     }
 
     if ($ez_pages_return_full_url === false) {
