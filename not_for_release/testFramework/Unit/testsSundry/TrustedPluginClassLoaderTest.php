@@ -189,6 +189,39 @@ PHP
         $this->assertSame('1', file_get_contents($markerFile));
     }
 
+    /**
+     * @runInSeparateProcess
+     */
+    public function testPluginRootAutoloaderRunsAgainForFreshLoaderInstance(): void
+    {
+        $pluginKey = 'zenTestPluginFreshLoader';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $markerFile = $pluginRoot . '/autoload-count.txt';
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\n\$count = file_exists(" . var_export($markerFile, true) . ") ? (int)file_get_contents(" . var_export($markerFile, true) . ") : 0;\nfile_put_contents(" . var_export($markerFile, true) . ", (string)(\$count + 1));\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+
+        $firstLoader = new \Aura\Autoload\Loader();
+        $firstLoader->register();
+        $psr4Autoloader = $firstLoader;
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        (new TrustedPluginClassLoader($firstLoader))->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $secondLoader = new \Aura\Autoload\Loader();
+        $secondLoader->register();
+        $psr4Autoloader = $secondLoader;
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        (new TrustedPluginClassLoader($secondLoader))->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $this->assertSame('2', file_get_contents($markerFile));
+    }
+
     private function createPluginFixture(string $pluginKey): string
     {
         $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/v1.0.0';

@@ -19,9 +19,9 @@ class TrustedPluginClassLoader
     private array $errors = [];
 
     /**
-     * @var array<string, true>
+     * @var array<int, array<string, true>>
      */
-    private static array $loadedAutoloaderFiles = [];
+    private static array $loadedAutoloaderFilesByLoader = [];
 
     public function __construct(private ?Loader $psr4Autoloader = null)
     {
@@ -94,13 +94,14 @@ class TrustedPluginClassLoader
 
     public static function loadPluginRootAutoloaderFile(string $autoloadFile, Loader $psr4Autoloader): void
     {
+        $loaderId = spl_object_id($psr4Autoloader);
         $normalizedPath = str_replace('\\', '/', realpath($autoloadFile) ?: $autoloadFile);
-        if (isset(self::$loadedAutoloaderFiles[$normalizedPath])) {
+        if (isset(self::$loadedAutoloaderFilesByLoader[$loaderId][$normalizedPath])) {
             return;
         }
 
         self::includePhpFile($autoloadFile, ['psr4Autoloader' => $psr4Autoloader]);
-        self::$loadedAutoloaderFiles[$normalizedPath] = true;
+        self::$loadedAutoloaderFilesByLoader[$loaderId][$normalizedPath] = true;
     }
 
     /**
