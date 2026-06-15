@@ -14,8 +14,8 @@
  *
  * @since ZC v1.0.3
  */
-  function zen_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $static = false, $use_dir_ws_catalog = true) {
-    global $request_type, $session_started, $http_domain, $https_domain, $zco_notifier;
+  function zen_href_link(string $page = '', string $parameters = '', string $connection = 'deprecated', bool $add_session_id = true, bool $search_engine_safe = true, bool $static = false, bool $use_dir_ws_catalog = true) {
+    global $session_started, $zco_notifier;
     $link = null;
     $zco_notifier->notify('NOTIFY_SEFU_INTERCEPT', array(), $link, $page, $parameters, $connection, $add_session_id, $static, $use_dir_ws_catalog);
     if($link !== null) return $link;
@@ -25,25 +25,10 @@
         $page = FILENAME_DEFAULT;
     }
 
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER;
-    } elseif ($connection == 'SSL' || $connection == '') {
-      if (ENABLE_SSL == 'true') {
-        $link = HTTPS_SERVER ;
-      } else {
-        $link = HTTP_SERVER;
-      }
-    } else {
-      trigger_error("zen_href_link($page, $parameters, $connection), Unable to determine connection method on a link! Known methods: NONSSL SSL");
-      $link = HTTP_SERVER;
-    }
+    $link = HTTP_SERVER;
 
     if ($use_dir_ws_catalog) {
-      if ($connection == 'SSL' && ENABLE_SSL == 'true') {
-        $link .= DIR_WS_HTTPS_CATALOG;
-      } else {
         $link .= DIR_WS_CATALOG;
-      }
     }
 
     if (!$static) {
@@ -65,13 +50,9 @@
     while (substr($link, -1) == '&' || substr($link, -1) == '?') $link = substr($link, 0, -1);
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ($add_session_id === true && $session_started === true && SESSION_FORCE_COOKIE_USE === 'False') {
+    if ($add_session_id === true && $session_started === true && zen_config('SESSION_FORCE_COOKIE_USE') === 'False') {
         if (PHP_VERSION_ID < 80401 && defined('SID') && !empty(constant('SID'))) {
             $sid = constant('SID');
-        } elseif ( ($request_type === 'NONSSL' && $connection === 'SSL' && ENABLE_SSL === 'true') || ($request_type === 'SSL' && $connection === 'NONSSL') ) {
-            if ($http_domain !== $https_domain) {
-                $sid = zen_session_name() . '=' . zen_session_id();
-            }
         }
     }
 
@@ -79,7 +60,7 @@
     while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
     while (strstr($link, '&amp;&amp;')) $link = str_replace('&amp;&amp;', '&amp;', $link);
 
-    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe == true) {
+    if (zen_config('SEARCH_ENGINE_FRIENDLY_URLS') === 'true' && $search_engine_safe == true) {
       while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
 
       $link = str_replace('&amp;', '/', $link);
@@ -108,9 +89,77 @@
  * link.
  * @since ZC v1.5.6
  */
-function zen_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL')
+function zen_catalog_href_link(string $page = '', string $parameters = '', $connection = 'deprecated')
 {
     return zen_href_link($page, $parameters, $connection, false);
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_resolve_template_fallback_asset_path(string $src, string $template_dir): string
+{
+    if (is_file($src) || !class_exists(\Zencart\ResourceLoaders\TemplateResolver::class)) {
+        return $src;
+    }
+
+    global $installedPlugins;
+
+    $resolver = function_exists('zen_get_template_resolver_with_installed_plugins')
+        ? zen_get_template_resolver_with_installed_plugins()
+        : new \Zencart\ResourceLoaders\TemplateResolver(
+            null,
+            null,
+            null,
+            $installedPlugins ?? null
+        );
+    $chain = $resolver->getTemplateInheritanceChain($template_dir);
+    if ($chain === []) {
+        return $src;
+    }
+
+    $normalizedSrc = str_replace('\\', '/', $src);
+
+    if (preg_match('~^(.*includes/templates/)([^/]+)(/(.*))$~', $normalizedSrc, $matches)) {
+        $assetSuffix = $matches[3];
+        foreach ($chain as $chainTemplateKey) {
+            $record = $resolver->getTemplateRecord($chainTemplateKey);
+            if ($record === null) {
+                continue;
+            }
+            $candidate = $record['template_catalog_path'] . ltrim($assetSuffix, '/');
+            if (is_file($candidate)) {
+                return $candidate;
+            }
+        }
+        return $src;
+    }
+
+    if (preg_match('~^(.*includes/languages/)([^/]+)/([^/]+)(/(.*))$~', $normalizedSrc, $matches)) {
+        $basePath = $matches[1];
+        $language = $matches[2];
+        $assetSuffix = $matches[4];
+        foreach ($chain as $chainTemplateKey) {
+            $candidate = $basePath . $language . '/' . $chainTemplateKey . $assetSuffix;
+            if (is_file($candidate)) {
+                return $candidate;
+            }
+        }
+        return $src;
+    }
+
+    if (preg_match('~^(.*includes/languages/)([^/]+)(/(.*))$~', $normalizedSrc, $matches)) {
+        $basePath = $matches[1];
+        $assetSuffix = $matches[3];
+        foreach ($chain as $chainTemplateKey) {
+            $candidate = $basePath . $chainTemplateKey . $assetSuffix;
+            if (is_file($candidate)) {
+                return $candidate;
+            }
+        }
+    }
+
+    return $src;
 }
 
 /**
@@ -123,21 +172,21 @@ function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters
     global $template_dir;
 
     //auto replace with defined missing image
-    if ($src === DIR_WS_IMAGES && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
-        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    if ($src === DIR_WS_IMAGES && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
+        $src = DIR_WS_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE');
     }
 
-    if ((empty($src) || $src === DIR_WS_IMAGES) && IMAGE_REQUIRED === 'false') {
+    if ((empty($src) || $src === DIR_WS_IMAGES) && zen_config('IMAGE_REQUIRED') === 'false') {
         return false;
     }
 
     // if not in current template switch to template_default
     $file_exists = is_file($src);
     if ($file_exists === false) {
-        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+        $src = zen_resolve_template_fallback_asset_path($src, $template_dir);
         $file_exists = is_file($src);
     }
-    if ($file_exists === false && IMAGE_REQUIRED === 'false') {
+    if ($file_exists === false && zen_config('IMAGE_REQUIRED') === 'false') {
         return false;
     }
 
@@ -154,10 +203,10 @@ function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters
 
     $width = (int)$width;
     $height = (int)$height;
-    if ($file_exists === true && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
+    if ($file_exists === true && zen_config('CONFIG_CALCULATE_IMAGE_SIZE') === 'true' && ($width === 0 || $height === 0)) {
         $image_size = getimagesize($src);
         if ($image_size === false) {
-            if (IMAGE_REQUIRED === 'false') {
+            if (zen_config('IMAGE_REQUIRED') === 'false') {
                 return false;
             }
         } elseif ($width === 0 && $height === 0) {
@@ -205,22 +254,22 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     $title = zen_clean_html($title);
 
     // use old method on template images
-    if (strpos($src, 'includes/templates') !== false || strpos($src, 'includes/languages') !== false || PROPORTIONAL_IMAGES_STATUS === '0') {
+    if (strpos($src, 'includes/templates') !== false || strpos($src, 'includes/languages') !== false || zen_config('PROPORTIONAL_IMAGES_STATUS') === '0') {
         return zen_image_OLD($src, $title, $width, $height, $parameters);
     }
 
     //auto replace with defined missing image
-    if ($src === DIR_WS_IMAGES && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
-        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    if ($src === DIR_WS_IMAGES && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
+        $src = DIR_WS_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE');
     }
 
-    if ((empty($src) || ($src === DIR_WS_IMAGES)) && IMAGE_REQUIRED === 'false') {
+    if ((empty($src) || ($src === DIR_WS_IMAGES)) && zen_config('IMAGE_REQUIRED') === 'false') {
         return false;
     }
 
     // if not in current template switch to template_default
     if (!is_file($src)) {
-        $src = str_replace(DIR_WS_TEMPLATES . $template_dir, DIR_WS_TEMPLATES . 'template_default', $src);
+        $src = zen_resolve_template_fallback_asset_path($src, $template_dir);
     }
 
     // hook for handle_image() function such as Image Handler etc
@@ -231,8 +280,8 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     //image is defined but is missing
-    if (PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !is_file($src)) {
-        $src = DIR_WS_IMAGES . PRODUCTS_IMAGE_NO_IMAGE;
+    if (zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1' && !is_file($src)) {
+        $src = DIR_WS_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE');
     }
 
     $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $title, $width, $height, $parameters);
@@ -243,7 +292,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     if ($file_exists === true) {
         $image_size = getimagesize($src);
     }
-    if ($image_size === false && IMAGE_REQUIRED === 'false') {
+    if ($image_size === false && zen_config('IMAGE_REQUIRED') === 'false') {
         return false;
     }
 
@@ -262,7 +311,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
     $image .= ' alt="' . $alt_text . '"';
 
-    if ($image_size !== false && CONFIG_CALCULATE_IMAGE_SIZE === 'true' && ($width === 0 || $height === 0)) {
+    if ($image_size !== false && zen_config('CONFIG_CALCULATE_IMAGE_SIZE') === 'true' && ($width === 0 || $height === 0)) {
         if ($width === 0 && $height === 0) {
             $width = $image_size[0];
             $height = $image_size[1];
@@ -292,7 +341,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
             $image .= ' width="' . (int)round($width) . '" height="' . (int)round($height) . '"';
         }
     } elseif (strpos($src, 'http') !== 0) {
-        $image .= ' width="' . (int)SMALL_IMAGE_WIDTH . '" height="' . (int)SMALL_IMAGE_HEIGHT . '"';
+        $image .= ' width="' . (int)zen_config('SMALL_IMAGE_WIDTH') . '" height="' . (int)zen_config('SMALL_IMAGE_HEIGHT') . '"';
     }
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
@@ -317,7 +366,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
     global $template, $current_page_base, $zco_notifier;
-    if ((strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower(IMAGE_USE_CSS_BUTTONS) === 'found' && !is_file(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
+    if ((strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found' && !is_file(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language']) . '/' . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -343,12 +392,11 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower(IMAGE_USE_CSS_BUTTONS) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
+    if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
         if (preg_match('/\.(png|gif|jpe?g|webp)/i', $image)) {
             return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
-        } else {
-            return zen_draw_button($image, $sec_class, '', $parameters, $alt, 'button');
         }
+        return zen_draw_button($image, $sec_class, '', $parameters, $alt, 'button');
     }
     return zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', $parameters);
   }
@@ -911,8 +959,8 @@ function zen_get_country_list($name, $selected = '', $parameters = '')
     $countries = zen_get_countries();
 
     // Set some default entries at top of list:
-    if (SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY !== '' && STORE_COUNTRY !== SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY) $countriesAtTopOfList[] = SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
-    $countriesAtTopOfList[] = STORE_COUNTRY;
+    if (zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY') !== '' && zen_config('STORE_COUNTRY') !== zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY')) $countriesAtTopOfList[] = zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY');
+    $countriesAtTopOfList[] = zen_config('STORE_COUNTRY');
     // IF YOU WANT TO ADD MORE DEFAULTS TO THE TOP OF THIS LIST, SIMPLY ENTER THEIR NUMBERS HERE.
     // Duplicate more lines as needed
     // Example: Canada is 38, so use 38 as shown:

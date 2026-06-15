@@ -11,17 +11,17 @@
   $gv_balance = zen_user_has_gv_account($_SESSION['customer_id'] ?? 0);
 
   switch (true) {
-    case (SHOW_SHOPPING_CART_BOX_STATUS == '0'):
+    case (zen_config('SHOW_SHOPPING_CART_BOX_STATUS') === '0'):
       $show_shopping_cart_box = true;
       break;
-    case (SHOW_SHOPPING_CART_BOX_STATUS == '1'):
+    case (zen_config('SHOW_SHOPPING_CART_BOX_STATUS') === '1'):
       if ($_SESSION['cart']->count_contents() > 0 || (isset($_SESSION['customer_id']) && $gv_balance > 0)) {
         $show_shopping_cart_box = true;
       } else {
         $show_shopping_cart_box = false;
       }
       break;
-    case (SHOW_SHOPPING_CART_BOX_STATUS == '2'):
+    case (zen_config('SHOW_SHOPPING_CART_BOX_STATUS') === '2'):
       if ( ( (isset($_SESSION['cart']) && $_SESSION['cart']->count_contents() > 0) || (isset($_SESSION['customer_id']) && $gv_balance > 0) ) && ($_GET['main_page'] != FILENAME_SHOPPING_CART) ) {
         $show_shopping_cart_box = true;
       } else {

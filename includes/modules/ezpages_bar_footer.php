@@ -15,7 +15,7 @@ $zco_notifier->notify('NOTIFY_START_EZPAGES_FOOTERBAR');
 $var_linksList = array();
 
 // test if bar should display:
-if (EZPAGES_STATUS_FOOTER == '1' || (EZPAGES_STATUS_FOOTER == '2' && zen_is_whitelisted_admin_ip())) {
+if ((int)zen_config('EZPAGES_STATUS_FOOTER') === 1 || ((int)zen_config('EZPAGES_STATUS_FOOTER') === 2 && zen_is_whitelisted_admin_ip())) {
 
   if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
     return; // early exit; db not upgraded

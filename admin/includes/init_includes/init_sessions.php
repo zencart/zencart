@@ -13,13 +13,13 @@ if (!defined('IS_ADMIN_FLAG')) {
 require DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'sessions.php';
 
 zen_session_name('zenAdminID');
-zen_session_save_path(SESSION_WRITE_DIRECTORY);
+zen_session_save_path(zen_config('SESSION_WRITE_DIRECTORY', ''));
 
 // set the session cookie parameters
 $path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-if (defined('SESSION_USE_ROOT_COOKIE_PATH') && SESSION_USE_ROOT_COOKIE_PATH === 'True') $path = '/';
+if (zen_config('SESSION_USE_ROOT_COOKIE_PATH') === 'True') $path = '/';
 $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
-$domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX === 'True') ? '.' : '';
+$domainPrefix = (zen_config('SESSION_ADD_PERIOD_PREFIX', 'True') === 'True') ? '.' : '';
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) $domainPrefix = '';
 $secureFlag = str_starts_with(HTTP_SERVER, 'https:');
 

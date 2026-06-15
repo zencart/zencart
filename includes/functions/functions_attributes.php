@@ -90,7 +90,7 @@ function zen_has_product_attributes(mixed $product_id, bool|string $not_readonly
 
     $exclude_readonly = ($not_readonly === true || $not_readonly === 'true');
 
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED === '1' && $exclude_readonly === true) {
+    if (zen_config('PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED') === '1' && $exclude_readonly === true) {
         // don't include READONLY attributes or *invalid* options
         $sql =
             "SELECT pa.products_attributes_id
@@ -99,7 +99,7 @@ function zen_has_product_attributes(mixed $product_id, bool|string $not_readonly
                         ON pa.options_id = po.products_options_id
                        AND po.language_id = " . (int)$_SESSION['languages_id'] . "
               WHERE pa.products_id = " . (int)$product_id . "
-                AND po.products_options_type != '" . $db->prepare_input(PRODUCTS_OPTIONS_TYPE_READONLY) . "'";
+                AND po.products_options_type != '" . $db->prepare_input(zen_config('PRODUCTS_OPTIONS_TYPE_READONLY', '')) . "'";
     } else {
         // regardless of READONLY attributes, at least one *valid* option must exist
         $sql =
@@ -141,17 +141,17 @@ function zen_requires_attribute_selection($products_id)
     }
 
     $noDoubles = [
-        PRODUCTS_OPTIONS_TYPE_RADIO,
-        PRODUCTS_OPTIONS_TYPE_SELECT,
+        zen_config('PRODUCTS_OPTIONS_TYPE_RADIO'),
+        zen_config('PRODUCTS_OPTIONS_TYPE_SELECT'),
     ];
 
     $noSingles = [
-        PRODUCTS_OPTIONS_TYPE_CHECKBOX,
-        PRODUCTS_OPTIONS_TYPE_FILE,
-        PRODUCTS_OPTIONS_TYPE_TEXT,
+        zen_config('PRODUCTS_OPTIONS_TYPE_CHECKBOX'),
+        zen_config('PRODUCTS_OPTIONS_TYPE_FILE'),
+        zen_config('PRODUCTS_OPTIONS_TYPE_TEXT'),
     ];
-    if (PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED === '0') {
-        $noSingles[] = PRODUCTS_OPTIONS_TYPE_READONLY;
+    if (zen_config('PRODUCTS_OPTIONS_TYPE_READONLY_IGNORED') === '0') {
+        $noSingles[] = zen_config('PRODUCTS_OPTIONS_TYPE_READONLY');
     }
 
     $query =
@@ -227,7 +227,7 @@ function zen_option_name_base_expects_no_values($option_name_id_array)
         $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
         $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE', $opt_type, $test_var);
 
-        if ($test_var && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) {
+        if ($test_var && $opt_type['products_options_type'] != zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') && $opt_type['products_options_type'] != zen_config('PRODUCTS_OPTIONS_TYPE_FILE')) {
             $option_name_no_value = false;
             break;
         }
@@ -273,7 +273,7 @@ function zen_has_product_attributes_values($product_id)
  */
 function zen_has_product_attributes_downloads_status($product_id)
 {
-    if (DOWNLOAD_ENABLED !== 'true') {
+    if (zen_config('DOWNLOAD_ENABLED') !== 'true') {
         return false;
     }
 
@@ -590,7 +590,7 @@ function zen_copy_products_attributes($products_id_from, $products_id_to)
 
 
             // Downloads
-            if (DOWNLOAD_ENABLED === 'true') {
+            if (zen_config('DOWNLOAD_ENABLED') === 'true') {
                 $sql = "SELECT products_attributes_id, products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
                         FROM " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                         WHERE products_attributes_id = " . (int)$copy_from['products_attributes_id'];
@@ -739,7 +739,7 @@ function zen_update_attributes_products_option_values_sort_order($product_id)
 function zen_has_product_attributes_downloads($product_id, $check_if_valid = false)
 {
     global $db;
-    if (DOWNLOAD_ENABLED !== 'true') {
+    if (zen_config('DOWNLOAD_ENABLED') !== 'true') {
         if ($check_if_valid) {
             // if downloads aren't enabled, then there can't be any invalid downloads, so we return blank to indicate no invalid downloads
             return '';
@@ -849,7 +849,7 @@ function zen_get_download_handler($filename)
  */
 function zen_check_for_misconfigured_downloads() {
    global $db;
-   if (DOWNLOAD_ENABLED === 'false') {
+   if (zen_config('DOWNLOAD_ENABLED') === 'false') {
        return true;
    }
    // use SELECT from admin/downloads_manager.php

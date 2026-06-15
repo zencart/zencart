@@ -38,59 +38,83 @@ if (isset($argc) && $argc > 0) {
         $_GET[$it[0]] = $it[1] ?? $it[0];
         // parse_str($argv[$i],$tmp);
         // $_REQUEST = array_merge($_REQUEST, $tmp);
-        if ($it[0] === 'cli') $controller = 'cli';
-        if ($it[0] === 'v' || $it[0] === 'verbose') $debug_logging = 'screen';
+        if ($it[0] === 'cli') {
+            $controller = 'cli';
+        }
+        if ($it[0] === 'v' || $it[0] === 'verbose') {
+            $debug_logging = 'screen';
+        }
     }
 }
 if (!isset($_GET) && isset($_SERVER["argc"]) && $_SERVER["argc"] > 1) {
     for ($i = 1; $i < $_SERVER["argc"]; $i++) {
         [$key, $val] = explode('=', $_SERVER["argv"][$i]);
         $_GET[$key] = $_REQUEST[$key] = $val;
-        if ($key === 'cli') $controller = 'cli';
-        if ($key === 'v' || $key === 'verbose') $debug_logging = 'screen';
+        if ($key === 'cli') {
+            $controller = 'cli';
+        }
+        if ($key === 'v' || $key === 'verbose') {
+            $debug_logging = 'screen';
+        }
     }
 }
 
 /**
  * set the level of system-inspection logging -- can by overridden by adding ?v={mode} to command line, for non-ajax steps, or generically set in localConfig.php
  */
-if (!isset($debug_logging)) $debug_logging = 'file';
-if (isset($_GET['v']) && in_array($_GET['v'], ['screen', '1', 1, 'true', 'TRUE'], true)) $debug_logging = 'screen';
+if (!isset($debug_logging)) {
+    $debug_logging = 'file';
+}
+if (isset($_GET['v']) && in_array($_GET['v'], ['screen', '1', 1, 'true', 'TRUE'], true)) {
+    $debug_logging = 'screen';
+}
 define('VERBOSE_SYSTEMCHECKER', $debug_logging);
-if (VERBOSE_SYSTEMCHECKER === 'screen' && $controller === 'cli') echo 'Verbose mode enabled.' . "\n";
+if (VERBOSE_SYSTEMCHECKER === 'screen' && $controller === 'cli') {
+    echo 'Verbose mode enabled.' . "\n";
+}
 
 /**
- * read some file locations from the "store / catalog" configure.php
+ * read some file locations from configure.php
  */
 require DIR_FS_INSTALL . 'includes/classes/class.zcConfigureFileReader.php';
 $configFile = DIR_FS_ROOT . 'includes/configure.php';
 $configFileLocal = DIR_FS_ROOT . 'includes/local/configure.php';
-if (file_exists($configFileLocal)) $configFile = $configFileLocal;
+if (file_exists($configFileLocal)) {
+    $configFile = $configFileLocal;
+}
 $configReader = new zcConfigureFileReader($configFile);
 
 if (!defined('DIR_FS_LOGS')) {
-    // Use the systemChecker to see if one is defined in the store configure.php
+    // Use the systemChecker to see if one is defined in the configure.php
     $logDir = $configReader->getDefine('DIR_FS_LOGS');
-    if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'logs';
+    if (!isset($logDir)) {
+        $logDir = DIR_FS_ROOT . 'logs';
+    }
     define('DIR_FS_LOGS', $logDir);
 }
 if (!defined('DIR_FS_SQL_CACHE')) {
-    // Use the systemChecker to see if one is defined in the store configure.php
+    // Use the systemChecker to see if one is defined in the configure.php
     $logDir = $configReader->getDefine('DIR_FS_SQL_CACHE');
-    if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'cache';
+    if (!isset($logDir)) {
+        $logDir = DIR_FS_ROOT . 'cache';
+    }
     define('DIR_FS_SQL_CACHE', $logDir);
 }
 if (!defined('DIR_FS_DOWNLOAD_PUBLIC')) {
-    // Use the systemChecker to see if one is defined in the store configure.php
+    // Use the systemChecker to see if one is defined in the configure.php
     $logDir = $configReader->getDefine('DIR_FS_DOWNLOAD_PUBLIC');
-    if (!isset($logDir)) $logDir = DIR_FS_ROOT . 'pub';
+    if (!isset($logDir)) {
+        $logDir = DIR_FS_ROOT . 'pub';
+    }
     define('DIR_FS_DOWNLOAD_PUBLIC', $logDir);
 }
 
 /**
  * set the level of error reporting
  */
-if (!defined('DEBUG_LOG_FOLDER')) define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
+if (!defined('DEBUG_LOG_FOLDER')) {
+    define('DEBUG_LOG_FOLDER', DIR_FS_LOGS);
+}
 //error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
 error_reporting(E_ALL);
 $debug_logfile_path = DEBUG_LOG_FOLDER . '/zcInstallDEBUG-' . time() . '-' . mt_rand(1000, 999999) . '.log';
@@ -118,7 +142,9 @@ if (ini_get('date.timezone') === '' && @date_default_timezone_get() === '') {
  */
 if (!isset($_GET['cacheignore'])) {
     //APC
-    if (function_exists('apc_clear_cache')) @apc_clear_cache();
+    if (function_exists('apc_clear_cache')) {
+        @apc_clear_cache();
+    }
     //XCACHE
     if (function_exists('xcache_clear_cache')) {
         @ini_set('xcache.cacher', 'OFF');
@@ -134,6 +160,8 @@ foreach (glob(DIR_FS_INSTALL . 'includes/extra_configures/*.php') ?? [] as $file
 
 require DIR_FS_ROOT . 'includes/classes/traits/ObserverManager.php';
 require DIR_FS_ROOT . 'includes/classes/traits/NotifierManager.php';
+require DIR_FS_ROOT . 'includes/classes/traits/Singleton.php';
+require DIR_FS_ROOT . 'includes/classes/EventDto.php';
 require DIR_FS_ROOT . 'includes/classes/class.base.php';
 require DIR_FS_ROOT . 'includes/classes/class.notifier.php';
 require DIR_FS_INSTALL . 'includes/functions/general.php';
@@ -144,17 +172,18 @@ $languageManager = new LanguageManager();
 
 zen_sanitize_request();
 /**
- * set the type of request (secure or not)
+ * Inspect the type of request (using SSL or not)
  */
-$request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_BY']) && stripos($_SERVER['HTTP_X_FORWARDED_BY'], 'SSL') !== false) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (stripos($_SERVER['HTTP_X_FORWARDED_HOST'], 'SSL') !== false)) ||
-    (isset($_SERVER['SCRIPT_URI']) && stripos($_SERVER['SCRIPT_URI'], 'https:') === 0) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) == 'on')) ||
-    (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'ssl' || strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https')) ||
-    (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] != '') ||
-    (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] == '443') ||
-    (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')) ? 'SSL' : 'NONSSL';
+$request_type = ((isset($_SERVER['HTTPS']) && (strtolower((string)$_SERVER['HTTPS']) !== 'off' || $_SERVER['HTTPS'] == '1')))
+    || (isset($_SERVER['HTTP_X_FORWARDED_BY']) && str_contains(strtoupper((string)$_SERVER['HTTP_X_FORWARDED_BY']), 'SSL'))
+    || (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && (str_contains(strtoupper((string)$_SERVER['HTTP_X_FORWARDED_HOST']), 'SSL')))
+    || (isset($_SERVER['SCRIPT_URI']) && stripos((string)$_SERVER['SCRIPT_URI'], 'https:') === 0)
+    || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower((string)$_SERVER['HTTP_X_FORWARDED_SSL']) === 'on'))
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'ssl' || strtolower((string)$_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https'))
+    || (isset($_SERVER['HTTP_SSLSESSIONID']) && $_SERVER['HTTP_SSLSESSIONID'] !== '')
+    || (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] == '443')
+    || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443')
+    ? 'SSL' : 'NONSSL';
 
 /*
  * debug params
@@ -176,7 +205,9 @@ require DIR_FS_INSTALL . 'includes/vendors/yaml/lib/class.sfYamlInline.php';
 require DIR_FS_INSTALL . 'includes/classes/class.zcDatabaseInstaller.php';
 require DIR_FS_ROOT . 'includes/classes/db/mysql/query_factory.php';
 
-if (!isset($_GET['main_page'])) $_GET['main_page'] = 'index';
+if (!isset($_GET['main_page'])) {
+    $_GET['main_page'] = 'index';
+}
 $current_page = preg_replace('/[^a-z0-9_]/', '', $_GET['main_page']);
 if (empty($current_page) || !file_exists('includes/modules/pages/' . $current_page)) {
     $_GET['main_page'] = $current_page = 'index';
@@ -186,8 +217,12 @@ $page_directory = 'includes/modules/pages/' . $current_page;
 
 $languagesInstalled = $languageManager->getLanguagesInstalled();
 $installer_lng = 'en_us';
-if (isset($_POST['lng'])) $installer_lng = $_POST['lng'];
-if (isset($_GET['lng'])) $installer_lng = $_GET['lng'];
+if (isset($_POST['lng'])) {
+    $installer_lng = $_POST['lng'];
+}
+if (isset($_GET['lng'])) {
+    $installer_lng = $_GET['lng'];
+}
 
 $languageManager->loadLanguageDefines($installer_lng, $current_page, 'en_us');
 $lng_short = substr($installer_lng, 0, strpos($installer_lng, '_'));

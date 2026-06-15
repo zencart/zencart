@@ -26,7 +26,7 @@ class zcObserverPaypalRestAdmin
         // If the paypalr payment-module isn't installed or isn't configured to be enabled,
         // then nothing further to do here.
         //
-        if (!defined('MODULE_PAYMENT_PAYPALR_STATUS') || MODULE_PAYMENT_PAYPALR_STATUS !== 'True') {
+        if (zen_config('MODULE_PAYMENT_PAYPALR_STATUS', 'False') !== 'True') {
             return;
         }
 
@@ -69,7 +69,7 @@ class zcObserverPaypalRestAdmin
 
         require_once $this->pluginManagerInstalledVersionDirectory . 'catalog/includes/modules/payment/paypalr.php';
         [$client_id, $secret] = \paypalr::getEnvironmentInfo();
-        $ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
+        $ppr = new PayPalRestfulApi(zen_config('MODULE_PAYMENT_PAYPALR_SERVER'), $client_id, $secret);
 
         foreach ($track_ids as $i => $tracking_number) {
             if (empty($tracking_number)) {

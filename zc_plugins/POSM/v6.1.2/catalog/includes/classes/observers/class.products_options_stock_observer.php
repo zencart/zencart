@@ -39,17 +39,17 @@ class products_options_stock_observer extends base
         // the value's initialized to prevent PHP notices!
         //
         $this->debug = false;
-        $this->enabled = (defined('POSM_ENABLE') && POSM_ENABLE === 'true');
+        $this->enabled = (defined('POSM_ENABLE') && zen_config('POSM_ENABLE') === 'true');
         if ($this->enabled === false) {
             return;
         }
 
-        $this->debug = (POSM_ENABLE_DEBUG === 'true');
+        $this->debug = (zen_config('POSM_ENABLE_DEBUG') === 'true');
         $this->debug_log_file = DIR_FS_LOGS . '/myDEBUG-POSM-' . time() . '-' . mt_rand(1000,999999) . '.log';
 
-        $this->show_stock_messages = (POSM_SHOW_STOCK_MESSAGES === 'Both' || POSM_SHOW_STOCK_MESSAGES === 'Store Only');
+        $this->show_stock_messages = (zen_config('POSM_SHOW_STOCK_MESSAGES') === 'Both' || zen_config('POSM_SHOW_STOCK_MESSAGES') === 'Store Only');
 
-        $this->debugMessage('STOCK_CHECK: ' . STOCK_CHECK . ', STOCK_ALLOW_CHECKOUT: ' . STOCK_ALLOW_CHECKOUT . ', STOCK_LIMITED: ' . STOCK_LIMITED);
+        $this->debugMessage('STOCK_CHECK: ' . zen_config('STOCK_CHECK') . ', STOCK_ALLOW_CHECKOUT: ' . zen_config('STOCK_ALLOW_CHECKOUT') . ', STOCK_LIMITED: ' . zen_config('STOCK_LIMITED'));
 
         // -----
         // Determine this zc_plugin's installed directory for use by other of the
@@ -215,7 +215,7 @@ class products_options_stock_observer extends base
         // bypass the stock-decrement, continue processing.
         //
         } elseif ($decrement_options_stock === true && $stock_record !== false) {
-            $result->fields['products_quantity'] = $order->products[$i]['qty'] + STOCK_REORDER_LEVEL + 1;
+            $result->fields['products_quantity'] = $order->products[$i]['qty'] + zen_config('STOCK_REORDER_LEVEL') + 1;
         }
     }
 
@@ -273,7 +273,7 @@ class products_options_stock_observer extends base
             $decrement_managed_stock
         );
 
-        $products_status_update = (SHOW_PRODUCTS_SOLD_OUT === '0') ? ', products_status = 0' : '';
+        $products_status_update = (zen_config('SHOW_PRODUCTS_SOLD_OUT') === '0') ? ', products_status = 0' : '';
 
         // -----
         // If the stock-adjustment is to be totally overridden, note the condition in the log only.
@@ -354,7 +354,7 @@ class products_options_stock_observer extends base
                 );
             }
 
-            if (SEND_LOWSTOCK_EMAIL === '1' && $new_option_quantity <= POSM_STOCK_REORDER_LEVEL && $pos_record->fields['products_quantity'] > POSM_STOCK_REORDER_LEVEL) {
+            if (zen_config('SEND_LOWSTOCK_EMAIL') === '1' && $new_option_quantity <= zen_config('POSM_STOCK_REORDER_LEVEL') && $pos_record->fields['products_quantity'] > zen_config('POSM_STOCK_REORDER_LEVEL')) {
                 $products_attributes = '';
                 foreach ($order->products[$ordered_product['i']]['attributes'] as $currentAttribute) {
                     $products_attributes .= (', ' . zen_options_name($currentAttribute['option_id']) . ': ' . zen_values_name($currentAttribute['value_id']));
@@ -363,17 +363,17 @@ class products_options_stock_observer extends base
                 $email_low_stock = sprintf(POS_LOW_STOCK_EMAIL_CONTENTS, (int)$prid, $ordered_product['products_model'], $this->products_name_saved, $products_attributes, $new_option_quantity);
                 zen_mail(
                     '',
-                    SEND_EXTRA_LOW_STOCK_EMAILS_TO,
+                    zen_config('SEND_EXTRA_LOW_STOCK_EMAILS_TO'),
                     POS_EMAIL_TEXT_SUBJECT_LOWSTOCK,
                     $email_low_stock,
-                    STORE_OWNER,
-                    EMAIL_FROM,
+                    zen_config('STORE_OWNER'),
+                    zen_config('EMAIL_FROM'),
                     ['EMAIL_MESSAGE_HTML' => nl2br($email_low_stock, false)],
                     'low_stock'
                 );
             }
         }
-        if (POSM_SHOW_STOCK_MESSAGES !== 'Store Only' && POSM_SHOW_STOCK_MESSAGES !== 'Both') {
+        if (zen_config('POSM_SHOW_STOCK_MESSAGES') !== 'Store Only' && zen_config('POSM_SHOW_STOCK_MESSAGES') !== 'Both') {
             $i = $ordered_product['i'];
             $order->products[$i]['name'] = str_replace($this->stock_message, '', $order->products[$i]['name']);
         }
@@ -476,7 +476,7 @@ class products_options_stock_observer extends base
         }
 
         $num_products = count($productArray);
-        $posm_include_model = (POSM_CART_DISPLAY_MODEL_NUMBERS === 'true');
+        $posm_include_model = (zen_config('POSM_CART_DISPLAY_MODEL_NUMBERS') === 'true');
         for ($i = 0; $i < $num_products; $i++) {
             $pid = $productArray[$i]['id'];
 
@@ -576,7 +576,7 @@ class products_options_stock_observer extends base
                 $extra_msg = '';
                 if ($msg === PRODUCTS_OPTIONS_STOCK_IN_STOCK) {
                     $extra_class = 'in-stock';
-                    if (POSM_SHOW_IN_STOCK_MESSAGE === 'false') {
+                    if (zen_config('POSM_SHOW_IN_STOCK_MESSAGE') === 'false') {
                         $msg = '';
                     }
                 } elseif (!str_contains($msg, ', ')) {
@@ -607,7 +607,7 @@ class products_options_stock_observer extends base
         $options_quantity = $cart_quantity = $pos_record = 'n/a';
         $always_output = (bool)$always_output;
         if ($this->enabled === true && ($always_output === true || $this->show_stock_messages === true)) {
-            $in_stock_message = (POSM_SHOW_IN_STOCK_MESSAGE === 'true' || $always_output === true) ? PRODUCTS_OPTIONS_STOCK_IN_STOCK : '';
+            $in_stock_message = (zen_config('POSM_SHOW_IN_STOCK_MESSAGE') === 'true' || $always_output === true) ? PRODUCTS_OPTIONS_STOCK_IN_STOCK : '';
             $no_stock_message = PRODUCTS_OPTIONS_STOCK_NOT_IN_STOCK;
 
             $msg_html = '';
@@ -659,7 +659,7 @@ class products_options_stock_observer extends base
                     $msg_text = $no_stock_message;
                 }
             } elseif ($pos_record === false) {
-                if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
+                if (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true') {
                     $quantity = zen_get_products_stock($prid);
                     if ($quantity >= $_SESSION['cart']->contents[$prid]['qty']) {
                         $extra_class = 'in-stock';
@@ -681,7 +681,7 @@ class products_options_stock_observer extends base
                 }
             } else {
                 if ($pos_record->EOF) {
-                    if (POSM_SHOW_UNMANAGED_OPTIONS_STATUS === 'true') {
+                    if (zen_config('POSM_SHOW_UNMANAGED_OPTIONS_STATUS') === 'true') {
                         $msg_html = $no_stock_message;
                         $msg_text = $no_stock_message;
                         $extra_class = 'no-stock';

@@ -96,13 +96,13 @@ class newsletter {
     $confirm_string .= zen_draw_separator() . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
-    $confirm_string .= '<div class="col-sm-12">' . nl2br($this->content_html) . '</div>' . PHP_EOL;
+    $confirm_string .= '<div class="col-sm-12">' . nl2br($this->content_html, false) . '</div>' . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
     $confirm_string .= zen_draw_separator() . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
-    $confirm_string .= '<div class="col-sm-12 tt">' . nl2br($this->content) . '</div>' . PHP_EOL;
+    $confirm_string .= '<div class="col-sm-12 tt">' . nl2br($this->content, false) . '</div>' . PHP_EOL;
     $confirm_string .= '</div>' . PHP_EOL;
     $confirm_string .= '<div class="row">' . PHP_EOL;
     $confirm_string .= zen_draw_separator() . PHP_EOL;
@@ -136,7 +136,7 @@ class newsletter {
       $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
       $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
       $html_msg['EMAIL_MESSAGE_HTML'] = $this->content_html;
-      zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $this->title, $this->content, STORE_NAME, EMAIL_FROM, $html_msg, 'newsletters');
+      zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $this->title, $this->content, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'newsletters');
       echo zen_icon('tick', $item['customers_email_address'], 'lg');
 
       //force output to the screen to show status indicator each time a message is sent...

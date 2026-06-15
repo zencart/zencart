@@ -502,19 +502,19 @@ if (mb_strlen($abbrev_dir_name) > 45) {
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['bID'])) {
                   $check_page = $db->Execute($banners_query_raw);
                   $check_count = 0;
-                  if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS) {
+                  if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS')) {
                     foreach ($check_page as $item) {
                       if ($item['banners_id'] == (int)$_GET['bID']) {
                         break;
                       }
                       $check_count++;
                     }
-                    $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS) != 0 ? .5 : 0)));
+                    $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)));
                   } else {
                     $_GET['page'] = 1;
                   }
                 }
-                $banners_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $banners_query_raw, $banners_query_numrows);
+                $banners_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $banners_query_raw, $banners_query_numrows);
                 $banners = $db->Execute($banners_query_raw);
                 foreach ($banners as $banner) {
                   $info = $db->Execute("SELECT SUM(banners_shown) AS banners_shown,
@@ -703,8 +703,8 @@ if (mb_strlen($abbrev_dir_name) > 45) {
         <div class="row">
           <table class="table">
             <tr>
-              <td><?= $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_BANNERS) ?></td>
-              <td class="text-right"><?= $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']) ?></td>
+              <td><?= $banners_split->display_count($banners_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_BANNERS) ?></td>
+              <td class="text-right"><?= $banners_split->display_links($banners_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']) ?></td>
             </tr>
             <tr>
               <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_BANNER_MANAGER, 'action=new') ?>" class="btn btn-primary" role="button"><?= IMAGE_NEW_BANNER ?></a></td>

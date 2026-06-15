@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -140,14 +141,6 @@ class Category
     /**
      * @since ZC v2.1.0
      */
-    public function getInfoPage(): string
-    {
-        return $this->getTypeHandler() . '_info';
-    }
-
-    /**
-     * @since ZC v2.1.0
-     */
     public function __get(string $name)
     {
         return $this->get($name);
@@ -205,4 +198,3 @@ class Category
         $this->languages = $lng->get_language_list();  // [1 => 'en', 2 => 'fr']
     }
 }
-

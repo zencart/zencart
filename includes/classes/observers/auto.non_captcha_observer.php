@@ -132,10 +132,10 @@ class zcObserverNonCaptchaObserver extends base
         foreach ($fields as $field) {
             if (!empty($_POST[$field])) {
                 if (is_array($_POST[$field])) {
-                   $array_found = true;
-                   $_POST[$field] = '';
+                    $array_found = true;
+                    $_POST[$field] = '';
                 } else {
-                   $test_string .= $_POST[$field];
+                    $test_string .= $_POST[$field];
                 }
             }
         }
@@ -148,7 +148,7 @@ class zcObserverNonCaptchaObserver extends base
             return;
         }
 
-        $test_string = str_ireplace([HTTP_SERVER, HTTPS_SERVER], '', $test_string);
+        $test_string = str_ireplace(HTTP_SERVER, '', $test_string);
 
         // inspect
         if (preg_match($regexPattern, $test_string)) {

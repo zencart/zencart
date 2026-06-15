@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Zen Cart Database Session Handler
  *
@@ -14,7 +16,6 @@ namespace Zencart;
  */
 class SessionHandler implements \SessionHandlerInterface
 {
-
     /**
      * @inheritDoc
      * @since ZC v2.0.0
@@ -45,9 +46,13 @@ class SessionHandler implements \SessionHandlerInterface
     {
         global $db;
         $sql = "DELETE FROM " . TABLE_SESSIONS . " WHERE expiry < " . time();
-        $db->Execute($sql);
+        $result = $db->Execute($sql);
 
-        return $db->affectedRows() ?? false;
+        if ($result->resource === false) {
+            return false;
+        }
+
+        return $db->affectedRows();
     }
 
     /**

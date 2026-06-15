@@ -44,7 +44,7 @@ $sql = "SELECT p.products_id, pd.products_name, sum(v.views) as total_views, l.n
 $sql = $db->bindVars($sql, ':startdate', $startdate, 'string');
 $sql = $db->bindVars($sql, ':enddate', $enddate, 'string');
 
-$products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $sql, $products_query_numrows);
+$products_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $sql, $products_query_numrows);
 $products = $db->Execute($sql);
 
 ?>
@@ -129,8 +129,8 @@ $products = $db->Execute($sql);
         </table>
         <table class="table">
             <tr>
-                <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-                <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], 'start_date=' . $startdate . '&end_date=' . $enddate); ?></td>
+                <td><?php echo $products_split->display_count($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+                <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], 'start_date=' . $startdate . '&end_date=' . $enddate); ?></td>
             </tr>
         </table>
         <!-- body_text_eof //-->

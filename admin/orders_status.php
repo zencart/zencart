@@ -81,7 +81,7 @@ if (!empty($action)) {
                               WHERE orders_status = " . (int)$oSID);
 
       $remove_status = true;
-      if ($oSID == DEFAULT_ORDERS_STATUS_ID) {
+      if ($oSID == zen_config('DEFAULT_ORDERS_STATUS_ID')) {
         $remove_status = false;
         $messageStack->add($error_message = ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
       } elseif ($status->fields['count'] > 0) {
@@ -132,7 +132,7 @@ if (!empty($action)) {
                                             FROM " . TABLE_ORDERS_STATUS . "
                                             WHERE language_id = " . (int)$_SESSION['languages_id'] . "
                                             ORDER BY sort_order ASC, orders_status_id ASC";
-                $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
+                $orders_status_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status = $db->Execute($orders_status_query_raw);
                 foreach ($orders_status as $status) {
                   if ((!isset($_GET['oSID']) || (isset($_GET['oSID']) && ($_GET['oSID'] == $status['orders_status_id']))) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {
@@ -152,7 +152,7 @@ if (!empty($action)) {
                         } else {
                             $status_display = $status['orders_status_name'];
                         }
-                  if (DEFAULT_ORDERS_STATUS_ID == $status['orders_status_id']) {
+                  if (zen_config('DEFAULT_ORDERS_STATUS_ID') == $status['orders_status_id']) {
                             echo '                <td class="dataTableContent">' . $status_display . ' <strong>(' . TEXT_DEFAULT . ')</strong></td>' . "\n";
                   } else {
                             echo '                <td class="dataTableContent">' . $status_display . '</td>' . "\n";
@@ -243,7 +243,7 @@ if (!empty($action)) {
                             '</span>' .
                             '</div>' .
                             '<small class="text-muted">' . TEXT_INFO_COLOR_CODE .'</small><br>' . TEXT_INFO_COLOR_CODE_WARNING . $colorSyncScript);
-                if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) {
+                if (zen_config('DEFAULT_ORDERS_STATUS_ID') != $oInfo->orders_status_id) {
                   $contents[] = array('text' => '<br>' . zen_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }
                 $contents[] = array('text' => '<br>' . TEXT_INFO_SORT_ORDER . '<br>&nbsp;&nbsp;&nbsp;&nbsp;' . zen_draw_input_field('sort_order', $oInfo->sort_order, 'class="form-control"'));
@@ -284,8 +284,8 @@ if (!empty($action)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $orders_status_split->display_count($orders_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS); ?></td>
-            <td class="text-right"><?php echo $orders_status_split->display_links($orders_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $orders_status_split->display_count($orders_status_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS); ?></td>
+            <td class="text-right"><?php echo $orders_status_split->display_links($orders_status_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
           <?php
           if (empty($action)) {

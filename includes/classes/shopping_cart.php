@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Class for managing the Shopping Cart
  *
@@ -17,66 +19,54 @@ class shoppingCart extends base
 {
     /**
      * shopping cart contents
-     * @var array
      */
-    public $contents;
+    public array $contents;
     /**
      * shopping cart total price
-     * @var float
      */
-    public $total;
+    public float $total;
     /**
      * shopping cart total weight
-     * @var float
      */
-    public $weight;
+    public float $weight;
     /**
      * cart identifier
-     * @var integer
      */
-    public $cartID;
+    public ?string $cartID;
     /**
      * overall content type of shopping cart
-     * @var string
      */
-    protected $content_type;
+    protected string|bool $content_type;
     /**
      * number of free shipping items in cart
-     * @var float|int
      */
-    protected $free_shipping_item;
+    protected float|int $free_shipping_item;
     /**
      * total weight of free shipping items in cart
-     * @var float|int
      */
-    protected $free_shipping_weight;
+    protected float|int $free_shipping_weight;
     /**
      * total price of free shipping items in cart
-     * @var float|int
      */
-    protected $free_shipping_price;
+    protected float|int $free_shipping_price;
     /**
      * total downloads in cart
-     * @var float|int
      */
-    protected $download_count;
+    protected float|int $download_count;
     /**
      * shopping cart total price before Specials, Sales and Discounts
-     * @var float|int
      */
-    protected $total_before_discounts;
+    protected float|int $total_before_discounts;
     /**
-     * set to TRUE to see debug messages for developer use when troubleshooting add/update cart
+     * set to true to see debug messages for developer use when troubleshooting add/update cart
      * Then, Logout/Login to reset cart for change
-     * @var boolean
      */
-    protected $display_debug_messages = false;
-    protected $flag_duplicate_msgs_set = false;
+    protected bool $display_debug_messages = false;
+    protected bool $flag_duplicate_msgs_set = false;
     /**
-     * array of flag to indicate if quantity ordered is outside product min/max order values
-     * @var array
+     * array of flags to indicate if quantity ordered is outside product min/max order values
      */
-    protected $flag_duplicate_quantity_msgs_set = [];
+    protected array $flag_duplicate_quantity_msgs_set = [];
 
     /**
      * Instantiate a new shopping cart object
@@ -97,10 +87,9 @@ class shoppingCart extends base
      * Note also that if the customer already has some items in their cart before they login,
      * these are merged with the stored contents.
      *
-     * @return bool
      * @since ZC v1.0.3
      */
-    public function restore_contents()
+    public function restore_contents(): bool
     {
         global $db;
         if (!zen_is_logged_in() || zen_in_guest_checkout()) {
@@ -185,7 +174,7 @@ class shoppingCart extends base
             foreach ($attributes as $next_att) {
                 $this->contents[$uprid]['attributes'][$next_att['products_options_id']] = $next_att['products_options_value_id'];
                 // text attributes set additional information
-                if ($next_att['products_options_value_id'] === PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
+                if ($next_att['products_options_value_id'] === zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')) {
                     $this->contents[$uprid]['attributes_values'][$next_att['products_options_id']] = $next_att['products_options_value_text'];
                 }
             }
@@ -193,6 +182,7 @@ class shoppingCart extends base
         $this->cartID = $this->generate_cart_id();
         $this->notify('NOTIFIER_CART_RESTORE_CONTENTS_END');
         $this->cleanup();
+        return true;
     }
 
     /**
@@ -207,7 +197,7 @@ class shoppingCart extends base
      * @return void
      * @since ZC v1.0.3
      */
-    public function reset($reset_database = false)
+    public function reset(bool $reset_database = false): void
     {
         global $db;
         $this->notify('NOTIFIER_CART_RESET_START', null, $reset_database);
@@ -230,7 +220,7 @@ class shoppingCart extends base
             $db->Execute($sql);
         }
 
-        unset($this->cartID);
+        $this->cartID = null;
         $_SESSION['cartID'] = '';
         $_SESSION['cart_errors'] = '';
         $_SESSION['valid_to_checkout'] = true;
@@ -245,13 +235,12 @@ class shoppingCart extends base
      * and if the customer is logged in, also adds to the database stored cart.
      *
      * @param int $product_id the product ID of the item to be added
-     * @param float $qty the quantity of the item to be added
+     * @param float|int $qty the quantity of the item to be added
      * @param array $attributes any attributes that are attached to the product
      * @param bool $notify whether to add the product to the notify list
-     * @return void
      * @since ZC v1.0.3
      */
-    public function add_cart($product_id, $qty = 1, $attributes = [], $notify = true)
+    public function add_cart(int|string $product_id, float|int|string $qty = 1, array $attributes = [], bool $notify = true): void
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) {
@@ -317,13 +306,13 @@ class shoppingCart extends base
                     //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                     $attr_value = null;
                     $blank_value = false;
-                    if (is_string($option) && str_starts_with($option, TEXT_PREFIX)) {
+                    if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX', ''))) {
                         if (trim($value) === '') {
                             $blank_value = true;
                         } else {
-                            $option = substr((string)$option, strlen(TEXT_PREFIX));
+                            $option = substr((string)$option, strlen(zen_config('TEXT_PREFIX', '')));
                             $attr_value = stripslashes($value);
-                            $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
+                            $value = zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID');
 
                             // Validate max-length of TEXT attribute
                             $check = $db->Execute("SELECT products_options_length FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = " . (int)$option . " LIMIT 1");
@@ -391,12 +380,11 @@ class shoppingCart extends base
      * logged in.
      *
      * @param mixed $uprid product 'uprid' of item to update
-     * @param int|float $quantity the quantity to update the item to
+     * @param float|int $quantity the quantity to update the item to
      * @param array $attributes product attributes attached to the item
-     * @return bool
      * @since ZC v1.0.3
      */
-    function update_quantity($uprid, $quantity = 0, $attributes = [])
+    public function update_quantity(mixed $uprid, float|int|string $quantity = 0, array $attributes = []): ?bool
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) {
@@ -414,12 +402,12 @@ class shoppingCart extends base
         }
         $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_START', null, $uprid, $quantity, $attributes);
         if (empty($quantity)) {
-            return true; // nothing needs to be updated if theres no quantity, so we return true.
+            return true; // nothing needs to be updated if there is no quantity, so we return true.
         }
 
         // ensure quantity added to cart is never more than what is in-stock
         $chk_current_qty = zen_get_products_stock($uprid);
-        if (STOCK_ALLOW_CHECKOUT === 'false' && $quantity > $chk_current_qty) {
+        if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && $quantity > $chk_current_qty) {
             $quantity = $chk_current_qty;
             if (!$this->flag_duplicate_msgs_set) {
                 $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? '$_GET[main_page]: ' . $_GET['main_page'] . ' FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($uprid), 'caution');
@@ -446,13 +434,13 @@ class shoppingCart extends base
                 //add htmlspecialchars processing.  This handles quotes and other special chars in the user input.
                 $attr_value = null;
                 $blank_value = false;
-                if (is_string($option) && str_starts_with($option, TEXT_PREFIX)) {
+                if (is_string($option) && str_starts_with($option, zen_config('TEXT_PREFIX', ''))) {
                     if (trim($value) === '') {
                         $blank_value = true;
                     } else {
-                        $option = substr($option, strlen(TEXT_PREFIX));
+                        $option = substr($option, strlen(zen_config('TEXT_PREFIX', '')));
                         $attr_value = stripslashes($value);
-                        $value = PRODUCTS_OPTIONS_VALUES_TEXT_ID;
+                        $value = zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID');
                         $this->contents[$uprid]['attributes_values'][$option] = $attr_value;
                     }
                 }
@@ -496,6 +484,7 @@ class shoppingCart extends base
         }
         $this->cartID = $this->generate_cart_id();
         $this->notify('NOTIFIER_CART_UPDATE_QUANTITY_END');
+        return true;
     }
 
     /**
@@ -506,10 +495,9 @@ class shoppingCart extends base
      * all items that have reached this state. The database-stored cart
      * is also updated where necessary
      *
-     * @return void
      * @since ZC v1.0.3
      */
-    function cleanup()
+    public function cleanup(): void
     {
         $this->notify('NOTIFIER_CART_CLEANUP_START');
         foreach ($this->contents as $key => $data) {
@@ -523,11 +511,10 @@ class shoppingCart extends base
     /**
      * Protected method that removes a uprid from the cart.
      *
-     * @param string|int $uprid 'uprid' of product to remove
-     * @return void
+     * @param int|string $uprid 'uprid' of product to remove
      * @since ZC v2.0.0
      */
-    protected function removeUprid($uprid)
+    protected function removeUprid(int|string $uprid): void
     {
         global $db;
 
@@ -559,7 +546,7 @@ class shoppingCart extends base
      * @return int|float total number of items in cart
      * @since ZC v1.0.3
      */
-    public function count_contents()
+    public function count_contents(): float|int
     {
         $this->notify('NOTIFIER_CART_COUNT_CONTENTS_START');
         $total_items = 0;
@@ -582,12 +569,12 @@ class shoppingCart extends base
      * @return int|float the quantity of the item
      * @since ZC v1.0.3
      */
-    public function get_quantity($uprid)
+    public function get_quantity(int|string $uprid): float|int
     {
         $this->notify('NOTIFIER_CART_GET_QUANTITY_START', null, $uprid);
         if (isset($this->contents[$uprid])) {
             $this->notify('NOTIFIER_CART_GET_QUANTITY_END_QTY', null, $uprid);
-            return $this->contents[$uprid]['qty'];
+            return zen_str_to_numeric($this->contents[$uprid]['qty']);
         }
 
         $this->notify('NOTIFIER_CART_GET_QUANTITY_END_FALSE', $uprid);
@@ -598,10 +585,9 @@ class shoppingCart extends base
      * Check whether a product exists in the cart
      *
      * @param mixed $uprid product ID of product to check
-     * @return boolean
      * @since ZC v1.0.3
      */
-    public function in_cart($uprid)
+    public function in_cart(mixed $uprid): bool
     {
         $this->notify('NOTIFIER_CART_IN_CART_START', null, $uprid);
         if (isset($this->contents[$uprid])) {
@@ -616,11 +602,10 @@ class shoppingCart extends base
     /**
      * Remove a product from the cart
      *
-     * @param string|int $uprid product ID of product to remove
-     * @return void
+     * @param int|string $uprid product ID of product to remove
      * @since ZC v1.0.3
      */
-    public function remove($uprid)
+    public function remove(int|string $uprid): void
     {
         $this->notify('NOTIFIER_CART_REMOVE_START', null, $uprid);
         $this->removeUprid(zen_db_input($uprid));
@@ -634,7 +619,7 @@ class shoppingCart extends base
      * Remove all products from the cart
      * @since ZC v1.0.3
      */
-    public function remove_all()
+    public function remove_all(): void
     {
         $this->notify('NOTIFIER_CART_REMOVE_ALL_START');
         $this->reset();
@@ -648,7 +633,7 @@ class shoppingCart extends base
      * @return string csv
      * @since ZC v1.0.3
      */
-    public function get_product_id_list()
+    public function get_product_id_list(): string
     {
         if (!is_array($this->contents)) {
             return '';
@@ -659,10 +644,9 @@ class shoppingCart extends base
     /**
      * Calculate cart totals(price and weight)
      *
-     * @return int
      * @since ZC v1.0.3
      */
-    public function calculate()
+    public function calculate(): int
     {
         global $db, $currencies;
         $this->total = 0;
@@ -677,8 +661,8 @@ class shoppingCart extends base
             return 0;
         }
 
-// By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
-// Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
+        // By default, Price Factor is based on Price and is called from function zen_get_attributes_price_factor
+        // Setting a define for ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL to 1 to calculate the Price Factor from Special rather than Price switches this to be based on Special, if it exists
         zen_define_default('ATTRIBUTES_PRICE_FACTOR_FROM_SPECIAL', 1);
         foreach ($this->contents as $uprid => $data) {
             $total_before_discounts = 0;
@@ -743,7 +727,7 @@ class shoppingCart extends base
             $productTotal += $products_price;
             $this->weight += ($qty * $products_weight);
 
-// ****** WARNING NEED TO ADD ATTRIBUTES AND QTY
+            // ****** WARNING NEED TO ADD ATTRIBUTES AND QTY
             // calculate Product Price without Specials, Sales or Discounts
             $total_before_discounts += zen_str_to_numeric($products_raw_price);
 
@@ -839,7 +823,7 @@ class shoppingCart extends base
                     $chk_price = zen_get_products_base_price($uprid);
                     $chk_special = zen_get_products_special_price($uprid, false);
                     // products_options_value_text
-                    if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && (string)zen_get_attributes_type($attributes_id) === (string)PRODUCTS_OPTIONS_TYPE_TEXT) {
+                    if (zen_config('ATTRIBUTES_ENABLED_TEXT_PRICES') === 'true' && (string)zen_get_attributes_type($attributes_id) === (string)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT')) {
                         $text_words = zen_get_word_count_price(
                             $this->contents[$uprid]['attributes_values'][$attribute_price->fields['options_id']],
                             $attribute_price->fields['attributes_price_words_free'],
@@ -982,7 +966,7 @@ class shoppingCart extends base
             // uncomment for odd shipping requirements needing this:
 
                   // if 0 weight defined as free shipping adjust for functions free_shipping_price and free_shipping_item
-                  if ($product['products_weight'] == 0 && ORDER_WEIGHT_ZERO_STATUS === '1' && $is_free_shipping === false) {
+                  if ($product['products_weight'] == 0 && zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && $is_free_shipping === false) {
                     $freeShippingTotal += $products_price;
                     $this->free_shipping_item += $qty;
                   }
@@ -995,12 +979,13 @@ class shoppingCart extends base
                 $this->free_shipping_price += zen_add_tax($totalOnetimeCharge, $products_tax);
             }
 
-// ******* WARNING ADD ONE TIME ATTRIBUTES, PRICE FACTOR
+            // ******* WARNING ADD ONE TIME ATTRIBUTES, PRICE FACTOR
             // calculate Product Price without Specials, Sales or Discounts
             $total_before_discounts = $total_before_discounts * $qty;
             $total_before_discounts += $totalOnetimeChargeNoDiscount;
             $this->total_before_discounts += $total_before_discounts;
         }
+        return 1;
     }
 
     /**
@@ -1010,7 +995,7 @@ class shoppingCart extends base
      * @return float the price of the item's attributes
      * @since ZC v1.0.3
      */
-    public function attributes_price($uprid)
+    public function attributes_price(mixed $uprid): float|int
     {
         global $db, $currencies;
 
@@ -1074,7 +1059,7 @@ class shoppingCart extends base
                 //////////////////////////////////////////////////
                 // calculate additional charges
                 // products_options_value_text
-                if (ATTRIBUTES_ENABLED_TEXT_PRICES === 'true' && (string)zen_get_attributes_type($attribute_price['products_attributes_id']) === (string)PRODUCTS_OPTIONS_TYPE_TEXT) {
+                if (zen_config('ATTRIBUTES_ENABLED_TEXT_PRICES') === 'true' && (string)zen_get_attributes_type($attribute_price['products_attributes_id']) === (string)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT')) {
                     $text_words = zen_get_word_count_price(
                         $this->contents[$uprid]['attributes_values'][$attribute_price['options_id']],
                         $attribute_price['attributes_price_words_free'],
@@ -1133,7 +1118,7 @@ class shoppingCart extends base
      * @return float the price of the items attributes
      * @since ZC v1.2.0d
      */
-    public function attributes_price_onetime_charges($uprid, $qty)
+    public function attributes_price_onetime_charges(mixed $uprid, float $qty): float|int
     {
         $this->notify('NOTIFY_CART_ATTRIBUTES_PRICE_ONETIME_CHARGES_START', $uprid);
 
@@ -1191,11 +1176,11 @@ class shoppingCart extends base
     /**
      * Calculate weight of attributes for a given item
      *
-     * @param mixed $product_id the product ID of the item to check
+     * @param string|int $uprid the product ID of the item to check
      * @return float the weight of the items attributes
      * @since ZC v1.0.3
      */
-    public function attributes_weight($uprid)
+    public function attributes_weight(string|int $uprid): float|int
     {
         if (!isset($this->contents[$uprid]['attributes'])) {
             return 0;
@@ -1234,7 +1219,7 @@ class shoppingCart extends base
      * @return array|false
      * @since ZC v1.0.3
      */
-    public function get_products(bool $check_for_valid_cart = false)
+    public function get_products(bool $check_for_valid_cart = false): false|array
     {
         global $db;
 
@@ -1377,11 +1362,14 @@ class shoppingCart extends base
             }
 
             // convert quantity to proper decimals
-            $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
-            if ($precision === 0 || !str_contains($data['qty'], '.')) {
+            $precision = (int)zen_config('QUANTITY_DECIMALS');
+            if ($precision < 0) {
+                $precision = 0;
+            }
+            if ($precision === 0 || !str_contains((string)$data['qty'], '.')) {
                 $new_qty = $data['qty'];
             } else {
-                $new_qty = rtrim($data['qty'], '0');
+                $new_qty = rtrim((string)$data['qty'], '0');
             }
             $check_unit_decimals = $product['products_quantity_order_units'];
             if (!str_contains($check_unit_decimals, '.')) {
@@ -1400,8 +1388,8 @@ class shoppingCart extends base
                 'weight' => $product['products_weight'] + $this->attributes_weight($uprid),
 
                 // units as defined in Admin, optionally overridden by what might be defined in products table from older shipping modules
-                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? (defined('SHIPPING_WEIGHT_UNITS') ? (string)SHIPPING_WEIGHT_UNITS : null),
-                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? (defined('SHIPPING_DIMENSION_UNITS') ? (string)SHIPPING_DIMENSION_UNITS : null),
+                'weight_units' => $product['products_weight_units'] ?? $product['products_weight_type'] ?? zen_config('SHIPPING_WEIGHT_UNITS'),
+                'dim_units' => $product['products_dim_units'] ?? $product['products_dim_type'] ?? zen_config('SHIPPING_DIMENSION_UNITS'),
 
                 'length' => $product['products_length'] ?? null, // float
                 'width' => $product['products_width'] ?? null, // float
@@ -1433,10 +1421,9 @@ class shoppingCart extends base
     /**
      * Calculate total price of items in cart
      *
-     * @return float Total Price
      * @since ZC v1.0.3
      */
-    public function show_total()
+    public function show_total(): float
     {
         $this->notify('NOTIFIER_CART_SHOW_TOTAL_START');
         $this->calculate();
@@ -1450,7 +1437,7 @@ class shoppingCart extends base
      * @return float Total Price before Specials, Sales, Discounts
      * @since ZC v1.5.2
      */
-    public function show_total_before_discounts()
+    public function show_total_before_discounts(): float|int
     {
         $this->notify('NOTIFIER_CART_SHOW_TOTAL_BEFORE_DISCOUNT_START');
         $this->calculate();
@@ -1461,10 +1448,9 @@ class shoppingCart extends base
     /**
      * Calculate total weight of items in cart
      *
-     * @return float Total Weight
      * @since ZC v1.0.3
      */
-    public function show_weight()
+    public function show_weight(): float
     {
         $this->calculate();
         return $this->weight;
@@ -1473,11 +1459,9 @@ class shoppingCart extends base
     /**
      * Generate a cart ID, used to ensure contents have not been altered unexpectedly
      *
-     * @param int $length length of ID to generate
-     * @return string cart ID
      * @since ZC v1.0.3
      */
-    public function generate_cart_id($length = 5)
+    public function generate_cart_id(int $length = 5): string
     {
         return zen_create_random_value($length, 'digits');
     }
@@ -1486,10 +1470,9 @@ class shoppingCart extends base
      * Calculate the content type of a cart
      *
      * @param bool $gv_only whether to test for Gift Vouchers only
-     * @return string
      * @since ZC v1.0.3
      */
-    public function get_content_type($gv_only = false)
+    public function get_content_type(bool $gv_only = false): string|float|int|false
     {
         global $db;
 
@@ -1511,7 +1494,7 @@ class shoppingCart extends base
                 $free_ship_check = (new Product($prid))->withDefaultLanguage()->getData();
 
                 if (str_starts_with($free_ship_check['products_model'] ?? '', 'GIFT')) {
-// @TODO - fix GIFT price in cart special/attribute
+                    // @TODO - fix GIFT price in cart special/attribute
                     $gift_special = zen_get_products_special_price($prid, true);
                     $gift_pba = zen_get_products_price_is_priced_by_attributes($prid);
                     $gift_price = zen_get_retail_or_wholesale_price($free_ship_check['products_price'], $free_ship_check['products_price_w']);
@@ -1638,10 +1621,9 @@ class shoppingCart extends base
      * @NOTE: NOT USED IN CORE CODE
      *
      * @param int|string $uprid_to_check product id of item to check
-     * @return float
      * @since ZC v1.2.0d
      */
-    public function in_cart_mixed_discount_quantity($uprid_to_check)
+    public function in_cart_mixed_discount_quantity(int|string $uprid_to_check): float|int
     {
         // if nothing is in cart return 0
         if (!is_array($this->contents)) {
@@ -1680,7 +1662,7 @@ class shoppingCart extends base
      * @return int number of items matching constraint
      * @since ZC v1.1.0
      */
-    public function in_cart_check($check_what, $check_value = '1')
+    public function in_cart_check(string $check_what, mixed $check_value = '1'): int
     {
         // if nothing is in cart return 0
         if (!is_array($this->contents)) {
@@ -1705,7 +1687,7 @@ class shoppingCart extends base
      * @return float|bool value of Gift Vouchers in cart
      * @since ZC v1.2.0d
      */
-    public function gv_only()
+    public function gv_only(): float|bool
     {
         return $this->get_content_type(true);
     }
@@ -1713,10 +1695,9 @@ class shoppingCart extends base
     /**
      * Return the number of free shipping items in the cart
      *
-     * @return float
      * @since ZC v1.2.2d
      */
-    public function free_shipping_items()
+    public function free_shipping_items(): float|int
     {
         $this->calculate();
         return $this->free_shipping_item;
@@ -1725,10 +1706,9 @@ class shoppingCart extends base
     /**
      * Return the total price of free shipping items in the cart
      *
-     * @return float
      * @since ZC v1.2.2d
      */
-    public function free_shipping_prices()
+    public function free_shipping_prices(): float|int
     {
         $this->calculate();
         return $this->free_shipping_price;
@@ -1737,10 +1717,9 @@ class shoppingCart extends base
     /**
      * Return the total weight of free shipping items in the cart
      *
-     * @return float
      * @since ZC v1.2.2d
      */
-    public function free_shipping_weight()
+    public function free_shipping_weight(): float|int
     {
         $this->calculate();
         return $this->free_shipping_weight;
@@ -1749,10 +1728,9 @@ class shoppingCart extends base
     /**
      * Return the total number of downloads in the cart
      *
-     * @return int|float
      * @since ZC v1.5.2
      */
-    public function download_counts()
+    public function download_counts(): float|int
     {
         $this->calculate();
         return $this->download_count;
@@ -1765,7 +1743,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionUpdateProduct($goto, $parameters)
+    public function actionUpdateProduct(string $goto, array $parameters): void
     {
         global $messageStack;
         if ($this->display_debug_messages) {
@@ -1839,7 +1817,7 @@ class shoppingCart extends base
                                 );
                             }
                         }
-                        unset($prod_num, $prod_id, $attributes, $this_curr_qty, $this_new_qty);
+                        unset($prod_id, $attributes, $this_curr_qty, $this_new_qty);
                     }
                 }
                 $cart_qty = $this->in_cart_mixed($products_id); // total currently in cart
@@ -1855,7 +1833,7 @@ class shoppingCart extends base
                 // Adjust new quantity to be the same as what's in stock.
                 //
                 $chk_current_qty = zen_get_products_stock($products_id);
-                if (STOCK_ALLOW_CHECKOUT === 'false' && $new_qty > $chk_current_qty) {
+                if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && $new_qty > $chk_current_qty) {
                     $new_qty = $chk_current_qty;
                     $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
                 }
@@ -1912,7 +1890,7 @@ class shoppingCart extends base
                 } else {
                     // display message if all is good and not on shopping_cart page
                     if ($_GET['main_page'] !== FILENAME_SHOPPING_CART) {
-                        if (DISPLAY_CART === 'false' && $messageStack->size('shopping_cart') === 0) {
+                        if (zen_config('DISPLAY_CART') === 'false' && $messageStack->size('shopping_cart') === 0) {
                             $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
                             $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_UPDATED_CART', $_POST, $goto, $parameters);
                         } else {
@@ -1932,7 +1910,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionAddProduct($goto, $parameters = [])
+    public function actionAddProduct(string $goto, array $parameters = []): void
     {
         global $db, $messageStack;
         if ($this->display_debug_messages) {
@@ -1955,7 +1933,7 @@ class shoppingCart extends base
                 //
                 foreach ($_POST['id'] as $key => $value) {
                     if (zen_get_attributes_valid($_POST['products_id'], $key, $value) === false) {
-                        if (str_starts_with($key, TEXT_PREFIX) === true && $value === '') {
+                        if (str_starts_with($key, zen_config('TEXT_PREFIX', '')) === true && $value === '') {
                             $selection_text = '';
                             $value_text = ' ' . ltrim(TEXT_INVALID_USER_INPUT, ' ');
                         } else {
@@ -2011,7 +1989,7 @@ class shoppingCart extends base
             // adjust new quantity to be no more than current in stock
             $chk_current_qty = zen_get_products_stock($_POST['products_id']);
             $this->flag_duplicate_msgs_set = false;
-            if (STOCK_ALLOW_CHECKOUT === 'false' && ($cart_qty + $new_qty) > $chk_current_qty) {
+            if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && ($cart_qty + $new_qty) > $chk_current_qty) {
                 $new_qty = $chk_current_qty;
                 $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'C: FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($_POST['products_id']), 'caution');
                 $this->flag_duplicate_msgs_set = true;
@@ -2022,7 +2000,7 @@ class shoppingCart extends base
                 $new_qty = 0;
                 $adjust_max = 'true';
             } else {
-                if (STOCK_ALLOW_CHECKOUT === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
+                if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
                     // adjust new quantity to be no more than current in stock
                     $adjust_new_qty = 'true';
                     $alter_qty = $chk_current_qty - $cart_qty;
@@ -2055,9 +2033,9 @@ class shoppingCart extends base
                          * Need the upload class for attribute type that allows user uploads. Now psr4Autoloaded!
                          */
                         for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
-                            $upload_prefix = UPLOAD_PREFIX . $i;    //- e.g. upload_2, contains the associated options_id, e.g. 8
-                            $text_prefix = TEXT_PREFIX . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8, the array index for the $_FILES array
-                            $text_upload_prefix = TEXT_PREFIX . $upload_prefix; //- e.g. txt_upload_2, is either an empty string or contains a previously uploaded file-name
+                            $upload_prefix = zen_config('UPLOAD_PREFIX') . $i;    //- e.g. upload_2, contains the associated options_id, e.g. 8
+                            $text_prefix = zen_config('TEXT_PREFIX') . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8, the array index for the $_FILES array
+                            $text_upload_prefix = zen_config('TEXT_PREFIX') . $upload_prefix; //- e.g. txt_upload_2, is either an empty string or contains a previously uploaded file-name
                             if (isset($_POST[$upload_prefix]) && empty($_POST[$text_upload_prefix])) {
                                 $products_options_file = new upload('id');
                                 $products_options_file->set_destination(DIR_FS_UPLOADS);
@@ -2065,7 +2043,7 @@ class shoppingCart extends base
                                 if (!$products_options_file->parse($text_prefix)) {
                                     continue;
                                 }
-                                $products_image_extension = '.' . pathinfo($products_options_file->filename, PATHINFO_EXTENSION);
+                                $products_image_extension = '.' . pathinfo($products_options_file->filename, \PATHINFO_EXTENSION);
                                 if (zen_is_logged_in()) {
                                     $db->Execute("INSERT INTO " . TABLE_FILES_UPLOADED . " (sesskey, customers_id, files_uploaded_name) VALUES ('" . zen_session_id() . "', " . (int)$_SESSION['customer_id'] . ", '" . zen_db_input($products_options_file->filename) . "')");
                                 } else {
@@ -2088,7 +2066,7 @@ class shoppingCart extends base
                                         '</span>' .
                                         TEXT_INVALID_SELECTION .
                                         '<span class="alertBlack">' .
-                                            ((int)$_POST[$text_prefix] === (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID) ? TEXT_INVALID_USER_INPUT : zen_values_name($value) .
+                                            ((int)$_POST[$text_prefix] === (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')) ? TEXT_INVALID_USER_INPUT : zen_values_name($value) .
                                         '</span>' .
                                         '<br>';
                                     $new_qty = 0; // Don't increase the quantity of product in the cart.
@@ -2111,7 +2089,7 @@ class shoppingCart extends base
                 } // eof: set error message
             } // eof: quantity maximum = 1
 
-            if ($adjust_max == 'true') {
+            if ($adjust_max === 'true') {
                 $messageStack->add_session('shopping_cart', ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
                 if ($this->display_debug_messages) {
                     $messageStack->add_session('header', 'E: FUNCTION ' . __FUNCTION__ . '<br>' . ERROR_MAXIMUM_QTY . zen_get_products_name($_POST['products_id']), 'caution');
@@ -2120,7 +2098,7 @@ class shoppingCart extends base
         }
         if (empty($the_list)) { // no errors
             // display message if all is good and not on shopping_cart page
-            if (DISPLAY_CART === 'false' && $_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
+            if (zen_config('DISPLAY_CART') === 'false' && $_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
                 if (!isset($_POST['shopping_cart_zero_or_less']) || $_POST['shopping_cart_zero_or_less'] !== true) {
                     $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCT, 'success');
                     $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_PRODUCT_ADDED_TO_CART', $_POST, $goto, $parameters);
@@ -2142,7 +2120,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionBuyNow($goto, $parameters = [])
+    public function actionBuyNow(string $goto, array $parameters = []): void
     {
         global $messageStack;
         if ($this->display_debug_messages) {
@@ -2186,7 +2164,7 @@ class shoppingCart extends base
         }
 
         // display message if all is good and not on shopping_cart page
-        if (DISPLAY_CART === 'false') {
+        if (zen_config('DISPLAY_CART') === 'false') {
             if ($_GET['main_page'] !== FILENAME_SHOPPING_CART && $allow_into_cart === 'Y' && $messageStack->size('shopping_cart') === 0) {
                 $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
                 $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_BUYNOW_ADDED_TO_CART', $_GET, $goto, $parameters);
@@ -2207,7 +2185,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionMultipleAddProduct($goto, $parameters = [])
+    public function actionMultipleAddProduct(string $goto, array $parameters = []): void
     {
         global $messageStack;
         if ($this->display_debug_messages) {
@@ -2232,7 +2210,7 @@ class shoppingCart extends base
 
                     // adjust new quantity to be no more than current in stock
                     $chk_current_qty = zen_get_products_stock($prodId);
-                    if (STOCK_ALLOW_CHECKOUT === 'false' && $new_qty > $chk_current_qty) {
+                    if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && $new_qty > $chk_current_qty) {
                         $new_qty = $chk_current_qty;
                         $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($prodId), 'caution');
                     }
@@ -2242,7 +2220,7 @@ class shoppingCart extends base
                         $adjust_max = 'true';
                     } else {
                         // adjust new quantity to be no more than current in stock
-                        if (STOCK_ALLOW_CHECKOUT === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
+                        if (zen_config('STOCK_ALLOW_CHECKOUT') === 'false' && ($new_qty + $cart_qty) > $chk_current_qty) {
                             $adjust_new_qty = 'true';
                             $alter_qty = $chk_current_qty - $cart_qty;
                             $new_qty = ($alter_qty > 0) ? $alter_qty : 0;
@@ -2276,7 +2254,7 @@ class shoppingCart extends base
             }
 
             // display message if all is good and not on shopping_cart page
-            if (DISPLAY_CART === 'false') {
+            if (zen_config('DISPLAY_CART') === 'false') {
                 if ($addCount && $_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
                     $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
                     $this->notify('NOTIFIER_CART_OPTIONAL_SUCCESS_MULTIPLE_ADDED_TO_CART', $products_list, $goto, $parameters);
@@ -2297,7 +2275,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionNotify($goto, $parameters = ['ignored'])
+    public function actionNotify(string $goto, array $parameters = ['ignored']): void
     {
         global $db;
         if (zen_is_logged_in() && !zen_in_guest_checkout()) {
@@ -2333,7 +2311,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionNotifyRemove($goto, $parameters = ['ignored'])
+    public function actionNotifyRemove(string $goto, array $parameters = ['ignored']): void
     {
         global $db;
         if (zen_is_logged_in() && !zen_in_guest_checkout() && isset($_GET['products_id'])) {
@@ -2356,7 +2334,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionCustomerOrder($goto, $parameters)
+    public function actionCustomerOrder(string $goto, array $parameters): void
     {
         global $messageStack;
         if ($this->display_debug_messages) {
@@ -2372,7 +2350,7 @@ class shoppingCart extends base
             }
         }
         // display message if all is good and not on shopping_cart page
-        if (DISPLAY_CART === 'false') {
+        if (zen_config('DISPLAY_CART') === 'false') {
             if ($_GET['main_page'] !== FILENAME_SHOPPING_CART && $messageStack->size('shopping_cart') === 0) {
                 $messageStack->add_session('header', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . SUCCESS_ADDED_TO_CART_PRODUCTS, 'success');
             } else {
@@ -2389,7 +2367,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionRemoveProduct($goto, $parameters)
+    public function actionRemoveProduct(string $goto, array $parameters): void
     {
         if (!empty($_GET['product_id'])) {
             $this->remove($_GET['product_id']);
@@ -2406,7 +2384,7 @@ class shoppingCart extends base
      * @param array $parameters URL parameters to ignore
      * @since ZC v1.3.0
      */
-    public function actionCartUserAction($goto, $parameters)
+    public function actionCartUserAction(string $goto, array $parameters): void
     {
         $this->notify('NOTIFY_CART_USER_ACTION', null, $goto, $parameters);
     }
@@ -2421,14 +2399,17 @@ class shoppingCart extends base
      * @return float|int
      * @since ZC v1.3.6
      */
-    public function adjust_quantity($check_qty, $product_id, $messageStackPosition = 'shopping_cart')
+    public function adjust_quantity(float|string $check_qty, int|string $product_id, string $messageStackPosition = 'shopping_cart'): float|int|string
     {
         global $messageStack;
         if (empty($messageStackPosition)) {
             $messageStackPosition = 'shopping_cart';
         }
 
-        $precision = QUANTITY_DECIMALS > 0 ? (int)QUANTITY_DECIMALS : 0;
+        $precision = (int)zen_config('QUANTITY_DECIMALS');
+        if ($precision < 0) {
+            $precision = 0;
+        }
 
         if ($precision !== 0) {
             if (!str_contains((string)$check_qty, '.')) {
@@ -2448,15 +2429,12 @@ class shoppingCart extends base
 
     /**
      * calculate the number of items in a cart based on an attribute option_id and option_values_id combo
-     * USAGE:  $chk_attrib_1_16 = $this->in_cart_check_attrib_quantity(1, 16);
-     * USAGE:  $chk_attrib_1_16 = $_SESSION['cart']->in_cart_check_attrib_quantity(1, 16);
+     * USAGE: $chk_attrib_1_16 = $this->in_cart_check_attrib_quantity(1, 16);
+     * USAGE: $chk_attrib_1_16 = $_SESSION['cart']->in_cart_check_attrib_quantity(1, 16);
      *
-     * @param int $check_option_id
-     * @param int $check_option_values_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_check_attrib_quantity($check_option_id, $check_option_values_id)
+    public function in_cart_check_attrib_quantity(int|string $check_option_id, int|string $check_option_values_id): float|int
     {
         // if nothing is in cart return 0
         if (!is_array($this->contents)) {
@@ -2484,11 +2462,9 @@ class shoppingCart extends base
      * USAGE:  $product_total_price = $this->in_cart_product_total_price(12);
      * USAGE:  $chk_product_cart_total_price = $_SESSION['cart']->in_cart_product_total_price(12);
      *
-     * @param mixed $product_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_price($product_id)
+    public function in_cart_product_total_price(int|string $product_id): float|int
     {
         $products = $this->get_products();
         $in_cart_product_price = 0;
@@ -2506,11 +2482,9 @@ class shoppingCart extends base
      * USAGE:  $product_total_quantity = $this->in_cart_product_total_quantity(12);
      * USAGE:  $chk_product_cart_total_quantity = $_SESSION['cart']->in_cart_product_total_quantity(12);
      *
-     * @param mixed $product_id
-     * @return int|mixed
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_quantity($product_id)
+    public function in_cart_product_total_quantity(int|string $product_id): mixed
     {
         $products = $this->get_products();
 
@@ -2528,11 +2502,9 @@ class shoppingCart extends base
      * USAGE:  $product_total_weight = $this->in_cart_product_total_weight(12);
      * USAGE:  $chk_product_cart_total_weight = $_SESSION['cart']->in_cart_product_total_weight(12);
      *
-     * @param mixed $product_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_weight($product_id)
+    public function in_cart_product_total_weight(int|string $product_id): float|int
     {
         $products = $this->get_products();
         $in_cart_product_weight = 0;
@@ -2549,16 +2521,14 @@ class shoppingCart extends base
      * USAGE:  $category_total_weight_cat = $this->in_cart_product_total_weight_category(9);
      * USAGE:  $chk_category_cart_total_weight_cat = $_SESSION['cart']->in_cart_product_total_weight_category(9);
      *
-     * @param int $category_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_weight_category($category_id)
+    public function in_cart_product_total_weight_category(int|string $category_id): float|int
     {
         $products = $this->get_products();
         $in_cart_product_weight = 0;
         foreach ($products as $product) {
-            if ($product['category'] === $category_id) {
+            if ((int)$product['category'] === (int)$category_id) {
                 $in_cart_product_weight += $product['weight'] * $product['quantity'];
             }
         }
@@ -2570,11 +2540,9 @@ class shoppingCart extends base
      * USAGE:  $category_total_price_cat = $this->in_cart_product_total_price_category(9);
      * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category(9);
      *
-     * @param int $category_id
-     * @return float|int
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_price_category($category_id)
+    public function in_cart_product_total_price_category(int|string $category_id): float|int
     {
         $products = $this->get_products();
         $in_cart_product_price = 0;
@@ -2592,11 +2560,9 @@ class shoppingCart extends base
      * USAGE:  $category_total_quantity_cat = $this->in_cart_product_total_quantity_category(9);
      * USAGE:  $chk_category_cart_total_quantity_cat = $_SESSION['cart']->in_cart_product_total_quantity_category(9);
      *
-     * @param int $category_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_quantity_category($category_id)
+    public function in_cart_product_total_quantity_category(int|string $category_id): float|int
     {
         $products = $this->get_products();
 
@@ -2614,14 +2580,12 @@ class shoppingCart extends base
      * USAGE:  $category_total_weight_cat = $this->in_cart_product_total_weight_category_sub(3);
      * USAGE:  $chk_category_cart_total_weight_cat = $_SESSION['cart']->in_cart_product_total_weight_category_sub(3);
      *
-     * @param int $category_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_weight_category_sub($category_id)
+    public function in_cart_product_total_weight_category_sub(int|string $category_id): float|int
     {
         if (!zen_has_category_subcategories($category_id)) {
-           return $this->in_cart_product_total_weight_category($category_id);
+            return $this->in_cart_product_total_weight_category($category_id);
         }
 
         $subcategories_array = [];
@@ -2638,11 +2602,9 @@ class shoppingCart extends base
      * USAGE:  $category_total_price_cat = $this->in_cart_product_total_price_category_sub(3);
      * USAGE:  $chk_category_cart_total_price_cat = $_SESSION['cart']->in_cart_product_total_price_category_sub(3);
      *
-     * @param int $category_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_price_category_sub($category_id)
+    public function in_cart_product_total_price_category_sub(int|string $category_id): float|int
     {
         if (!zen_has_category_subcategories($category_id)) {
             return $this->in_cart_product_total_price_category($category_id);
@@ -2662,11 +2624,9 @@ class shoppingCart extends base
      * USAGE:  $category_total_quantity_cat = $this->in_cart_product_total_quantity_category_sub(3);
      * USAGE:  $chk_category_cart_total_quantity_cat = $_SESSION['cart']->in_cart_product_total_quantity_category_sub(3);
      *
-     * @param int $category_id
-     * @return float
      * @since ZC v1.5.5b
      */
-    public function in_cart_product_total_quantity_category_sub($category_id)
+    public function in_cart_product_total_quantity_category_sub(int|string $category_id): float|int
     {
         if (!zen_has_category_subcategories($category_id)) {
             return $this->in_cart_product_total_quantity_category($category_id);
@@ -2688,12 +2648,9 @@ class shoppingCart extends base
      * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id);
      * USAGE:  $mix_all = in_cart_product_mixed_changed($product_id, 'all'); (Second value anything other than 'increase' or 'decrease')
      *
-     * @param int|string $product_id
-     * @param bool $chk
-     * @return array|bool
      * @since ZC v1.5.6
      */
-    public function in_cart_product_mixed_changed($product_id, $chk = false)
+    public function in_cart_product_mixed_changed(int|string $product_id, string|bool $chk = false): bool|array
     {
         global $db;
 
@@ -2779,13 +2736,13 @@ class shoppingCart extends base
         ];
 
         if (array_key_exists($product_id, $product_changed)) {
-            if ($product_total_change[$pr_id] == 0) {
+            if ($product_total_change[$pr_id] === 0) {
                 $changed_array['state'] = 'netzero';
                 return $changed_array;
             }
 
             if (array_key_exists($product_id, $product_tracked_changed)) {
-                if ($product_last_changed[$pr_id] == $product_id) {
+                if ($product_last_changed[$pr_id] === $product_id) {
                     $changed_array['state'] = true;
                     return $changed_array;
                 }

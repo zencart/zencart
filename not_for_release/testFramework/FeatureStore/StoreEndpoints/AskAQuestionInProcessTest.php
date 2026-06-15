@@ -17,6 +17,15 @@ class AskAQuestionInProcessTest extends zcInProcessFeatureTestCaseStore
     protected $runTestInSeparateProcess = true;
     protected $preserveGlobalState = false;
 
+    public function testAskAQuestionPageCanBeRenderedOverHttp(): void
+    {
+        $this->get('/index.php?main_page=ask_a_question&pID=2')
+            ->assertOk()
+            ->assertHeader('X-ZC-InProcess-Runner', 'storefront')
+            ->assertSee('Ask a Question About')
+            ->assertSee('Matrox G400 32MB');
+    }
+
     public function testLoggedInCustomerSeesPrefilledAskAQuestionForm(): void
     {
         $profile = $this->createCustomerAccountOrLogin('florida-basic1');

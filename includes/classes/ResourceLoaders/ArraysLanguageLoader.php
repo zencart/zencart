@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 29 Modified in v2.2.0 $
  */
+
 namespace Zencart\LanguageLoader;
 
 use Zencart\FileSystem\FileSystem;
@@ -27,11 +30,21 @@ class ArraysLanguageLoader extends BaseLanguageLoader
 
         $constants_made = false;
         foreach ($defines as $defineKey => $defineValue) {
+            // -----
+            // If the language-constant 'key' isn't a string, there's some problem
+            // with a loaded language file. Any non-string key is, thus, ignored
+            // here so that the code associated with the language file will error-out
+            // with an undefined-constant error rather than a hard-stop here.
+            //
+            if (!is_string($defineKey)) {
+                continue;
+            }
+
             if (defined($defineKey)) {
                 $constants_made = true;
                 continue;
             }
-            preg_match_all('/%{2}([^%]+)%{2}/', $defineValue, $matches, PREG_PATTERN_ORDER);
+            preg_match_all('/%{2}([^%]+)%{2}/', $defineValue, $matches, \PREG_PATTERN_ORDER);
             if (count($matches[1])) {
                 foreach ($matches[1] as $index => $match) {
                     if (isset($defines[$match])) {
@@ -131,10 +144,19 @@ class ArraysLanguageLoader extends BaseLanguageLoader
             $defineListMain = array_merge($defineListMain, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
         }
 
-        $extraPath .= '/' . $this->templateDir;
-        $defineListTemplate = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
-        if ($language !== $this->fallback) {
-            $defineListTemplate = array_merge($defineListTemplate, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
+        $defineListTemplate = [];
+        foreach ($this->getTemplateInheritanceChainForLookup(true) as $templateKey) {
+            $templateExtraPath = $extraPath . '/' . $templateKey;
+            $defineListTemplate = array_merge(
+                $defineListTemplate,
+                $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $templateExtraPath)
+            );
+            if ($language !== $this->fallback) {
+                $defineListTemplate = array_merge(
+                    $defineListTemplate,
+                    $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $templateExtraPath)
+                );
+            }
         }
 
         $defineList = array_merge($defineListMain, $defineListTemplate);
@@ -188,8 +210,10 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         // Finally, gather any template-override definitions **for the current session language**. Any language
         // definitions found here overwrite any previously-loaded ones.
         //
-        $defineListTemplate = $this->loadModuleDefinesFromArrayFile($_SESSION['language'], $fileName, $module_type, $this->templateDir . '/');
-        $defineList = array_merge($defineList, $defineListTemplate);
+        foreach ($this->getTemplateInheritanceChainForLookup(true) as $templateKey) {
+            $defineListTemplate = $this->loadModuleDefinesFromArrayFile($_SESSION['language'], $fileName, $module_type, $templateKey . '/');
+            $defineList = array_merge($defineList, $defineListTemplate);
+        }
 
         // -----
         // Create the language constants from the definitions found and return an indication of whether/not
@@ -204,7 +228,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
     protected function loadDefinesFromArrayFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): array
     {
         $arrayFileName = 'lang.' . $fileName;
-        $mainFile = $rootPath . $language . $extraPath. '/' . $arrayFileName;
+        $mainFile = $rootPath . $language . $extraPath . '/' . $arrayFileName;
         $fallbackFile = $rootPath . $language . '/' . $arrayFileName;
         $defineList = $this->loadDefinesWithFallback($mainFile, $fallbackFile);
         return $defineList;
@@ -340,8 +364,9 @@ class ArraysLanguageLoader extends BaseLanguageLoader
             $defineList = array_merge($defineList, $pluginDefineList);
         }
 
-        $templateFile = $rootDir . $_SESSION['language'] . $extraDir . '/' . $this->templateDir . '/' . $fileName;
-        $defineList = array_merge($defineList, $this->loadArrayDefineFile($templateFile));
+        foreach ($this->getTemplateLanguageOverrideFiles($rootDir, $_SESSION['language'], $fileName, $extraDir) as $templateFile) {
+            $defineList = array_merge($defineList, $this->loadArrayDefineFile($templateFile));
+        }
 
         $this->makeConstants($defineList);
     }

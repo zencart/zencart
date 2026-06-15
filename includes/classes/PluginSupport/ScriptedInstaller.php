@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -22,9 +24,7 @@ class ScriptedInstaller
     protected string $version;
     protected ?string $oldVersion; // null if not in upgrade mode
 
-    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer)
-    {
-    }
+    public function __construct(protected queryFactory $dbConn, protected PluginErrorContainer $errorContainer) {}
 
     /***** START: METHODS FOR IMPLEMENTATION IN EXTENDED CLASSES *********/
     /***** There is no need to implement any other methods in extended classes ****/
@@ -192,7 +192,7 @@ class ScriptedInstaller
             return false;
         }
         return $this->executeInstall();
-     }
+    }
 
     /**
      * @since ZC v1.5.7
@@ -290,8 +290,7 @@ class ScriptedInstaller
     }
 
     /**
-     * Removes, if they exist, a list of files from either the 'admin' or
-     * 'catalog' side.
+     * Removes, if they exist, a list of files from either the 'admin' or 'catalog' side.
      *
      * The $files_to_remove input is an associative array with each key being
      * an admin/catalog sub-directory and the value(s) being an array of files
@@ -310,13 +309,15 @@ class ScriptedInstaller
             return false;
         }
 
+        $errorOccurred = false;
+
         $base_dir = ($context === 'admin') ? DIR_FS_ADMIN : DIR_FS_CATALOG;
         foreach ($files_to_remove as $dir => $files) {
             $current_dir = $base_dir . $dir;
             foreach ($files as $next_file) {
                 $current_file = $current_dir . $next_file;
                 if (str_ends_with($current_file, '*.*')) {
-                    if ($this->removeDirectoryAndFiles(str_replace('/*.*', '', $current_file)) === false) {
+                    if ($this->removeDirectoryAndFilesRecursive(str_replace('/*.*', '', $current_file)) === false) {
                         $errorOccurred = true;
                     }
                     continue;
@@ -377,7 +378,7 @@ class ScriptedInstaller
                         sprintf(ERROR_REMOVE_FILES_CANT_DELETE, str_replace([DIR_FS_ADMIN, DIR_FS_CATALOG], ['[admin_directory]/', ''], $next_entry))
                     );
                 }
-            } elseif ($this->removeDirectoryAndFiles($next_entry) === false) {
+            } elseif ($this->removeDirectoryAndFilesRecursive($next_entry) === false) {
                 $errorOccurred = true;
             }
         }

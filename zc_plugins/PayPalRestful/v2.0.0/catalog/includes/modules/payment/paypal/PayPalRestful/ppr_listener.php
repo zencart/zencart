@@ -15,7 +15,7 @@ require 'includes/application_top.php';
 // If the paypalr payment module is not installed or is totally disabled, nothing further to be
 // done here.  Kill any session and whitescreen since it's an invalid access.
 //
-if (!defined('MODULE_PAYMENT_PAYPALR_STATUS') || MODULE_PAYMENT_PAYPALR_STATUS === 'False') {
+if (zen_config('MODULE_PAYMENT_PAYPALR_STATUS', 'False') === 'False') {
     // @TODO - set a header to 403 Forbidden? or 401 Unauthorized? or 400 Bad Request?
     require DIR_WS_INCLUDES . 'application_bottom.php';
     die();
@@ -26,10 +26,10 @@ use PayPalRestful\Common\Logger;
 
 $op = $_GET['op'] ?? '';
 $logger = new Logger();
-if (strpos(MODULE_PAYMENT_PAYPALR_DEBUGGING, 'Log') !== false) {
+if (str_contains(zen_config('MODULE_PAYMENT_PAYPALR_DEBUGGING', 'Off'), 'Log')) {
     $logger->enableDebug();
 }
-$logger->write("ppr_listener ($op, " . MODULE_PAYMENT_PAYPALR_SERVER . ") starts.\n" . Logger::logJSON($_GET), true, 'before');
+$logger->write("ppr_listener ($op, " . zen_config('MODULE_PAYMENT_PAYPALR_SERVER') . ") starts.\n" . Logger::logJSON($_GET), true, 'before');
 
 $valid_operations = ['cancel', 'return', '3ds_cancel', '3ds_return'];
 if (!in_array($op, $valid_operations, true)) {
@@ -84,7 +84,7 @@ if (!isset($_SESSION['PayPalRestful']['Order']['PayerAction'])) {
 require FILENAME_PAYPALR_MODULE;
 [$client_id, $secret] = paypalr::getEnvironmentInfo();
 
-$ppr = new PayPalRestfulApi(MODULE_PAYMENT_PAYPALR_SERVER, $client_id, $secret);
+$ppr = new PayPalRestfulApi(zen_config('MODULE_PAYMENT_PAYPALR_SERVER'), $client_id, $secret);
 $ppr->setKeepTxnLinks(true);
 $order_status = $ppr->getOrderStatus($_SESSION['PayPalRestful']['Order']['id']);
 if ($order_status === false) {

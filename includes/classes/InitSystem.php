@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
@@ -8,32 +10,19 @@
 
 namespace Zencart\InitSystem;
 
+use Zencart\FileSystem\FileSystem;
+use Zencart\PluginManager\PluginManager;
+
 /**
  * @since ZC v1.5.7
  */
 class InitSystem
 {
-    private $installedPlugins;
-    private bool $debug;
-    private array $debugList;
-    private array $actionList;
+    private bool $debug = false;
+    private array $debugList = [];
+    private array $actionList = [];
 
-    private string $context;
-    private string $loaderPrefix;
-    private $fileSystem;
-    private $pluginManager;
-
-    public function __construct(string $context, string $loaderPrefix, $fileSystem, $pluginManager, $installedPlugins)
-    {
-        $this->context = $context;
-        $this->loaderPrefix = $loaderPrefix;
-        $this->fileSystem = $fileSystem;
-        $this->pluginManager = $pluginManager;
-        $this->installedPlugins = $installedPlugins;
-        $this->debug = false;
-        $this->debugList = [];
-        $this->actionList = [];
-    }
+    public function __construct(private string $context, private string $loaderPrefix, private FileSystem $fileSystem, private PluginManager $pluginManager, private array $installedPlugins) {}
 
     /**
      * @since ZC v1.5.7
@@ -112,7 +101,7 @@ class InitSystem
         if ($entry['loaderType'] === 'plugin') {
             $filePath = $this->findPluginDirectory($entry['classPath'] ?? DIR_WS_CLASSES, $entry['pluginInfo']['unique_key']);
         }
-        $this->debugList[] = 'processing class - ' . $filePath  . $entry['loadFile'];
+        $this->debugList[] = 'processing class - ' . $filePath . $entry['loadFile'];
         $result = 'FAILED';
         if (file_exists($filePath . $entry['loadFile'])) {
             $result = 'SUCCESS';
@@ -179,7 +168,7 @@ class InitSystem
     {
         $filePath = $entry['loadFile'];
         $this->debugList[] = 'processing include - ' . $entry['loadFile'];
-        if ($entry['loaderType'] == 'plugin') {
+        if ($entry['loaderType'] === 'plugin') {
 
         }
         $result = 'FAILED';
@@ -196,11 +185,11 @@ class InitSystem
     protected function processAutoTypeInit_script(array $entry): void
     {
         $actualDir = DIR_WS_INCLUDES . 'init_includes/';
-        if ($entry['loaderType'] == 'plugin') {
+        if ($entry['loaderType'] === 'plugin') {
             $actualDir = $this->findPluginDirectory($actualDir, $entry['pluginInfo']['unique_key']);
         }
         if (file_exists($actualDir . 'overrides/' . $entry['loadFile'])) {
-            $actualDir = $actualDir . 'overrides/';
+            $actualDir .= 'overrides/';
         }
         $this->actionList[] = ['type' => 'require', 'filePath' => $actualDir . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         $this->debugList[] = 'loading init_script - ' . $actualDir . $entry['loadFile'];
@@ -215,8 +204,7 @@ class InitSystem
         $fileList = $this->fileSystem->listFilesFromDirectoryAlphaSorted($rootDir);
         $fileList = $this->processForOverrides($loaderType, $fileList, $rootDir);
         $loaderList = $this->getLoadersFromFileList($fileList);
-        $loaderList = $this->processLoaderListForType($loaderType, $loaderList, $plugin);
-        return $loaderList;
+        return $this->processLoaderListForType($loaderType, $loaderList, $plugin);
     }
 
     /**
@@ -270,10 +258,7 @@ class InitSystem
     protected function fileMatchesLoaderPrefix(string $file): bool
     {
         $fileParts = explode('.', $file);
-        if (($fileParts[0] ?? '') !== $this->loaderPrefix) {
-            return false;
-        }
-        return true;
+        return ($fileParts[0] ?? '') === $this->loaderPrefix;
     }
 
     /**

@@ -22,7 +22,7 @@ require_once TESTCWD . 'Support/configs/runtime_config.php';
 
 $configBasePath = TESTCWD . 'Support/configs/';
 $mainConfigs = TestConfigResolver::loadConfig('main', $configBasePath);
-TestConfigResolver::loadConfig($context, $configBasePath);
+TestConfigResolver::loadConfig('configure', $configBasePath);
 
 TestDb::resetConnection();
 TestDb::pdo();

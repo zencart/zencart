@@ -56,9 +56,9 @@
       $this->code = 'ot_cod_fee';
       $this->title = MODULE_ORDER_TOTAL_COD_TITLE;
       $this->description = MODULE_ORDER_TOTAL_COD_DESCRIPTION;
-      $this->enabled = (defined('MODULE_ORDER_TOTAL_COD_STATUS') && MODULE_ORDER_TOTAL_COD_STATUS == 'true');
-      $this->sort_order = defined('MODULE_ORDER_TOTAL_COD_SORT_ORDER') ? MODULE_ORDER_TOTAL_COD_SORT_ORDER : null;
-      if (null === $this->sort_order) return false;
+      $this->enabled = zen_config('MODULE_ORDER_TOTAL_COD_STATUS') === 'true';
+      $this->sort_order = zen_config('MODULE_ORDER_TOTAL_COD_SORT_ORDER');
+      if (null === $this->sort_order) return;
 
       $this->output = array();
     }
@@ -78,21 +78,21 @@
         if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'cod') {
           $cod_zones = [];
           //process installed shipping modules
-          if (substr_count($_SESSION['shipping']['id'], 'flat') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FLAT));
-          if (substr_count($_SESSION['shipping']['id'], 'free') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREE));
-          if (substr_count($_SESSION['shipping']['id'], 'freeshipper') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREESHIPPER));
-          if (substr_count($_SESSION['shipping']['id'], 'freeoptions') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FREEOPTIONS));
-          if (substr_count($_SESSION['shipping']['id'], 'item') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_ITEM));
-          if (substr_count($_SESSION['shipping']['id'], 'perweightunit') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_PERWEIGHTUNIT));
-          if (substr_count($_SESSION['shipping']['id'], 'table') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_TABLE));
-          if (substr_count($_SESSION['shipping']['id'], 'ups') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_UPS));
-          if (substr_count($_SESSION['shipping']['id'], 'usps') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_USPS));
-          if (substr_count($_SESSION['shipping']['id'], 'fedex') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_FEDEX));
-          if (substr_count($_SESSION['shipping']['id'], 'zones') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_ZONES));
-          if (substr_count($_SESSION['shipping']['id'], 'ap') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_AP));
-          if (substr_count($_SESSION['shipping']['id'], 'dp') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_DP));
+          if (substr_count($_SESSION['shipping']['id'], 'flat') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_FLAT', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'free') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_FREE', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'freeshipper') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_FREESHIPPER', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'freeoptions') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_FREEOPTIONS', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'item') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_ITEM', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'perweightunit') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_PERWEIGHTUNIT', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'table') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_TABLE', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'ups') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_UPS', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'usps') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_USPS', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'fedex') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_FEDEX', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'zones') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_ZONES', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'ap') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_AP', '')));
+          if (substr_count($_SESSION['shipping']['id'], 'dp') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_DP', '')));
           //satt inn av Pompel
-          if (substr_count($_SESSION['shipping']['id'], 'servicepakke') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE));
+          if (substr_count($_SESSION['shipping']['id'], 'servicepakke') !=0) $cod_zones = preg_split("/[:,]/", str_replace(' ', '', zen_config('MODULE_ORDER_TOTAL_COD_FEE_SERVICEPAKKE', '')));
 
             for ($i = 0, $n=count($cod_zones); $i < $n; $i++) {
               if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
@@ -116,15 +116,15 @@
 
         if ($cod_country) {
           $cod_tax_address = zen_get_tax_locations();
-          $tax = zen_get_tax_rate(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
+          $tax = zen_get_tax_rate(zen_config('MODULE_ORDER_TOTAL_COD_TAX_CLASS'), $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
           $order->info['total'] += $cod_cost;
           if ($tax > 0) {
-            $tax_description = zen_get_tax_description(MODULE_ORDER_TOTAL_COD_TAX_CLASS, $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
+            $tax_description = zen_get_tax_description(zen_config('MODULE_ORDER_TOTAL_COD_TAX_CLASS'), $cod_tax_address['country_id'], $cod_tax_address['zone_id']);
             $tax_amount = zen_calculate_tax($cod_cost, $tax);
             $order->info['tax'] += $tax_amount;
             $order->info['tax_groups'][$tax_description] += $tax_amount;
             $order->info['total'] += $tax_amount;
-            if (DISPLAY_PRICE_WITH_TAX == 'true') {
+            if (zen_config('DISPLAY_PRICE_WITH_TAX') == 'true') {
               $cod_cost += $tax_amount;
             }
           }

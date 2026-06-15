@@ -89,7 +89,7 @@ class zcDatabaseInstaller
     public function getConnection(): bool
     {
         require_once DIR_FS_ROOT . 'includes/classes/db/' . $this->dbType . '/query_factory.php';
-        $this->db = new queryFactory;
+        $this->db = new queryFactory();
         $options = ['dbCharset' => $this->dbCharset];
         return $this->db->Connect($this->dbHost, $this->dbUser, $this->dbPassword, $this->dbName, 'false', $this->dieOnErrors, $options);
     }
@@ -133,7 +133,7 @@ class zcDatabaseInstaller
          *       For now, since outputting them has usually just raised unnecessary questions and confusion for end-users, simply returning false to suppress their display.
          *       Advanced users/integrators can check the upgrade_exceptions database table or the /logs/ folder for the details.
          */
-//    return (count($this->upgradeExceptions) > 0);
+        //    return (count($this->upgradeExceptions) > 0);
     }
 
     private function doJsonProgressLoggingStart($count): void
@@ -256,9 +256,9 @@ class zcDatabaseInstaller
 
     public function tryExecute(string $sql)
     {
-//    echo $sql;
-//    $this->writeUpgradeExceptions($this->line, '', $this->sqlFile);
-//    logDetails($sql, $this->sqlFile);
+        //    echo $sql;
+        //    $this->writeUpgradeExceptions($this->line, '', $this->sqlFile);
+        //    logDetails($sql, $this->sqlFile);
         $result = $this->db->Execute($sql);
         if (!$result || $result->link->errno !== 0) {
             $this->writeUpgradeExceptions($this->line, $this->db->error_number . ': ' . $this->db->error_text);
@@ -282,7 +282,7 @@ class zcDatabaseInstaller
     {
         if (!$this->tableExists(TABLE_UPGRADE_EXCEPTIONS)) {
             $this->db->Execute(
-        "CREATE TABLE " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS . " (
+                "CREATE TABLE " . $this->dbPrefix . TABLE_UPGRADE_EXCEPTIONS . " (
                     upgrade_exception_id SMALLINT(5) NOT NULL AUTO_INCREMENT,
                     sql_file VARCHAR(128) DEFAULT NULL,
                     reason TEXT DEFAULT NULL,
@@ -367,10 +367,10 @@ class zcDatabaseInstaller
 
     public function parserInsertInto(): void
     {
-        if (($this->lineSplit[2] === 'configuration' && ($result = $this->checkConfigKey($this->line))) ||
-            ($this->lineSplit[2] === 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) ||
-            ($this->lineSplit[2] === 'configuration_group' && ($result = $this->checkCfggroupKey($this->line))) ||
-            (!$this->tableExists($this->lineSplit[2]))) {
+        if (($this->lineSplit[2] === 'configuration' && ($result = $this->checkConfigKey($this->line)))
+            || ($this->lineSplit[2] === 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line)))
+            || ($this->lineSplit[2] === 'configuration_group' && ($result = $this->checkCfggroupKey($this->line)))
+            || (!$this->tableExists($this->lineSplit[2]))) {
             if (!isset($result)) {
                 $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]) . ' CHECK PREFIXES!';
             }
@@ -496,10 +496,10 @@ class zcDatabaseInstaller
 
     public function parserReplaceInto(): void
     {
-        if (($this->lineSplit[2] === 'configuration' && ($result = $this->checkConfigKey($this->line))) ||
-            ($this->lineSplit[2] === 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line))) ||
-            ($this->lineSplit[2] === 'configuration_group' && ($result = $this->checkCfggroupKey($this->line))) ||
-            (!$this->tableExists($this->lineSplit[2]))) {
+        if (($this->lineSplit[2] === 'configuration' && ($result = $this->checkConfigKey($this->line)))
+            || ($this->lineSplit[2] === 'product_type_layout' && ($result = $this->checkProductTypeLayoutKey($this->line)))
+            || ($this->lineSplit[2] === 'configuration_group' && ($result = $this->checkCfggroupKey($this->line)))
+            || (!$this->tableExists($this->lineSplit[2]))) {
             if (!isset($result)) {
                 $result = sprintf(REASON_TABLE_NOT_FOUND, $this->lineSplit[2]) . ' CHECK PREFIXES!';
             }
@@ -700,7 +700,7 @@ class zcDatabaseInstaller
 
     public function parserReferences(): void
     {
-        $parts = explode('(',$this->lineSplit[1]);
+        $parts = explode('(', $this->lineSplit[1]);
         $table = $parts[0];
         if (!$this->tableExists($table)) {
             $result = sprintf(REASON_TABLE_NOT_FOUND, $table) . ' CHECK PREFIXES!';

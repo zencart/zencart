@@ -40,7 +40,7 @@ class zcObserverDownloadsViaStreaming extends base {
 
     $disabled_funcs = @ini_get("disable_functions");
 
-    if (DOWNLOAD_IN_CHUNKS != 'true' && !strstr($disabled_funcs,'readfile')) {
+    if (zen_config('DOWNLOAD_IN_CHUNKS') !== 'true' && !strstr($disabled_funcs,'readfile')) {
       $this->notify('NOTIFY_DOWNLOAD_WITHOUT_REDIRECT___COMPLETED', $origin_filename);
 
       // close the session, since it is not needed for streaming the file contents
@@ -74,7 +74,7 @@ class zcObserverDownloadsViaStreaming extends base {
         $msg = 'Please contact store owner.  ERROR: Cannot read file: ' . $origin_filename;
         $messageStack->add_session('default', $msg, 'error');
         error_log($msg);
-        zen_mail('', STORE_OWNER_EMAIL_ADDRESS, ERROR_CUSTOMER_DOWNLOAD_FAILURE, "Unable to open file '" . $origin_filename . " for reading.  Check the file permissions.", STORE_NAME, EMAIL_FROM);
+        zen_mail('', zen_config('STORE_OWNER_EMAIL_ADDRESS'), ERROR_CUSTOMER_DOWNLOAD_FAILURE, "Unable to open file '" . $origin_filename . " for reading.  Check the file permissions.", zen_config('STORE_NAME'), zen_config('EMAIL_FROM'));
       }
       $this->notify('NOTIFY_DOWNLOAD_WITHOUT_REDIRECT_VIA_CHUNKS___COMPLETED');
     }

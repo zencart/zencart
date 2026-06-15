@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -93,6 +95,7 @@ class PluginControlRepository
                 ") ON DUPLICATE KEY UPDATE " .
                 "name = VALUES(name), " .
                 "description = VALUES(description), " .
+                "type = VALUES(type), " .
                 "infs = VALUES(infs), " .
                 "author = VALUES(author), " .
                 "zc_contrib_id = VALUES(zc_contrib_id)"

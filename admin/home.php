@@ -10,7 +10,7 @@ require('includes/application_top.php');
 
 $languages = zen_get_languages();
 $languages_array = [];
-$languages_selected = DEFAULT_LANGUAGE;
+$languages_selected = zen_config('DEFAULT_LANGUAGE');
 for ($i = 0, $n = count($languages); $i < $n; $i++) {
     $languages_array[] = [
         'id' => $languages[$i]['code'],
@@ -21,7 +21,7 @@ for ($i = 0, $n = count($languages); $i < $n; $i++) {
     }
 }
 
-if (STORE_NAME === '' || STORE_OWNER === '' || STORE_OWNER_EMAIL_ADDRESS === '' || STORE_NAME_ADDRESS === '') {
+if (zen_config('STORE_NAME') === '' || zen_config('STORE_OWNER') === '' || zen_config('STORE_OWNER_EMAIL_ADDRESS') === '' || zen_config('STORE_NAME_ADDRESS') === '') {
     require('index_setup_wizard.php');
 } else {
     require('index_dashboard.php');

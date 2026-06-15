@@ -59,7 +59,9 @@ function zen_get_buyable_product_type_handlers(): array
 function zen_get_manufacturers($manufacturers_array = [], $only_those_with_products = false)
 {
     global $db;
-    if (!is_array($manufacturers_array)) $manufacturers_array = [];
+    if (!is_array($manufacturers_array)) {
+        $manufacturers_array = [];
+    }
 
     if (!empty($only_those_with_products)) {
         $manufacturers_query = "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
@@ -77,10 +79,10 @@ function zen_get_manufacturers($manufacturers_array = [], $only_those_with_produ
     $manufacturers = $db->Execute($manufacturers_query);
 
     foreach ($manufacturers as $manufacturer) {
-        $manufacturers_array[] = array(
+        $manufacturers_array[] = [
             'id' => $manufacturer['manufacturers_id'],
-            'text' => $manufacturer['manufacturers_name']
-        );
+            'text' => $manufacturer['manufacturers_name'],
+        ];
     }
 
     return $manufacturers_array;
@@ -99,7 +101,9 @@ function zen_get_manufacturer_url($manufacturer_id, $language_id)
                                   FROM " . TABLE_MANUFACTURERS_INFO . "
                                   WHERE manufacturers_id = " . (int)$manufacturer_id . "
                                   AND languages_id = " . (int)$language_id);
-    if ($manufacturer->EOF) return '';
+    if ($manufacturer->EOF) {
+        return '';
+    }
     return $manufacturer->fields['manufacturers_url'];
 }
 
@@ -191,32 +195,32 @@ function zen_run_normal(): bool
             // down for maintenance not for ADMIN
             $zc_run = true;
             break;
-        case (DOWN_FOR_MAINTENANCE == 'true'):
+        case (zen_config('DOWN_FOR_MAINTENANCE') === 'true'):
             // down for maintenance
             $zc_run = false;
             break;
-        case (STORE_STATUS >= 1):
+        case (zen_config('STORE_STATUS') >= 1):
             // showcase no prices
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()):
             // customer must be logged in to browse
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL == '2' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL') === '2' && !zen_is_logged_in()):
             // show room only
             // customer may browse but no prices
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL == '3'):
+        case (zen_config('CUSTOMERS_APPROVAL') === '3'):
             // show room only
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && !zen_is_logged_in()):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && !zen_is_logged_in()):
             // customer must be logged in to browse
             $zc_run = false;
             break;
-        case (CUSTOMERS_APPROVAL_AUTHORIZATION != '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
+        case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && isset($_SESSION['customers_authorization']) && (int)$_SESSION['customers_authorization'] > 0):
             // customer must be logged in to browse
             $zc_run = false;
             break;
@@ -242,13 +246,13 @@ function zen_run_normal(): bool
  */
 function zen_check_show_prices(): bool
 {
-    if (STORE_STATUS === '1') {
+    if (zen_config('STORE_STATUS') === '1') {
         return false;
     }
-    if (CUSTOMERS_APPROVAL === '2' && zen_is_logged_in() === false) {
+    if (zen_config('CUSTOMERS_APPROVAL') === '2' && zen_is_logged_in() === false) {
         return false;
     }
-    if (CUSTOMERS_APPROVAL_AUTHORIZATION !== '1' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '2') {
+    if (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '1' && zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '2') {
         return true;
     }
     if (zen_is_logged_in() === false || ((int)$_SESSION['customers_authorization'] !== 0 && (int)$_SESSION['customers_authorization'] !== 3)) {
@@ -308,7 +312,9 @@ function zen_get_orders_status_id_from_name(string $status_name): int|false
 function zen_get_orders_status_name(int|string $order_status_id, int $language_id = 0): string
 {
     global $db;
-    if (empty($language_id)) $language_id = $_SESSION['languages_id'];
+    if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
+    }
 
     $sql = "SELECT orders_status_name
             FROM " . TABLE_ORDERS_STATUS . "
@@ -316,7 +322,9 @@ function zen_get_orders_status_name(int|string $order_status_id, int $language_i
             AND language_id = " . (int)$language_id;
     $result = $db->Execute($sql);
 
-    if ($result->EOF) return '';
+    if ($result->EOF) {
+        return '';
+    }
     return $result->fields['orders_status_name'];
 }
 
@@ -332,16 +340,22 @@ function zen_get_order_status_name(int|string $order_status_id, int $language_id
 {
     global $db;
 
-    if ($order_status_id < 1) return TEXT_DEFAULT;
+    if ($order_status_id < 1) {
+        return TEXT_DEFAULT;
+    }
 
-    if (empty($language_id)) $language_id = $_SESSION['languages_id'];
+    if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
+    }
 
     $sql = "SELECT orders_status_name
             FROM " . TABLE_ORDERS_STATUS . "
             WHERE orders_status_id = " . (int)$order_status_id . "
             AND language_id = " . (int)$language_id;
     $result = $db->Execute($sql);
-    if ($result->EOF) return 'ERROR: INVALID STATUS ID: ' . (int)$order_status_id;
+    if ($result->EOF) {
+        return 'ERROR: INVALID STATUS ID: ' . (int)$order_status_id;
+    }
     return $result->fields['orders_status_name'] . ' [' . (int)$order_status_id . ']';
 }
 

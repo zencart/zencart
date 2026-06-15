@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -8,14 +10,14 @@
 
 class zcAjaxAdminSessionChange extends base
 {
-    protected $supportedNames = [
+    protected array $supportedNames = [
         'imageView',
     ];
 
     /**
      * @since ZC v2.0.0
      */
-    public function change()
+    public function change(): string
     {
         // -----
         // Deny access unless running under the admin.
@@ -25,8 +27,8 @@ class zcAjaxAdminSessionChange extends base
         }
 
         // -----
-        // Give an observer the opportunity to add other supported names.  Each
-        // name can contain *only* alphanumeric characters.
+        // Give an observer the opportunity to add other supported names.
+        // Each name can contain *only* alphanumeric characters.
         //
         $other_names = [];
         $this->notify('NOTIFY_AJAX_ADMIN_NOTIFICATIONS', '', $other_names);
@@ -39,7 +41,7 @@ class zcAjaxAdminSessionChange extends base
         // -----
         // No action if the 'name' isn't recognized.
         //
-        if (!in_array($_POST['name'], $this->supportedNames)) {
+        if (!in_array($_POST['name'], $this->supportedNames, true)) {
             return '';
         }
 

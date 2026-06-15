@@ -42,13 +42,13 @@ if (isset($_GET['debug_only'])) {
     $files_to_match = 'myDEBUG-(adm-)?[0-9]+-[0-9]+-[0-9]+((-deprecated)|(-warning)|(-error))?';
     $files_to_exclude = '';
 } else {
-    $files_to_match = str_replace(' ', '', DISPLAY_LOGS_INCLUDED_FILES);
+    $files_to_match = str_replace(' ', '', zen_config('DISPLAY_LOGS_INCLUDED_FILES', ''));
     if (strpos($files_to_match, '|') !== false) {
         $files_to_match = "($files_to_match)";
     }
     $files_to_match .= '.*';
 
-    $files_to_exclude = str_replace(' ', '', DISPLAY_LOGS_EXCLUDED_FILES);
+    $files_to_exclude = str_replace(' ', '', zen_config('DISPLAY_LOGS_EXCLUDED_FILES', ''));
     if (strpos($files_to_exclude, '|') !== false) {
         $files_to_exclude = "($files_to_exclude)";
     }
@@ -60,7 +60,7 @@ if (isset($_GET['debug_only'])) {
 // -----
 // Determine (and properly default) the number of log files to be displayed.
 //
-$max_logs_to_display = (int)DISPLAY_LOGS_MAX_DISPLAY;
+$max_logs_to_display = (int)zen_config('DISPLAY_LOGS_MAX_DISPLAY');
 if ($max_logs_to_display < 1) {
     $max_logs_to_display = 20;
 }
@@ -176,7 +176,7 @@ if (isset($_GET['fID'])) {
 // -----
 // "Sanitize" the maximum file-size to be fully read, defaulting if the configured value is not a positive integer.
 //
-$max_log_file_size = (int)DISPLAY_LOGS_MAX_FILE_SIZE;
+$max_log_file_size = (int)zen_config('DISPLAY_LOGS_MAX_FILE_SIZE');
 if ($max_log_file_size < 1) {
     $max_log_file_size = 80000;
 }
@@ -230,12 +230,12 @@ if ($max_log_file_size < 1) {
                         <td><table>
                                 <tr>
                                     <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                                    <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+                                    <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')); ?></td>
                                 </tr>
 
                                 <tr>
                                     <td class="main"><?php echo ((substr(HTTP_SERVER, 0, 5) != 'https') ? WARNING_NOT_SECURE : '') . sprintf(TEXT_INSTRUCTIONS, $max_log_file_size, $sort_description, (($numLogFiles > $max_logs_to_display) ? $max_logs_to_display : $numLogFiles), $numLogFiles, $files_to_match, $files_to_exclude, zen_image (DIR_WS_IMAGES . 'icon_info.gif', ICON_INFO_VIEW)); ?></td>
-                                    <td class="main text-right"><?php echo zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+                                    <td class="main text-right"><?php echo zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')); ?></td>
                                 </tr>
 
                                 <tr>
@@ -282,7 +282,7 @@ if ($max_log_file_size < 1) {
                                                         $heading[] = array(
                                                             'text' => '<strong>' . TEXT_HEADING_INFO . '( ' . $curFile['name'] . ')</strong>'
                                                         );
-                                                        $fileContent = str_replace(DIR_FS_CATALOG, '/', nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false)));
+                                                        $fileContent = str_replace(DIR_FS_CATALOG, '/', nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false), false));
                                                         $contents[] = array(
                                                             'align' => 'left',
                                                             'text' => '<div id="fContents">' . $fileContent . '</div>'

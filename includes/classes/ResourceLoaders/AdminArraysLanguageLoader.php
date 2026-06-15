@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
 /**
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
+
 namespace Zencart\LanguageLoader;
 
 /**
@@ -64,7 +67,7 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
     /**
      * @since ZC v2.1.0
      */
-    protected function loadBaseLanguageFiles()
+    protected function loadBaseLanguageFiles(): void
     {
         // -----
         // First, load the main language file(). The 'lang.english.php' file is always
@@ -95,8 +98,13 @@ class AdminArraysLanguageLoader extends ArraysLanguageLoader
         // current session's language**, load those definitions, adding to the
         // to-be-generated constants' list.
         //
-        if ($this->fileSystem->hasTemplateLanguageOverride($this->templateDir, DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES)) {
-            $defineList = $this->loadDefinesFromArrayFile(DIR_FS_CATALOG . DIR_WS_LANGUAGES, $_SESSION['language'], FILENAME_OTHER_IMAGES_NAMES, '/' . $this->templateDir);
+        $templateOverrideFile = $this->findTemplateLanguageOverrideFile(
+            DIR_FS_CATALOG . DIR_WS_LANGUAGES,
+            $_SESSION['language'],
+            'lang.' . FILENAME_OTHER_IMAGES_NAMES
+        );
+        if ($templateOverrideFile !== null) {
+            $defineList = $this->loadArrayDefineFile($templateOverrideFile);
             $this->addLanguageDefines($defineList);
         }
     }

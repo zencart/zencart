@@ -30,8 +30,8 @@ $zen_admin_html_head_loaded = true;
     <link rel="stylesheet" href="<?= zen_add_filemtime($value) ?>">
     <link rel="stylesheet" href="<?= zen_add_filemtime(DIR_WS_INCLUDES . 'fontawesome/css/solid.min.css') ?>">
     <link rel="stylesheet" href="<?= zen_add_filemtime(DIR_WS_INCLUDES . 'fontawesome/css/regular.min.css') ?>">
-    <?php if (empty($disableFontAwesomeV4Compatibility) &&
-        file_exists($value = DIR_WS_INCLUDES . 'fontawesome/css/v4-shims.min.css')) { ?>
+    <?php if (empty($disableFontAwesomeV4Compatibility)
+        && file_exists($value = DIR_WS_INCLUDES . 'fontawesome/css/v4-shims.min.css')) { ?>
         <link rel="stylesheet" href="<?= zen_add_filemtime($value) ?>">
     <?php } ?>
 <?php } else { ?>
@@ -62,26 +62,25 @@ foreach ($installedPlugins as $plugin) {
     } else {
         $pluginKey = $plugin['unique_key'] ?? '';
         $pluginVersion = $plugin['version'] ?? '';
-        $relativeDir = ($GLOBALS['request_type'] === 'SSL' ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG)
-            . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
+        $relativeDir = DIR_WS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
         $absoluteDir = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/' . $pluginVersion . '/';
     }
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^global_stylesheet/', '.css');
     foreach ($directory_array as $key => $value) {
-?>
+        ?>
         <link rel="stylesheet" href="<?= zen_add_filemtime($relativeDir . 'admin/includes/css/' . $value, $absoluteDir . 'admin/includes/css/' . $value) ?>">
 <?php
     }
 
-    if (file_exists($absoluteDir  . 'admin/includes/css/' . $page_base_name . '.css')) {
-?>
+    if (file_exists($absoluteDir . 'admin/includes/css/' . $page_base_name . '.css')) {
+        ?>
         <link rel="stylesheet" href="<?= zen_add_filemtime($relativeDir . 'admin/includes/css/' . $page_base_name . '.css', $absoluteDir . 'admin/includes/css/' . $page_base_name . '.css') ?>">
 <?php
     }
 
     $directory_array = $template->get_template_part($absoluteDir . 'admin/includes/css/', '/^' . $page_base_name . '_/', '.css');
     foreach ($directory_array as $key => $value) {
-?>
+        ?>
         <link rel="stylesheet" href="<?= zen_add_filemtime($relativeDir . 'admin/includes/css/' . $value, $absoluteDir . 'admin/includes/css/' . $value) ?>">
 <?php
     }
@@ -95,7 +94,7 @@ foreach ($installedPlugins as $plugin) {
 
 $directory_array = $template->get_template_part(DIR_WS_INCLUDES . 'css/', '/^' . $page_base_name . '_/', '.css');
 foreach ($directory_array as $key => $value) {
-?>
+    ?>
     <link rel="stylesheet" href="<?= DIR_WS_INCLUDES ?>css/<?= $value ?>">
 <?php
 }

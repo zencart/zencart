@@ -15,9 +15,7 @@ class LanguageManager
     /**
      * $langPath is the directory path to languages files
      */
-    public function __construct(protected string $langPath = 'includes/languages/')
-    {
-    }
+    public function __construct(protected string $langPath = 'includes/languages/') {}
 
     public function getLanguagesInstalled(): array
     {

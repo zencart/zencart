@@ -220,7 +220,6 @@ class systemChecker
 
     public function configFileExists(): bool
     {
-        $this->checkWriteableAdminFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
         $this->checkWriteableFile(['fileDir' => DIR_FS_ROOT . 'includes/configure.php', 'createFile' => true, 'changePerms' => '0664']);
         return $this->getServerConfig()->fileExists();
     }
@@ -253,6 +252,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -575,6 +578,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
 
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
+
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
         if (!$result) {
@@ -598,6 +605,10 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
 
         $db = new queryFactory();
         $result = @$db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -696,7 +707,7 @@ class systemChecker
                 'fieldName' => 'admin_profile',
                 'fieldCheck' => 'Type',
                 'expectedResult' => 'INT(11)',
-            ]
+            ],
         ];
         $hasAdminProfiles = $this->dbVersionChecker($parameters);
         $dbServerVal = $this->getServerConfig()->getDefine('DB_SERVER');
@@ -704,6 +715,10 @@ class systemChecker
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
         $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return false;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
@@ -732,7 +747,7 @@ class systemChecker
             return (int)$result->fields['admin_id'];
         }
 
-// first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
+        // first check if the table has any superusers; if not, verify the user's password and assign them as a superuser
         $sql = "SELECT DISTINCT(admin_profile)
                 FROM " . $dbPrefixVal . "admin
                 ORDER BY admin_profile";
@@ -764,12 +779,12 @@ class systemChecker
         return false;
     }
 
-    function backupConfigureFiles($parameters): bool
+    public function backupConfigureFiles($parameters): bool
     {
         return true;
     }
 
-    function checkIsZCVersionCurrent(): bool
+    public function checkIsZCVersionCurrent(): bool
     {
         $new_version = TEXT_VERSION_CHECK_CURRENT; //set to "current" by default
 
@@ -818,6 +833,10 @@ class systemChecker
             $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
             $dbPrefixVal = $this->getServerConfig()->getDefine('DB_PREFIX');
 
+            if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+                return;
+            }
+
             $db = new queryFactory();
             $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);
             $db->selectdb($dbNameVal);
@@ -849,6 +868,10 @@ class systemChecker
         $dbNameVal = $this->getServerConfig()->getDefine('DB_DATABASE');
         $dbPasswordVal = $this->getServerConfig()->getDefine('DB_SERVER_PASSWORD');
         $dbUserVal = $this->getServerConfig()->getDefine('DB_SERVER_USERNAME');
+
+        if (($dbServerVal ?? '') === '' || ($dbNameVal ?? '') === '' || ($dbUserVal ?? '') === '') {
+            return true;
+        }
 
         $db = new queryFactory();
         $result = $db->simpleConnect($dbServerVal, $dbUserVal, $dbPasswordVal, $dbNameVal);

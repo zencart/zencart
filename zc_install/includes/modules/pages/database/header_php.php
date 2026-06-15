@@ -29,22 +29,22 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
     if (empty($db_user_fallback)) {
         $db_user_fallback = (defined('DEVELOPER_DBUSER_DEFAULT') ? DEVELOPER_DBUSER_DEFAULT : 'zencart');
     }
-    $db_user = $db_user ?? $db_user_fallback;
+    $db_user ??= $db_user_fallback;
 
     if (empty($db_password_fallback)) {
         $db_password_fallback = (defined('DEVELOPER_DBPASSWORD_DEFAULT') ? DEVELOPER_DBPASSWORD_DEFAULT : 'zencart');
     }
-    $db_password = $db_password ?? $db_password_fallback;
+    $db_password ??= $db_password_fallback;
 
     if (empty($db_name_fallback)) {
         $db_name_fallback = (defined('DEVELOPER_DBNAME_DEFAULT') ? DEVELOPER_DBNAME_DEFAULT : 'zencart');
     }
-    $db_name = $db_name ?? $db_name_fallback;
+    $db_name ??= $db_name_fallback;
 
     if (empty($db_host_fallback)) {
         $db_host_fallback = (defined('DEVELOPER_DBHOST_DEFAULT') ? DEVELOPER_DBHOST_DEFAULT : 'localhost');
     }
-    $db_host = $db_host ?? $db_host_fallback;
+    $db_host ??= $db_host_fallback;
 
     if (defined('DEVELOPER_INSTALL_DEMO_DATA')) {
         $install_demo_data = !empty(DEVELOPER_INSTALL_DEMO_DATA);
@@ -61,25 +61,19 @@ if (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true) {
     }
     $db_user = $db_user_fallback;
     $db_password = $db_password_fallback;
-    $db_name = $db_name ?? $db_name_fallback;
+    $db_name ??= $db_name_fallback;
 }
 
-$db_user = $db_user ?? '';
-$db_password = $db_password ?? '';
-$db_host = $db_host ?? 'localhost';
-$db_prefix = $db_prefix ?? '';
+$db_user ??= '';
+$db_password ??= '';
+$db_host ??= 'localhost';
+$db_prefix ??= '';
 
 
 // attempt to intelligently manage user-adjusted subdirectory values if they are different from detected defaults
 if (!isset($_POST['detected_http_server_catalog'])) {
     $_POST['detected_http_server_catalog'] = '';
 }
-if (!isset($_POST['detected_https_server_catalog'])) {
-    $_POST['detected_https_server_catalog'] = '';
-}
 if ($_POST['http_server_catalog'] !== $_POST['detected_http_server_catalog']) {
     $_POST['dir_ws_http_catalog'] = rtrim(str_replace($_POST['http_server_catalog'], '', $_POST['http_url_catalog']), '/') . '/';
-}
-if ($_POST['https_server_catalog'] !== $_POST['detected_https_server_catalog']) {
-    $_POST['dir_ws_https_catalog'] = rtrim(str_replace($_POST['https_server_catalog'], '', $_POST['https_url_catalog']), '/') . '/';
 }

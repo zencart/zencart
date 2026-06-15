@@ -29,7 +29,6 @@ function page_has_help()
       11 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_regulations',
       12 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_emailoptions',
       13 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_attributesettings',
-      14 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_gzipcompression',
       15 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_sessions',
       16 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_gvcoupons',
       17 => 'https://docs.zen-cart.com/user/admin_pages/configuration/configuration_creditcards',

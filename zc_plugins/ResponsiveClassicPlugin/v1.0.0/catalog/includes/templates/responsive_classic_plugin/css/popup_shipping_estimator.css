@@ -1,0 +1,14 @@
+.no-fouc{display:block !important;}
+.se-address-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    height: auto;
+}
+.se-address {
+    display: flex;
+    justify-content: left;
+    align-items: start;
+    width: max-content;
+}
+.se-address-container #seAddressPulldown {width:max-content;}

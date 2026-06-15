@@ -1,4 +1,5 @@
 <?php
+
 /**
  * version.php
  * Defines the project version details
@@ -16,7 +17,7 @@
 define('PROJECT_VERSION_NAME', 'Zen Cart');
 define('PROJECT_VERSION_MAJOR', '3');
 define('PROJECT_VERSION_MINOR', '0.0-dev');
-define('NEW_VERSION_CHECKUP_URL','https://ping.zen-cart.com/version_id.txt');
+define('NEW_VERSION_CHECKUP_URL', 'https://ping.zen-cart.com/version_id.txt');
 define('PROJECT_VERSIONSERVER_URL', 'https://ping.zen-cart.com/zcversioncheck');
 define('PLUGIN_VERSIONSERVER_URL', 'https://ping.zen-cart.com/plugincheck');
 define('PROJECT_NOTIFICATIONSERVER_URL', 'https://ping.zen-cart.com/api/notifications');

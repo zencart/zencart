@@ -25,7 +25,7 @@ $ary = [];
 $chk_option_values = $db->Execute(
     "SELECT *
        FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "
-      WHERE products_options_values_id = " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID
+      WHERE products_options_values_id = " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')
 );
 foreach ($chk_option_values as $item) {
     $ary[] = $item['language_id'];
@@ -37,7 +37,7 @@ foreach ($languages as $next_lang) {
             "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_VALUES . "
                 (products_options_values_id, language_id, products_options_values_name)
              VALUES
-                (" . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID . ", " . $next_lang_id . ", 'TEXT')"
+                (" . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') . ", " . $next_lang_id . ", 'TEXT')"
         );
     }
 }
@@ -53,13 +53,13 @@ if ($filter < 0) {
 }
 $last_mod = (int)($_SESSION['options_names_values_last_mod'] ?? 0);
 unset($_SESSION['options_names_values_last_mod']);
-$max_search_results = !empty($_GET['max_search_results']) ? (int)$_GET['max_search_results'] : (int)MAX_DISPLAY_SEARCH_RESULTS;
+$max_search_results = !empty($_GET['max_search_results']) ? (int)$_GET['max_search_results'] : (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS');
 if ($max_search_results <= 0) {
-    $max_search_results = (int)MAX_DISPLAY_SEARCH_RESULTS;
+    $max_search_results = (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS');
 }
 
 // display or hide copier features
-$_SESSION['option_names_values_copier'] ??= OPTION_NAMES_VALUES_GLOBAL_STATUS;
+$_SESSION['option_names_values_copier'] ??= zen_config('OPTION_NAMES_VALUES_GLOBAL_STATUS');
 if (!isset($_GET['reset_option_names_values_copier'])) {
     $reset_option_names_values_copier = $_SESSION['option_names_values_copier'];
 }
@@ -75,7 +75,7 @@ if ($action !== '') {
             break;
 
         case 'set_option_names_values_copier':
-            $_SESSION['option_names_values_copier'] = $_GET['reset_option_names_values_copier'] ?? OPTION_NAMES_VALUES_GLOBAL_STATUS;
+            $_SESSION['option_names_values_copier'] = $_GET['reset_option_names_values_copier'] ?? zen_config('OPTION_NAMES_VALUES_GLOBAL_STATUS');
             zen_redirect(zen_href_link(FILENAME_OPTIONS_VALUES_MANAGER));
             break;
 
@@ -799,7 +799,7 @@ if ($action === 'delete_option_value') { // delete product option value
                     ON po.products_options_id = pov2po.products_options_id
                    AND po.language_id = " . (int)$_SESSION['languages_id'] . "
           WHERE pov.language_id = " . (int)$_SESSION['languages_id'] . "
-            AND pov2po.products_options_values_id != " . (int)PRODUCTS_OPTIONS_VALUES_TEXT_ID .
+            AND pov2po.products_options_values_id != " . (int)zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID') .
             $filter_condition . $search . "
           ORDER BY po.products_options_name, LPAD(pov.products_options_values_sort_order, 11, '0'), pov.products_options_values_name";
     $values_split = new splitPageResults($currentPage, $max_search_results, $values_query_raw, $values_query_numrows);
@@ -838,7 +838,7 @@ if ($action === 'delete_option_value') { // delete product option value
     $exclude_array = ['page'];
 ?>
           <div class="col-sm-8 text-right">
-            <?= $values_split->display_links($values_query_numrows, $max_search_results, MAX_DISPLAY_PAGE_LINKS, $currentPage, zen_get_all_get_params($exclude_array)) ?>
+            <?= $values_split->display_links($values_query_numrows, $max_search_results, zen_config('MAX_DISPLAY_PAGE_LINKS'), $currentPage, zen_get_all_get_params($exclude_array)) ?>
           </div>
         </div>
         <div class="table-responsive">
@@ -941,8 +941,8 @@ if ($action === 'delete_option_value') { // delete product option value
                 "SELECT products_options_id, products_options_name, products_options_type
                    FROM " . TABLE_PRODUCTS_OPTIONS . "
                   WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                    AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                    AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+                    AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') . "
+                    AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_FILE') . "
                   ORDER BY products_options_name"
             );
 
@@ -1017,8 +1017,8 @@ if ($action === 'delete_option_value') { // delete product option value
             "SELECT products_options_id, products_options_name, products_options_type
                FROM " . TABLE_PRODUCTS_OPTIONS . "
               WHERE language_id = " . (int)$_SESSION['languages_id'] . "
-                AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-                AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+                AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') . "
+                AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_FILE') . "
               ORDER BY products_options_name"
         );
 
@@ -1100,8 +1100,8 @@ if ($_SESSION['option_names_values_copier'] == '0') {
            FROM " . TABLE_PRODUCTS_OPTIONS . "
           WHERE language_id = " . (int)$_SESSION['languages_id'] . "
             AND products_options_name != ''
-            AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_TEXT . "
-            AND products_options_type != " . (int)PRODUCTS_OPTIONS_TYPE_FILE . "
+            AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_TEXT') . "
+            AND products_options_type != " . (int)zen_config('PRODUCTS_OPTIONS_TYPE_FILE') . "
           ORDER BY products_options_name"
     );
     $option_from_dropdown = [];

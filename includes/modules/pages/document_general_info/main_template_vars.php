@@ -20,7 +20,7 @@ if (!isset($product_info) || get_class($product_info) !== 'Product' || $product_
 
 $product_not_found = !$product_info->exists();
 
-if (!defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') || DISABLED_PRODUCTS_TRIGGER_HTTP200 !== 'true') {
+if (zen_config('DISABLED_PRODUCTS_TRIGGER_HTTP200', 'false') !== 'true') {
     if (!$product_not_found && $product_info->status() !== 1) {
         $product_not_found = true;
     }
@@ -69,10 +69,10 @@ if ($product_not_found) {
 
     // if no common markup tags in description, add line breaks for readability:
     $products_description = $product_data['products_description'] ?? '';
-    $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description) : $products_description);
+    $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description, false) : $products_description);
 
-    $products_image = (($product_not_found || $product_data['products_image'] == '') && PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') ? PRODUCTS_IMAGE_NO_IMAGE : '';
-    if ($product_data['products_image'] != '' || PRODUCTS_IMAGE_NO_IMAGE_STATUS !== '1') {
+    $products_image = (($product_not_found || $product_data['products_image'] == '') && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') ? zen_config('PRODUCTS_IMAGE_NO_IMAGE', '') : '';
+    if ($product_data['products_image'] != '' || zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') !== '1') {
         $products_image = $product_data['products_image'];
     }
 

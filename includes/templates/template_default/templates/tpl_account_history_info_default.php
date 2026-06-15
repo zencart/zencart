@@ -57,7 +57,7 @@ $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order
     if (isset($op['attributes']) && !empty($op['attributes'])) {
       echo '<ul class="orderAttribsList">';
       foreach($op['attributes'] as $attr) {
-        echo '<li>' . $attr['option'] . TEXT_OPTION_DIVIDER . nl2br(zen_output_string_protected($attr['value'])) . '</li>';
+        echo '<li>' . $attr['option'] . TEXT_OPTION_DIVIDER . nl2br(zen_output_string_protected($attr['value']), false) . '</li>';
       }
         echo '</ul>';
     }
@@ -172,7 +172,7 @@ if (!empty($order->statuses)) {
         <td>
 <?php
         if (!empty($statuses['comments'])) {
-           echo nl2br(zen_output_string($statuses['comments'], false, $protected));
+           echo nl2br(zen_output_string($statuses['comments'], false, $protected), false);
         }
 ?>
        </td>

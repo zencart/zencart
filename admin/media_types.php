@@ -81,7 +81,7 @@ if (!empty($action)) {
                     $media_type_query_raw = "SELECT *
                                          FROM " . TABLE_MEDIA_TYPES . "
                                          ORDER BY type_name";
-                    $media_type_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $media_type_query_raw, $media_type_query_numrows);
+                    $media_type_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $media_type_query_raw, $media_type_query_numrows);
                     $media_types = $db->Execute($media_type_query_raw);
                     $mType_parameter = '';
                     foreach ($media_types as $media_type) {
@@ -165,8 +165,8 @@ if (!empty($action)) {
         </div>
         <table class="table">
             <tr>
-                <td><?php echo $media_type_split->display_count($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES); ?></td>
-                <td class="text-right"><?php echo $media_type_split->display_links($media_type_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                <td><?php echo $media_type_split->display_count($media_type_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MEDIA_TYPES); ?></td>
+                <td class="text-right"><?php echo $media_type_split->display_links($media_type_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
             </tr>
             <?php if (empty($action)) { ?>
                 <tr>

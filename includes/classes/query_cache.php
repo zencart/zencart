@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Memoization cache for MySQL SELECT queries
  *
@@ -10,21 +12,23 @@
 
 /**
  * QueryCache memoization cache for SELECT queries
+ *
  * @since ZC v1.5.1
  */
 class QueryCache
 {
-    protected $queries = [];
+    protected array $queries = [];
 
     /**
      * Cache SELECT statement query resources in application memory
      * returns TRUE if and only if query has been stored in cache
+     *
      * @param string $query query string, used as a key
      * @param mysqli_result $valueToStore result from mysqli_query
-     * @return bool
+     *
      * @since ZC v1.5.1
      */
-    public function cache(string $query, $valueToStore)
+    public function cache(string $query, mixed $valueToStore): bool
     {
         if ($this->isSelectStatement($query) === true) {
             $this->queries[$query] = $valueToStore;
@@ -35,11 +39,11 @@ class QueryCache
     }
 
     /**
-     * @param string $query
-     * @return mixed
+     * Returns the cached query result for the given query string. Returns false if not found in cache.
+     *
      * @since ZC v1.5.1
      */
-    public function getFromCache(string $query)
+    public function getFromCache(string $query): mixed
     {
         $ret = $this->queries[$query];
         mysqli_data_seek($ret, 0);
@@ -48,37 +52,36 @@ class QueryCache
 
     /**
      * @param string $query used as a cache key
-     * @return bool
      * @since ZC v1.5.1
      */
-    public function inCache(string $query)
+    public function inCache(string $query): bool
     {
         return (isset($this->queries[$query]) && $this->queries[$query] instanceof mysqli_result);
     }
 
     /**
      * ensure the query is a SELECT query
-     * @param string $q
-     * @return bool
+     * (Technically, other "read" queries include SHOW, DESCRIBE, EXPLAIN, but we're not caching those.)
+     *
      * @since ZC v1.5.1
      */
-    protected function isSelectStatement(string $q)
+    protected function isSelectStatement(string $q): bool
     {
         return 0 === stripos($q, "SELECT");
     }
 
     /**
      * Remove query from cache. Pass ALL to reset entire cache
-     * @param string $query
-     * @return bool
+     *
      * @since ZC v1.5.3
      */
-    public function reset(string $query)
+    public function reset(string $query): bool
     {
-        if ('ALL' == $query) {
+        if ('ALL' === $query) {
             $this->queries = [];
             return false;
         }
-        unset ($this->queries[$query]);
+        unset($this->queries[$query]);
+        return true;
     }
 }

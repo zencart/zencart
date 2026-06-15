@@ -31,7 +31,7 @@ if (count($newArray)) { ?>
                     <?php
                     foreach ($newArray as $key => $value) { ?>
                         <?php
-                        $from = ($key === 0) ? ($dbVersion ?? $versionArray[$value]['required']): $newArray[($key - 1)]; ?>
+                        $from = ($key === 0) ? ($dbVersion ?? $versionArray[$value]['required']) : $newArray[($key - 1)]; ?>
                         <?php
                         $to = $value; ?>
                         <div id="label-version-<?= str_replace('.', '_', $value) ?>" class="checkbox-wrapper">

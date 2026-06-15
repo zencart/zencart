@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -23,8 +25,7 @@ class PluginCommandDiscovery
         private string $pluginRootPath,
         private ?\Aura\Autoload\Loader $autoloader = null,
         private ?array $allowedPluginVersions = null
-    ) {
-    }
+    ) {}
 
     /**
      * @since ZC v3.0.0
@@ -51,6 +52,7 @@ class PluginCommandDiscovery
                 }
 
                 $versionPath = $versionDirectory->getPathname();
+                $commandFile = $versionPath . '/Console/commands.php';
                 if (!file_exists($versionPath . '/manifest.php')) {
                     continue;
                 }
@@ -59,13 +61,25 @@ class PluginCommandDiscovery
                     continue;
                 }
 
+                if (!file_exists($commandFile)) {
+                    continue;
+                }
+
                 $this->registerPluginConsoleNamespace($pluginDirectory->getFilename(), $versionPath);
+                if (!$this->loadPluginRootAutoloader(
+                    $pluginDirectory->getFilename(),
+                    $versionDirectory->getFilename(),
+                    $versionPath
+                )) {
+                    continue;
+                }
                 $commands = array_merge(
                     $commands,
                     $this->loadCommandsFromVersion(
                         $pluginDirectory->getFilename(),
                         $versionDirectory->getFilename(),
-                        $versionPath
+                        $versionPath,
+                        $commandFile
                     )
                 );
             }
@@ -98,8 +112,33 @@ class PluginCommandDiscovery
             return;
         }
 
-        $namespace = 'Zencart\\Plugins\\Console\\' . $this->normalizePluginNamespace($pluginKey);
+        $namespace = 'Zencart\\Plugins\\Console\\' . self::normalizePluginNamespace($pluginKey);
         $this->autoloader->addPrefix($namespace, $consolePath);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function loadPluginRootAutoloader(string $pluginKey, string $pluginVersion, string $versionPath): bool
+    {
+        $autoloadFile = $versionPath . '/psr4Autoload.php';
+        if (!file_exists($autoloadFile) || $this->autoloader === null) {
+            return true;
+        }
+
+        try {
+            self::includePhpFile($autoloadFile, ['psr4Autoloader' => $this->autoloader]);
+        } catch (Throwable $exception) {
+            $pluginReference = $pluginKey . '/' . $pluginVersion;
+            $this->errors[] = sprintf(
+                'Failed loading plugin autoloader from %s: %s',
+                $pluginReference . '/psr4Autoload.php',
+                $this->sanitizeErrorMessage($exception->getMessage(), $versionPath, $pluginReference)
+            );
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -107,9 +146,13 @@ class PluginCommandDiscovery
      *
      * @return ConsoleCommand[]
      */
-    private function loadCommandsFromVersion(string $pluginKey, string $pluginVersion, string $versionPath): array
-    {
-        $commandFile = $versionPath . '/Console/commands.php';
+    private function loadCommandsFromVersion(
+        string $pluginKey,
+        string $pluginVersion,
+        string $versionPath,
+        ?string $commandFile = null
+    ): array {
+        $commandFile ??= $versionPath . '/Console/commands.php';
         if (!file_exists($commandFile)) {
             return [];
         }
@@ -117,12 +160,12 @@ class PluginCommandDiscovery
         $definitionReference = $pluginKey . '/' . $pluginVersion . '/Console/commands.php';
 
         try {
-            $definitions = require $commandFile;
+            $definitions = self::includePhpFile($commandFile);
         } catch (Throwable $exception) {
             $this->errors[] = sprintf(
                 'Failed loading plugin commands from %s: %s',
                 $definitionReference,
-                $exception->getMessage()
+                $this->sanitizeErrorMessage($exception->getMessage(), $versionPath, $pluginKey . '/' . $pluginVersion)
             );
             return [];
         }
@@ -135,7 +178,7 @@ class PluginCommandDiscovery
         $commands = [];
         foreach ($definitions as $definition) {
             try {
-                $commands[] = $this->resolveCommandDefinition($definition);
+                $commands[] = self::resolveCommandDefinition($definition);
             } catch (Throwable $exception) {
                 $this->errors[] = sprintf(
                     'Invalid plugin command definition in %s: %s',
@@ -163,7 +206,51 @@ class PluginCommandDiscovery
     /**
      * @since ZC v3.0.0
      */
-    private function resolveCommandDefinition(mixed $definition): ConsoleCommand
+    private static function includePhpFile(string $file, array $scopeVariables = []): mixed
+    {
+        extract($scopeVariables, \EXTR_SKIP);
+
+        if (!is_file($file) || !is_readable($file)) {
+            throw new \RuntimeException('PHP file is not readable: ' . $file);
+        }
+
+        $result = include $file;
+        if ($result === false) {
+            throw new \RuntimeException('PHP file failed to include: ' . $file);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private function sanitizeErrorMessage(string $message, string $absolutePath, string $relativePath): string
+    {
+        $normalizedAbsolutePath = rtrim(str_replace('\\', '/', $absolutePath), '/');
+        $normalizedRelativePath = rtrim(str_replace('\\', '/', $relativePath), '/');
+        $absolutePathPattern = implode(
+            '[\\\\/]',
+            array_map(
+                static fn(string $segment): string => preg_quote($segment, '~'),
+                explode('/', $normalizedAbsolutePath)
+            )
+        );
+
+        return (string)preg_replace_callback(
+            '~' . $absolutePathPattern . '(?:[\\\\/][^\s\'":]+)*~',
+            static function (array $matches) use ($normalizedAbsolutePath, $normalizedRelativePath): string {
+                $path = str_replace('\\', '/', $matches[0]);
+                return str_replace($normalizedAbsolutePath, $normalizedRelativePath, $path);
+            },
+            $message
+        );
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    private static function resolveCommandDefinition(mixed $definition): ConsoleCommand
     {
         if ($definition instanceof ConsoleCommand) {
             return $definition;
@@ -179,15 +266,15 @@ class PluginCommandDiscovery
     /**
      * @since ZC v3.0.0
      */
-    private function normalizePluginNamespace(string $pluginKey): string
+    private static function normalizePluginNamespace(string $pluginKey): string
     {
         $segments = preg_split('/[^a-zA-Z0-9]+/', $pluginKey) ?: [];
-        $segments = array_filter($segments, static fn ($segment) => $segment !== '');
+        $segments = array_filter($segments, static fn($segment) => $segment !== '');
 
         if ($segments === []) {
             return 'Plugin';
         }
 
-        return implode('', array_map(static fn ($segment) => ucfirst((string) $segment), $segments));
+        return implode('', array_map(static fn($segment) => ucfirst((string)$segment), $segments));
     }
 }

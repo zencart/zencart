@@ -11,9 +11,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
     <input type="hidden" name="action" value="process">
     <input type="hidden" name="lng" value="<?= $installer_lng ?>">
     <input type="hidden" name="dir_ws_http_catalog" value="<?= $dir_ws_http_catalog ?>">
-    <input type="hidden" name="dir_ws_https_catalog" value="<?= $dir_ws_https_catalog ?>">
     <input type="hidden" name="detected_detected_http_server_catalog" value="<?= $catalogHttpServer ?>">
-    <input type="hidden" name="detected_detected_https_server_catalog" value="<?= $catalogHttpsServer ?>">
     <input type="hidden" name="adminDir" value="<?= $adminDir ?>">
     <input type="hidden" name="db_type" value="<?= $db_type ?>">
 
@@ -36,38 +34,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         </div>
     </fieldset>
     <fieldset class="border rounded p-3 mt-2">
-        <legend><?= TEXT_SYSTEM_SETUP_ADMIN_SETTINGS ?></legend>
-        <div class="row mb-2">
-            <div class="col-xs-5 col-md-4 col-lg-3">
-                <label class="col-form-label" for="http_server_admin">
-                    <a href="#" class="hasHelpText icon-link" id="ADMINSERVERDOMAIN">
-                        <?= TEXT_SYSTEM_SETUP_ADMIN_SERVER_DOMAIN ?>
-                        <i class="bi-question-circle"></i>
-                    </a>
-                </label>
-            </div>
-            <div class="col-7">
-                <input id="http_server_admin" class="form-control" type="url" value="<?= $adminServer ?>" name="http_server_admin" tabindex="2" placeholder="ie: https:/www.your_domain.com" required>
-                <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_ADMINSERVERDOMAIN ?></div>
-            </div>
-        </div>
-    </fieldset>
-    <fieldset class="border rounded p-3 mt-2">
         <legend><?= TEXT_SYSTEM_SETUP_CATALOG_SETTINGS ?></legend>
-        <div class="row mb-2">
-            <div class="col-xs-5 col-md-4 col-lg-3">
-                <label class="form-check-label" for="enable_ssl_catalog">
-                    <a href="#" class="hasHelpText icon-link" id="ENABLESSLCATALOG">
-                        <?= TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL ?>
-                        <i class="bi-question-circle"></i>
-                    </a>
-                </label>
-            </div>
-            <div class="col-7">
-                <input class="form-check-input" id="enable_ssl_catalog" type="checkbox" value="true" name="enable_ssl_catalog" tabindex="3" <?= $enableSslCatalog ?>>
-                <label class="form-check-label" for="enable_ssl_catalog"><?= TEXT_SYSTEM_SETUP_CATALOG_ENABLE_SSL ?></label>
-            </div>
-        </div>
         <div class="row mb-2">
             <div class="col-xs-5 col-md-4 col-lg-3">
                 <label class="col-form-label" for="http_server_catalog">
@@ -78,7 +45,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_server_catalog" class="form-control" type="url" value="<?= $catalogHttpServer ?>" name="http_server_catalog" tabindex="4" placeholder="ie: http:/www.your_domain.com" required>
+                <input id="http_server_catalog" class="form-control" type="url" value="<?= $catalogHttpServer ?>" name="http_server_catalog" tabindex="4" placeholder="ie: https://www.your_domain.com" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPSERVERCATALOG ?></div>
             </div>
         </div>
@@ -91,36 +58,8 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_url_catalog" class="form-control" type="url" value="<?= $catalogHttpUrl ?>" name="http_url_catalog" tabindex="5" placeholder="ie: http:/www.your_domain.com">
+                <input id="http_url_catalog" class="form-control" type="url" value="<?= $catalogHttpUrl ?>" name="http_url_catalog" tabindex="5" placeholder="ie: https://www.your_domain.com">
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPURLCATALOG ?></div>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-xs-5 col-md-4 col-lg-3">
-                <label class="col-form-label" for="https_server_catalog">
-                    <a href="#" class="hasHelpText icon-link" id="HTTPSSERVERCATALOG">
-                        <?= TEXT_SYSTEM_SETUP_CATALOG_HTTPS_SERVER_DOMAIN ?>
-                        <i class="bi-question-circle"></i>
-                    </a>
-                </label>
-            </div>
-            <div class="col-7">
-                <input id="https_server_catalog" class="form-control" type="url" value="<?= $catalogHttpsServer ?>" name="https_server_catalog" tabindex="6" placeholder="ie: https:/www.your_domain.com" required>
-                <div class="invalid-feedback"><?= TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL ?></div>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-xs-5 col-md-4 col-lg-3">
-                <label class="col-form-label" for="https_url_catalog">
-                    <a href="#" class="hasHelpText icon-link" id="HTTPSURLCATALOG">
-                        <?= TEXT_SYSTEM_SETUP_CATALOG_HTTPS_URL ?>
-                        <i class="bi-question-circle"></i>
-                    </a>
-                </label>
-            </div>
-            <div class="col-7">
-                <input id="https_url_catalog" class="form-control" type="url" value="<?= $catalogHttpsUrl ?>" name="https_url_catalog" tabindex="7" placeholder="ie: https:/www.your_domain.com">
-                <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPSURLCATALOG ?></div>
             </div>
         </div>
         <div class="row mb-2">

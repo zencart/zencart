@@ -71,7 +71,7 @@ function checkForm(form_name) {
   error_message = "<?php echo JS_ERROR; ?>";
 
 
-  check_input('review_text',"<?php echo REVIEW_TEXT_MIN_LENGTH; ?>","<?php echo JS_REVIEW_TEXT; ?>");
+  check_input('review_text',"<?php echo zen_config('REVIEW_TEXT_MIN_LENGTH'); ?>","<?php echo JS_REVIEW_TEXT; ?>");
   check_radio("rating","<?php echo JS_REVIEW_RATING; ?>");
 
   if (error == true) {

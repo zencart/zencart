@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * upload Class.
  *
@@ -17,7 +19,7 @@ if (!defined('IS_ADMIN_FLAG')) {
  *
  * @since ZC v1.0.3
  */
- //
+//
 // This is the old UPLOAD_FILENAME_EXTENSIONS which was in the database
 zen_define_default('UPLOAD_FILENAME_EXTENSIONS_LIST', 'jpg,jpeg,gif,png,eps,cdr,ai,pdf,tif,tiff,bmp,zip');
 
@@ -118,13 +120,13 @@ class upload
             return false;
         }
 
-        if (!empty($file['size']) && $file['size'] > MAX_FILE_UPLOAD_SIZE) {
+        if (!empty($file['size']) && $file['size'] > zen_config('MAX_FILE_UPLOAD_SIZE')) {
             $this->message_stack(ERROR_FILE_TOO_BIG, 'error');
             return false;
         }
 
-        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        if (str_ends_with($file['name'], '.htaccess') || (count($this->extensions) !== 0 && !in_array(strtolower($file_extension), $this->extensions))) {
+        $file_extension = pathinfo($file['name'], \PATHINFO_EXTENSION);
+        if (str_ends_with($file['name'], '.htaccess') || (count($this->extensions) !== 0 && !in_array(strtolower($file_extension), $this->extensions, true))) {
             $this->message_stack(sprintf(ERROR_FILETYPE_NOT_ALLOWED, $file_extension, '.' . implode(', .', $this->extensions)), 'error');
             return false;
         }
@@ -140,11 +142,11 @@ class upload
      */
     protected function fileError(array $file): bool
     {
-        if ((int)$file['error'] === UPLOAD_ERR_OK) {
+        if ((int)$file['error'] === \UPLOAD_ERR_OK) {
             return false;
         }
         switch ((int)$file['error']) {  //- See for details: https://www.php.net/manual/en/filesystem.constants.php#constant.upload-err-form-size
-            case UPLOAD_ERR_INI_SIZE:   //- 1
+            case \UPLOAD_ERR_INI_SIZE:   //- 1
                 if (IS_ADMIN_FLAG === true) {
                     $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_INI, ini_get('upload_max_filesize')), 'error'); //- TODO: Check post_max_size, too
                 } else {
@@ -152,18 +154,18 @@ class upload
                 }
                 break;
 
-            case UPLOAD_ERR_FORM_SIZE:  //- 2
+            case \UPLOAD_ERR_FORM_SIZE:  //- 2
                 if (IS_ADMIN_FLAG === true) {
-                    $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_MAXSIZE, $_POST['MAX_FILE_SIZE']), 'error');
+                    $this->message_stack(sprintf(ERROR_FILE_TOO_BIG_MAXSIZE, (int)($_POST['MAX_FILE_SIZE'] ?? 0)), 'error');
                 } else {
                     $this->message_stack(ERROR_FILE_TOO_BIG, 'error');
                 }
                 break;
 
-            // -----
-            // Note: No message here, intentionally.
-            //
-            case UPLOAD_ERR_NO_FILE:    //- 4
+                // -----
+                // Note: No message here, intentionally.
+                //
+            case \UPLOAD_ERR_NO_FILE:    //- 4
                 $this->fileUploaded = false;
                 break;
 
@@ -175,8 +177,6 @@ class upload
     }
 
     /**
-     * @param bool $overwrite
-     * @return bool
      * @since ZC v1.0.3
      */
     public function save(bool $overwrite = true): bool
@@ -210,7 +210,6 @@ class upload
     }
 
     /**
-     * @param string $file
      * @since ZC v1.0.3
      */
     public function set_file(string $file): void
@@ -219,7 +218,6 @@ class upload
     }
 
     /**
-     * @param string $destination
      * @since ZC v1.0.3
      */
     public function set_destination(string $destination): void
@@ -232,7 +230,6 @@ class upload
     }
 
     /**
-     * @param string $permissions
      * @since ZC v1.0.3
      */
     public function set_permissions(string $permissions): void
@@ -241,7 +238,6 @@ class upload
     }
 
     /**
-     * @param string $filename
      * @since ZC v1.0.3
      */
     public function set_filename(string $filename): void
@@ -250,7 +246,6 @@ class upload
     }
 
     /**
-     * @param string $filename
      * @since ZC v1.0.3
      */
     public function set_tmp_filename(string $filename): void
@@ -259,10 +254,9 @@ class upload
     }
 
     /**
-     * @param array $extensions
      * @since ZC v1.0.3
      */
-    function set_extensions(array|string $extensions): void
+    public function set_extensions(array|string $extensions): void
     {
         if (!empty($extensions)) {
             if (is_array($extensions)) {
@@ -280,7 +274,7 @@ class upload
      */
     public function check_destination(): bool
     {
-        if (!is_writeable($this->destination)) {
+        if (!is_writable($this->destination)) {
             if (is_dir($this->destination)) {
                 $this->message_stack(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
             } else {
@@ -294,7 +288,6 @@ class upload
     }
 
     /**
-     * @param string $location
      * @since ZC v1.0.3
      */
     public function set_output_messages(string $location): void

@@ -21,7 +21,7 @@ $sql = "SELECT op.products_id, max(date_purchased) as date_purchased
         AND p.products_status = 1
         GROUP BY products_id
         ORDER BY date_purchased desc, products_id
-        LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX;
+        LIMIT " . zen_config('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX');
 
 $results = $db->Execute($sql);
 

@@ -39,7 +39,7 @@ class TestConfigResolverTest extends TestCase
 
     public function testResolveConfigPathFallsBackToRunnerWhenUserSpecificFileIsMissing(): void
     {
-        $runnerConfig = $this->configDirectory . '/runner.store.configure.php';
+        $runnerConfig = $this->configDirectory . '/runner.configure.php';
         file_put_contents($runnerConfig, "<?php\nreturn ['context' => 'runner-store'];\n");
 
         $resolvedPath = TestConfigResolver::resolveConfigPath('store', $this->configDirectory, ['USER' => 'unknown-user']);
@@ -95,6 +95,16 @@ class TestConfigResolverTest extends TestCase
         $profile = TestConfigResolver::resolveConfigProfile('main', $this->configDirectory, ['USER' => 'unknown-user']);
 
         $this->assertSame('runner', $profile);
+    }
+
+    public function testResolveConfigPathUsesSharedFixtureForAdminAndStoreContexts(): void
+    {
+        $runnerConfig = $this->configDirectory . '/runner.configure.php';
+        file_put_contents($runnerConfig, "<?php\nreturn ['context' => 'runner-app'];\n");
+
+        $this->assertSame($runnerConfig, TestConfigResolver::resolveConfigPath('store', $this->configDirectory, ['USER' => 'unknown-user']));
+        $this->assertSame($runnerConfig, TestConfigResolver::resolveConfigPath('admin', $this->configDirectory, ['USER' => 'unknown-user']));
+        $this->assertSame($runnerConfig, TestConfigResolver::resolveConfigPath('configure', $this->configDirectory, ['USER' => 'unknown-user']));
     }
 
     public function testResolveConfigPathThrowsHelpfulExceptionWhenNoFilesExist(): void

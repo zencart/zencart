@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -16,12 +18,12 @@ class EventDto
 {
     use Singleton;
 
-    private $observers = [];
+    private array $observers = [];
 
     /**
      * @since ZC v1.5.8
      */
-    public function getObservers()
+    public function getObservers(): array
     {
         return $this->observers;
     }
@@ -29,7 +31,7 @@ class EventDto
     /**
      * @since ZC v1.5.8
      */
-    public function setObserver($eventHash, $eventParameters)
+    public function setObserver($eventHash, $eventParameters): void
     {
         $this->observers[$eventHash] = $eventParameters;
     }
@@ -37,7 +39,7 @@ class EventDto
     /**
      * @since ZC v1.5.8
      */
-    public function removeObserver($eventHash)
+    public function removeObserver($eventHash): void
     {
         if (isset($this->observers[$eventHash])) {
             unset($this->observers[$eventHash]);

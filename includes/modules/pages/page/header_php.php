@@ -124,16 +124,16 @@ if (!defined('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST')) {
     define('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', '');
 }
 if ($ezpage_id > 0) {
-    if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_HEADER_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_HEADER_DISPLAY_LIST, '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_HEADER_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_HEADER_DISPLAY_LIST'), '*')) {
         $flag_disable_header = true;
     }
-    if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_FOOTER_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_FOOTER_DISPLAY_LIST, '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST'), '*')) {
         $flag_disable_footer = true;
     }
-    if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST, '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST'), '*')) {
         $flag_disable_left = true;
     }
-    if (in_array($ezpage_id, explode(",", EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST)) || strstr(EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST, '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST'), '*')) {
         $flag_disable_right = true;
     }
 }

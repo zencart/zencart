@@ -33,7 +33,7 @@ if (basename($PHP_SELF) === FILENAME_AJAX . '.php') {
 // admin folder rename required
 if ((!defined('ADMIN_BLOCK_WARNING_OVERRIDE') || ADMIN_BLOCK_WARNING_OVERRIDE === '') && !defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     if (basename($PHP_SELF) !== FILENAME_ALERT_PAGE . '.php') {
-        if (str_ends_with(DIR_WS_ADMIN, '/admin/') || str_ends_with(DIR_WS_HTTPS_ADMIN, '/admin/')) {
+        if (str_ends_with(DIR_WS_ADMIN, '/admin/')) {
             zen_redirect(zen_href_link(FILENAME_ALERT_PAGE));
         }
         $check_path = dirname($PHP_SELF) . '/../zc_install';
@@ -71,7 +71,7 @@ if (basename($PHP_SELF) !== FILENAME_ALERT_PAGE . '.php') {
         }
 
         // check page authorization access
-        if (!in_array($page, ['keepalive', FILENAME_DEFAULT, FILENAME_ADMIN_ACCOUNT, FILENAME_LOGOFF, FILENAME_ALERT_PAGE, FILENAME_PASSWORD_FORGOTTEN, FILENAME_DENIED, FILENAME_ALT_NAV], true)
+        if (!in_array($page, ['keepalive', FILENAME_DEFAULT, FILENAME_ADMIN_ACCOUNT, FILENAME_LOGOFF, FILENAME_ALERT_PAGE, FILENAME_PASSWORD_FORGOTTEN, FILENAME_MFA, FILENAME_DENIED, FILENAME_ALT_NAV], true)
             && !zen_is_superuser())
         {
             if (check_page($page, $_GET) === false && check_related_page($page, $_GET) === false) {

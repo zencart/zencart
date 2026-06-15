@@ -33,13 +33,17 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-openssl": "*",
-        "ext-pcre": "*"
+        "ext-pcre": "*",
+        "ext-mysqli": "*",
+        "ext-zlib": "*"
     },
     "require-dev": {
         "ext-pdo": "*",
+        "friendsofphp/php-cs-fixer": "^3.95",
         "guzzlehttp/guzzle": "^7.7",
         "mikey179/vfsstream": "^1.6",
-        "phpunit/phpunit": "^11.5.42",
+        "phpstan/phpstan": "^2.2",
+        "phpunit/phpunit": "^12.0",
         "symfony/css-selector": "^6.0",
         "symfony/dom-crawler": "^7.4",
         "symfony/maker-bundle": "^1.49",
@@ -68,6 +72,12 @@
         "optimize-autoloader": true
     },
     "scripts": {
+        "phpstan": [
+            "@phpstan:catalog",
+            "@phpstan:admin"
+        ],
+        "phpstan:admin": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.admin.neon --no-progress",
+        "phpstan:catalog": "php -d memory_limit=-1 vendor/bin/phpstan analyse -c phpstan.catalog.neon --no-progress",
         "tests-ci": "bash not_for_release/testFramework/run-tests-ci.sh",
         "tests-ci-local": "bash not_for_release/testFramework/run-tests-ci-local.sh",
         "tests-db-prepare-workers": "bash not_for_release/testFramework/prepare-worker-databases.sh",

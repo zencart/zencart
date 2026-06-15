@@ -42,7 +42,7 @@ if (!empty($_GET['order'])) {
     }
     $page_cnt++;
   }
-  $_GET['page'] = round(($page_cnt / MAX_DISPLAY_SEARCH_RESULTS));
+  $_GET['page'] = round(($page_cnt / zen_config('MAX_DISPLAY_SEARCH_RESULTS')));
   zen_redirect(zen_href_link(FILENAME_GV_QUEUE, 'gid=' . $gv_check->fields['unique_id'] . '&page=' . $_GET['page']));
 }
 // eof: find gv for a particular order and set page
@@ -68,10 +68,10 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
 
       $message = TEXT_REDEEM_GV_MESSAGE_HEADER . "\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . "\n\n" . TEXT_REDEEM_GV_MESSAGE_RELEASED;
       $message .= sprintf(TEXT_REDEEM_GV_MESSAGE_AMOUNT, $currencies->format($gv_amount)) . "\n\n";
-      $message .= TEXT_REDEEM_GV_MESSAGE_THANKS . "\n" . STORE_OWNER . "\n\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
+      $message .= TEXT_REDEEM_GV_MESSAGE_THANKS . "\n" . zen_config('STORE_OWNER') . "\n\n" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       $message .= TEXT_REDEEM_GV_MESSAGE_BODY;
       $message .= TEXT_REDEEM_GV_MESSAGE_FOOTER;
-      $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
+      $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, zen_config('STORE_OWNER_EMAIL_ADDRESS')) . "\n\n";
 
       $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
       $html_msg['EMAIL_FIRST_NAME'] = $mail->fields['customers_firstname'];
@@ -85,7 +85,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
       $html_msg['TEXT_REDEEM_GV_MESSAGE_FOOTER'] = TEXT_REDEEM_GV_MESSAGE_FOOTER;
 
 //send the message
-      zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'], $message, STORE_NAME, EMAIL_FROM, $html_msg, 'gv_queue');
+      zen_mail($mail->fields['customers_firstname'] . ' ' . $mail->fields['customers_lastname'], $mail->fields['customers_email_address'], TEXT_REDEEM_GV_SUBJECT . TEXT_REDEEM_GV_SUBJECT_ORDER . $gv_resulta->fields['order_id'], $message, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'gv_queue');
 
       zen_record_admin_activity('GV Queue entry released in the amount of ' . $gv_amount . ' for ' . $mail->fields['customers_email_address'], 'info');
 
@@ -151,7 +151,7 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
                                WHERE (gv.customer_id = c.customers_id
                                  AND gv.release_flag = 'N')
                                ORDER BY gv.order_id, gv.unique_id";
-              $gv_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $gv_query_raw, $gv_query_numrows);
+              $gv_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $gv_query_raw, $gv_query_numrows);
               $gv_lists = $db->Execute($gv_query_raw);
               foreach ($gv_lists as $gv_list) {
                 if ((!isset($_GET['gid']) || $_GET['gid'] == $gv_list['unique_id']) && (!isset($gInfo))) {
@@ -182,8 +182,8 @@ if ($_GET['action'] == 'confirmrelease' && isset($_POST['gid'])) {
           </table>
           <table class="table">
             <tr>
-              <td><?php echo $gv_split->display_count($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
-              <td class="text-right"><?php echo $gv_split->display_links($gv_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+              <td><?php echo $gv_split->display_count($gv_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
+              <td class="text-right"><?php echo $gv_split->display_links($gv_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
             </tr>
           </table>
         </div>

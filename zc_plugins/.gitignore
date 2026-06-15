@@ -7,7 +7,14 @@ zenTestPlugin/
 
 #specifically allow the following, using the ! prefix:
 !DisplayLogs/
+!DisplayLogs/**
 !PayPalRestful/
+!PayPalRestful/**
 !POSM/
+!POSM/**
 !SystemInspection/
+!SystemInspection/**
 !ScanAdditionalImages/
+!ScanAdditionalImages/**
+!ResponsiveClassicPlugin/
+!ResponsiveClassicPlugin/**

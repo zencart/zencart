@@ -32,10 +32,12 @@ class StoreInProcessTest extends zcInProcessFeatureTestCaseStore
         ];
     }
 
-    public function testContactUsRedirectsToSslInProcess(): void
+    public function testContactUsPageCanBeRenderedInProcessOverHttp(): void
     {
         $this->getMainPage('contact_us')
-            ->assertRedirect('main_page=contact_us');
+            ->assertOk()
+            ->assertHeader('X-ZC-InProcess-Runner', 'storefront')
+            ->assertSee('Zen Cart! : Contact Us');
     }
 
     public function testContactUsPageCanBeRenderedInProcessOverSsl(): void

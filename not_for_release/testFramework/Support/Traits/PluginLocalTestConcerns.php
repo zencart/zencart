@@ -92,6 +92,7 @@ trait PluginLocalTestConcerns
 
         require_once ROOTCWD . 'includes/functions/database.php';
         require_once ROOTCWD . 'includes/functions/zen_define_default.php';
+        require_once ROOTCWD . 'includes/functions/zen_config.php';
         require_once ROOTCWD . 'admin/includes/functions/admin_access.php';
         require_once ROOTCWD . 'admin/includes/classes/class.admin.zcObserverLogEventListener.php';
 

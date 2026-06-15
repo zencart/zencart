@@ -206,7 +206,7 @@
     <td><table>
       <tr>
         <td class="pageHeading"><?= HEADING_TITLE ?></td>
-        <td class="pageHeading"><?= zen_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT) ?></td>
+        <td class="pageHeading"><?= zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')) ?></td>
       </tr>
 
 <?php

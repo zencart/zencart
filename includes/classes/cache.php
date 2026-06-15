@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * cache Class.
  *
@@ -72,7 +74,7 @@ class cache
                 }
                 break;
             case 'database':
-                $sql = "SELECT * FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name ."'";
+                $sql = "SELECT * FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name . "'";
                 $cache_result = $db->Execute($sql);
                 if (!$cache_result->EOF) {
                     $start_time = $cache_result->fields['cache_entry_created'];
@@ -124,7 +126,7 @@ class cache
     /**
      * @since ZC v1.2.0d
      */
-    public function sql_cache_store($zf_query, $zf_result_array): void
+    public function sql_cache_store(string $zf_query, array $zf_result_array): void
     {
         global $db;
         $zp_cache_name = $this->cache_generate_cache_name($zf_query);
@@ -164,8 +166,7 @@ class cache
                 if ($zp_fa === false) {
                     return false;
                 }
-                $zp_result_array = unserialize(implode('', $zp_fa));
-                return $zp_result_array;
+                return unserialize(implode('', $zp_fa), ['allowed_classes' => false]);
                 break;
             case 'database':
                 $sql = "SELECT * FROM " . TABLE_DB_CACHE . " WHERE cache_entry_name = '" . $zp_cache_name . "'";
@@ -173,8 +174,7 @@ class cache
                 if ($zp_cache_result->EOF) {
                     return false;
                 }
-                $zp_result_array = unserialize(base64_decode($zp_cache_result->fields['cache_data']));
-                return $zp_result_array;
+                return unserialize(base64_decode($zp_cache_result->fields['cache_data']), ['allowed_classes' => false]);
                 break;
             case 'memory':
             case 'none':

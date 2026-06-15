@@ -1,16 +1,18 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  * @since ZC v1.5.6
  */
 
 class AdminNotifications
 {
-    protected $enabled = true;
-    private $projectNotificationServer;
+    protected bool $enabled = true;
+    private string $projectNotificationServer = 'https://ping.zen-cart.com/api/notifications';
 
     public function __construct()
     {
@@ -31,7 +33,7 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    public function getNotifications($target, $adminId)
+    public function getNotifications(string $target, int $adminId): array
     {
         if ($this->enabled === false) {
             return [];
@@ -45,6 +47,7 @@ class AdminNotifications
         $this->pruneSavedState($notificationList);
         $savedState = $this->getSavedState($adminId);
         $result = [];
+
         foreach ($notificationList as $name => $notification) {
             if ($this->isNotificationAvailable($name, $target, $notification, $savedState)) {
                 $result[$name] = $notification;
@@ -58,17 +61,17 @@ class AdminNotifications
      */
     protected function getNotificationInfo()
     {
-        if (empty($this->projectNotificationServer)){
+        if (empty($this->projectNotificationServer)) {
             return [];
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->projectNotificationServer);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 9);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 9);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Notification Messages Check');
+        curl_setopt($ch, \CURLOPT_URL, $this->projectNotificationServer);
+        curl_setopt($ch, \CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, \CURLOPT_HEADER, false);
+        curl_setopt($ch, \CURLOPT_TIMEOUT, 9);
+        curl_setopt($ch, \CURLOPT_CONNECTTIMEOUT, 9);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, \CURLOPT_USERAGENT, 'Notification Messages Check');
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
@@ -82,7 +85,7 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected function isNotificationAvailable($name, $target, $notification, $savedState)
+    protected function isNotificationAvailable(string $name, string $target, array $notification, array $savedState): bool
     {
         if ($notification['target'] !== $target) {
             return false;
@@ -90,10 +93,10 @@ class AdminNotifications
         if ($this->isNotificationDismissed($name, $savedState)) {
             return false;
         }
-        if (!$this->isNotificationInDate($notification, $this->getCurrentDate())) {
+        if (!$this->isNotificationInCountry($notification)) {
             return false;
         }
-        if (!$this->isNotificationInCountry($notification)) {
+        if (!$this->isNotificationInDate($notification, $this->getCurrentDate())) {
             return false;
         }
         return true;
@@ -102,7 +105,7 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected function isNotificationDismissed($name, $savedState)
+    protected function isNotificationDismissed(string $name, array $savedState): bool
     {
         if (!isset($savedState[$name])) {
             return false;
@@ -113,7 +116,7 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected function isNotificationInDate($notification, $currentDatetime)
+    protected function isNotificationInDate(array $notification, DateTimeInterface $currentDatetime): bool
     {
         if (!isset($notification['start-date']) && !isset($notification['end-date'])) {
             return true;
@@ -130,13 +133,13 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected function isNotificationInCountry($notification)
+    protected function isNotificationInCountry(array $notification): bool
     {
         if (!isset($notification['countries'])) {
             return true;
         }
         $iso3 = $this->getStoreCountryIso3();
-        if (!in_array($iso3, $notification['countries'])) {
+        if (!in_array($iso3, $notification['countries'], true)) {
             return false;
         }
         return true;
@@ -145,20 +148,19 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected  function getStoreCountryIso3()
+    protected function getStoreCountryIso3(): string
     {
         global $db;
 
-        $sql = "SELECT countries_iso_code_3 from " . TABLE_COUNTRIES . " WHERE countries_id = " . STORE_COUNTRY;
-        $r = $db->Execute($sql);
-        $iso3 = $r->fields['countries_iso_code_3'];
-        return $iso3;
+        $sql = "SELECT countries_iso_code_3 from " . TABLE_COUNTRIES . " WHERE countries_id = " . (int)zen_config('STORE_COUNTRY');
+        $result = $db->Execute($sql);
+        return $result->fields['countries_iso_code_3'] ?? '';
     }
 
     /**
      * @since ZC v1.5.6
      */
-    protected function getSavedState($adminId)
+    protected function getSavedState(int $adminId): array
     {
         global $db;
 
@@ -175,15 +177,15 @@ class AdminNotifications
     /**
      * @since ZC v1.5.6
      */
-    protected function getCurrentDate()
+    protected function getCurrentDate(): DateTime
     {
-        return new DateTime("now");
+        return new DateTime('now');
     }
 
     /**
      * @since ZC v1.5.6
      */
-    protected function pruneSavedState($notificationList)
+    protected function pruneSavedState($notificationList): void
     {
         global $db;
 

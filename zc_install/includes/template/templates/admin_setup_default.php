@@ -76,7 +76,7 @@ if (!empty($errors)) { ?>
             </div>
             <div class="col-6 col-md-5 col-lg-4">
                 <input class="form-control" type="email" name="admin_email2" id="admin_email2" value="" tabindex="3" placeholder="<?= TEXT_EXAMPLE_EMAIL ?>" required data-equalto="admin_email" autocomplete="off">
-                <div class="invalid-feedback"><? TEXT_ADMIN_SETUP_MATCHING_EMAIL ?></div>
+                <div class="invalid-feedback"><?= TEXT_ADMIN_SETUP_MATCHING_EMAIL ?></div>
             </div>
         </div>
         <div class="row mb-2">

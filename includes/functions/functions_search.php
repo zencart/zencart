@@ -133,7 +133,7 @@ function zen_parse_search_string($search_str = '', &$objects = [])
             ($objects[$i+1] != 'and') &&
             ($objects[$i+1] != 'or') &&
             ($objects[$i+1] != ')') ) {
-            $temp[] = ADVANCED_SEARCH_DEFAULT_OPERATOR;
+            $temp[] = zen_config('ADVANCED_SEARCH_DEFAULT_OPERATOR');
         }
     }
     $temp[] = $objects[$i] ?? [];

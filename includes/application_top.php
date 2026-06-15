@@ -250,34 +250,6 @@ if (PHP_VERSION_ID < 80300) {
     exit(0);
 }
 
-/**
- * Set the local configuration parameters - mainly for developers
- */
-if (file_exists('includes/local/configure.php')) {
-    /**
-     * load any local(user created) configure file.
-     */
-    include 'includes/local/configure.php';
-}
-
-/**
- * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
- */
-define('DEBUG_AUTOLOAD', false);
-
-/**
- * set the level of error reporting
- *
- * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
- * It is mainly there to show php warnings during testing/bug fixing phases.
- */
-if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
-    @ini_set('display_errors', true);
-    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
-} else {
-    error_reporting(0);
-}
-
 date_default_timezone_set(date_default_timezone_get());
 
 /*
@@ -297,7 +269,15 @@ if (file_exists('./not_for_release/testFramework/Support/application_testing.php
  * check for and include load application parameters
  */
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
-    if (file_exists('includes/configure.php')) {
+    /**
+     * Set the local configuration parameters - mainly for developers
+     */
+    if (file_exists('includes/local/configure.php')) {
+        /**
+         * load any local(user created) configure file.
+         */
+        include 'includes/local/configure.php';
+    } elseif (file_exists('includes/configure.php')) {
         /**
          * load the main configure file.
          */
@@ -316,6 +296,24 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
     $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
     require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
     exit;
+}
+
+/**
+ * boolean if true the autoloader scripts will be parsed and their output shown. For debugging purposes only.
+ */
+if (!defined('DEBUG_AUTOLOAD')) define('DEBUG_AUTOLOAD', false);
+
+/**
+ * set the level of error reporting
+ *
+ * Note STRICT_ERROR_REPORTING should never be set to true on a production site.
+ * It is mainly there to show php warnings during testing/bug fixing phases.
+ */
+if (DEBUG_AUTOLOAD || (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING == true)) {
+    @ini_set('display_errors', true);
+    error_reporting(defined('STRICT_ERROR_REPORTING_LEVEL') ? STRICT_ERROR_REPORTING_LEVEL : E_ALL);
+} else {
+    error_reporting(0);
 }
 
 /**
@@ -399,6 +397,8 @@ foreach ($installedPlugins as $plugin) {
     $psr4Autoloader->addPrefix($namespaceAdmin, $filePathAdmin);
     $psr4Autoloader->addPrefix($namespaceCatalog, $filePathCatalog);
 }
+// Load registered psr4Autoload in plugin directories
+$fs->loadFilesFromPluginsDirectory($installedPlugins, '', '~^psr4Autoload\.php$~i');
 
 if (isset($loaderPrefix)) {
     $loaderPrefix = preg_replace('/[^a-z_]/', '', $loaderPrefix);
@@ -407,7 +407,7 @@ if (isset($loaderPrefix)) {
 }
 $initSystem = new InitSystem('catalog', $loaderPrefix, new FileSystem, $pluginManager, $installedPlugins);
 
-if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) {
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) {
     $initSystem->setDebug(true);
 }
 

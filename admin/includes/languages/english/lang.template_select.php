@@ -32,6 +32,7 @@ $define = [
     'TEXT_VIEW_TEMPLATE_SETTINGS' => 'View Template Settings',
     'TEXT_MODAL_HEADING_INTRO' => 'Template Settings: ',
     'ERROR_COULD_NOT_READ_FILE' => 'Sorry, the file could not be read.',
+    'ERROR_TEMPLATE_SELECTION_NOT_AVAILABLE' => 'The selected template is not available. Plugin templates must be installed before they can be assigned.',
 ];
 
 return $define;

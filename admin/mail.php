@@ -55,7 +55,7 @@ if (($action == 'send_email_to_user') && isset($_POST['customers_email_address']
     $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
     $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
     $html_msg['EMAIL_LAST_NAME'] = $item['customers_lastname'];
-    $rc = zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, STORE_NAME, $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));
+    $rc = zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, zen_config('STORE_NAME'), $from, $html_msg, 'direct_email', array('file' => $attachment_file, 'name' => basename($attachment_file), 'mime_type' => $attachment_filetype));
     if ($rc === '') $recip_count++;
   }
   if ($recip_count > 0) {
@@ -210,10 +210,10 @@ if ($action == 'preview') {
           <div class="col-sm-12"><hr></div>
           <div class="col-sm-3 text-right"><b><?php echo strip_tags(TEXT_MESSAGE_HTML); ?></b></div>
           <div class="col-sm-9">
-              <?php if (EMAIL_USE_HTML != 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
+              <?php if (zen_config('EMAIL_USE_HTML') !== 'true') echo TEXT_WARNING_HTML_DISABLED . '<br>'; ?>
               <?php
               $html_preview = zen_output_string(isset($_POST['message_html']) ? $_POST['message_html'] : '');
-              echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview));
+              echo (false !== stripos($html_preview, '<br') ? $html_preview : nl2br($html_preview, false));
               ?>
           </div>
           <div class="col-sm-12"><hr></div>
@@ -221,10 +221,10 @@ if ($action == 'preview') {
           <div class="col-sm-9 tt">
               <?php
               $message_preview = empty($_POST['message']) ? $_POST['message_html'] : $_POST['message'];
-              $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview));
+              $message_preview = (false !== stripos($message_preview, '<br') ? $message_preview : nl2br($message_preview, false));
               $message_preview = str_replace(array('<br>', '<br />'), "<br />\n", $message_preview);
               $message_preview = str_replace('</p>', "</p>\n", $message_preview);
-              echo  nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, TRUE));
+              echo  nl2br(htmlspecialchars(stripslashes(strip_tags($message_preview)), ENT_COMPAT, CHARSET, true), false);
               ?>
           </div>
           <div class="col-sm-12"><hr></div>
@@ -269,7 +269,7 @@ if ($action == 'preview') {
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_FROM, 'from', 'class="col-sm-3 control-label"'); ?>
-            <div class="col-sm-9"><?php echo zen_draw_input_field('from', htmlspecialchars(EMAIL_FROM, ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
+            <div class="col-sm-9"><?php echo zen_draw_input_field('from', htmlspecialchars(zen_config('EMAIL_FROM', ''), ENT_COMPAT, CHARSET, TRUE), 'size="50" class="form-control"'); ?></div>
           </div>
           <div class="form-group">
               <?php echo zen_draw_label(TEXT_SUBJECT, 'subject', 'class="col-sm-3 control-label"'); ?>
@@ -279,7 +279,7 @@ if ($action == 'preview') {
             <?php echo zen_draw_label(TEXT_MESSAGE_HTML, 'message_html', 'class="col-sm-3 control-label"'); //HTML version   ?>
             <div class="col-sm-9">
                 <?php
-                if (EMAIL_USE_HTML == 'true') {
+                if (zen_config('EMAIL_USE_HTML') === 'true') {
                   echo zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(stripslashes(isset($_POST['message_html'])?$_POST['message_html']:''), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control"');
                 } else {
                   echo TEXT_WARNING_HTML_DISABLED;

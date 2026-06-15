@@ -21,7 +21,13 @@ require_once __DIR__ . '/configs/runtime_config.php';
  */
 abstract class zcFeatureTestCase extends zcInProcessFeatureTestCase
 {
-    use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns, LowOrderFeeConcerns, DiscountCouponConcerns;
+    use DatabaseConcerns;
+    use GeneralConcerns;
+    use CustomerAccountConcerns;
+    use ConfigurationSettingsConcerns;
+    use LogFileConcerns;
+    use LowOrderFeeConcerns;
+    use DiscountCouponConcerns;
 
     /**
      * @return void
@@ -77,7 +83,7 @@ abstract class zcFeatureTestCase extends zcInProcessFeatureTestCase
 
         $artifactDirectory = zc_test_config_artifact_directory(ROOTCWD, $context);
         if (!is_dir($artifactDirectory)) {
-            mkdir($artifactDirectory, 0777, true);
+            mkdir($artifactDirectory, 0o777, true);
         }
 
         copy($file, $artifactDirectory . basename($file));

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -187,7 +188,7 @@ class Product
 
         if ($allow_add_to_cart && $this->isGiftVoucher()) {
             // if GV feature disabled, can't allow GV's to be added to cart
-            if (!defined('MODULE_ORDER_TOTAL_GV_STATUS') || MODULE_ORDER_TOTAL_GV_STATUS !== 'true') {
+            if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') !== 'true') {
                 $allow_add_to_cart = false;
             }
         }

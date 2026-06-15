@@ -46,7 +46,7 @@ try {
     $listing_sql = $search->buildSearchSQL();
     $keywords = $searchOptions->keywords;
 
-    $result = new \splitPageResults($listing_sql, MAX_DISPLAY_PRODUCTS_LISTING, 'p.products_id', 'page');
+    $result = new \splitPageResults($listing_sql, zen_config('MAX_DISPLAY_PRODUCTS_LISTING'), 'p.products_id', 'page');
     $zco_notifier->notify('NOTIFY_SEARCH_RESULTS', $listing_sql, $keywords, $result);
 
     // -----
@@ -69,7 +69,7 @@ try {
         }
     }
     // if only one product found in search results, go directly to the product page, instead of displaying a link to just one item:
-    if ((int)$result->number_of_rows === 1 && SKIP_SINGLE_PRODUCT_CATEGORIES === 'True') {
+    if ((int)$result->number_of_rows === 1 && zen_config('SKIP_SINGLE_PRODUCT_CATEGORIES') === 'True') {
         $result = $db->Execute($result->sql_query);
         zen_redirect(zen_href_link(zen_get_info_page($result->fields['products_id']), 'cPath=' . zen_get_product_path($result->fields['products_id']) . '&products_id=' . $result->fields['products_id']));
     }

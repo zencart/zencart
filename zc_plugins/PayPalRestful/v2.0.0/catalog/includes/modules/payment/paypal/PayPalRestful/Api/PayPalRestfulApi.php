@@ -510,7 +510,7 @@ class PayPalRestfulApi extends ErrorInfo
      */
     public function registerAndUpdateSubscribedWebhooks(): void
     {
-        $webhook_id = defined('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS') ? MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS : '';
+        $webhook_id = zen_config('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS', '');
 
         if (empty($webhook_id)) {
             $this->subscribeWebhook();
@@ -584,7 +584,7 @@ class PayPalRestfulApi extends ErrorInfo
         $this->log->write("==> Start deleteWebhook Registration", true);
         $url = HTTP_SERVER . DIR_WS_CATALOG . 'ppr_webhook.php';
 
-        $webhook_id = defined('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS') ? MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS : '';
+        $webhook_id = zen_config('MODULE_PAYMENT_PAYPALR_SUBSCRIBED_WEBHOOKS', '');
         if (empty($webhook_id)) {
             // None remembered internally, but let's also check if any are registered at PayPal for our URL, and remove them.
             $response = $this->curlGet("v1/notifications/webhooks/");

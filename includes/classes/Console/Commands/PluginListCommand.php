@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -18,9 +20,7 @@ class PluginListCommand extends ConsoleCommand
      *
      * @param null|callable(): ?array<int|string, array<string, mixed>> $pluginProvider
      */
-    public function __construct(private $pluginProvider = null)
-    {
-    }
+    public function __construct(private $pluginProvider = null) {}
 
     /**
      * @since ZC v3.0.0
@@ -78,7 +78,7 @@ class PluginListCommand extends ConsoleCommand
         foreach ($plugins as $plugin) {
             $output->writeln(sprintf(
                 '  %-12s %-24s %-12s %s',
-                $this->formatStatus((int)($plugin['status'] ?? PluginStatus::NOT_INSTALLED)),
+                self::formatStatus((int)($plugin['status'] ?? PluginStatus::NOT_INSTALLED)),
                 (string)($plugin['unique_key'] ?? ''),
                 (string)($plugin['version'] ?? ''),
                 (string)($plugin['name'] ?? $plugin['unique_key'] ?? '')
@@ -91,7 +91,7 @@ class PluginListCommand extends ConsoleCommand
     /**
      * @since ZC v3.0.0
      */
-    private function formatStatus(int $status): string
+    private static function formatStatus(int $status): string
     {
         return match ($status) {
             PluginStatus::ENABLED => 'enabled',

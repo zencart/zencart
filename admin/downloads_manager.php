@@ -124,7 +124,7 @@ if (!empty($action)) {
                       WHERE pa.products_attributes_id = pad.products_attributes_id
                       " . $search . "
                       " . $order_by;
-              $products_downloads_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, $sql, $products_downloads_query_numrows);
+              $products_downloads_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER'), $sql, $products_downloads_query_numrows);
               $products_downloads_query = $db->Execute($sql);
 
               foreach ($products_downloads_query as $products_downloads) {
@@ -240,11 +240,11 @@ if (!empty($action)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?php echo $products_downloads_split->display_count($products_downloads_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_DOWNLOADS_MANAGER); ?></td>
+            <td><?php echo $products_downloads_split->display_count($products_downloads_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_DOWNLOADS_MANAGER); ?></td>
             <!--
-            <td class="smallText text-right"><?php echo $products_downloads_split->display_links($products_downloads_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></td>
+            <td class="smallText text-right"><?php echo $products_downloads_split->display_links($products_downloads_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></td>
             -->
-            <td class="text-right"><?php echo $products_downloads_split->display_links($products_downloads_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td class="text-right"><?php echo $products_downloads_split->display_links($products_downloads_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DOWNLOADS_MANAGER'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
           <?php if (isset($_GET['search']) && zen_not_null($_GET['search'])) { ?>
             <tr>

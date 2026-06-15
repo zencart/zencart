@@ -8,6 +8,7 @@
  *
  * Last updated: v1.3.0
  */
+
 namespace PayPalRestful\Admin;
 
 use PayPalRestful\Admin\Formatters\Messages;
@@ -136,7 +137,7 @@ class GetPayPalOrderTransactions
         $db_txns = [];
         foreach ($txns as $txn) {
             // -----
-            // 
+            //
             //
             if ($txn['txn_type'] === 'CREATE') {
                 $db_txns[] = $txn;
@@ -227,7 +228,7 @@ class GetPayPalOrderTransactions
     {
         foreach ($authorizations as $next_authorization) {
             $authorization_txn_id = $next_authorization['id'];
-            $first_auth_txn_id = $first_auth_txn_id ?? $authorization_txn_id;
+            $first_auth_txn_id ??= $authorization_txn_id;
             if ($this->transactionExists($authorization_txn_id) === true) {
                 continue;
             }

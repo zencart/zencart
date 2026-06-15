@@ -109,7 +109,7 @@ switch ($_GET['action']) {
                         'banners_url' => $banner->fields['banners_url'],
                     ]
                 );
-                zen_update_banner_click_count($_GET['goto']);
+                zen_update_banner_click_count((int)$_GET['goto']);
                 zen_redirect($banner->fields['banners_url']);
             }
         }

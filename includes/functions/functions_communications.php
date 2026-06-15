@@ -91,12 +91,12 @@ function zenDoCurlRequest(
     }
 
     $proxy = false;
-    if (CURL_PROXY_REQUIRED === 'True') {
+    if (zen_config('CURL_PROXY_REQUIRED') === 'True') {
         $proxy = true;
         $proxy_tunnel_flag = !((defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) === 'FALSE'));
         curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
         curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        curl_setopt($ch, CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+        curl_setopt($ch, CURLOPT_PROXY, zen_config('CURL_PROXY_SERVER_DETAILS'));
     }
 
     $response = curl_exec($ch);

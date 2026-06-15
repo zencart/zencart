@@ -37,7 +37,7 @@ if (zen_get_customer_validate_session($_SESSION['customer_id']) === false) {
 if (!isset($_SESSION['shipping']) || !$_SESSION['shipping']) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
-if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true' && defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER') && $_SESSION['cart']->show_total() < MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_free' && $_SESSION['cart']->get_content_type() != 'virtual' && zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') === 'true' && $_SESSION['cart']->show_total() < zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) {
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
@@ -49,7 +49,7 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
 }
 
 // Stock Check
-if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
+if ( (zen_config('STOCK_CHECK') === 'true') && (zen_config('STOCK_ALLOW_CHECKOUT') !== 'true') ) {
   $products = $_SESSION['cart']->get_products();
   for ($i=0, $n=sizeof($products); $i<$n; $i++) {
     $qtyAvailable = zen_get_products_stock($products[$i]['id']);

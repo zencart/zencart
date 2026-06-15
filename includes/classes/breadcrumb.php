@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * breadcrumb Class.
  *
@@ -16,7 +18,9 @@ if (!defined('IS_ADMIN_FLAG')) {
  * If you desire to have the older behaviour of having all product and category items in the breadcrumb be shown as links
  * then you should add a define() for this item in the extra_datafiles folder and set it to 'false' instead of 'true':
  */
-if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', 'true');
+if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) {
+    define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', 'true');
+}
 
 /**
  * Handle page breadcrumbs
@@ -24,9 +28,9 @@ if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) define('DISABLE_BREADCRUM
  */
 class breadcrumb extends base
 {
-    protected $_trail = [];
+    protected array $_trail = [];
 
-    function __construct()
+    public function __construct()
     {
         $this->reset();
     }
@@ -34,7 +38,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function reset()
+    public function reset(): void
     {
         $this->_trail = [];
     }
@@ -42,7 +46,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function add($title, $link = '')
+    public function add(string $title, string $link = ''): void
     {
         $this->_trail[] = ['title' => $title, 'link' => $link];
     }
@@ -50,19 +54,19 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function trail($separator = '&nbsp;&nbsp;', $prefix = '', $suffix = '')
+    public function trail(string $separator = '&nbsp;&nbsp;', string $prefix = '', string $suffix = ''): string
     {
         $trail_string = '';
 
         for ($i = 0, $n = count($this->_trail); $i < $n; $i++) {
-        // echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br>';
+            // echo 'breadcrumb ' . $i . ' of ' . $n . ': ' . $this->_trail[$i]['title'] . '<br>';
             $skip_link = false;
-            if ($i == ($n - 1) && DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM == 'true') {
+            if ($i === ($n - 1) && DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM === 'true') {
                 $skip_link = true;
             }
             if (!empty($this->_trail[$i]['link']) && !$skip_link) {
                 // this line simply sets the "Home" link to be the domain/url, not main_page=index?blahblah:
-                if ($this->_trail[$i]['title'] == HEADER_TITLE_CATALOG) {
+                if ($this->_trail[$i]['title'] === HEADER_TITLE_CATALOG) {
                     $trail_string .= '  ' . $prefix . '<a href="' . zen_href_link('/', '', 'SSL', false, true, true) . '">' . $this->_trail[$i]['title'] . '</a>' . $suffix;
                 } else {
                     $trail_string .= '  ' . $prefix . '<a href="' . $this->_trail[$i]['link'] . '">' . $this->_trail[$i]['title'] . '</a>' . $suffix;
@@ -73,7 +77,9 @@ class breadcrumb extends base
                 }
             }
 
-            if (($i + 1) < $n) $trail_string .= $separator;
+            if (($i + 1) < $n) {
+                $trail_string .= $separator;
+            }
             $trail_string .= "\n";
         }
 
@@ -83,7 +89,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.0.3
      */
-    function last()
+    public function last()
     {
         $trail_size = count($this->_trail);
         return $this->_trail[$trail_size - 1]['title'];
@@ -92,7 +98,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7c
      */
-    function removeLast()
+    public function removeLast(): void
     {
         $trail_size = count($this->_trail);
         unset($this->_trail[$trail_size - 1]);
@@ -101,9 +107,12 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7c
      */
-    function replaceLast($title = null, $link = null)
+    public function replaceLast(?string $title = null, ?string $link = null): void
     {
-        if ($title === null && $link === null) return $this->removeLast();
+        if ($title === null && $link === null) {
+            $this->removeLast();
+            return;
+        }
 
         $trail_size = count($this->_trail);
         if ($title !== null) {
@@ -117,7 +126,7 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7
      */
-    function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->_trail);
     }
@@ -125,15 +134,15 @@ class breadcrumb extends base
     /**
      * @since ZC v1.5.7
      */
-    function count()
+    public function count(): int
     {
         return count($this->_trail);
     }
     /**
      * @since ZC v1.5.8a
      */
-    function getTrail()
+    public function getTrail(): array
     {
-       return $this->_trail;
+        return $this->_trail;
     }
 }

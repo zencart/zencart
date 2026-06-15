@@ -100,7 +100,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $message .= sprintf(TEXT_VISIT, HTTP_CATALOG_SERVER . DIR_WS_CATALOG);
 
     // disclaimer
-    $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, STORE_OWNER_EMAIL_ADDRESS) . "\n\n";
+    $message .= "\n-----\n" . sprintf(EMAIL_DISCLAIMER, zen_config('STORE_OWNER_EMAIL_ADDRESS')) . "\n\n";
 
     $html_msg['EMAIL_SALUTATION'] = EMAIL_SALUTATION;
     $html_msg['EMAIL_FIRST_NAME'] = $item['customers_firstname'];
@@ -111,7 +111,7 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $html_msg['COUPON_CODE'] = $coupon_result->fields['coupon_code'] . $html_coupon_help;
     $html_msg['COUPON_DESCRIPTION'] = $coupon_description . (!empty($coupon_result->fields['coupon_description']) ? $coupon_result->fields['coupon_description'] : '');
     $html_msg['COUPON_TEXT_REMEMBER'] = TEXT_REMEMBER;
-    $html_msg['COUPON_REDEEM_STORENAME_URL'] = sprintf(TEXT_VISIT, '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . STORE_NAME . '</a>');
+    $html_msg['COUPON_REDEEM_STORENAME_URL'] = sprintf(TEXT_VISIT, '<a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . '">' . zen_config('STORE_NAME') . '</a>');
 
 //Send the emails
     zen_mail($item['customers_firstname'] . ' ' . $item['customers_lastname'], $item['customers_email_address'], $subject, $message, '', $from, $html_msg, 'coupon');
@@ -119,8 +119,8 @@ if ($_GET['action'] == 'send_email_to_user' && !empty($_POST['customers_email_ad
     $zco_notifier->notify('ADMIN_COUPON_CODE_EMAILED_TO_CUSTOMER', $coupon_result->fields['coupon_code'], $item['customers_email_address']);
     $recip_count++;
     // send copy to Admin if enabled
-    if (SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS == '1' && SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO != '') {
-      zen_mail('', SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO, SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, '', $from, $html_msg, 'coupon_extra');
+    if ((int)zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_STATUS') === 1 && zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO') !== '') {
+      zen_mail('', zen_config('SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO'), SEND_EXTRA_DISCOUNT_COUPON_ADMIN_EMAILS_TO_SUBJECT . ' ' . $subject, $message, '', $from, $html_msg, 'coupon_extra');
     }
   }
   zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'mail_sent_to=' . urlencode($mail_sent_to) . '&recip_count=' . $recip_count));
@@ -149,7 +149,7 @@ switch ($_GET['action']) {
 
   case 'confirmdelete':
     // do not allow change if set to welcome coupon
-    if ($_GET['cid'] == NEW_SIGNUP_DISCOUNT_COUPON) {
+    if ($_GET['cid'] == zen_config('NEW_SIGNUP_DISCOUNT_COUPON')) {
       $messageStack->add_session(ERROR_DISCOUNT_COUPON_WELCOME, 'caution');
       zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, 'cid=' . $_GET['cid'] . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '') . (isset($_GET['page']) ? '&page=' . $_GET['page'] : '')));
     }
@@ -416,7 +416,7 @@ switch ($_GET['action']) {
                                    FROM " . TABLE_COUPON_REDEEM_TRACK . "
                                    WHERE coupon_id = " . (int)$_GET['cid'];
                   $cc_query_numrows = $cc_query_numrows ?? 0;
-                  $cc_split = new splitPageResults($_GET['reports_page'], MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $cc_query_raw, $cc_query_numrows);
+                  $cc_split = new splitPageResults($_GET['reports_page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS'), $cc_query_raw, $cc_query_numrows);
                   $cc_list = $db->Execute($cc_query_raw);
                   if ($cc_list->EOF && empty($cInfo)) {
                     $cInfo = new objectInfo($cc_list->fields);
@@ -456,8 +456,8 @@ switch ($_GET['action']) {
               </table>
               <table class="table">
                 <tr>
-                  <td><?= $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS) ?></td>
-                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['reports_page'], 'action=voucherreport&cid=' . $cInfo->coupon_id, 'reports_page') ?></td>
+                  <td><?= $cc_split->display_count($cc_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS'), $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS) ?></td>
+                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['reports_page'], 'action=voucherreport&cid=' . $cInfo->coupon_id, 'reports_page') ?></td>
                 </tr>
                 <tr>
                   <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']) . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a></td>
@@ -514,7 +514,7 @@ switch ($_GET['action']) {
                                                            WHERE coupon_code LIKE '" . $_GET['codebase'] . "%'" . ")
                                    AND crt.coupon_id = c.coupon_id";
                   $cc_query_numrows = $cc_query_numrows ?? 0;
-                  $cc_split = new splitPageResults($_GET['reports_page'], MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $cc_query_raw, $cc_query_numrows);
+                  $cc_split = new splitPageResults($_GET['reports_page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS'), $cc_query_raw, $cc_query_numrows);
                   $cc_list = $db->Execute($cc_query_raw);
 
                   foreach ($cc_list as $item) {
@@ -553,8 +553,8 @@ switch ($_GET['action']) {
               </table>
               <table class="table">
                 <tr>
-                  <td><?= $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS) ?></td>
-                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['reports_page'], 'action=voucherreport&cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']), 'reports_page') ?></td>
+                  <td><?= $cc_split->display_count($cc_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS'), $_GET['reports_page'], TEXT_DISPLAY_NUMBER_OF_COUPONS) ?></td>
+                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['reports_page'], 'action=voucherreport&cid=' . (!empty($cInfo->coupon_id) ? $cInfo->coupon_id : $_GET['cid']), 'reports_page') ?></td>
                 </tr>
                 <tr>
                   <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . $cc_previous_cid . (isset($_GET['status']) ? '&status=' . $_GET['status'] : '')) ?>" class="btn btn-default" role="button"><?= IMAGE_BACK ?></a></td>
@@ -616,7 +616,7 @@ switch ($_GET['action']) {
                 <td class="text-right"><b><?= TEXT_SUBJECT ?></b></td>
                 <td><?= htmlspecialchars(stripslashes($_POST['subject']), ENT_COMPAT, CHARSET, TRUE) ?></td>
               </tr>
-              <?php if (EMAIL_USE_HTML == 'true') { ?>
+              <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
                 <tr>
                   <td class="text-right"><hr><b><?= TEXT_RICH_TEXT_MESSAGE ?></b></td>
                   <td><?= stripslashes($_POST['message_html']) ?></td>
@@ -624,7 +624,7 @@ switch ($_GET['action']) {
               <?php } ?>
               <tr>
                 <td class="text-right"><b><?= TEXT_MESSAGE ?></b></td>
-                <td class="tt"><?= nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, TRUE)) ?></td>
+                <td class="tt"><?= nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), false) ?></td>
               </tr>
               <tr>
                 <td>
@@ -664,7 +664,7 @@ switch ($_GET['action']) {
             </div>
             <div class="form-group">
               <?= zen_draw_label(TEXT_FROM, 'from', 'class="control-label col-sm-3"') ?>
-              <div class="col-sm-9 col-md-6"><?= zen_draw_input_field('from', EMAIL_FROM, 'size="50" class="form-control" id="from"') ?></div>
+              <div class="col-sm-9 col-md-6"><?= zen_draw_input_field('from', zen_config('EMAIL_FROM'), 'size="50" class="form-control" id="from"') ?></div>
             </div>
             <?php
             /*
@@ -680,7 +680,7 @@ switch ($_GET['action']) {
                 <?= zen_draw_input_field('subject', '', 'size="50" class="form-control" id="subject"', true) ?>
               </div>
             </div>
-            <?php if (EMAIL_USE_HTML == 'true') { ?>
+            <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
               <div class="form-group">
                 <?= zen_draw_label(TEXT_RICH_TEXT_MESSAGE, 'message_html', 'class="control-label col-sm-3"') ?>
                 <div class="col-sm-9 col-md-6"><?= zen_draw_textarea_field('message_html', 'soft', '', '25', htmlspecialchars(empty($_POST['message_html']) ? TEXT_COUPON_ANNOUNCE : stripslashes($_POST['message_html']), ENT_COMPAT, CHARSET, TRUE), 'id="message_html" class="editorHook form-control" id="message_html"') ?></div>
@@ -1191,7 +1191,7 @@ switch ($_GET['action']) {
                   $cc_query_raw = "SELECT *
                                      FROM " . TABLE_COUPONS . "
                                      WHERE coupon_type != 'G'" . $mysqlSearch . $mysqlActive;
-                  $maxDisplaySearchResults = ((defined('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') && (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS > 0) ? (int)MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS : 20);
+                  $maxDisplaySearchResults = ((int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') > 0 ? (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_DISCOUNT_COUPONS') : 20);
 
                   $cc_query_numrows = $cc_query_numrows ?? 0;
                   $cc_split = new splitPageResults($_GET['page'], $maxDisplaySearchResults, $cc_query_raw, $cc_query_numrows);
@@ -1280,7 +1280,7 @@ switch ($_GET['action']) {
               <table class="table">
                 <tr>
                   <td><?= $cc_split->display_count($cc_query_numrows, $maxDisplaySearchResults, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS) ?></td>
-                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, $maxDisplaySearchResults, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')) ?></td>
+                  <td class="text-right"><?= $cc_split->display_links($cc_query_numrows, $maxDisplaySearchResults, zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], (isset($_GET['status']) ? 'status=' . $_GET['status'] : '')) ?></td>
                 </tr>
                 <tr>
                   <td class="text-right" colspan="2"><a id="couponInsert" href="<?= zen_href_link(FILENAME_COUPON_ADMIN, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cid=' . (int)$cInfo->coupon_id . '&action=new') ?>" class="btn btn-primary" role="button"><?= IMAGE_INSERT ?></a></td>

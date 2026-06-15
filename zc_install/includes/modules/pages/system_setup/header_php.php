@@ -7,18 +7,9 @@
 [
     $adminDir,
     $documentRoot,
-    $adminServer,
     $catalogHttpServer,
     $catalogHttpUrl,
-    $catalogHttpsServer,
-    $catalogHttpsUrl,
     $dir_ws_http_catalog,
-    $dir_ws_https_catalog,
 ] = getDetectedURIs();
 
 $db_type = 'mysql';
-
-$enableSslCatalog = '';
-if ($request_type === 'SSL') {
-    $enableSslCatalog = 'checked = checked';
-}

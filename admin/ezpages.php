@@ -93,6 +93,24 @@ if (!empty($action)) {
                 $page_error = true;
             }
 
+            $sql_data_array = [
+                'page_open_new_window' => $page_open_new_window,
+                'alt_url' => $alt_url,
+                'alt_url_external' => $alt_url_external,
+                'status_mobile' => $status_mobile,
+                'status_header' => $status_header,
+                'status_sidebox' => $status_sidebox,
+                'status_footer' => $status_footer,
+                'status_toc' => $status_toc,
+                'status_visible' => $status_visible,
+                'mobile_sort_order' => $pages_mobile_sort_order,
+                'header_sort_order' => $pages_header_sort_order,
+                'sidebox_sort_order' => $pages_sidebox_sort_order,
+                'footer_sort_order' => $pages_footer_sort_order,
+                'toc_sort_order' => $pages_toc_sort_order,
+                'toc_chapter' => $toc_chapter,
+            ];
+
             // -----
             // Let a watching observer know that the EZ-Page's data is about to be recorded in the
             // database, giving it the opportunity to perform its checks on any additional data and
@@ -101,27 +119,16 @@ if (!empty($action)) {
             // If the observer sets the $page_error (i.e. $p2) value to (bool)true, it is the observer's
             // responsibility to add a message for display to the current admin.
             //
-            $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array);
+            // The observer may update the $sql_data_array.
+            //
+            // The $page_id is passed as extra information in the case of action=update 
+            // so the observer knows which page is affected, but the observer cannot change the page ID.
+        
+            // Pass the page ID as a separate variable so that an observer cannot change it.
+            $page_id = (int)($pages_id ?? 0);
+            $zco_notifier->notify('NOTIFY_ADMIN_EZPAGES_UPDATE_BASE', $action, $page_error, $sql_data_array, $page_id);
 
             if ($page_error === false) {
-                $sql_data_array = [
-                    'page_open_new_window' => $page_open_new_window,
-                    'alt_url' => $alt_url,
-                    'alt_url_external' => $alt_url_external,
-                    'status_mobile' => $status_mobile,
-                    'status_header' => $status_header,
-                    'status_sidebox' => $status_sidebox,
-                    'status_footer' => $status_footer,
-                    'status_toc' => $status_toc,
-                    'status_visible' => $status_visible,
-                    'mobile_sort_order' => $pages_mobile_sort_order,
-                    'header_sort_order' => $pages_header_sort_order,
-                    'sidebox_sort_order' => $pages_sidebox_sort_order,
-                    'footer_sort_order' => $pages_footer_sort_order,
-                    'toc_sort_order' => $pages_toc_sort_order,
-                    'toc_chapter' => $toc_chapter,
-                ];
-
                 if ($action === 'insert') {
                     zen_db_perform(TABLE_EZPAGES, $sql_data_array);
                     $pages_id = $db->insert_ID();
@@ -591,20 +598,20 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                     if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['ezID'])) {
                         $check_page = $db->Execute($pages_query_raw);
                         $check_count = 0;
-                        if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) {
+                        if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE')) {
                             foreach ($check_page as $item) {
                                 if ($item['pages_id'] == $_GET['ezID']) {
                                     break;
                                 }
                                 $check_count++;
                             }
-                            $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_EZPAGE) != 0 ? .5 : 0)), 0);
+                            $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE')) != 0 ? .5 : 0)), 0);
                         } else {
                             $_GET['page'] = 1;
                         }
                     }
 
-                    $pages_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_EZPAGE, $pages_query_raw, $pages_query_numrows);
+                    $pages_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE'), $pages_query_raw, $pages_query_numrows);
                     $pages = $db->Execute($pages_query_raw);
 
                     foreach ($pages as $page) {
@@ -839,7 +846,7 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                             $contents[] = ['text' => TEXT_ALT_URL . (empty($ezInfo->alt_url) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url)];
                             $contents[] = ['text' => TEXT_ALT_URL_EXTERNAL . (empty($ezInfo->alt_url_external) ? '&nbsp;' . TEXT_NONE : '<br>' . $ezInfo->alt_url_external)];
                             $ez_content = strip_tags($ezInfo->pages_html_text);
-                            $ez_sub_content = zen_trunc_string($ez_content, (int)MAX_PREVIEW);
+                            $ez_sub_content = zen_trunc_string($ez_content, (int)zen_config('MAX_PREVIEW'));
                             $contents[] = ['text' => TEXT_PAGES_HTML_TEXT . '<br>' . $ez_sub_content];
 
                             $contents[] = [
@@ -865,8 +872,8 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
         <div class="row">
             <table class="table">
                 <tr>
-                    <td><?= $pages_split->display_count($pages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_EZPAGE, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PAGES) ?></td>
-                    <td class="text-right"><?= $pages_split->display_links($pages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_EZPAGE, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'info', 'x', 'y', 'ezID'])) ?></td>
+                    <td><?= $pages_split->display_count($pages_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PAGES) ?></td>
+                    <td class="text-right"><?= $pages_split->display_links($pages_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_EZPAGE'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params(['page', 'info', 'x', 'y', 'ezID'])) ?></td>
                 </tr>
                 <tr>
                     <td class="text-right" colspan="2"><a href="<?= zen_href_link(FILENAME_EZPAGES_ADMIN, 'action=new') ?>" class="btn btn-primary" role="button"><?= IMAGE_NEW_PAGE ?></a></td>

@@ -461,7 +461,7 @@ if (!empty($action)) {
                                                      sale_date_end, sale_date_added, sale_date_last_modified, sale_date_status_change
                                               FROM " . TABLE_SALEMAKER_SALES . "
                                               ORDER BY sale_name";
-                $salemaker_sales_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $salemaker_sales_query_raw, $salemaker_sales_query_numrows);
+                $salemaker_sales_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $salemaker_sales_query_raw, $salemaker_sales_query_numrows);
                 $salemaker_sales = $db->Execute($salemaker_sales_query_raw);
 
                 foreach ($salemaker_sales as $salemaker_sale) {
@@ -559,8 +559,8 @@ if (!empty($action)) {
       <div class="row">
         <table class="table">
           <tr>
-            <td><?= $salemaker_sales_split->display_count($salemaker_sales_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SALES) ?></td>
-            <td class="text-right"><?= $salemaker_sales_split->display_links($salemaker_sales_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']) ?></td>
+            <td><?= $salemaker_sales_split->display_count($salemaker_sales_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_SALES) ?></td>
+            <td class="text-right"><?= $salemaker_sales_split->display_links($salemaker_sales_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']) ?></td>
           </tr>
           <?php
           if (empty($action)) {

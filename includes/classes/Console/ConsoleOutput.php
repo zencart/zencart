@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -18,8 +20,8 @@ class ConsoleOutput
         private $stdout = null,
         private $stderr = null
     ) {
-        $this->stdout = $stdout ?? STDOUT;
-        $this->stderr = $stderr ?? STDERR;
+        $this->stdout = $stdout ?? \STDOUT;
+        $this->stderr = $stderr ?? \STDERR;
     }
 
     /**
@@ -35,7 +37,7 @@ class ConsoleOutput
      */
     public function writeln(string $message = ''): void
     {
-        $this->write($message . PHP_EOL);
+        $this->write($message . \PHP_EOL);
     }
 
     /**
@@ -51,6 +53,6 @@ class ConsoleOutput
      */
     public function errorln(string $message): void
     {
-        $this->error($message . PHP_EOL);
+        $this->error($message . \PHP_EOL);
     }
 }

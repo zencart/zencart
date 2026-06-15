@@ -82,6 +82,7 @@ $autoLoadConfig[5][] = [
  * Breakpoint 20.
  *
  * require 'includes/init_includes/init_db_config_read.php';
+ * .. which in turn loads functions/zen_config.php
  *
  */
 $autoLoadConfig[20][] = [
@@ -110,15 +111,9 @@ $autoLoadConfig[27][] = [
 /**
  * Breakpoint 30.
  *
- * require 'includes/init_includes/init_gzip.php';
  * $sniffer = new sniffer();
  *
  */
-$autoLoadConfig[30][] = [
-    'autoType' => 'init_script',
-    'loadFile' => 'init_gzip.php',
-];
-
 //- sniffer class loaded via psr4Autoload.php
 $autoLoadConfig[30][] = [
     'autoType' => 'classInstantiate',

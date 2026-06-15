@@ -60,7 +60,7 @@ if (method_exists($lng, 'get_language_list')) {
 <script title="CKEditor-custom-config" src="<?= (function_exists('zen_catalog_base_link') ? zen_catalog_base_link() : '/') . DIR_WS_EDITORS . 'ckeditor5/config.js' ?>"></script>
 <script title="CKEditor-initialize" type="module">
     const langArray = <?= json_encode($langArray) ?>;
-    const defaultLang = '<?= DEFAULT_LANGUAGE ?>';
+    const defaultLang = '<?= zen_config('DEFAULT_LANGUAGE') ?>';
     const sessionLangId = '<?= $_SESSION['languages_id'] ?>';
     const sessionLangCode = '<?= $_SESSION['languages_code'] ?>';
 

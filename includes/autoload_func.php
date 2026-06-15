@@ -14,7 +14,7 @@ if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
 }
 $debugAutoload = false;
-if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD == true) $debugAutoload = true;
+if (defined('DEBUG_AUTOLOAD') && DEBUG_AUTOLOAD === true) $debugAutoload = true;
 if ($debugAutoload) {
     echo '<pre>$initSystemList=<br>';
     print_r($initSystemList);

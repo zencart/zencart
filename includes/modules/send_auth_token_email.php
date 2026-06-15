@@ -50,7 +50,7 @@ if (Customer::getAuthTokenValid($token) === false) {
 
 $name = $customer->getData('customers_firstname') . ' ' . $customer->getData('customers_lastname');
 
-$reset_url = zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, "reset_token=$token", 'SSL');
+$reset_url = zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), "reset_token=$token", 'SSL');
 
 $body = sprintf(EMAIL_AUTH_TOKEN_BODY, $reset_url, Customer::getAuthTokenMinutesValid());
 
@@ -63,6 +63,6 @@ $email_text = $name . "\n\n" . $body;
 // $html_msg = 'none';
 
 // Send the email
-zen_mail($name, $customer->getData('customers_email_address'), EMAIL_AUTH_TOKEN_SUBJECT, $email_text, STORE_NAME, EMAIL_FROM, $html_msg, 'password_forgotten');
+zen_mail($name, $customer->getData('customers_email_address'), EMAIL_AUTH_TOKEN_SUBJECT, $email_text, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'password_forgotten');
 
 $messageStack->add_session('header', sprintf(SUCCESS_AUTH_TOKEN_SENT, $customer->getData('customers_email_address')), 'success');

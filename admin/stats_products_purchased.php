@@ -79,7 +79,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                                         ORDER BY op.products_id, o.date_purchased DESC";
         }
         $chk_orders_products_query_numrows = '';
-        $chk_orders_products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $chk_orders_products_query, $chk_orders_products_query_numrows);
+        $chk_orders_products_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $chk_orders_products_query, $chk_orders_products_query_numrows);
 
         $chk_orders_products = $db->Execute($chk_orders_products_query);
         ?>
@@ -127,8 +127,8 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 
         <table class="table">
           <tr>
-            <td><?php echo $chk_orders_products_split->display_count($chk_orders_products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-            <td class="text-right"><?php echo $chk_orders_products_split->display_links($chk_orders_products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(array('page', 'x', 'y'))); ?></td>
+            <td><?php echo $chk_orders_products_split->display_count($chk_orders_products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+            <td class="text-right"><?php echo $chk_orders_products_split->display_links($chk_orders_products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params(array('page', 'x', 'y'))); ?></td>
           </tr>
         </table>
 
@@ -149,7 +149,7 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
                                  ORDER BY products_ordered DESC, products_name";
 
           $products_query_numrows = '';
-          $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $products_query_raw, $products_query_numrows);
+          $products_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $products_query_raw, $products_query_numrows);
           $products = $db->Execute($products_query_raw);
           foreach ($products as $product) {
             $cPath = zen_get_product_path($product['products_id']);
@@ -164,8 +164,8 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
         </table>
         <table class="table">
           <tr>
-            <td><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-            <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_REPORTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <td><?php echo $products_split->display_count($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+            <td class="text-right"><?php echo $products_split->display_links($products_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_REPORTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page']); ?></td>
           </tr>
         </table>
         <?php

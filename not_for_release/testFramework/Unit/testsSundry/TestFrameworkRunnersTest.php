@@ -1150,10 +1150,8 @@ BASH
         $this->assertContains('Detected shell user: runner', $output);
         $this->assertContains('Main config profile: runner', $output);
         $this->assertContains('Main config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.main.configure.php', $output);
-        $this->assertContains('Store config profile: runner', $output);
-        $this->assertContains('Store config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.store.configure.php', $output);
-        $this->assertContains('Admin config profile: runner', $output);
-        $this->assertContains('Admin config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.admin.configure.php', $output);
+        $this->assertContains('App config profile: runner', $output);
+        $this->assertContains('App config: ' . $this->rootPath . '/not_for_release/testFramework/Support/configs/runner.configure.php', $output);
         $this->assertContains('Worker token: (none)', $output);
         $this->assertContains('Database: db_testing', $output);
         $this->assertContains('Progress file: ' . $this->rootPath . '/progress.json', $output);
@@ -1179,8 +1177,7 @@ BASH
         $this->assertSame(0, $exitCode, implode(PHP_EOL, $output));
         $this->assertContains('Detected shell user: runner', $output);
         $this->assertContains('Main config profile: runner', $output);
-        $this->assertContains('Store config profile: runner', $output);
-        $this->assertContains('Admin config profile: runner', $output);
+        $this->assertContains('App config profile: runner', $output);
         $this->assertContains('Worker token: 2', $output);
         $this->assertContains('Database: db_ci_2', $output);
         $this->assertContains('Progress file: /tmp/zc-runtime/progress_2.json', $output);
@@ -1215,7 +1212,7 @@ BASH
         $this->assertSame(0, $exitCode, $joinedOutput);
         $this->assertContains('Available commands:', $output);
         $this->assertStringContainsString(
-            'Warning: Plugin command discovery disabled: the MySQL connector for PHP is unavailable.',
+            'Warning: Command disabled: the MySQL connector for PHP is unavailable.',
             $joinedOutput
         );
         $this->assertStringContainsString('help', $joinedOutput);
@@ -1248,7 +1245,7 @@ BASH
         $this->assertSame(0, $exitCode, $joinedOutput);
         $this->assertContains('Available commands:', $output);
         $this->assertStringContainsString(
-            'Warning: Plugin command discovery disabled: store database configuration is unavailable.',
+            'Warning: Command disabled: store database configuration is unavailable.',
             $joinedOutput
         );
     }
@@ -1278,7 +1275,7 @@ PHP
         $this->assertSame(0, $exitCode, $joinedOutput);
         $this->assertContains('Available commands:', $output);
         $this->assertStringContainsString(
-            'Warning: Plugin command discovery disabled: unable to connect to the store database.',
+            'Warning: Command disabled: unable to connect to the store database.',
             $joinedOutput
         );
     }
@@ -1307,6 +1304,7 @@ PHP
         mkdir($root, 0777, true);
         mkdir($root . '/bin', 0777, true);
         mkdir($root . '/includes/functions', 0777, true);
+        mkdir($root . '/includes/extra_configures', 0777, true);
         mkdir($root . '/includes/classes/traits', 0777, true);
         mkdir($root . '/includes/classes/vendors/AuraAutoload/src', 0777, true);
         mkdir($root . '/includes/classes/vendors/polyfill-mbstring/Resources/unidata', 0777, true);
@@ -1321,8 +1319,12 @@ PHP
         copy($this->rootPath . '/includes/database_tables.php', $root . '/includes/database_tables.php');
         copy($this->rootPath . '/includes/functions/php_polyfills.php', $root . '/includes/functions/php_polyfills.php');
         copy($this->rootPath . '/includes/functions/zen_define_default.php', $root . '/includes/functions/zen_define_default.php');
+        copy($this->rootPath . '/includes/functions/zen_config.php', $root . '/includes/functions/zen_config.php');
+        copy($this->rootPath . '/includes/functions/functions_error_handling.php', $root . '/includes/functions/functions_error_handling.php');
+        copy($this->rootPath . '/includes/extra_configures/set_time_zone.php', $root . '/includes/extra_configures/set_time_zone.php');
         copy($this->rootPath . '/includes/classes/class.base.php', $root . '/includes/classes/class.base.php');
         copy($this->rootPath . '/includes/classes/EventDto.php', $root . '/includes/classes/EventDto.php');
+        copy($this->rootPath . '/includes/classes/traits/Singleton.php', $root . '/includes/classes/traits/Singleton.php');
         copy($this->rootPath . '/includes/classes/traits/NotifierManager.php', $root . '/includes/classes/traits/NotifierManager.php');
         copy($this->rootPath . '/includes/classes/traits/ObserverManager.php', $root . '/includes/classes/traits/ObserverManager.php');
         copy($this->rootPath . '/includes/classes/vendors/AuraAutoload/src/Loader.php', $root . '/includes/classes/vendors/AuraAutoload/src/Loader.php');
@@ -1342,6 +1344,7 @@ PHP
             'ConsoleKernel.php',
             'ConsoleOutput.php',
             'PluginCommandDiscovery.php',
+            'TrustedPluginClassLoader.php',
             'TrustedPluginVersionResolver.php',
         ] as $file) {
             copy($this->rootPath . '/includes/classes/Console/' . $file, $root . '/includes/classes/Console/' . $file);

@@ -21,7 +21,7 @@ $parameters = [
   'additional_images' => [],
   'products_price' => '0.0000',
   'products_price_w' => '0',
-  'products_virtual' => DEFAULT_DOCUMENT_PRODUCT_PRODUCTS_VIRTUAL,
+  'products_virtual' => zen_config('DEFAULT_DOCUMENT_PRODUCT_PRODUCTS_VIRTUAL'),
   'products_weight' => '0',
   'products_length' => '',
   'products_width' => '',
@@ -31,7 +31,7 @@ $parameters = [
   'products_last_modified' => '',
   'products_date_available' => '',
   'products_status' => '1',
-  'products_tax_class_id' => DEFAULT_DOCUMENT_PRODUCT_TAX_CLASS_ID,
+  'products_tax_class_id' => zen_config('DEFAULT_DOCUMENT_PRODUCT_TAX_CLASS_ID'),
   'manufacturers_id' => '',
   'products_quantity_order_min' => '1',
   'products_quantity_order_units' => '1',
@@ -39,8 +39,8 @@ $parameters = [
   'product_is_free' => '0',
   'product_is_call' => '0',
   'products_quantity_mixed' => '1',
-  'product_is_always_free_shipping' => DEFAULT_DOCUMENT_PRODUCT_PRODUCTS_IS_ALWAYS_FREE_SHIPPING,
-  'products_qty_box_status' => PRODUCTS_QTY_BOX_STATUS,
+  'product_is_always_free_shipping' => zen_config('DEFAULT_DOCUMENT_PRODUCT_PRODUCTS_IS_ALWAYS_FREE_SHIPPING'),
+  'products_qty_box_status' => zen_config('PRODUCTS_QTY_BOX_STATUS'),
   'products_quantity_order_max' => '0',
   'products_sort_order' => '0',
   'products_discount_type' => '0',
@@ -135,7 +135,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     }
     ?>
   <h3 class="col-sm-11"><?= sprintf(TEXT_NEW_PRODUCT, zen_output_generated_category_path($current_category_id)) ?></h3>
-  <div class="col-sm-1"><?= zen_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT, 'class="object-fit-contain"') ?></div>
+  <div class="col-sm-1"><?= zen_info_image($cInfo->categories_image, $cInfo->categories_name, zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT'), 'class="object-fit-contain"') ?></div>
     <div class="floatButton text-right">
       <button type="submit" class="btn btn-primary"><?= IMAGE_PREVIEW ?></button>&nbsp;&nbsp;
         <a href="<?= zen_href_link(
@@ -362,7 +362,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       </div>
     </div>
 <?php
-    if (WHOLESALE_PRICING_CONFIG !== 'false') {
+    if (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false') {
 ?>
     <div class="form-group">
         <?= zen_draw_label(TEXT_PRODUCTS_WHOLESALE_PRICE, 'products-price-w', 'class="col-sm-3 control-label"') ?>
@@ -507,7 +507,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
     if (!empty($pInfo->products_image)) { ?>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9 col-md-6">
-                <?= zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), MEDIUM_IMAGE_WIDTH) ?>
+                <?= zen_info_image($pInfo->products_image, (is_array($pInfo->products_name) ? $pInfo->products_name[$_SESSION['languages_id']] : $pInfo->products_name), zen_config('MEDIUM_IMAGE_WIDTH')) ?>
                 <br>
                 <?= $pInfo->products_image ?>
             </div>
@@ -544,7 +544,7 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
             <?= zen_draw_input_field('products_image_manual', '', 'class="form-control" id="products_image_manual"') ?>
         </div>
     </div>
-    <?php if (ADDITIONAL_IMAGES_HANDLING === 'Database') { ?>
+    <?php if (zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') { ?>
         <h3><?= TEXT_PRODUCTS_ADDITIONAL_IMAGES ?></h3>
         <?php if (!empty($additional_images)) { ?>
             <div class="form-group">
@@ -717,28 +717,28 @@ if (zen_get_categories_status($current_category_id) == 0 && $pInfo->products_sta
       <h2><?= TEXT_SHIPPING_PACKAGE_DETAILS ?></h2>
   <div class="form-group">
       <?= zen_draw_label(TEXT_PRODUCTS_WEIGHT, 'products_weight', 'class="col-sm-3 control-label"') ?>
-      <?= zen_get_translated_config_setting('SHIPPING_WEIGHT_UNITS', 'TEXT_SHIPPING_', SHIPPING_WEIGHT_UNITS) ?>
+      <?= zen_get_translated_config_setting('SHIPPING_WEIGHT_UNITS', 'TEXT_SHIPPING_', zen_config('SHIPPING_WEIGHT_UNITS')) ?>
     <div class="col-sm-6 col-md-4">
         <?= zen_draw_input_field('products_weight', $pInfo->products_weight, 'class="form-control" id="products_weight" inputmode="decimal"') ?>
     </div>
   </div>
   <div class="form-group">
     <?= zen_draw_label(TEXT_PRODUCTS_LENGTH, 'products_length', 'class="col-sm-3 control-label"') ?>
-      <?= zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', SHIPPING_DIMENSION_UNITS) ?>
+      <?= zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', zen_config('SHIPPING_DIMENSION_UNITS')) ?>
     <div class="col-sm-6 col-md-4">
     <?= zen_draw_input_field('products_length', $pInfo->products_length, 'class="form-control" id="products_length" inputmode="decimal"') ?>
     </div>
   </div>
   <div class="form-group">
      <?= zen_draw_label(TEXT_PRODUCTS_WIDTH, 'products_width', 'class="col-sm-3 control-label"') ?>
-      <?= zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', SHIPPING_DIMENSION_UNITS) ?>
+      <?= zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', zen_config('SHIPPING_DIMENSION_UNITS')) ?>
     <div class="col-sm-6 col-md-4">
     <?= zen_draw_input_field('products_width', $pInfo->products_width, 'class="form-control" id="products_width" inputmode="decimal"') ?>
     </div>
   </div>
     <div class="form-group">
     <?= zen_draw_label(TEXT_PRODUCTS_HEIGHT, 'products_height', 'class="col-sm-3 control-label"') ?>
-        <?= zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', SHIPPING_DIMENSION_UNITS) ?>
+        <?= zen_get_translated_config_setting('SHIPPING_DIMENSION_UNITS', 'TEXT_SHIPPING_', zen_config('SHIPPING_DIMENSION_UNITS')) ?>
     <div class="col-sm-6 col-md-4">
     <?= zen_draw_input_field('products_height', $pInfo->products_height, 'class="form-control" id="products_height" inputmode="decimal"') ?>
     </div>

@@ -19,32 +19,32 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         </div>
     <?php
     }
-    ?>
+?>
 
     <?php
-    if (file_exists(DIR_FS_INSTALL) && !defined('DEVELOPER_MODE')) { ?>
+if (file_exists(DIR_FS_INSTALL) && !defined('DEVELOPER_MODE')) { ?>
         <div class="alert alert-secondary py-3">
             <h6><?= TEXT_COMPLETION_INSTALLATION_DIRECTORY_WARNING ?></h6>
             <h6><?= TEXT_COMPLETION_INSTALLATION_DIRECTORY_EXPLANATION ?></h6>
         </div>
     <?php
-    } ?>
+} ?>
 
     <div class="alert alert-primary py-3">
         <h5>
             <?php
-            if ($isUpgrade) { ?>
+        if ($isUpgrade) { ?>
                 <?= TEXT_COMPLETION_UPGRADE_COMPLETE ?>
             <?php
-            } else { ?>
+        } else { ?>
                 <?= TEXT_COMPLETION_INSTALL_COMPLETE ?>
 
                 <?php
-                if ($catalogLink !== '#') {
-                    echo TEXT_COMPLETION_INSTALL_LINKS_BELOW;
-                } ?>
-            <?php
+            if ($catalogLink !== '#') {
+                echo TEXT_COMPLETION_INSTALL_LINKS_BELOW;
             } ?>
+            <?php
+        } ?>
         </h5>
 
         <?php

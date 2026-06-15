@@ -28,9 +28,9 @@ $search_result = zen_not_null($_GET['search'] ?? null);
 
 $search_parameter = $search_result ? '&search=' . zen_preserve_search_quotes($_GET['search']) : '';
 $keywords = $search_result ? zen_db_input(zen_db_prepare_input($_GET['search'])) : '';
-$max_results = MAX_DISPLAY_RESULTS_CATEGORIES;
+$max_results = zen_config('MAX_DISPLAY_RESULTS_CATEGORIES');
 if (!empty($search_parameter)) {
-    $max_results = MAX_DISPLAY_SEARCH_RESULTS;
+    $max_results = zen_config('MAX_DISPLAY_SEARCH_RESULTS');
 }
 
 $page_num = (int)($_GET['page'] ?? 1);
@@ -67,10 +67,10 @@ if (isset($current_category_id) && isset($_GET['pID'])) {
 }
 
 if (!isset($_SESSION['categories_sort_order'])) {
-    $_SESSION['categories_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;
+    $_SESSION['categories_sort_order'] = zen_config('CATEGORIES_PRODUCTS_SORT_ORDER');
 }
 if (!isset($_SESSION['products_sort_order'])) {
-    $_SESSION['products_sort_order'] = CATEGORIES_PRODUCTS_SORT_ORDER;
+    $_SESSION['products_sort_order'] = zen_config('CATEGORIES_PRODUCTS_SORT_ORDER');
 }
 
 if (!empty($action)) {
@@ -563,7 +563,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
                 $show_prod_labels = ($search_result || $categories->EOF);
 
-                $wholesale_pricing_enabled = (WHOLESALE_PRICING_CONFIG !== 'false');
+                $wholesale_pricing_enabled = (zen_config('WHOLESALE_PRICING_CONFIG') !== 'false');
                 $wholesale_pricing_indicator = '<span class="text-danger">*</span>';
                 $wholesale_pricing_heading = ($wholesale_pricing_enabled === true) ? '<br>' . $wholesale_pricing_indicator . '<small>' . TABLE_HEADING_HAS_WHOLESALE_PRICE . '</small>' : '';
                 ?>
@@ -609,7 +609,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     }
                 }
 ?>
-                        <?php if ($show_prod_labels || SHOW_COUNTS_ADMIN === 'true') { ?>
+                        <?php if ($show_prod_labels || zen_config('SHOW_COUNTS_ADMIN') === 'true') { ?>
                             <th class="text-right hidden-sm hidden-xs"><?= TABLE_HEADING_QUANTITY ?></th>
                         <?php } ?>
 <?php
@@ -724,16 +724,16 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                 </a>
                             </td>
                             <td class="hidden-sm hidden-xs imageView<?= $additionalClass ?>">
-                                <?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="object-fit-contain"') ?>
+                                <?= zen_image(DIR_WS_CATALOG_IMAGES . $category['categories_image'], $category['categories_name'], zen_config('IMAGE_SHOPPING_CART_WIDTH'), zen_config('IMAGE_SHOPPING_CART_HEIGHT'), 'class="object-fit-contain"') ?>
                             </td>
                         <?php if ($show_prod_labels) { ?>
                             <td class="hidden-sm hidden-xs"><!-- no model for categories --></td>
                             <td class="hidden-sm hidden-xs"><!-- no price for categories --></td>
                         <?php } ?>
-                        <?php if ($show_prod_labels === true || SHOW_COUNTS_ADMIN === 'true') { ?>
+                        <?php if ($show_prod_labels === true || zen_config('SHOW_COUNTS_ADMIN') === 'true') { ?>
                             <td class="text-right hidden-sm hidden-xs">
                                 <?php
-                                if (SHOW_COUNTS_ADMIN === 'true') {
+                                if (zen_config('SHOW_COUNTS_ADMIN') === 'true') {
                                     // show counts
                                     $total_products = zen_get_products_to_categories($current_cID, true);
                                     $total_products_on = zen_get_products_to_categories($current_cID);
@@ -774,7 +774,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                         }
 ?>
                             <td class="text-right dataTableButtonCell actions">
-                            <?php if (SHOW_CATEGORY_PRODUCTS_LINKED_STATUS === 'true' && zen_get_products_to_categories($current_cID, true, 'products_active') === 'true') {
+                            <?php if (zen_config('SHOW_CATEGORY_PRODUCTS_LINKED_STATUS') === 'true' && zen_get_products_to_categories($current_cID, true, 'products_active') === 'true') {
                                 echo zen_icon('linked', IMAGE_ICON_LINKED, size: 'lg', hidden: true);
                             }
                             if ($category['categories_status'] === '1') { ?>
@@ -977,7 +977,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                                 </a>
                             </td>
                             <td class="hidden-sm hidden-xs imageView<?= $additionalClass ?>">
-                                <?= zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', IMAGE_SHOPPING_CART_WIDTH, IMAGE_SHOPPING_CART_HEIGHT, 'class="object-fit-contain"') ?>
+                                <?= zen_image(DIR_WS_CATALOG_IMAGES . zen_get_products_image($product['products_id']),'', zen_config('IMAGE_SHOPPING_CART_WIDTH'), zen_config('IMAGE_SHOPPING_CART_HEIGHT'), 'class="object-fit-contain"') ?>
                             </td>
                             <td class="hidden-sm hidden-xs"><?= $product['products_model'] ?></td>
                             <td class="text-right hidden-sm hidden-xs"><?= zen_get_products_display_price($product['products_id']) . $products_wholesale_indicator ?></td>
@@ -1498,7 +1498,7 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
                     <?= $products_split->display_count($products_query_numrows, $max_results, $page_num, TEXT_DISPLAY_NUMBER_OF_PRODUCTS) ?>
                 </div>
                 <div class="col-md-6">
-                    <?= $products_split->display_links($products_query_numrows, $max_results, MAX_DISPLAY_PAGE_LINKS, $page_num, zen_get_all_get_params(['page', 'info', 'x', 'y', 'pID'])) ?>
+                    <?= $products_split->display_links($products_query_numrows, $max_results, zen_config('MAX_DISPLAY_PAGE_LINKS'), $page_num, zen_get_all_get_params(['page', 'info', 'x', 'y', 'pID'])) ?>
                 </div>
             </div>
             <?php } ?>

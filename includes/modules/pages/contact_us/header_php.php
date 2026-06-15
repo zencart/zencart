@@ -61,16 +61,16 @@ if (isset($_GET['action']) && ($_GET['action'] === 'send')) {
             $send_to_array = [];
 
             // use contact us dropdown if defined and if a destination is provided
-            if (CONTACT_US_LIST !== '' && isset($_POST['send_to'])){
-                $send_to_array = explode(',', CONTACT_US_LIST);
+            if (zen_config('CONTACT_US_LIST') !== '' && isset($_POST['send_to'])){
+                $send_to_array = explode(',', zen_config('CONTACT_US_LIST'));
 
                 if (isset($send_to_array[$_POST['send_to']])) {
                     preg_match('/\<[^>]+\>/', $send_to_array[$_POST['send_to']], $send_email_array);
                 }
             }
 
-            $send_to_email = trim(EMAIL_FROM); // default to EMAIL_FROM
-            $send_to_name  = trim(STORE_NAME);  // default to STORE_NAME
+            $send_to_email = trim(zen_config('STORE_OWNER_EMAIL_ADDRESS')); // default to STORE_OWNER_EMAIL_ADDRESS
+            $send_to_name  = trim(zen_config('STORE_NAME'));  // default to STORE_NAME
 
             // Assign email destination from array
             if (!empty($send_email_array)) {
@@ -115,11 +115,6 @@ if (isset($_GET['action']) && ($_GET['action'] === 'send')) {
     }
 } // end action==send
 
-
-if (ENABLE_SSL === 'true' && $request_type !== 'SSL') {
-    zen_redirect(zen_href_link(FILENAME_CONTACT_US, '', 'SSL'));
-}
-
 $name = $name ?? '';
 $email_address = $email_address ?? '';
 
@@ -142,9 +137,9 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
 // Otherwise, it's possible to submit the form without actually selecting a name!
 //
 $send_to_array = [];
-if (CONTACT_US_LIST !== ''){
+if (zen_config('CONTACT_US_LIST') !== ''){
     $send_to_array[] = ['id' => '', 'text' => PLEASE_SELECT];
-    foreach (explode(',', CONTACT_US_LIST) as $k => $v) {
+    foreach (explode(',', zen_config('CONTACT_US_LIST')) as $k => $v) {
         $send_to_array[] = ['id' => (string)$k, 'text' => preg_replace('/\<[^*]*/', '', $v)];
     }
     $send_to_default = count($send_to_array) + 1;

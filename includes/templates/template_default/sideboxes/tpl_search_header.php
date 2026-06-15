@@ -8,7 +8,7 @@
  * @version $Id: piloujp 2025 Aug 29 Modified in v2.2.0 $
  */
 $content = '';
-$content .= zen_draw_form('quick_find_header', zen_href_link(FILENAME_SEARCH_RESULT, '', $request_type, false), 'get');
+$content .= zen_draw_form('quick_find_header', zen_href_link(FILENAME_SEARCH_RESULT, '', '', false), 'get');
 $content .= zen_draw_hidden_field('main_page', FILENAME_SEARCH_RESULT);
 $content .= zen_draw_hidden_field('search_in_description', '1') . zen_hide_session_id();
 

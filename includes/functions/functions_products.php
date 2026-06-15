@@ -49,7 +49,7 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
         $response_code = 410;
     }
 
-    if (defined('DISABLED_PRODUCTS_TRIGGER_HTTP200') && DISABLED_PRODUCTS_TRIGGER_HTTP200 === 'true') {
+    if (zen_config('DISABLED_PRODUCTS_TRIGGER_HTTP200') === 'true') {
         $response_code = 200;
     }
 
@@ -171,7 +171,7 @@ function zen_get_upcoming_date_range(): string
 function zen_get_new_date_range($time_limit = false): string
 {
     if ($time_limit == false) {
-        $time_limit = (int)SHOW_NEW_PRODUCTS_LIMIT;
+        $time_limit = (int)zen_config('SHOW_NEW_PRODUCTS_LIMIT');
     }
     // 120 days; 24 hours; 60 mins; 60secs
     $date_range = time() - ($time_limit * 24 * 60 * 60);
@@ -180,10 +180,10 @@ function zen_get_new_date_range($time_limit = false): string
 
     $zc_new_date = date('Ymd', $date_range);
     switch (true) {
-        case (SHOW_NEW_PRODUCTS_LIMIT === 0):
+        case ((int)zen_config('SHOW_NEW_PRODUCTS_LIMIT') === 0):
             $new_range = '';
             break;
-        case (SHOW_NEW_PRODUCTS_LIMIT === 1):
+        case ((int)zen_config('SHOW_NEW_PRODUCTS_LIMIT') === 1):
             $zc_new_date = date('Ym', time()) . '01';
             $new_range = ' AND p.products_date_added >= ' . $zc_new_date;
             break;
@@ -192,7 +192,7 @@ function zen_get_new_date_range($time_limit = false): string
             break;
     }
 
-    if (SHOW_NEW_PRODUCTS_UPCOMING_MASKED !== '0') {
+    if (zen_config('SHOW_NEW_PRODUCTS_UPCOMING_MASKED') !== '0') {
         // do not include upcoming in new
         $new_range .= " AND (p.products_date_available <= " . $upcoming_mask . " OR p.products_date_available IS NULL)";
     }
@@ -536,7 +536,7 @@ function zen_check_stock($products_id, $products_quantity): string
     // Give an observer the opportunity to change the out-of-stock message.
     $the_message = '';
     if ($stock_left < 0) {
-        $out_of_stock_message = STOCK_MARK_PRODUCT_OUT_OF_STOCK;
+        $out_of_stock_message = zen_config('STOCK_MARK_PRODUCT_OUT_OF_STOCK');
         $zco_notifier->notify(
             'ZEN_CHECK_STOCK_MESSAGE',
             [
@@ -644,7 +644,7 @@ function zen_get_products_type($product_id): int
  * @return string
  * @since ZC v1.2.0d
  */
-function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height = SMALL_IMAGE_HEIGHT): string
+function zen_get_products_image($product_id, $width = null, $height = null): string
 {
     $image = (new Product((int)$product_id))->get('products_image') ?? '';
     if (empty($image)) {
@@ -654,7 +654,7 @@ function zen_get_products_image($product_id, $width = SMALL_IMAGE_WIDTH, $height
     if (IS_ADMIN_FLAG === true) {
         return $image;
     }
-    return zen_image(DIR_WS_IMAGES . $image, zen_get_products_name($product_id), $width, $height);
+    return zen_image(DIR_WS_IMAGES . $image, zen_get_products_name($product_id), $width ?? zen_config('SMALL_IMAGE_WIDTH'), $height ?? zen_config('SMALL_IMAGE_HEIGHT'));
 }
 
 /**
@@ -830,7 +830,7 @@ function zen_remove_product($product_id, $ptc = 'true'): void
           WHERE products_id = $product_id
             AND products_image IS NOT NULL
             AND products_image != ''
-            AND products_image NOT LIKE '%" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'
+            AND products_image NOT LIKE '%" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) . "'
           LIMIT 1"
     );
 
@@ -847,8 +847,8 @@ function zen_remove_product($product_id, $ptc = 'true'): void
             $products_image_extension = '.' . $image_parts['extension'];
             $products_image_base = $image_parts['dirname'] . DIRECTORY_SEPARATOR  . $image_parts['filename'];
 
-            $filename_medium = 'medium/' . $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
-            $filename_large = 'large/' . $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+            $filename_medium = 'medium/' . $products_image_base . zen_config('IMAGE_SUFFIX_MEDIUM') . $products_image_extension;
+            $filename_large = 'large/' . $products_image_base . zen_config('IMAGE_SUFFIX_LARGE') . $products_image_extension;
 
             if (file_exists(DIR_FS_CATALOG_IMAGES . $products_image)) {
                 @unlink(DIR_FS_CATALOG_IMAGES . $products_image);
@@ -863,7 +863,7 @@ function zen_remove_product($product_id, $ptc = 'true'): void
     }
 
     // remove additional images
-    if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
+    if (zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') {
         // Get all additional images for this product
         $images_query = $db->Execute("SELECT additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $product_id");
         foreach ($images_query as $image) {
@@ -1032,7 +1032,7 @@ function zen_copy_discounts_to_product($copy_from, $copy_to): bool
  */
 function zen_products_sort_order($includeOrderBy = true): string
 {
-    switch (PRODUCT_INFO_PREVIOUS_NEXT_SORT) {
+    switch (zen_config('PRODUCT_INFO_PREVIOUS_NEXT_SORT')) {
         case (0):
             $productSort = "LPAD(p.products_id,11,'0')";
             $productSort = 'p.products_id';

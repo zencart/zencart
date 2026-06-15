@@ -77,7 +77,7 @@ class moneyorder extends base
             }
 
             if (IS_ADMIN_FLAG === true && (MODULE_PAYMENT_MONEYORDER_PAYTO == 'the Store Owner/Website Name' || MODULE_PAYMENT_MONEYORDER_PAYTO == '')) {
-                $this->title .= '<span class="alert"> (not configured - needs pay-to)</span>';
+                $this->title .= '<span class="alert">' . MODULE_PAYMENT_MONEYORDER_TEXT_MISSING_INFO . '</span>';
             }
 
             if ((int)MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {

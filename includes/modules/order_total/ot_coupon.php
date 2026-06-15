@@ -265,10 +265,8 @@ class ot_coupon extends base
      */
     protected function generateCouponPopupLink($coupon_id, $coupon_code)
     {
-        global $request_type;
-
         $couponLink = '<a href="javascript:couponpopupWindow(\'' .
-            zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_id, $request_type) .
+            zen_href_link(FILENAME_POPUP_COUPON_HELP, 'cID=' . $coupon_id) .
             '\')"' .
             ' title="' . TEXT_COUPON_LINK_TITLE . '"' .
             '>' . $coupon_code . '</a>';

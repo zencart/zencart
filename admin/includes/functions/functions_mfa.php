@@ -34,7 +34,7 @@ function zen_mfa_handler(array $admin_info = []): bool
 
     $user_mfa_data = json_decode($admin_info['mfa'] ?? '', true, 2);
 
-    $mfa_status_of_store = MFA_ENABLED === 'True';
+    $mfa_status_of_store = zen_config('MFA_ENABLED') === 'True';
     if ($mfa_status_of_store === false) {
         return true;
     }
@@ -150,7 +150,7 @@ function zen_mfa_by_email(array $admin_info = []): bool
         'EMAIL_MESSAGE_HTML' => sprintf(TEXT_MFA_EMAIL_BODY, $token, $_SERVER['REMOTE_ADDR']),
     ];
     // send email
-    $email_response = zen_mail($admin_info['admin_name'], $admin_info['email'], TEXT_MFA_EMAIL_SUBJECT, $text_msg, STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
+    $email_response = zen_mail($admin_info['admin_name'], $admin_info['email'], TEXT_MFA_EMAIL_SUBJECT, $text_msg, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'no_archive');
 
     // zen_mail()'s response must be a blank string (it will be false on abort, or error message string on failure)
     return $email_response === '';

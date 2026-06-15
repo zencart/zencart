@@ -16,7 +16,7 @@ $breadcrumb->add(BREADCRUMB_BRANDS, zen_href_link(FILENAME_BRANDS));
 $category_depth = 'brands';
 $typefilter = $_GET['typefilter'] = 'brands';
 
-if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
+if ((int)zen_config('PRODUCTS_MANUFACTURERS_STATUS') === 1) {
     $listing_sql =
         "SELECT DISTINCT m.manufacturers_name, m.manufacturers_image, m.manufacturers_id, m.featured
            FROM " . TABLE_MANUFACTURERS . " m
@@ -53,13 +53,13 @@ foreach ($listing as $record) {
 // These are "soft" configuration setting that can be overridden on a site-specific basis.
 //
 if (!defined('BRANDS_IMAGE_WIDTH')) {
-    define('BRANDS_IMAGE_WIDTH', IMAGE_PRODUCT_LISTING_WIDTH);
+    define('BRANDS_IMAGE_WIDTH', zen_config('IMAGE_PRODUCT_LISTING_WIDTH'));
 }
 if (!defined('BRANDS_IMAGE_HEIGHT')) {
-    define('BRANDS_IMAGE_HEIGHT', IMAGE_PRODUCT_LISTING_HEIGHT);
+    define('BRANDS_IMAGE_HEIGHT', zen_config('IMAGE_PRODUCT_LISTING_HEIGHT'));
 }
 if (!defined('BRANDS_MAX_COLUMNS')) {
-    $product_listing_columns_per_row = (int)PRODUCT_LISTING_COLUMNS_PER_ROW;
+    $product_listing_columns_per_row = (int)zen_config('PRODUCT_LISTING_COLUMNS_PER_ROW');
     if ($product_listing_columns_per_row < 1) {
         $product_listing_columns_per_row = 1;
     }

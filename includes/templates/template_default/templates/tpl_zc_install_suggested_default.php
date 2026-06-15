@@ -238,19 +238,19 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
           <br>
           <ul style='list-style-type:square'>
             <li>
-              Your <tt><strong>/includes/configure.php</strong></tt> and/or <tt><strong>/admin/includes/configure.php</strong></tt> files contain invalid <em>path information</em> and/or invalid <em>database-connection information</em>.
+              Your <tt><strong>/includes/configure.php</strong></tt> file contains invalid <em>path information</em> and/or invalid <em>database-connection information</em>.
             <br>
             </li>
             <li>
-              If you recently edited your configure.php files for any reason, or perhaps moved your site to a different folder or different server, then you will need to review and update all your settings to the correct values for your server.
+              If you recently edited your configure.php file for any reason, or perhaps moved your site to a different folder or different server, then you will need to review and update all your settings to the correct values for your server.
               <br>
             </li>
             <li>
-              Additionally, if the permissions have been changed on your configure.php files, then perhaps they are too low for the files to be read.
+              Additionally, if the permissions have been changed on your configure.php file, then perhaps they are too low for the file to be read.
               <br>
             </li>
             <li>
-              Or the configure.php files could be missing altogether.
+              Or the configure.php file could be missing altogether.
               <br>
             </li>
             <li>
@@ -258,7 +258,7 @@ $docsPath = (file_exists('docs/index.html')) ? 'docs/index.html' : (file_exists(
               <br>
             </li>
             <li>
-              See the <a href="https://docs.zen-cart.com" rel="noopener" target="_blank">Online Documentation</a> area on the Zen Cart<sup>&reg;</sup> website for assistance.
+              See the <a href="https://docs.zen-cart.com" rel="noopener" target="_blank">Online Documentation</a> on the Zen Cart<sup>&reg;</sup> website for assistance.
             </li>
           </ul>
         </li>

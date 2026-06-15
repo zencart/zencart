@@ -85,7 +85,7 @@ if ($products_filter > 0) {
 require(DIR_WS_MODULES . FILENAME_PREV_NEXT);
 
 // target_category_id: the root/base target category whose subcategories will be displayed for linking into
-$target_category_id = (int)($_POST['target_category_id'] ?? $_GET['target_category_id'] ?? P2C_TARGET_CATEGORY_DEFAULT);
+$target_category_id = (int)($_POST['target_category_id'] ?? $_GET['target_category_id'] ?? zen_config('P2C_TARGET_CATEGORY_DEFAULT'));
 $_GET['target_category_id'] = $target_category_id;
 
 if (!empty($action)) {
@@ -552,8 +552,8 @@ if (empty($_SESSION['hide_linked_categories'])) {
                             if ($products_filter > 0) {
                                 $heading[] = ['text' => '<h4>ID#' . $product_to_copy->fields['products_id'] . ' - ' . $product_to_copy->fields['products_name'] . '</h4>'];
                                 $contents[] = [
-                                    'text' => zen_image(DIR_WS_CATALOG_IMAGES . $product_to_copy->fields['products_image'], $product_to_copy->fields['products_name'], SMALL_IMAGE_WIDTH,
-                                        SMALL_IMAGE_HEIGHT)
+                                    'text' => zen_image(DIR_WS_CATALOG_IMAGES . $product_to_copy->fields['products_image'], $product_to_copy->fields['products_name'], zen_config('SMALL_IMAGE_WIDTH'),
+                                        zen_config('SMALL_IMAGE_HEIGHT'))
                                 ];
                                 $contents[] = ['text' => TEXT_PRODUCTS_NAME . $product_to_copy->fields['products_name']];
                                 $contents[] = ['text' => TEXT_PRODUCTS_MODEL . $product_to_copy->fields['products_model']];
@@ -646,7 +646,7 @@ if (empty($_SESSION['hide_linked_categories'])) {
                         <noscript><input type="submit" value="<?= IMAGE_DISPLAY ?>"></noscript>
                         <?php
                         echo '</form>';
-                        if ($target_category_id !== (int)P2C_TARGET_CATEGORY_DEFAULT) { // show a Set Default button if the selected target category is different from the saved default
+                        if ($target_category_id !== (int)zen_config('P2C_TARGET_CATEGORY_DEFAULT')) { // show a Set Default button if the selected target category is different from the saved default
                             echo zen_draw_form('set_default_target_category_form', FILENAME_PRODUCTS_TO_CATEGORIES, 'action=set_default_target_category' . '&products_filter=' . $products_filter . '&current_category_id=' . $current_category_id, 'post'); ?>
                             <button type="submit" class="btn btn-info" title="<?= BUTTON_SET_DEFAULT_TARGET_CATEGORY_TITLE ?>"><?= BUTTON_SET_DEFAULT_TARGET_CATEGORY ?></span></button>
                             <?php
@@ -680,7 +680,7 @@ if (empty($_SESSION['hide_linked_categories'])) {
                         <?php $cnt_columns = 0; ?>
                         <tr class="dataTableHeadingRow">
                             <?php
-                            while ($cnt_columns !== (int)MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS) {
+                            while ($cnt_columns !== (int)zen_config('MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS')) {
                                 $cnt_columns++;
                                 ?>
                                 <th class="dataTableHeadingContent"><?= TEXT_CATEGORIES_NAME ?></th>
@@ -720,11 +720,11 @@ if (empty($_SESSION['hide_linked_categories'])) {
                                echo '  <td class="dataTableContent"><label class="labelForCheck" title="' . TEXT_VALID_CATEGORIES_ID . ': ' . $categories_list->fields['categories_id'] . '">' . $zc_categories_checkbox . '<span>' . htmlspecialchars($categories_list->fields['categories_name'], ENT_COMPAT, CHARSET) . '</span></label></td>' . "\n";
                             } // span is required inside label to allow css selection for highlighting when input checked
 
-                            if ($cnt_columns === (int)MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS ||
+                            if ($cnt_columns === (int)zen_config('MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS') ||
                                 $cat_i === ($num_target_categories - 1)) {
                                 if ($cat_i === ($num_target_categories - 1) &&
-                                    $cnt_columns !== (int)MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS) {
-                                    while ($cnt_columns < (int)MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS) {
+                                    $cnt_columns !== (int)zen_config('MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS')) {
+                                    while ($cnt_columns < (int)zen_config('MAX_DISPLAY_PRODUCTS_TO_CATEGORIES_COLUMNS')) {
                                         $cnt_columns++;
                                         ?>
                                         <td class="dataTableContent">&nbsp;</td>

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Payment Class.
  *
@@ -27,38 +29,33 @@ class payment
 
     /**
      * $doesCollectsCardDataOnsite is a flag to indicate if card details are collected on site
-     * @var boolean
      */
-    public bool $doesCollectsCardDataOnsite;
+    public bool $doesCollectsCardDataOnsite = false;
     /**
      * $form_action_url is the URL to process the payment or not set for local processing
-     * @var string
      */
-    public string $form_action_url;
+    public string $form_action_url = '';
     /**
      * $modules array of payment module names
-     * @var array
      */
-    public array $modules;
+    public array $modules = [];
     /**
      * $paymentClass is a payment class
-     * @var class
      */
-    public $paymentClass;
+    public ?object $paymentClass = null;
     /**
      * $selected_module is the selected payment module
-     * @var string
      */
-    public string $selected_module;
+    public string $selected_module = '';
 
-    public function __construct($module = '')
+    public function __construct(string $module = '')
     {
         global $language, $credit_covers, $messageStack, $languageLoader, $installedPlugins;
 
         $this->doesCollectsCardDataOnsite = false;
 
-        if (defined('MODULE_PAYMENT_INSTALLED') && !empty(MODULE_PAYMENT_INSTALLED)) {
-            $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
+        if (!empty(zen_config('MODULE_PAYMENT_INSTALLED'))) {
+            $this->modules = explode(';', zen_config('MODULE_PAYMENT_INSTALLED'));
         }
         $this->notify('NOTIFY_PAYMENT_CLASS_GET_INSTALLED_MODULES', $module);
 
@@ -76,22 +73,22 @@ class payment
 
         $include_modules = [];
 
-        if (!empty($module) && in_array($module . '.php', $this->modules) && isset($modules_found[$module . '.php'])) {
+        if (!empty($module) && in_array($module . '.php', $this->modules, true) && isset($modules_found[$module . '.php'])) {
             $this->selected_module = $module;
 
             $include_modules[] = ['class' => $module, 'file' => $module . '.php'];
         } else {
             // Free Payment Only shows
-            $freecharger_enabled = (defined('MODULE_PAYMENT_FREECHARGER_STATUS') && MODULE_PAYMENT_FREECHARGER_STATUS === 'True' && isset($modules_found['freecharger.php']));
-            if ($freecharger_enabled && $_SESSION['cart']->show_total() == 0 && (!isset($_SESSION['shipping']['cost']) || $_SESSION['shipping']['cost'] == 0)) {
+            $freecharger_enabled = (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') === 'True' && isset($modules_found['freecharger.php']));
+            if ($freecharger_enabled && empty($_SESSION['cart']->show_total()) && empty($_SESSION['shipping']['cost'])) {
                 $this->selected_module = $module;
-                $include_modules[] = ['class'=> 'freecharger', 'file' => 'freecharger.php'];
+                $include_modules[] = ['class' => 'freecharger', 'file' => 'freecharger.php'];
             } else {
                 // All Other Payment Modules show
                 foreach ($this->modules as $value) {
                     // double check that the module really exists before adding to the array
                     if (isset($modules_found[$value])) {
-                        $class = pathinfo($value, PATHINFO_FILENAME);
+                        $class = pathinfo($value, \PATHINFO_FILENAME);
                         // Don't show Free Payment Module
                         if ($class !== 'freecharger') {
                             $include_modules[] = ['class' => $class, 'file' => $value];
@@ -108,8 +105,8 @@ class payment
                 $lang_file = zen_get_file_directory(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/', $next_module['file'], 'false');
 
                 // -----
-                // If the language file's name doesn't start with 'lang.' (which they do,
-                // as of zc300), add that prefix for the cautionary message.
+                // If the language file's name doesn't start with 'lang.' (which they do, as of zc300),
+                // add that prefix for the cautionary message.
                 //
                 if (!str_starts_with($next_module['file'], 'lang.')) {
                     $lang_file = str_replace($lang_file, $next_module['file'], 'lang.' . $next_module['file']);
@@ -142,13 +139,13 @@ class payment
         // if there is only one payment method, select it as default because in
         // checkout_confirmation.php the $payment variable is being assigned the
         // $_POST['payment'] value which will be empty (no radio button selection possible)
-        if (zen_count_payment_modules() == 1 && (!isset($_SESSION['payment']) || !is_object($_SESSION['payment']))) {
+        if (zen_count_payment_modules() === 1 && (!isset($_SESSION['payment']) || !is_object($_SESSION['payment']))) {
             if (empty($credit_covers)) {
                 $_SESSION['payment'] = $include_modules[0]['class'];
             }
         }
 
-        if (!empty($module) && in_array($module, $this->modules) && isset($GLOBALS[$module]->form_action_url)) {
+        if (!empty($module) && in_array($module, $this->modules, true) && isset($GLOBALS[$module]->form_action_url)) {
             $this->form_action_url = $GLOBALS[$module]->form_action_url;
         }
     }
@@ -169,12 +166,10 @@ class payment
         return $credit_is_covered;
     }
 
-    // -----
-    // This protected method is used by various public methods to
-    // perform common determination of whether the currently-selected
-    // module is present, enabled and includes the submitted method.
-    //
     /**
+     * This protected method is used by various public methods to
+     * perform common determination of whether the currently-selected
+     * module is present AND enabled AND includes the submitted method.
      * @since ZC v2.1.0
      */
     protected function isPaymentModuleMethodPresent(string $method): bool
@@ -235,7 +230,7 @@ class payment
             '  }' . "\n\n";
 
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (!empty($GLOBALS[$class]->enabled)) {
                 $js .= $GLOBALS[$class]->javascript_validation();
             }
@@ -249,8 +244,8 @@ class payment
         $js .=  '    alert(error_message);' . "\n";
         $js .=  '    return false;' . "\n";
         $js .=  '  } else {' . "\n";
-        $js .=  ' var result = true; '  . "\n";
-        if ($this->doesCollectsCardDataOnsite === true && PADSS_AJAX_CHECKOUT === '1') {
+        $js .=  ' var result = true; ' . "\n";
+        if ($this->doesCollectsCardDataOnsite === true && zen_config('PADSS_AJAX_CHECKOUT') === '1') {
             $js .= '      result = !(doesCollectsCardDataOnsite(payment_value));' . "\n";
         }
         $js .=  ' if (result == false) doCollectsCardDataOnsite();' . "\n";
@@ -271,7 +266,7 @@ class payment
 
         $selection_array = [];
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (empty($GLOBALS[$class]->enabled)) {
                 continue;
             }
@@ -282,7 +277,7 @@ class payment
                 $selection['fields'][] = [
                     'title' => '',
                     'field' => zen_draw_hidden_field($class . '_collects_onsite', 'true', 'id="' . $class . '_collects_onsite"'),
-                    'tag' => ''
+                    'tag' => '',
                 ];
             }
             if (is_array($selection)) {
@@ -303,7 +298,7 @@ class payment
 
         $result = false;
         foreach ($this->modules as $value) {
-            $class = pathinfo($value, PATHINFO_FILENAME);
+            $class = pathinfo($value, \PATHINFO_FILENAME);
             if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class]) && $GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'in_special_checkout')) {
                 $module_result = $GLOBALS[$class]->in_special_checkout();
                 if ($module_result === true) {
@@ -362,7 +357,7 @@ class payment
      */
     public function process_button_ajax()
     {
-         if ($this->isPaymentModuleMethodPresent('process_button_ajax') === false) {
+        if ($this->isPaymentModuleMethodPresent('process_button_ajax') === false) {
             return;
         }
         return $GLOBALS[$this->selected_module]->process_button_ajax();
@@ -417,7 +412,7 @@ class payment
      */
     public function admin_notification($zf_order_id)
     {
-         if ($this->isPaymentModuleMethodPresent('admin_notification') === false) {
+        if ($this->isPaymentModuleMethodPresent('admin_notification') === false) {
             return;
         }
         return $GLOBALS[$this->selected_module]->admin_notification($zf_order_id);

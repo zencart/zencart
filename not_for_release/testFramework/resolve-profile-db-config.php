@@ -16,7 +16,7 @@ require_once $rootDir . '/not_for_release/testFramework/Support/TestConfigResolv
 putenv('ZC_TEST_WORKER');
 putenv('TEST_TOKEN');
 
-$configPath = TestConfigResolver::resolveConfigPath('store', $configBasePath);
+$configPath = TestConfigResolver::resolveConfigPath('configure', $configBasePath);
 require $configPath;
 
 $dbServer = defined('DB_SERVER') ? (string) DB_SERVER : '';

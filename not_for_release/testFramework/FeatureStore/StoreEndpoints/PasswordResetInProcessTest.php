@@ -40,11 +40,11 @@ class PasswordResetInProcessTest extends zcInProcessFeatureTestCaseStore
             ->assertOk()
             ->assertSee('Your password has been successfully updated. Please login using your email address and the password you have just created.');
 
-        $newHash = (string) TestDb::selectValue(
+        $newHash = (string)TestDb::selectValue(
             'SELECT customers_password FROM customers WHERE customers_id = :customer_id LIMIT 1',
             [':customer_id' => $reset['customer_id']]
         );
-        $tokenCount = (int) TestDb::selectValue(
+        $tokenCount = (int)TestDb::selectValue(
             'SELECT COUNT(*) FROM customer_password_reset_tokens WHERE customer_id = :customer_id',
             [':customer_id' => $reset['customer_id']]
         );
@@ -95,7 +95,7 @@ class PasswordResetInProcessTest extends zcInProcessFeatureTestCaseStore
             ->assertOk()
             ->assertSee('Thank you. If that email address is in our system, we will send password recovery instructions');
 
-        $token = (string) TestDb::selectValue(
+        $token = (string)TestDb::selectValue(
             'SELECT token
                FROM customer_password_reset_tokens
               WHERE customer_id = :customer_id
@@ -107,9 +107,9 @@ class PasswordResetInProcessTest extends zcInProcessFeatureTestCaseStore
         $this->assertNotSame('', $token);
 
         return [
-            'customer_id' => (int) $customer['customers_id'],
+            'customer_id' => (int)$customer['customers_id'],
             'email_address' => $profile['email_address'],
-            'old_hash' => (string) $customer['customers_password'],
+            'old_hash' => (string)$customer['customers_password'],
             'token' => $token,
         ];
     }

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * messageStack Class.
  *
@@ -27,7 +29,7 @@ class messageStack extends base
             return $this->size('default');
         }
 
-        trigger_error('Undefined property: ' . static::class . '::$' . $name, E_USER_WARNING);
+        trigger_error('Undefined property: ' . static::class . '::$' . $name, \E_USER_WARNING);
 
         return null;
     }
@@ -46,7 +48,7 @@ class messageStack extends base
         $message = trim($message);
         $duplicate = false;
 
-        if (strlen($message) > 0) {
+        if ($message !== '') {
 
             $theAlert['class'] = $class;
 
@@ -87,7 +89,7 @@ class messageStack extends base
         $messageToStack[] = [
             'class' => $class,
             'text' => $message,
-            'type' => $type
+            'type' => $type,
         ];
         $_SESSION['messageToStack'] = $messageToStack;
         $this->add($class, $message, $type);
@@ -228,22 +230,22 @@ class messageStack extends base
         return [
             'error' => [
                 'params' => 'class="messageStackError larger"',
-                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT),
+                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_ERROR, DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/' . ICON_IMAGE_ERROR, ICON_ERROR_ALT),
             ],
             'success' => [
                 'params' => 'class="messageStackSuccess larger"',
-                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT),
+                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_SUCCESS, DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/' . ICON_IMAGE_SUCCESS, ICON_SUCCESS_ALT),
             ],
             'warning' => [
                 'params' => 'class="messageStackWarning larger"',
-                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT),
+                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT),
             ],
             'caution' => [
                 'params' => 'class="messageStackCaution larger"',
-                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base,'images/icons'). '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT),
+                'icon' => zen_image($template->get_template_dir(ICON_IMAGE_WARNING, DIR_WS_TEMPLATE, $current_page_base, 'images/icons') . '/' . ICON_IMAGE_WARNING, ICON_WARNING_ALT),
             ],
             'default' => [
                 'params' => 'class="messageStackError larger"'],
-            ];
+        ];
     }
 }

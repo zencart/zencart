@@ -411,7 +411,7 @@ if (!empty($action)) {
                 // reset page when page is unknown
                 if ((empty($_GET['page']) || $_GET['page'] == '1') && !empty($_GET['fID'])) {
                     $check_page = $db->Execute($featured_query_raw);
-                    if ($check_page->RecordCount() > MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) {
+                    if ($check_page->RecordCount() > zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN')) {
                         $check_count = 0;
                         foreach ($check_page as $item) {
                             if ((int)$item['featured_id'] === (int)$_GET['fID']) {
@@ -419,7 +419,7 @@ if (!empty($action)) {
                             }
                             $check_count++;
                         }
-                        $_GET['page'] = round((($check_count / MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) + (fmod_round($check_count, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN) !== 0 ? .5 : 0)));
+                        $_GET['page'] = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN')) !== 0 ? .5 : 0)));
                         $page = $_GET['page'];
                     } else {
                         $_GET['page'] = 1;
@@ -427,7 +427,7 @@ if (!empty($action)) {
                 }
 
                 // create split page control
-                $featured_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $featured_query_raw, $featured_query_numrows);
+                $featured_split = new splitPageResults($_GET['page'], (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN'), $featured_query_raw, $featured_query_numrows);
                 $featureds = $db->Execute($featured_query_raw);
                 foreach ($featureds as $featured) {
                   if ((!isset($_GET['fID']) || (isset($_GET['fID']) && ((int)$_GET['fID'] === (int)$featured['featured_id']))) && !isset($fInfo)) {
@@ -511,8 +511,8 @@ if (!empty($action)) {
               </tbody>
             </table>
             <div class="row">
-              <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_FEATURED); ?></div>
-              <div class="col-sm-6 text-right"><?php echo $featured_split->display_links($featured_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], zen_get_all_get_params(['page', 'fID'])); ?></div>
+              <div class="col-sm-6"><?php echo $featured_split->display_count($featured_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN'), $_GET['page'], TEXT_DISPLAY_NUMBER_OF_FEATURED); ?></div>
+              <div class="col-sm-6 text-right"><?php echo $featured_split->display_links($featured_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_FEATURED_ADMIN'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $_GET['page'], zen_get_all_get_params(['page', 'fID'])); ?></div>
             </div>
           </div>
             <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 configurationColumnRight">
@@ -569,7 +569,7 @@ if (!empty($action)) {
                             $contents[] = ['text' => TEXT_INFO_DATE_ADDED . ' ' . zen_date_short($fInfo->featured_date_added)];
                             $contents[] = [
                                 'align' => 'text-center',
-                                'text' => zen_info_image($fInfo->products_image, htmlspecialchars($fInfo->products_name, ENT_COMPAT, CHARSET, true), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT)
+                                'text' => zen_info_image($fInfo->products_image, htmlspecialchars($fInfo->products_name, ENT_COMPAT, CHARSET, true), zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'))
                             ];
                             $contents[] = [
                                 'align' => 'text-center',

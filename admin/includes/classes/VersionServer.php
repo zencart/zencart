@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -11,9 +13,9 @@ class VersionServer
     protected string $projectVersionServer = 'https://ping.zen-cart.com/zcversioncheck';
     protected string $pluginVersionServer = 'https://ping.zen-cart.com/plugincheck';
 
-    protected const TIMEOUT = 3;
+    protected const int TIMEOUT = 3;
 
-    protected const CONNECTTIMEOUT = 2;
+    protected const int CONNECTTIMEOUT = 2;
 
     public function __construct()
     {
@@ -40,22 +42,22 @@ class VersionServer
     {
         $currentInfo = $this->getZcVersioninfo();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->projectVersionServer);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($currentInfo));
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Core Version Check ' . HTTP_SERVER);
+        curl_setopt($ch, \CURLOPT_URL, $this->projectVersionServer);
+        curl_setopt($ch, \CURLOPT_POST, 1);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, http_build_query($currentInfo));
+        curl_setopt($ch, \CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, \CURLOPT_HEADER, false);
+        curl_setopt($ch, \CURLOPT_TIMEOUT, self::TIMEOUT);
+        curl_setopt($ch, \CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, \CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, \CURLOPT_MAXREDIRS, 2);
+        curl_setopt($ch, \CURLOPT_USERAGENT, 'Core Version Check ' . HTTP_SERVER);
 
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $http_code = curl_getinfo($ch, \CURLINFO_HTTP_CODE);
 
         if ($errno > 0 || $response === false || $http_code > 299) {
             return json_decode($this->formatCurlError($errno, $error), true);
@@ -85,21 +87,21 @@ class VersionServer
 
         $currentInfo = $this->getZcVersioninfo();
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->pluginVersionServer . '/' . $keylist);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($currentInfo));
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 2);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Plugin Version Check ' . $type . ' ' . HTTP_SERVER);
+        curl_setopt($ch, \CURLOPT_URL, $this->pluginVersionServer . '/' . $keylist);
+        curl_setopt($ch, \CURLOPT_POST, 1);
+        curl_setopt($ch, \CURLOPT_POSTFIELDS, http_build_query($currentInfo));
+        curl_setopt($ch, \CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, \CURLOPT_HEADER, false);
+        curl_setopt($ch, \CURLOPT_TIMEOUT, self::TIMEOUT);
+        curl_setopt($ch, \CURLOPT_CONNECTTIMEOUT, self::CONNECTTIMEOUT);
+        curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, \CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, \CURLOPT_MAXREDIRS, 2);
+        curl_setopt($ch, \CURLOPT_USERAGENT, 'Plugin Version Check ' . $type . ' ' . HTTP_SERVER);
         $response = curl_exec($ch);
         $error = curl_error($ch);
         $errno = curl_errno($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $http_code = curl_getinfo($ch, \CURLINFO_HTTP_CODE);
 
         if ($errno > 0 || $response === false || $http_code > 299) {
             return $this->formatCurlError($errno, $error);
@@ -164,16 +166,14 @@ class VersionServer
 
         $country_iso = $this->getCountryIso();
 
-        $results = [
+        return [
             'currentVersionMajor' => PROJECT_VERSION_MAJOR,
             'currentVersionMinor' => PROJECT_VERSION_MINOR,
             'httpServer' => HTTP_SERVER,
-            'httpsServer' => HTTPS_SERVER,
             'storeCountry' => $country_iso,
             'systemInfo' => $systemInfo,
             'moduleInfo' => $moduleInfo,
         ];
-        return $results;
     }
 
     /**
@@ -181,22 +181,20 @@ class VersionServer
      */
     protected function getModuleinfo(): array
     {
-        $modules = [
-            'MODULE_PAYMENT_INSTALLED' => MODULE_PAYMENT_INSTALLED,
-            'MODULE_SHIPPING_INSTALLED' => MODULE_SHIPPING_INSTALLED,
-            'MODULE_ORDER_TOTAL_INSTALLED' => MODULE_ORDER_TOTAL_INSTALLED,
+        return [
+            'MODULE_PAYMENT_INSTALLED' => zen_config('MODULE_PAYMENT_INSTALLED'),
+            'MODULE_SHIPPING_INSTALLED' => zen_config('MODULE_SHIPPING_INSTALLED'),
+            'MODULE_ORDER_TOTAL_INSTALLED' => zen_config('MODULE_ORDER_TOTAL_INSTALLED'),
         ];
-
-        return $modules;
     }
 
     /**
      * @since ZC v1.5.5f
      */
-    protected function getCountryIso()
+    protected function getCountryIso(): string
     {
         global $db;
-        $result = $db->Execute('SELECT countries_iso_code_3 FROM ' . TABLE_COUNTRIES . ' WHERE countries_id = ' . (int)STORE_COUNTRY);
+        $result = $db->Execute('SELECT countries_iso_code_3 FROM ' . TABLE_COUNTRIES . ' WHERE countries_id = ' . (int)zen_config('STORE_COUNTRY'));
         if ($result->RecordCount()) {
             return $result->fields['countries_iso_code_3'] ?? '';
         }
