@@ -697,63 +697,97 @@ class Email
         // LOOKUP HTML AND CSS FILES according to current language and page/module
 
         // English files are assumed to be in the main directory, so we set it to blank. Other languages are assumed to be in a subdirectory.
-        $langfolder = (strtolower($_SESSION['languages_code']) === 'en') ? '' : (strtolower($_SESSION['languages_code']) . '/');
+        $langfolder = strtolower($_SESSION['languages_code']) . '/';
 
-        $filesToTest = [
-            DIR_FS_EMAIL_TEMPLATES . $langfolder . 'email_common.css',
-            DIR_FS_EMAIL_TEMPLATES . 'email_common.css',
+        /**
+         * Allow an observer to register additional HTML and CSS template folders to the lookup flow.
+         * Registered additional folders will be searched in the order they are registered, using the system /email directory as a fallback.
+         *
+         * KEY: A plugin should register its own email directory path via an observer class, with 4 simple steps:
+         *      1. use the InteractsWithPlugins and ObserverManager traits.
+         *      2. In the constructor, attach using $this->attach($this, ['NOTIFY_EMAIL_REGISTER_ADDITIONAL_TEMPLATE_DIRS']);
+         *         and initialize path detection using $this->detectZcPluginDetails(__DIR__);
+         *      3. Then create a function to listen for the NOTIFY_EMAIL_REGISTER_ADDITIONAL_TEMPLATE_DIRS event:
+         *         public function notify_email_register_additional_template_dirs(&$class, $eventID, $params, &$extra_email_template_paths) {
+         *             $extra_email_template_paths[] = $this->zcPluginPath . 'email';
+         *         }
+         *      4. And then your custom email template files should go in that /email directory (ie: zc_plugins/plugin-name/version/email)
+         */
+        $extra_email_template_paths = [];
+        $this->notify('NOTIFY_EMAIL_REGISTER_ADDITIONAL_TEMPLATE_DIRS', ['module' => $module, 'langfolder' => $langfolder, 'content' => $content], $extra_email_template_paths);
+
+        $rootsToCheck = [DIR_FS_EMAIL_TEMPLATES];
+        // Add LFI-safe paths to the beginning of the list.
+        $rootsToCheck = array_merge(
+            array_filter(array_map(static function ($val) {
+                return str_starts_with($val, DIR_FS_CATALOG) ? (rtrim($val, '/') . '/') : null;
+            }, $extra_email_template_paths)),
+            $rootsToCheck
+        );
+
+        $block['EMAIL_COMMON_CSS'] = '';
+
+        // FIND CSS FILE
+        $patternsToTest = [
+            $langfolder . 'email_common.css',
+            'email_common.css',
         ];
-
-        $block['EMAIL_COMMON_CSS'] = '';   // add this before the loop
         $found = false;
-        foreach ($filesToTest as $val) {
-            if (file_exists($val)) {
-                $contents = file_get_contents($val);
-                if ($contents === false) {
+        foreach ($rootsToCheck as $root) {
+            foreach ($patternsToTest as $pattern) {
+                if (empty($pattern)) {
                     continue;
                 }
-                $block['EMAIL_COMMON_CSS'] = $contents;
-                $found = true;
-                break;
+                $path = $root . $pattern;
+                if (file_exists($path)) {
+                    $contents = file_get_contents($path);
+                    if ($contents === false) {
+                        error_log(sprintf('ERROR: The email css file (%s) was found but cannot be read.', $path));
+                        continue;
+                    }
+                    $block['EMAIL_COMMON_CSS'] = $contents;
+                    $found = true;
+                    break 2;
+                }
             }
         }
-        if (false === $found) {
-            trigger_error('Missing common email CSS file: ' . DIR_FS_EMAIL_TEMPLATES . 'email_common.css', E_USER_WARNING);
+        if (!$found) {
+            trigger_error('Email Template Warning: Unable to locate email_common.css file for use in HTML email templates. Searched for: '
+                . implode(', ', $patternsToTest) . ' in: ' . implode(', ', $rootsToCheck), E_USER_WARNING);
         }
 
-        $template_filename_base = DIR_FS_EMAIL_TEMPLATES . $langfolder . 'email_template_';
-        $template_filename_base_en = DIR_FS_EMAIL_TEMPLATES . 'email_template_';
-        $template_filename = DIR_FS_EMAIL_TEMPLATES . $langfolder . 'email_template_' . $current_page_base . '.html';
-
-        $filesToTest = [
-            $template_filename_base . str_replace(['_extra', '_admin'], '', $module) . '.html',
-            $template_filename_base_en . str_replace(['_extra', '_admin'], '', $module) . '.html',
-            DIR_FS_EMAIL_TEMPLATES . $langfolder . 'email_template_' . $current_page_base . '.html',
-            DIR_FS_EMAIL_TEMPLATES . 'email_template_' . $current_page_base . '.html',
+        // FIND HTML TEMPLATE FILE
+        $patternsToTest = [
+            $langfolder . 'email_template_' . str_replace(['_extra', '_admin'], '', $module) . '.html',
+            'email_template_' . str_replace(['_extra', '_admin'], '', $module) . '.html',
+            $langfolder . 'email_template_' . $current_page_base . '.html',
+            'email_template_' . $current_page_base . '.html',
             (!empty($block['EMAIL_TEMPLATE_FILENAME']) ? $block['EMAIL_TEMPLATE_FILENAME'] . '.html' : null),
-            $template_filename_base . 'default.html',
-            $template_filename_base_en . 'default.html',
+            $langfolder . 'email_template_default.html',
+            'email_template_default.html',
         ];
 
         $found = false;
-        foreach ($filesToTest as $val) {
-            if (!empty($val) && file_exists($val)) {
-                $template_filename = $val;
-                $found = true;
-                break;
+        foreach ($rootsToCheck as $root) {
+            foreach ($patternsToTest as $pattern) {
+                if (empty($pattern)) {
+                    continue;
+                }
+                $template_filename = $root . $pattern;
+                if (file_exists($template_filename)) {
+                    $template_content = file_get_contents($template_filename);
+                    if ($template_content === false) {
+                        error_log(sprintf('ERROR: The email template for (%s) cannot be opened.', $template_filename));
+                        continue;
+                    }
+                    $found = true;
+                    break 2;
+                }
             }
         }
         if (false === $found) {
             if (isset($messageStack)) {
-                $messageStack->add('header', 'ERROR: The email template file for (' . $template_filename_base . ') or (' . $template_filename . ') cannot be found.', 'caution');
-            }
-            return '';
-        }
-
-        $template_content = file_get_contents($template_filename);
-        if ($template_content === false) {
-            if (isset($messageStack)) {
-                $messageStack->add('header', 'ERROR: The email template file (' . $template_filename_base . ') or (' . $template_filename . ') cannot be opened', 'caution');
+                $messageStack->add('header', sprintf('ERROR: The email template for (%s) or (%s) cannot be found.', $module, $current_page_base), 'caution');
             }
             return '';
         }
