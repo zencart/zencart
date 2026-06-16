@@ -47,52 +47,12 @@ function zc_cli_include_first_configure_file(array $configureFiles): void
     }
 }
 
-function zc_cli_find_admin_root(string $catalogRoot): ?string
-{
-    $candidateFiles = array_merge(
-        glob($catalogRoot . '*/includes/local/configure.php') ?: [],
-        glob($catalogRoot . '*/includes/configure.php') ?: []
-    );
-    $candidates = [];
-
-    foreach ($candidateFiles as $configureFile) {
-        $configureDirectory = dirname($configureFile);
-        $adminRoot = basename($configureDirectory) === 'local'
-            ? dirname(dirname($configureDirectory)) . '/'
-            : dirname($configureDirectory) . '/';
-        if ($adminRoot === $catalogRoot) {
-            continue;
-        }
-
-        $candidates[$adminRoot] = $adminRoot;
-    }
-
-    if (count($candidates) === 1) {
-        return reset($candidates) ?: null;
-    }
-
-    $defaultAdminRoot = $catalogRoot . 'admin/';
-    if (is_dir($defaultAdminRoot)) {
-        return $defaultAdminRoot;
-    }
-
-    return count($candidates) > 0 ? reset($candidates) : null;
-}
-
 date_default_timezone_set(date_default_timezone_get());
 
 zc_cli_include_first_configure_file([
     $catalogRoot . 'includes/local/configure.php',
     $catalogRoot . 'includes/configure.php',
 ]);
-
-$adminRoot = zc_cli_find_admin_root($catalogRoot);
-if ($adminRoot !== null) {
-    zc_cli_include_first_configure_file([
-        $adminRoot . 'includes/local/configure.php',
-        $adminRoot . 'includes/configure.php',
-    ]);
-}
 
 if (!defined('DIR_FS_CATALOG')) {
     define('DIR_FS_CATALOG', $catalogRoot);
@@ -102,19 +62,8 @@ if (!defined('DIR_FS_INCLUDES')) {
     define('DIR_FS_INCLUDES', DIR_FS_CATALOG . 'includes/');
 }
 
-if (!defined('DIR_FS_ADMIN')) {
-    define('DIR_FS_ADMIN', $adminRoot ?? (DIR_FS_CATALOG . 'admin/'));
-}
-
 if (!defined('DIR_WS_CATALOG')) {
     define('DIR_WS_CATALOG', '/');
-}
-
-if (!defined('DIR_WS_ADMIN')) {
-    $catalogWebPath = trim(DIR_WS_CATALOG, '/');
-    $adminBaseName = basename(rtrim(DIR_FS_ADMIN, '/'));
-    $adminWebPath = ($catalogWebPath === '' ? '/' : '/' . $catalogWebPath . '/') . $adminBaseName . '/';
-    define('DIR_WS_ADMIN', $adminWebPath);
 }
 
 require_once DIR_FS_INCLUDES . 'defined_paths.php';
