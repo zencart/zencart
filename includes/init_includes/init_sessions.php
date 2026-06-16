@@ -31,17 +31,17 @@ require DIR_WS_FUNCTIONS . 'sessions.php';
  * set the session name and save path
  */
 zen_session_name($zenSessionId);
-zen_session_save_path(SESSION_WRITE_DIRECTORY);
+zen_session_save_path(zen_config('SESSION_WRITE_DIRECTORY'));
 
 /**
  * set the session cookie parameters
  */
 $path = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
-if (defined('SESSION_USE_ROOT_COOKIE_PATH') && SESSION_USE_ROOT_COOKIE_PATH === 'True') {
+if (zen_config('SESSION_USE_ROOT_COOKIE_PATH') === 'True') {
     $path = '/';
 }
 $path = (defined('CUSTOM_COOKIE_PATH')) ? CUSTOM_COOKIE_PATH : $path;
-$domainPrefix = (!defined('SESSION_ADD_PERIOD_PREFIX') || SESSION_ADD_PERIOD_PREFIX === 'True') ? '.' : '';
+$domainPrefix = (zen_config('SESSION_ADD_PERIOD_PREFIX', 'True') === 'True') ? '.' : '';
 if (filter_var($cookieDomain, FILTER_VALIDATE_IP)) {
     $domainPrefix = '';
 }
@@ -78,7 +78,7 @@ $_SERVER['REMOTE_ADDR'] = zen_get_ip_address();
  * start the session
  */
 $session_started = false;
-if (SESSION_FORCE_COOKIE_USE === 'True') {
+if (zen_config('SESSION_FORCE_COOKIE_USE') === 'True') {
     $params = session_get_cookie_params();
     unset($params['lifetime']);
     $params['expires'] = time() + 60 * 60 * 24 * 30;
@@ -88,7 +88,7 @@ if (SESSION_FORCE_COOKIE_USE === 'True') {
         zen_session_start();
         $session_started = true;
     }
-} elseif (SESSION_BLOCK_SPIDERS === 'True') {
+} elseif (zen_config('SESSION_BLOCK_SPIDERS') === 'True') {
     $user_agent = '';
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
         $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
@@ -96,7 +96,7 @@ if (SESSION_FORCE_COOKIE_USE === 'True') {
     $spider_flag = false;
     if (!empty($user_agent)) {
         $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
-        for ($i=0, $n = count($spiders); $i < $n; $i++) {
+        for ($i = 0, $n = count($spiders); $i < $n; $i++) {
             if (!empty($spiders[$i]) && !str_starts_with($spiders[$i], '$Id:')) {
                 if (is_int(strpos($user_agent, trim($spiders[$i])))) {
                     $spider_flag = true;
@@ -125,7 +125,7 @@ unset($spiders);
  * set host_address once per session to reduce load on server
  */
 if (!isset($_SESSION['customers_host_address'])) {
-    if (SESSION_IP_TO_HOST_ADDRESS === 'true' || !defined('OFFICE_IP_TO_HOST_ADDRESS')) {
+    if (zen_config('SESSION_IP_TO_HOST_ADDRESS') === 'true' || !defined('OFFICE_IP_TO_HOST_ADDRESS')) {
         $_SESSION['customers_host_address'] = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
     } else {
         $_SESSION['customers_host_address'] = OFFICE_IP_TO_HOST_ADDRESS;
@@ -135,7 +135,7 @@ if (!isset($_SESSION['customers_host_address'])) {
 /**
  * verify the browser user agent if the feature is enabled
  */
-if (SESSION_CHECK_USER_AGENT === 'True') {
+if (zen_config('SESSION_CHECK_USER_AGENT') === 'True') {
     $http_user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
     if (empty($_SESSION['SESSION_USER_AGENT'])) {
         $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
@@ -149,7 +149,7 @@ if (SESSION_CHECK_USER_AGENT === 'True') {
 /**
  * verify the IP address if the feature is enabled
  */
-if (SESSION_CHECK_IP_ADDRESS === 'True') {
+if (zen_config('SESSION_CHECK_IP_ADDRESS') === 'True') {
     $ip_address = zen_get_ip_address();
     if (empty($_SESSION['SESSION_IP_ADDRESS'])) {
         $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;

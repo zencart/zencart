@@ -12,45 +12,41 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // give the visitors a message that the website will be down at ... time
-if (WARN_BEFORE_DOWN_FOR_MAINTENANCE === 'true' && DOWN_FOR_MAINTENANCE === 'false') {
+if (zen_config('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE') === 'false') {
     $messageStack->add('header', TEXT_BEFORE_DOWN_FOR_MAINTENANCE . PERIOD_BEFORE_DOWN_FOR_MAINTENANCE);
 }
 
 // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
-if (DOWN_FOR_MAINTENANCE === 'true' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('DOWN_FOR_MAINTENANCE') === 'true' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add('header', TEXT_ADMIN_DOWN_FOR_MAINTENANCE, 'warning');
 }
 
 // Alerting about payment modules in testing/debug mode
 
-if ((defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG === 'true') || (defined('MODULE_PAYMENT_PAYPAL_TESTING') && MODULE_PAYMENT_PAYPAL_TESTING === 'Test')) {
+if (zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'true' || zen_config('MODULE_PAYMENT_PAYPAL_TESTING') === 'Test') {
     $messageStack->add('header', 'PAYPAL IS IN TESTING MODE', 'warning');
 }
 if (
-    (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS')
-    && MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS === 'True'
-    && defined('MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE')
-    && MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE === 'Test')
+    (zen_config('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS') === 'True'
+    && zen_config('MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE') === 'Test')
     ||
-    (defined('MODULE_PAYMENT_AUTHORIZENET_STATUS')
-    && MODULE_PAYMENT_AUTHORIZENET_STATUS === 'True'
-    && defined('MODULE_PAYMENT_AUTHORIZENET_TESTMODE')
-    && MODULE_PAYMENT_AUTHORIZENET_TESTMODE ==='Test')
+    (zen_config('MODULE_PAYMENT_AUTHORIZENET_STATUS') === 'True'
+    && zen_config('MODULE_PAYMENT_AUTHORIZENET_TESTMODE') === 'Test')
 ) {
     $messageStack->add('header', 'AUTHORIZENET IS IN TESTING MODE', 'warning');
 }
-if (defined('MODULE_SHIPPING_USPS_SERVER') &&   MODULE_SHIPPING_USPS_SERVER === 'test' ) {
+if (zen_config('MODULE_SHIPPING_USPS_SERVER') === 'test') {
     $messageStack->add('header', 'USPS IS IN TESTING MODE', 'warning');
 }
 
 // Alerts for EZ-Pages
-if (EZPAGES_STATUS_HEADER === '2' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('EZPAGES_STATUS_HEADER') === '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add('header', TEXT_EZPAGES_STATUS_HEADER_ADMIN, 'caution');
 }
-if (EZPAGES_STATUS_FOOTER === '2' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('EZPAGES_STATUS_FOOTER') === '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add('header', TEXT_EZPAGES_STATUS_FOOTER_ADMIN, 'caution');
 }
-if (EZPAGES_STATUS_SIDEBOX === '2' && zen_is_whitelisted_admin_ip()) {
+if (zen_config('EZPAGES_STATUS_SIDEBOX') === '2' && zen_is_whitelisted_admin_ip()) {
     $messageStack->add('header', TEXT_EZPAGES_STATUS_SIDEBOX_ADMIN, 'caution');
 }
 if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING === true) {
@@ -58,7 +54,7 @@ if (defined('STRICT_ERROR_REPORTING') && STRICT_ERROR_REPORTING === true) {
 }
 
 // if down for maintenance, prevent indexing
-if (DOWN_FOR_MAINTENANCE === 'true' && !zen_is_whitelisted_admin_ip()) {
+if (zen_config('DOWN_FOR_MAINTENANCE') === 'true' && !zen_is_whitelisted_admin_ip()) {
     header("HTTP/1.1 503 Service Unavailable");
 }
 
