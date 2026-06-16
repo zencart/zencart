@@ -12,7 +12,7 @@
 ?>
 <div class="centerColumn" id="ezPageDefault">
   <h1 id="ezPagesHeading"><?php echo $var_pageDetails->fields['pages_title']; ?></h1>
-  <?php if (EZPAGES_SHOW_PREV_NEXT_BUTTONS == '2' && $counter > 1) { ?>
+  <?php if (zen_config('EZPAGES_SHOW_PREV_NEXT_BUTTONS') === '2' && $counter > 1) { ?>
     <?php if ($_SESSION['layoutType'] == 'mobile') { ?>
       <div id="navEZPageNextPrev">
         <a href="<?php echo $prev_link; ?>"><i class="fa-solid fa-circle-chevron-left" title="<?php echo BUTTON_PREVIOUS_ALT; ?>"></i></a>
@@ -26,14 +26,14 @@
         <a href="<?php echo $next_link; ?>"><?php echo $next_item_button; ?></a>
       </div>
     <?php } ?>
-  <?php } elseif (EZPAGES_SHOW_PREV_NEXT_BUTTONS == '1') { ?>
+  <?php } elseif (zen_config('EZPAGES_SHOW_PREV_NEXT_BUTTONS') === '1') { ?>
     <div id="navEZPageNextPrev"><?php echo zen_back_link() . $home_button . '</a>'; ?></div>
   <?php } ?>
 
   <?php
 // vertical TOC listing
 // create a table of contents for chapter when more than 1 page in the TOC
-  if (count($toc_links) > 1 && EZPAGES_SHOW_TABLE_CONTENTS == '1') {
+  if (count($toc_links) > 1 && zen_config('EZPAGES_SHOW_TABLE_CONTENTS') === '1') {
     ?>
     <div id="navEZPagesTOCWrapper">
       <h2 id="ezPagesTOCHeading"><?php echo TEXT_EZ_PAGES_TABLE_CONTEXT; ?></h2>

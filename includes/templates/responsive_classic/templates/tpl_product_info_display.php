@@ -40,7 +40,7 @@ if ($module_show_categories != 0) {
 
 <!--bof Prev/Next top position -->
 <?php
-if (PRODUCT_INFO_PREVIOUS_NEXT === '1' || PRODUCT_INFO_PREVIOUS_NEXT === '3') {
+if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '1' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
     /**
      * display the product previous/next helper
      */
@@ -175,7 +175,7 @@ if ($products_discount_type != 0) {
 
 <!--bof Add to Cart Box -->
 <?php
-if (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == '') {
+if (zen_config('CUSTOMERS_APPROVAL') === '3' && TEXT_LOGIN_FOR_PRICE_BUTTON_REPLACE_SHOWROOM == '') {
   // do nothing
 } else {
 
@@ -223,7 +223,7 @@ if ($products_description != '') {
 
 <!--bof Prev/Next bottom position -->
 <?php
-if (PRODUCT_INFO_PREVIOUS_NEXT === '2' || PRODUCT_INFO_PREVIOUS_NEXT === '3') {
+if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '2' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
     /**
      * display the product previous/next helper
      */

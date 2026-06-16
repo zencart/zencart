@@ -24,11 +24,11 @@
 <h2 id="checkoutShipAddressDefaultAddress"><?php echo TITLE_SHIPPING_ADDRESS; ?></h2>
     <div class="instructions group">
      <address class="back"><?php echo zen_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br>'); ?></address>
-<?php if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) echo TEXT_CREATE_NEW_SHIPPING_ADDRESS; ?></div>
+<?php if ($addresses_count < (int)zen_config('MAX_ADDRESS_BOOK_ENTRIES')) echo TEXT_CREATE_NEW_SHIPPING_ADDRESS; ?></div>
 
 
 <?php
-     if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
+     if ($addresses_count < (int)zen_config('MAX_ADDRESS_BOOK_ENTRIES')) {
        echo zen_draw_form('checkout_address', zen_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="group"');
 /**
  * require template to display new address form
