@@ -39,7 +39,9 @@ class ConsoleKernel
         private $versionProvider = null,
         private $configurationProvider = null,
         private ?Loader $psr4Autoloader = null,
-        private array $trustedPluginVersions = []
+        private array $trustedPluginVersions = [],
+        private mixed $db = null,
+        private ?CliConfigurationLoader $cliConfigurationLoader = null
     ) {
         $this->registry = $registry ?? new CommandRegistry();
         $this->resolver = new CommandResolver($this->registry);
@@ -56,8 +58,15 @@ class ConsoleKernel
             return;
         }
 
-        (new TrustedPluginClassLoader($this->psr4Autoloader))
-            ->registerPluginClassNamespaces($this->trustedPluginVersions);
+        if ($this->db instanceof \queryFactory) {
+            $GLOBALS['db'] = $this->db;
+        }
+
+        $trustedPluginClassLoader = new TrustedPluginClassLoader($this->psr4Autoloader);
+        $trustedPluginClassLoader->loadPluginBootstrapFiles($this->trustedPluginVersions);
+        $trustedPluginClassLoader->registerPluginClassNamespaces($this->trustedPluginVersions);
+        $this->bootWarnings = array_merge($this->bootWarnings, $trustedPluginClassLoader->getErrors());
+        ($this->cliConfigurationLoader ?? new CliConfigurationLoader())->bootstrap($this->db);
         $this->registerCoreCommands();
         $this->registerPluginCommands();
         $this->booted = true;
