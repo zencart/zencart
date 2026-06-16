@@ -245,6 +245,12 @@ class paypaldp extends base {
      * @var string
      */
      public  $transactiontype;
+
+    /**
+     * A copy of MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY, so that the constant's
+     * availability can be registered.
+     */
+     protected ?string $merchant_country;
   /**
    * class constructor
    */
@@ -255,11 +261,12 @@ class paypaldp extends base {
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired')));
+    $this->merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
 
-      $merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
+      $merchant_country = $this->merchant_country;
       $country = $merchant_country ?? STORE_COUNTRY;
       $this->title = $country == '223' || $country == 'USA' ? MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP : MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_NONUSA;
       $this->title .= ($merchant_country !== null) ? " ($merchant_country)" : '';
@@ -285,7 +292,7 @@ class paypaldp extends base {
     $this->enableDebugging = (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email');
     $this->emailAlerts = (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email' || MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Alerts Only');
 
-    $this->buttonSource = (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') ? 'ZenCart-DP_uk' : 'ZenCart-DP_us';
+    $this->buttonSource = ($this->merchant_country == 'UK') ? 'ZenCart-DP_uk' : 'ZenCart-DP_us';
 
     $this->order_pending_status = MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID;
     if ((int)MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID > 0) {
@@ -297,7 +304,7 @@ class paypaldp extends base {
 
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') {
+    if ($this->merchant_country == 'UK') {
       if (CC_ENABLED_VISA=='1')    $this->cards[] = array('id' => 'Visa', 'text' => 'Visa');
       if (CC_ENABLED_MC=='1')      $this->cards[] = array('id' => 'MasterCard', 'text' => 'MasterCard');
       if (CC_ENABLED_MAESTRO=='1') $this->cards[] = array('id' => 'Maestro', 'text' => 'Maestro');
@@ -310,7 +317,7 @@ class paypaldp extends base {
     // the PayFlow-UK mode is currently in use, that class variable is 'reset' to enable the 3DS handling
     // to proceed without issue.
     //
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY === 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR !== '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD !== '')) {
+    if ($this->merchant_country === 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR !== '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD !== '')) {
       $this->collectsCardDataOnsite = false;
     }
 
@@ -474,7 +481,7 @@ class paypaldp extends base {
                        'module' => MODULE_PAYMENT_PAYPALDP_TEXT_TITLE,
                        'fields' => $fieldsArray);
 
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SOLO=='1')) {
+    if ($this->merchant_country == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SOLO=='1')) {
       // add extra fields for UK cards
       for ($i = $today['year'] - 10; $i <= $today['year']; $i++) {
         $issue_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
@@ -564,7 +571,7 @@ class paypaldp extends base {
      * transactions using credit and debit cards that are unable to be
      * authenticated to complete and proceed with authorization.
      */
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && (!isset($_POST['MD']))) {
+    if ($this->merchant_country == 'UK' && (!isset($_POST['MD']))) {
       if (isset($_SESSION['3Dsecure_auth_status']) && isset($_SESSION['3Dsecure_auth_xid']) && isset($_SESSION['3Dsecure_auth_cavv']) && isset($_SESSION['3Dsecure_auth_eci'])) {
         // at this point we have 3d-secure auth data
       } else {
@@ -692,7 +699,7 @@ class paypaldp extends base {
                                                   'field' => $_POST['paypalwpp_cc_issuenumber']) : '')
                                             )));
     // 3D-Secure
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && $this->requiresLookup($_POST['paypalwpp_cc_number']) == true) {
+    if ($this->merchant_country == 'UK' && $this->requiresLookup($_POST['paypalwpp_cc_number']) == true) {
           $confirmation['fields'][count($confirmation['fields'])] = array(
               'title' => '',
               'field' => '<div id="' . $this->code.'-cc-securetext"><p>' .
@@ -835,7 +842,7 @@ class paypaldp extends base {
 
 
       // 3D-Secure
-      if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') {
+      if ($this->merchant_country == 'UK') {
         // determine the card type and validate that authentication was attempted and completed if applicable
         if (($_SESSION['3Dsecure_requires_lookup'] || $this->requiresLookup($_POST['wpp_cc_number']) == true)) {  // authentication attempt required?
             $secureflags = [];
@@ -947,7 +954,7 @@ class paypaldp extends base {
 //       $optionsAll['SOFTDESCRIPTOR'] = substr(preg_replace('/[^a-zA-Z0-9. ]/', '', STORE_NAME), 0, 23);
 //       $optionsAll['SOFTDESCRIPTORCITY'] = substr(preg_replace('/[^a-zA-Z0-9. !,' . preg_quote('"$%&\'()+-*/:;<=>?@') . ']/', '', STORE_TELEPHONE_CUSTSERVICE), 0, 23);
 
-      if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD != '')) { // Payflow params required
+      if ($this->merchant_country == 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD != '')) { // Payflow params required
         if (isset($optionsAll['COUNTRYCODE'])) {
           $optionsAll['COUNTRY'] = $optionsAll['COUNTRYCODE'];
           unset($optionsAll['COUNTRYCODE']);
@@ -1052,7 +1059,7 @@ class paypaldp extends base {
     $paypal_order = array('order_id' => $insert_id,
                           'txn_type' => $this->transactiontype,
                           'module_name' => $this->code,
-                          'module_mode' => MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY,
+                          'module_mode' => $this->merchant_country ?? '',
                           'reason_code' => $this->reasoncode,
                           'payment_type' => $this->payment_type,
                           'payment_status' => $this->payment_status,
@@ -1319,7 +1326,7 @@ class paypaldp extends base {
   function paypal_init() {
     $nvp = (MODULE_PAYMENT_PAYPALWPP_APIPASSWORD != '' && MODULE_PAYMENT_PAYPALWPP_APISIGNATURE != '') ? true : false;
     $ec = ($nvp && isset($_GET['type']) && $_GET['type'] == 'ec') ? true : false;
-    if (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' && !$ec) {
+    if ($this->merchant_country == 'UK' && !$ec) {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
                                         'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
                                         'vendor' => trim(MODULE_PAYMENT_PAYPALWPP_PFVENDOR),
@@ -1541,7 +1548,7 @@ class paypaldp extends base {
     $dpus_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD');
 
     // in USA, only 6 currencies are supported. But UK and Canada support 16 currencies (as of Jan 2011):
-    $paypalSupportedCurrencies = (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK' || MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'Canada') ? $dp_currencies : $dpus_currencies;
+    $paypalSupportedCurrencies = ($this->merchant_country == 'UK' || $this->merchant_country == 'Canada') ? $dp_currencies : $dpus_currencies;
 
     $my_currency = substr(MODULE_PAYMENT_PAYPALDP_CURRENCY, 5);
     if (MODULE_PAYMENT_PAYPALDP_CURRENCY == 'Selected Currency') {
@@ -1549,7 +1556,7 @@ class paypaldp extends base {
     }
 
     if (!in_array($my_currency, $paypalSupportedCurrencies)) {
-      $my_currency = (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') ? 'GBP' : (MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'Canada' ? 'CAD' : 'USD');
+      $my_currency = ($this->merchant_country == 'UK') ? 'GBP' : ($this->merchant_country == 'Canada' ? 'CAD' : 'USD');
     }
     return $my_currency;
   }
