@@ -78,3 +78,4 @@ $psr4Autoloader->setClassFile('zcPassword', DIR_FS_CATALOG . DIR_WS_CLASSES . 'c
 $psr4Autoloader->setClassFile('ZenShipping', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ZenShipping.php');
 $psr4Autoloader->setClassFile('Zencart\SessionHandler', DIR_FS_CATALOG . DIR_WS_CLASSES . 'SessionHandler.php' );
 $psr4Autoloader->setClassFile('Category', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Category.php' );
+$psr4Autoloader->setClassFile('Email', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Email.php');
