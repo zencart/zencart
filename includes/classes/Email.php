@@ -149,8 +149,8 @@ class Email
             // DETERMINE RECIPIENT EMAIL FORMAT (TEXT/HTML)
             $sql = "SELECT customers_email_format FROM " . TABLE_CUSTOMERS . " WHERE customers_email_address= :custEmailAddress:";
             $sql = $db->bindVars($sql, ':custEmailAddress:', $to_email_address, 'string');
-            $result = $db->Execute($sql);
-            $customers_email_format = ($result->RecordCount() > 0) ? $result->fields['customers_email_format'] : '';
+            $result = $db->Execute($sql, 1);
+            $customers_email_format = (!$result->EOF) ? $result->fields['customers_email_format'] : '';
 
             $this->notify('NOTIFY_EMAIL_DETERMINING_EMAIL_FORMAT', $to_email_address, $customers_email_format, $module);
 
@@ -323,17 +323,18 @@ class Email
                 $zen_fix_current = $zen_fix_currencies[$i];
                 $zen_fix_replace = $zen_fix_currencies[$i + 1];
                 if ($zen_fix_current !== '') {
-                    while (strpos($email_text, $zen_fix_current)) {
+                    while (str_contains($email_text, $zen_fix_current)) {
                         $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
                     }
                 }
             }
         }
 
-        $email_text = preg_replace('/(&quot;)+/', '"', $email_text);
-        $email_text = preg_replace('/(&lt;)+/', '<', $email_text);
-        $email_text = preg_replace('/(&gt;)+/', '>', $email_text);
-        $email_text = preg_replace('/\0+/', ' ', $email_text);
+        $email_text = str_replace(
+            ['&quot;', '&lt;', '&gt;', '\0'],
+            ['"', '<', '>', ' '],
+            $email_text
+        );
         $email_text = str_replace('&nbsp;', ' ', $email_text);
 
         return $email_text;
@@ -446,7 +447,7 @@ class Email
                     $valid_address = false;
                     return $valid_address;
                 }
-                if (($digit[0] == 192) || ($digit[0] == 10)) {
+                if ($digit[0] == 192 || $digit[0] == 10) {
                     $valid_address = false;
                     return $valid_address;
                 }
