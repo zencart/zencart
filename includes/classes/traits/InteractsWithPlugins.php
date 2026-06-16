@@ -19,9 +19,13 @@ use Zencart\PluginManager\PluginManager;
  */
 trait InteractsWithPlugins
 {
+    /** @var bool true if this is a Zen Cart plugin, determined by the presence of a manifest.php file */
     protected bool $isAZcPlugin = false;
+    /** @var string Plugin foldername only */
     protected string $zcPluginDirName;
+    /** @var string Plugin version directory name (e.g. 'v1.0.0') */
     protected string $zcPluginVersionDir;
+    /** @var string Full Path To Versioned Plugin Directory (including DIR_FS_CATALOG portion) */
     protected string $zcPluginPath;
 
     /** @var string catalog, admin, or Installer */

@@ -11,7 +11,7 @@
 <div class="centerColumn" id="shippingInfo">
 <h1 id="shippingInfoHeading"><?php echo HEADING_TITLE; ?></h1>
 
-<?php if (DEFINE_SHIPPINGINFO_STATUS >= 1 and DEFINE_SHIPPINGINFO_STATUS <= 2) { ?>
+<?php if ((int)zen_config('DEFINE_SHIPPINGINFO_STATUS') >= 1 && (int)zen_config('DEFINE_SHIPPINGINFO_STATUS') <= 2) { ?>
 <div id="shippingInfoMainContent" class="content">
 <?php
 /**

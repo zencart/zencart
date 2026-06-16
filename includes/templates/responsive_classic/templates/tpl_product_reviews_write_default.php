@@ -76,7 +76,7 @@
 
 <div class="buttonRow forward"><?php echo zen_image_submit(BUTTON_IMAGE_SUBMIT, BUTTON_SUBMIT_ALT); ?></div>
 
-<div id="reviewsWriteReviewsNotice" class="notice clearBoth"><?php echo TEXT_NO_HTML . (REVIEWS_APPROVAL == '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
+<div id="reviewsWriteReviewsNotice" class="notice clearBoth"><?php echo TEXT_NO_HTML . (zen_config('REVIEWS_APPROVAL') === '1' ? '<br>' . TEXT_APPROVAL_REQUIRED: ''); ?></div>
 
 </form>
 </div>

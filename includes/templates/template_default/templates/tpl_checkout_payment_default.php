@@ -38,7 +38,7 @@ echo $payment_modules->javascript_validation(); ?>
 
         <div id="checkoutBillto" class="floatingBox back">
             <?php
-            if (MAX_ADDRESS_BOOK_ENTRIES >= 2) { ?>
+            if ((int)zen_config('MAX_ADDRESS_BOOK_ENTRIES') >= 2) { ?>
                 <div class="buttonRow forward"><a href="<?= zen_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL') ?>"><?= zen_image_button(BUTTON_IMAGE_CHANGE_ADDRESS, BUTTON_CHANGE_ADDRESS_ALT) ?></a></div>
             <?php
             } ?>
@@ -56,7 +56,7 @@ echo $payment_modules->javascript_validation(); ?>
     <fieldset id="checkoutOrderTotals">
         <legend id="checkoutPaymentHeadingTotal"><?= TEXT_YOUR_TOTAL ?></legend>
         <?php
-        if (MODULE_ORDER_TOTAL_INSTALLED) {
+        if (!empty(zen_config('MODULE_ORDER_TOTAL_INSTALLED'))) {
             $order_totals = $order_total_modules->process();
             $order_total_modules->output();
         }
@@ -92,11 +92,11 @@ echo $payment_modules->javascript_validation(); ?>
         <fieldset class="payment">
             <legend><?= HEADING_PAYMENT_METHOD ?></legend>
             <?php
-            if (SHOW_ACCEPTED_CREDIT_CARDS != '0') {
-                if (SHOW_ACCEPTED_CREDIT_CARDS == '1') {
+            if (zen_config('SHOW_ACCEPTED_CREDIT_CARDS') !== '0') {
+                if (zen_config('SHOW_ACCEPTED_CREDIT_CARDS') === '1') {
                     echo TEXT_ACCEPTED_CREDIT_CARDS . zen_get_cc_enabled();
                 }
-                if (SHOW_ACCEPTED_CREDIT_CARDS == '2') {
+                if (zen_config('SHOW_ACCEPTED_CREDIT_CARDS') === '2') {
                     echo TEXT_ACCEPTED_CREDIT_CARDS . zen_get_cc_enabled('IMAGE_');
                 }
                 ?>
@@ -127,7 +127,7 @@ echo $payment_modules->javascript_validation(); ?>
                 ?>
                 <label for="pmt-<?= $selection[$i]['id'] ?>" class="radioButtonLabel"><?= $selection[$i]['module'] ?></label>
                 <?php
-                if (defined('MODULE_ORDER_TOTAL_COD_STATUS') && MODULE_ORDER_TOTAL_COD_STATUS == 'true' && $selection[$i]['id'] == 'cod') {
+                if (zen_config('MODULE_ORDER_TOTAL_COD_STATUS') === 'true' && $selection[$i]['id'] == 'cod') {
                     ?>
                     <div class="alert"><?= TEXT_INFO_COD_FEES ?></div>
                     <?php
@@ -188,7 +188,7 @@ echo $payment_modules->javascript_validation(); ?>
     </fieldset>
 
     <?php
-    if (DISPLAY_CONDITIONS_ON_CHECKOUT === 'true') {
+    if (zen_config('DISPLAY_CONDITIONS_ON_CHECKOUT') === 'true') {
         ?>
         <fieldset>
             <legend><?= TABLE_HEADING_CONDITIONS ?></legend>

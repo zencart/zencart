@@ -52,7 +52,7 @@ if (zen_is_logged_in() && !zen_in_guest_checkout()) {
     </div>
 <?php
 } elseif ($_SESSION['cart']->get_content_type() !== 'virtual') {
-    $flag_show_pulldown_states = (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true');
+    $flag_show_pulldown_states = (zen_config('ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN') === 'true');
 ?>
     <label class="inputLabel" for="country"><?= ENTRY_COUNTRY ?></label>
     <?= zen_get_country_list('zone_country_id', $selected_country, 'id="country"' . (($flag_show_pulldown_states) ? ' onchange="update_zone(this.form);"' : '')) ?>
@@ -89,7 +89,7 @@ echo '</form>';
 if ($_SESSION['cart']->get_content_type() === 'virtual') {
     echo CART_SHIPPING_METHOD_FREE_TEXT . ' ' . CART_SHIPPING_METHOD_ALL_DOWNLOADS;
 } elseif ($free_shipping == 1) {
-    echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER));
+    echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')));
 } else {
 ?>
     <table id="seQuoteResults">

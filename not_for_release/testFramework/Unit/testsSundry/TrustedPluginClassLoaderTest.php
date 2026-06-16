@@ -1,0 +1,385 @@
+<?php
+/**
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ */
+
+namespace Tests\Unit\testsSundry;
+
+use PHPUnit\Framework\TestCase;
+use Tests\Support\TestFrameworkFilesystem;
+use Tests\Support\UnitTestBootstrap;
+use Zencart\Console\TrustedPluginClassLoader;
+
+class TrustedPluginClassLoaderTest extends TestCase
+{
+    protected $preserveGlobalState = false;
+    /**
+     * @var string[]
+     */
+    private array $pluginRootsToRemove = [];
+
+    public static function setUpBeforeClass(): void
+    {
+        UnitTestBootstrap::initialize();
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+    }
+
+    protected function tearDown(): void
+    {
+        (new TestFrameworkFilesystem())->removePlugin('zenTestPlugin', 'v1.0.0', DIR_FS_CATALOG);
+        foreach ($this->pluginRootsToRemove as $pluginRoot) {
+            $this->removeDirectory(dirname($pluginRoot));
+        }
+        $this->pluginRootsToRemove = [];
+
+        parent::tearDown();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testBootstrapTrustedPluginsLoadsPluginRootAutoloader(): void
+    {
+        (new TestFrameworkFilesystem())->installPlugin('zenTestPlugin', DIR_FS_CATALOG, DIR_FS_CATALOG);
+        $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/zenTestPlugin/v1.0.0';
+
+        mkdir($pluginRoot . '/support', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/support/LoaderFlag.php',
+            <<<'PHP'
+<?php
+
+namespace ZenTestPlugin\Support;
+
+class LoaderFlag
+{
+    public static function message(): string
+    {
+        return 'autoloaded';
+    }
+}
+PHP
+        );
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            <<<'PHP'
+<?php
+
+/** @var \Aura\Autoload\Loader $psr4Autoloader */
+$psr4Autoloader->addPrefix('ZenTestPlugin\\Support', __DIR__ . '/support/');
+PHP
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $loader = new TrustedPluginClassLoader($psr4Autoloader);
+        $loader->bootstrapTrustedPlugins(['zenTestPlugin' => 'v1.0.0']);
+
+        $this->assertSame('autoloaded', \ZenTestPlugin\Support\LoaderFlag::message());
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testBootstrapTrustedPluginsReportsAutoloaderErrorsWithoutThrowing(): void
+    {
+        $pluginKey = 'zenTestPluginError';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\nthrow new RuntimeException('autoload failed');\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $loader = new TrustedPluginClassLoader($psr4Autoloader);
+        $loader->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $this->assertCount(1, $loader->getErrors());
+        $this->assertStringContainsString(
+            'Failed loading plugin autoloader from ' . $pluginKey . '/v1.0.0/psr4Autoload.php',
+            $loader->getErrors()[0]
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testPluginRootAutoloaderIsLoadedOnlyOnceAcrossBootstrapAndDiscovery(): void
+    {
+        $pluginKey = 'zenTestPluginDedupe';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $markerFile = $pluginRoot . '/autoload-count.txt';
+
+        mkdir($pluginRoot . '/Console/Commands', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\n\$count = file_exists(" . var_export($markerFile, true) . ") ? (int)file_get_contents(" . var_export($markerFile, true) . ") : 0;\nfile_put_contents(" . var_export($markerFile, true) . ", (string)(\$count + 1));\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/Console/Commands/DemoCommand.php',
+            <<<'PHP'
+<?php
+
+namespace Zencart\Plugins\Console\ZenTestPluginDedupe\Commands;
+
+use Zencart\Console\ConsoleCommand;
+use Zencart\Console\ConsoleInput;
+use Zencart\Console\ConsoleOutput;
+
+class DemoCommand extends ConsoleCommand
+{
+    public function getName(): string
+    {
+        return 'zen-test:demo';
+    }
+
+    public function getDescription(): string
+    {
+        return 'demo';
+    }
+
+    public function handle(ConsoleInput $input, ConsoleOutput $output): int
+    {
+        return 0;
+    }
+}
+PHP
+        );
+        file_put_contents(
+            $pluginRoot . '/Console/commands.php',
+            <<<'PHP'
+<?php
+
+return [
+    \Zencart\Plugins\Console\ZenTestPluginDedupe\Commands\DemoCommand::class,
+];
+PHP
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $loader = new TrustedPluginClassLoader($psr4Autoloader);
+        $loader->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $discovery = new \Zencart\Console\PluginCommandDiscovery(
+            DIR_FS_CATALOG . 'zc_plugins',
+            $psr4Autoloader,
+            [$pluginKey => 'v1.0.0']
+        );
+
+        $commands = $discovery->discover();
+
+        $this->assertCount(1, $commands);
+        $this->assertSame('1', file_get_contents($markerFile));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testPluginRootAutoloaderRunsAgainForFreshLoaderInstance(): void
+    {
+        $pluginKey = 'zenTestPluginFreshLoader';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $markerFile = $pluginRoot . '/autoload-count.txt';
+
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\n\$count = file_exists(" . var_export($markerFile, true) . ") ? (int)file_get_contents(" . var_export($markerFile, true) . ") : 0;\nfile_put_contents(" . var_export($markerFile, true) . ", (string)(\$count + 1));\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+
+        $firstLoader = new \Aura\Autoload\Loader();
+        $firstLoader->register();
+        $psr4Autoloader = $firstLoader;
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        (new TrustedPluginClassLoader($firstLoader))->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $secondLoader = new \Aura\Autoload\Loader();
+        $secondLoader->register();
+        $psr4Autoloader = $secondLoader;
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        (new TrustedPluginClassLoader($secondLoader))->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $this->assertSame('2', file_get_contents($markerFile));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testBootstrapTrustedPluginsLoadsStandardPluginFilesBeforeRootAutoloader(): void
+    {
+        $pluginKey = 'zenTestPluginBootstrapOrder';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $markerFile = $pluginRoot . '/bootstrap-order.json';
+
+        mkdir($pluginRoot . '/catalog/includes/extra_configures', 0777, true);
+        mkdir($pluginRoot . '/catalog/includes/extra_datafiles', 0777, true);
+        mkdir($pluginRoot . '/admin/includes/extra_configures', 0777, true);
+        mkdir($pluginRoot . '/admin/includes/extra_datafiles', 0777, true);
+
+        file_put_contents(
+            $pluginRoot . '/catalog/includes/extra_configures/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_CONFIG', 'catalog-config');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/catalog/includes/extra_datafiles/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_DATAFILE', 'catalog-data');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/admin/includes/extra_configures/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_CONFIG_SHOULD_NOT_LOAD', 'admin-config');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/admin/includes/extra_datafiles/bootstrap.php',
+            "<?php\ndefine('ZEN_TEST_PLUGIN_ADMIN_DATAFILE_SHOULD_NOT_LOAD', 'admin-data');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/database_tables.php',
+            "<?php\ndefine('TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP', 'zen_test_bootstrap');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/filenames.php',
+            "<?php\ndefine('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP', 'zen_test_bootstrap.php');\n"
+        );
+        file_put_contents(
+            $pluginRoot . '/psr4Autoload.php',
+            "<?php\n"
+            . "file_put_contents("
+            . var_export($markerFile, true)
+            . ", json_encode([\n"
+            . "    'config' => defined('ZEN_TEST_PLUGIN_CONFIG') ? ZEN_TEST_PLUGIN_CONFIG : null,\n"
+            . "    'datafile' => defined('ZEN_TEST_PLUGIN_DATAFILE') ? ZEN_TEST_PLUGIN_DATAFILE : null,\n"
+            . "    'admin_config' => defined('ZEN_TEST_PLUGIN_ADMIN_CONFIG_SHOULD_NOT_LOAD') ? ZEN_TEST_PLUGIN_ADMIN_CONFIG_SHOULD_NOT_LOAD : null,\n"
+            . "    'admin_datafile' => defined('ZEN_TEST_PLUGIN_ADMIN_DATAFILE_SHOULD_NOT_LOAD') ? ZEN_TEST_PLUGIN_ADMIN_DATAFILE_SHOULD_NOT_LOAD : null,\n"
+            . "    'table' => defined('TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP') ? TABLE_ZEN_TEST_PLUGIN_BOOTSTRAP : null,\n"
+            . "    'filename' => defined('FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP') ? FILENAME_ZEN_TEST_PLUGIN_BOOTSTRAP : null,\n"
+            . "]));\n"
+        );
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        $psr4Autoloader->register();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+
+        $loader = new TrustedPluginClassLoader($psr4Autoloader);
+        $loader->bootstrapTrustedPlugins([$pluginKey => 'v1.0.0']);
+
+        $this->assertSame([], $loader->getErrors());
+        $this->assertSame(
+            [
+                'config' => 'catalog-config',
+                'datafile' => 'catalog-data',
+                'admin_config' => null,
+                'admin_datafile' => null,
+                'table' => 'zen_test_bootstrap',
+                'filename' => 'zen_test_bootstrap.php',
+            ],
+            json_decode((string)file_get_contents($markerFile), true)
+        );
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testPluginRootAutoloaderCacheDoesNotOutliveLoaderInstance(): void
+    {
+        $pluginKey = 'zenTestPluginWeakMap';
+        $pluginRoot = $this->createPluginFixture($pluginKey);
+        $autoloadFile = $pluginRoot . '/psr4Autoload.php';
+
+        file_put_contents($autoloadFile, "<?php\n");
+
+        require_once DIR_FS_CATALOG . 'includes/classes/vendors/AuraAutoload/src/Loader.php';
+        $property = new \ReflectionProperty(TrustedPluginClassLoader::class, 'loadedAutoloaderFilesByLoader');
+        $weakMap = $property->getValue();
+        $baselineCount = $weakMap instanceof \WeakMap ? count($weakMap) : 0;
+
+        $loader = new \Aura\Autoload\Loader();
+        TrustedPluginClassLoader::loadPluginRootAutoloaderFile($autoloadFile, $loader);
+
+        $weakMap = $property->getValue();
+
+        $this->assertInstanceOf(\WeakMap::class, $weakMap);
+        $this->assertCount($baselineCount + 1, $weakMap);
+
+        unset($loader);
+        gc_collect_cycles();
+
+        $this->assertCount($baselineCount, $weakMap);
+    }
+
+    private function createPluginFixture(string $pluginKey): string
+    {
+        $pluginRoot = DIR_FS_CATALOG . 'zc_plugins/' . $pluginKey . '/v1.0.0';
+        mkdir($pluginRoot . '/Console', 0777, true);
+        file_put_contents(
+            $pluginRoot . '/manifest.php',
+            <<<'PHP'
+<?php
+
+return [
+    'pluginVersion' => 'v1.0.0',
+    'pluginName' => 'Fixture Plugin',
+    'pluginDescription' => 'Fixture plugin',
+    'pluginAuthor' => 'Zen Cart Development Team',
+    'pluginId' => null,
+    'zcVersions' => [],
+    'changelog' => '',
+    'github_repo' => '',
+    'pluginGroups' => [],
+];
+PHP
+        );
+
+        $this->pluginRootsToRemove[] = $pluginRoot;
+
+        return $pluginRoot;
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        if (!is_dir($path)) {
+            return;
+        }
+
+        $items = scandir($path);
+        if ($items === false) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $itemPath = $path . '/' . $item;
+            if (is_dir($itemPath)) {
+                $this->removeDirectory($itemPath);
+                continue;
+            }
+
+            unlink($itemPath);
+        }
+
+        rmdir($path);
+    }
+}

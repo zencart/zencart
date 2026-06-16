@@ -18,7 +18,7 @@
 <?php if (!empty($var_linksList)) { ?>
 <div id="navEZPagesTop">
 <?php for ($i=1, $n=sizeof($var_linksList); $i<=$n; $i++) {  ?>
-  <a href="<?php echo $var_linksList[$i]['link']; ?>"><?php echo $var_linksList[$i]['name']; ?></a><?php echo ($i < $n ? EZPAGES_SEPARATOR_HEADER : '') . "\n"; ?>
+  <a href="<?php echo $var_linksList[$i]['link']; ?>"><?php echo $var_linksList[$i]['name']; ?></a><?php echo ($i < $n ? zen_config('EZPAGES_SEPARATOR_HEADER') : '') . "\n"; ?>
 <?php } // end FOR loop ?>
 </div>
 <?php } ?>

@@ -13,7 +13,7 @@
 // -----
 // If the site does NOT require a 'State' entry in an address, nothing to be done here!
 //
-if (ACCOUNT_STATE !== 'true') {
+if (zen_config('ACCOUNT_STATE') !== 'true') {
     return;
 }
 
@@ -24,7 +24,7 @@ if (ACCOUNT_STATE !== 'true') {
 // associated zones.
 //
 $c2z = [];
-if (ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN === 'true') {
+if (zen_config('ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN') === 'true') {
     // -----
     // If the current site has at least one country enabled that uses zones, a JSON-encoded array of
     // countries-to-zones will be created for use by the jQuery section.

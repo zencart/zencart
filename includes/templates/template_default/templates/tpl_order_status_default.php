@@ -101,7 +101,7 @@ if (isset($order)) {
     // We'll set the order's email address into the session for that module's processing and then remove
     // that value, once finished.
     //
-    if (DOWNLOAD_ENABLED === 'true') {
+    if (zen_config('DOWNLOAD_ENABLED') === 'true') {
         require $template->get_template_dir('tpl_modules_downloads.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_modules_downloads.php';
     }
 

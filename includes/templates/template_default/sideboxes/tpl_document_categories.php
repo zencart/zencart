@@ -42,13 +42,13 @@
       }
 
       if ($box_categories_array[$i]['has_sub_cat']) {
-        $content .= CATEGORIES_SEPARATOR;
+        $content .= zen_config('CATEGORIES_SEPARATOR');
       }
       $content .= '</a>';
 
-      if (SHOW_COUNTS == 'true') {
-        if ((CATEGORIES_COUNT_ZERO == '1' and $box_categories_array[$i]['count'] == 0) or $box_categories_array[$i]['count'] >= 1) {
-          $content .= CATEGORIES_COUNT_PREFIX . $box_categories_array[$i]['count'] . CATEGORIES_COUNT_SUFFIX;
+      if (zen_config('SHOW_COUNTS') === 'true') {
+        if ((zen_config('CATEGORIES_COUNT_ZERO') === '1' and $box_categories_array[$i]['count'] == 0) or $box_categories_array[$i]['count'] >= 1) {
+          $content .= zen_config('CATEGORIES_COUNT_PREFIX') . $box_categories_array[$i]['count'] . zen_config('CATEGORIES_COUNT_SUFFIX');
         }
       }
 

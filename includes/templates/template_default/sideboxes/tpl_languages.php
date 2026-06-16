@@ -17,7 +17,7 @@ foreach ($lng->get_languages_by_code() as $key => $value) {
         . zen_image(DIR_WS_LANGUAGES . $value['directory'] . '/images/' . $value['image'], $value['name'])
         . '</a>&nbsp;&nbsp;';
     $lng_cnt++;
-    if ($lng_cnt >= MAX_LANGUAGE_FLAGS_COLUMNS) {
+    if ($lng_cnt >= zen_config('MAX_LANGUAGE_FLAGS_COLUMNS')) {
         $lng_cnt = 0;
         $content .= '<br>';
     }
