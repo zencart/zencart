@@ -49,45 +49,34 @@ function zc_cli_include_first_configure_file(array $configureFiles): void
 
 function zc_cli_find_admin_root(string $catalogRoot): ?string
 {
+    $candidateFiles = array_merge(
+        glob($catalogRoot . '*/includes/local/configure.php') ?: [],
+        glob($catalogRoot . '*/includes/configure.php') ?: []
+    );
     $candidates = [];
 
-    foreach (glob($catalogRoot . '*/includes/configure.php') ?: [] as $configureFile) {
-        $adminRoot = dirname(dirname($configureFile)) . '/';
+    foreach ($candidateFiles as $configureFile) {
+        $configureDirectory = dirname($configureFile);
+        $adminRoot = basename($configureDirectory) === 'local'
+            ? dirname(dirname($configureDirectory)) . '/'
+            : dirname($configureDirectory) . '/';
         if ($adminRoot === $catalogRoot) {
             continue;
         }
 
-        $basename = basename(rtrim($adminRoot, '/'));
-        $contents = file_get_contents($configureFile) ?: '';
-        $score = 0;
-
-        if (preg_match("~define\\(['\"]DIR_WS_ADMIN['\"],\\s*['\"]([^'\"]+)['\"]\\)~", $contents, $matches) === 1) {
-            $configuredBasename = basename(trim($matches[1], '/'));
-            if ($configuredBasename === $basename) {
-                $score += 2;
-            }
-        }
-
-        if ($basename !== 'admin') {
-            $score += 1;
-        }
-
-        $candidates[] = [
-            'path' => $adminRoot,
-            'score' => $score,
-        ];
+        $candidates[$adminRoot] = $adminRoot;
     }
 
-    usort(
-        $candidates,
-        static fn(array $left, array $right): int => $right['score'] <=> $left['score']
-    );
-
-    foreach ($candidates as $candidate) {
-        return $candidate['path'];
+    if (count($candidates) === 1) {
+        return reset($candidates) ?: null;
     }
 
-    return null;
+    $defaultAdminRoot = $catalogRoot . 'admin/';
+    if (is_dir($defaultAdminRoot)) {
+        return $defaultAdminRoot;
+    }
+
+    return count($candidates) > 0 ? reset($candidates) : null;
 }
 
 date_default_timezone_set(date_default_timezone_get());
