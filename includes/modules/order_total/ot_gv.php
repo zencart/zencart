@@ -17,15 +17,11 @@ class ot_gv
     /**
      * $_check is used to check that configuration keys are set up
      */
-    protected int $_check = 0;
+    protected int $_check;
     /**
      * $calculate_tax determines how tax should be applied to coupon Standard, Credit Note, None
      */
     protected string $calculate_tax;
-    /**
-     * $checkbox is the output to request the amount of gift vouchers the user wants to redeem
-     */
-    protected string $checkbox = '';
     /**
      * $code determines the internal 'code' name used to designate "this" order total module
      */
@@ -98,19 +94,6 @@ class ot_gv
 
         if (!(isset($_SESSION['cot_gv']) && !empty(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') {
             $_SESSION['cot_gv'] = '0.00';
-        }
-
-        if (IS_ADMIN_FLAG !== true && zen_is_logged_in() && !zen_in_guest_checkout()) {
-            $cot_gv = number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2);
-            $gv_account_balance = $this->user_has_gv_account($_SESSION['customer_id']);
-            $this->checkbox =
-                MODULE_ORDER_TOTAL_GV_USER_PROMPT .
-                '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . $cot_gv . '" onfocus="if (this.value == \'' . $cot_gv . '\') this.value = \'\';">' .
-                (
-                    $gv_account_balance > 0
-                    ? '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($gv_account_balance)
-                    : ''
-                );
         }
 
         $this->output = [];
@@ -210,12 +193,22 @@ class ot_gv
      * if customer has a GV balance, then we display the input field to allow entry of desired GV redemption amount
      * @since ZC v1.0.3
      */
-    public function use_credit_amount(): string
+    protected function use_credit_amount(): string
     {
-        if ($this->user_has_gv_account($_SESSION['customer_id'])) {
-            return $this->checkbox;
+        if (IS_ADMIN_FLAG === true || !zen_is_logged_in() || zen_in_guest_checkout() || !$this->user_has_gv_account($_SESSION['customer_id'])) {
+            return '';
         }
-        return '';
+
+        global $currencies;
+        $cot_gv = number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2);
+        $gv_account_balance = $this->user_has_gv_account($_SESSION['customer_id']);
+        $checkbox =
+            MODULE_ORDER_TOTAL_GV_USER_PROMPT .
+            '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . $cot_gv . '" onfocus="if (this.value == \'' . $cot_gv . '\') this.value = \'\';">';
+        if ($gv_account_balance > 0) {
+            $checkbox .= '<br>' . MODULE_ORDER_TOTAL_GV_USER_BALANCE . $currencies->format($gv_account_balance);
+        }
+        return $checkbox;
     }
 
     /**
@@ -302,7 +295,7 @@ class ot_gv
         $selection = [];
         $gv_query = $db->Execute("SELECT coupon_id FROM " . TABLE_COUPONS . " WHERE coupon_type = 'G' AND coupon_active = 'Y' LIMIT 1");
         // checks to see if any GVs are in the system and active or if the current customer has any GV balance
-        if (!$gv_query->EOF || $this->use_credit_amount()) {
+        if (!$gv_query->EOF || $this->use_credit_amount() !== '') {
             $selection = [
                 'id' => $this->code,
                 'module' => $this->title,
@@ -349,11 +342,26 @@ class ot_gv
 
     /**
      * Check to see if redemption code has been entered and redeem if valid
+     *
+     * NOTE: The order_total class' collect_posts method has already captured the
+     * contents of $_POST['cot_gv'] into $_SESSION['cot_gv'].
+     *
      * @since ZC v1.0.3
      */
     public function collect_posts(): void
     {
         global $db, $currencies, $messageStack;
+
+        // -----
+        // Check that any 'cot_gv' amount submitted is a valid numeric
+        // string. If not, reset the value, set a message and return to
+        // the checkout_payment phase.
+        //
+        if (isset($_SESSION['cot_gv']) && !preg_match('/^\d+[\.,]?\d*$/', $_SESSION['cot_gv'])) {
+            $messageStack->add_session('checkout_payment', sprintf(MODULE_ORDER_TOTAL_GV_INVALID_REDEEM_AMOUNT, zen_output_string_protected($_SESSION['cot_gv'])), 'error');
+            $_SESSION['cot_gv'] = '0';
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
+        }
 
         // if we have no GV amount selected, set it to 0
         // if requested redemption amount is greater than value of credits on account, throw error
@@ -446,7 +454,7 @@ class ot_gv
 
         // calculate value based on default currency
         $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
-        $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
+        $gv_payment_amount = $currencies->value($gv_payment_amount, true, zen_config('DEFAULT_CURRENCY'));
         $full_cost = $save_total_cost - $gv_payment_amount;
         if ($full_cost < 0) {
             $gv_payment_amount = $save_total_cost;
@@ -657,7 +665,7 @@ class ot_gv
         global $db;
         if (!isset($this->_check)) {
             $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_GV_STATUS'");
-            $this->_check = $check_query->RecordCount();
+            $this->_check = (int)$check_query->RecordCount();
         }
 
         if ($this->_check) {
