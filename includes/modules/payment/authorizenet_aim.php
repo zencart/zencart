@@ -521,14 +521,69 @@ class authorizenet_aim extends base {
   /**
     * Build admin-page components
     *
-    * @param int $zf_order_id
+    * @param int $order_id
     * @return string
    * @since ZC v1.3.9a
     */
-  function admin_notification($zf_order_id) {
-    $output = '';
-    require(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php');
-    return $output;
+  function admin_notification($order_id)
+  {
+      global $db;
+      $sql = "SELECT transaction_id FROM " . TABLE_AUTHORIZENET . " WHERE order_id = " . (int)$order_id . " AND response_code IN (1, 4) AND transaction_id IS NOT NULL AND transaction_id != '' ORDER BY id DESC";
+      $result = $db->Execute($sql, 1);
+      $transaction_id = $result->fields['transaction_id'] ?? 0;
+      $status = '';
+
+      if (!empty($transaction_id)) {
+          $submit_data = [
+              'getTransactionDetailsRequest' => [
+                  'merchantAuthentication' => [
+                      'name' => MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN,
+                      'transactionKey' => MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY,
+                  ],
+                  'transId' => (string)$transaction_id,
+              ],
+          ];
+          $url = 'https://api.authorize.net/xml/v1/request.api';
+          $devurl = 'https://apitest.authorize.net/xml/v1/request.api';
+          if (MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE === 'Sandbox') $url = $devurl;
+
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_REFERER, HTTP_SERVER . DIR_WS_CATALOG);
+          curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+          curl_setopt($ch, CURLOPT_HEADER, false);
+          curl_setopt($ch, CURLOPT_VERBOSE, false);
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Accept: application/json']);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($submit_data));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_TIMEOUT, 3);
+          curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
+
+          $this->authorize = curl_exec($ch);
+          $this->commError = curl_error($ch);
+          $this->commErrNo = curl_errno($ch);
+          $this->commInfo = @curl_getinfo($ch);
+
+          // strip BOM if present
+          $result = preg_replace('/^\xEF\xBB\xBF/', '', (string)$this->authorize);
+
+          // error_log('Authorize.net Response: ' . $result . "\n\n" . var_export($this->commInfo, true));
+          if (empty($this->commErrNo)) {
+              $response = json_decode(trim($result), true);
+              if (json_last_error() !== JSON_ERROR_NONE || !is_array($response)) {
+                  error_log('<strong>JSON Error decoding Authnet response:</strong> ' . json_last_error_msg() . "\n" . $result);
+              } elseif (isset($response['transaction']['transactionStatus'])) {
+                  $status = '<strong>Transaction Status:</strong> ' . htmlspecialchars($response['transaction']['transactionStatus']);
+              }
+          }
+      }
+
+      $output = '';
+      require DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/authorizenet/authorizenet_admin_notification.php';
+      $output = sprintf('<strong>Transaction ID:</strong> %s.<br>%s<br><a href="https://account.authorize.net/" rel="noopener noreferrer" target="_blank">Go to Authorize.net</a>',
+          zen_output_string_protected($transaction_id), $status) . $output;
+      return $output;
   }
   /**
    * Used to display error message details
@@ -570,8 +625,8 @@ class authorizenet_aim extends base {
     }
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Authorize.net (AIM) Module', 'MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS', 'True', 'Do you want to accept Authorize.net payments via the AIM Method?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Login ID', 'MODULE_PAYMENT_AUTHORIZENET_AIM_LOGIN', 'testing', 'The API Login ID used for the Authorize.net service', '6', '0', now())");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY', 'Test', 'Transaction Key from Authorize.net account<br>See <a href=\"https://support.authorize.net/s/article/How-do-I-obtain-my-API-Login-ID-and-Transaction-Key\" rel=\"noopener\" target=\"_blank\">How-do-I-obtain-my-API-Login-ID-and-Transaction-Key</a>', '6', '0', now(), 'zen_cfg_password_display')");
-    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Transaction Mode', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE', 'Test', 'Transaction mode used for processing orders.<br><strong>Production</strong>=Live processing with real account credentials<br><strong>Test</strong>=Simulations with real account credentials<br><strong>Sandbox</strong>=use special sandbox transaction key to do special testing of success/fail transaction responses (obtain sandbox credentials via <a href=\"https://developer.authorize.net/hello_world/sandbox/\">developer.authorize.net</a>)', '6', '0', 'zen_cfg_select_option(array(\'Test\', \'Production\', \'Sandbox\'), ', now())");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TXNKEY', 'Test', 'Transaction Key from Authorize.net account<br>See <a href=\"https://support.authorize.net/knowledgebase/Knowledgearticle/?code=KA-07619\" rel=\"noopener\" target=\"_blank\">How-do-I-obtain-my-API-Login-ID-and-Transaction-Key</a>', '6', '0', now(), 'zen_cfg_password_display')");
+    $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Transaction Mode', 'MODULE_PAYMENT_AUTHORIZENET_AIM_TESTMODE', 'Test', 'Transaction mode used for processing orders.<br><strong>Production</strong>=Live processing with real account credentials<br><strong>Test</strong>=Simulations with real account credentials<br><strong>Sandbox</strong>=use special sandbox transaction key to do special testing of success/fail transaction responses (obtain sandbox credentials via <a href=\"https://developer.authorize.net/hello_world/sandbox/\" rel=\"noopener\" target=\"_blank\">developer.authorize.net</a>)', '6', '0', 'zen_cfg_select_option(array(\'Test\', \'Production\', \'Sandbox\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Authorization Type', 'MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE', 'Authorize', 'Do you want submitted credit card transactions to be authorized only, or authorized and captured?', '6', '0', 'zen_cfg_select_option(array(\'Authorize\', \'Authorize+Capture\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Database Storage', 'MODULE_PAYMENT_AUTHORIZENET_AIM_STORE_DATA', 'True', 'Do you want to save the gateway communications data to the database?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
     $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Customer Notifications', 'MODULE_PAYMENT_AUTHORIZENET_AIM_EMAIL_CUSTOMER', 'False', 'Should Authorize.Net email a receipt to the customer?', '6', '0', 'zen_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -699,15 +754,6 @@ class authorizenet_aim extends base {
     $this->authorize = curl_exec($ch);
     $this->commError = curl_error($ch);
     $this->commErrNo = curl_errno($ch);
-
-    if ($this->commErrNo == 35) {
-      trigger_error('ALERT: Could not process Authorize.net AIM transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
-      curl_setopt($ch, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
-      $this->authorize = curl_exec($ch);
-      $this->commError = curl_error($ch);
-      $this->commErrNo = curl_errno($ch);
-    }
-
     $this->commInfo = @curl_getinfo($ch);
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
@@ -777,7 +823,7 @@ class authorizenet_aim extends base {
       $sql = $db->bindVars($sql, ':respText', $db_response_text, 'string');
       $sql = $db->bindVars($sql, ':authType', ($response[11] ?? ''), 'string');
       if (!empty($this->transaction_id)) {
-        $sql = $db->bindVars($sql, ':transID', substr($this->transaction_id, 0, strpos($this->transaction_id, ' ')), 'string');
+        $sql = $db->bindVars($sql, ':transID', (($pos = strpos((string)$this->transaction_id, ' ')) === false ? trim((string)$this->transaction_id) : substr((string)$this->transaction_id, 0, $pos)), 'string');
       } else {
         $sql = $db->bindVars($sql, ':transID', 'NULL', 'passthru');
       }
