@@ -105,12 +105,12 @@ class paypal extends base {
     global $order, $messageStack;
     $this->code = 'paypal';
     $this->codeVersion = '1.5.8';
-    $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_SORT_ORDER : null;
-    $this->enabled = (defined('MODULE_PAYMENT_PAYPAL_STATUS') && MODULE_PAYMENT_PAYPAL_STATUS == 'True');
+    $this->sort_order = zen_config('MODULE_PAYMENT_PAYPAL_SORT_ORDER');
+    $this->enabled = (zen_config('MODULE_PAYMENT_PAYPAL_STATUS') === 'True');
     if (IS_ADMIN_FLAG === true) {
       // Payment Module title in Admin
       $this->title = STORE_COUNTRY != '223' ? MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE_NONUSA : MODULE_PAYMENT_PAYPAL_TEXT_ADMIN_TITLE;
-      if (IS_ADMIN_FLAG === true && defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG != 'Off') $this->title .= '<span class="alert"> (debug mode active)</span>';
+      if (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') !== 'Off') $this->title .= '<span class="alert"> (debug mode active)</span>';
       if (IS_ADMIN_FLAG === true && defined('MODULE_PAYMENT_PAYPAL_TESTING') && MODULE_PAYMENT_PAYPAL_TESTING == 'Test') $this->title .= '<span class="alert"> (dev/test mode active)</span>';
     } else {
       $this->title = MODULE_PAYMENT_PAYPAL_TEXT_CATALOG_TITLE; // Payment Module title in Catalog
@@ -119,7 +119,7 @@ class paypal extends base {
     if (null === $this->sort_order) return false;
 
     $this->description = MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION;
-    if (defined('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID > 0) {
+    if (defined('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') && (int)zen_config('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') > 0) {
       $this->order_status = MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID;
     }
 
@@ -128,7 +128,7 @@ class paypal extends base {
     /**
      * Determine which PayPal URL to direct the customer's browser to when needed
      */
-    if (MODULE_PAYMENT_PAYPAL_HANDLER == 'live' || !strstr(MODULE_PAYMENT_PAYPAL_HANDLER, 'sandbox')) {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_HANDLER') === 'live' || !strstr(zen_config('MODULE_PAYMENT_PAYPAL_HANDLER'), 'sandbox')) {
       $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
     } else {
       $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
@@ -145,9 +145,9 @@ class paypal extends base {
   function update_status() {
     global $order, $db;
 
-    if ($this->enabled && (int)MODULE_PAYMENT_PAYPAL_ZONE > 0 && isset($order->billing['country']['id'])) {
+    if ($this->enabled && (int)zen_config('MODULE_PAYMENT_PAYPAL_ZONE') > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
-      $check_query = $db->Execute("SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id");
+      $check_query = $db->Execute("SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE geo_zone_id = '" . zen_config('MODULE_PAYMENT_PAYPAL_ZONE') . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id");
       while (!$check_query->EOF) {
         if ($check_query->fields['zone_id'] < 1) {
           $check_flag = true;
@@ -263,9 +263,9 @@ class paypal extends base {
                    'lc' => $this->getLanguageCode(),
 //                   'lc' => $order->customer['country']['iso_code_2'],
                    'charset' => CHARSET,
-                   'page_style' => MODULE_PAYMENT_PAYPAL_PAGE_STYLE,
+                   'page_style' => zen_config('MODULE_PAYMENT_PAYPAL_PAGE_STYLE'),
                    'custom' => zen_session_name() . '=' . zen_session_id(),
-                   'business' => MODULE_PAYMENT_PAYPAL_BUSINESS_ID,
+                   'business' => zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID'),
                    'return' => zen_href_link(FILENAME_CHECKOUT_PROCESS, 'referer=paypal', 'SSL'),
                    'cancel_return' => zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                    'shopping_url' => zen_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
@@ -286,7 +286,7 @@ class paypal extends base {
     if ($order->customer['suburb'] != '') $optionsCust['address2'] = $order->customer['suburb'];
     // different format for Japanese address layout:
     if ($order->customer['country']['iso_code_2'] == 'JP') $optionsCust['zip'] = substr($order->customer['postcode'], 0, 3) . '-' . substr($order->customer['postcode'], 3);
-    if (MODULE_PAYMENT_PAYPAL_ADDRESS_REQUIRED == 2) {
+    if ((int)zen_config('MODULE_PAYMENT_PAYPAL_ADDRESS_REQUIRED') === 2) {
       $optionsCust = array(
                    'first_name' => replace_accents($order->delivery['firstname'] != '' ? $order->delivery['firstname'] : $order->billing['firstname']),
                    'last_name' => replace_accents($order->delivery['lastname'] != '' ? $order->delivery['lastname'] : $order->billing['lastname']),
@@ -302,9 +302,9 @@ class paypal extends base {
       if ($order->delivery['country']['iso_code_2'] == 'JP') $optionsCust['zip'] = substr($order->delivery['postcode'], 0, 3) . '-' . substr($order->delivery['postcode'], 3);
     }
     $optionsShip['no_shipping'] = MODULE_PAYMENT_PAYPAL_ADDRESS_REQUIRED;
-    if (MODULE_PAYMENT_PAYPAL_ADDRESS_OVERRIDE == '1') $optionsShip['address_override'] = MODULE_PAYMENT_PAYPAL_ADDRESS_OVERRIDE;
+    if (zen_config('MODULE_PAYMENT_PAYPAL_ADDRESS_OVERRIDE') === '1') $optionsShip['address_override'] = MODULE_PAYMENT_PAYPAL_ADDRESS_OVERRIDE;
     // prepare cart contents details where possible
-    if (MODULE_PAYMENT_PAYPAL_DETAILED_CART == 'Yes') $optionsLineItems = ipn_getLineItemDetails($my_currency);
+    if (zen_config('MODULE_PAYMENT_PAYPAL_DETAILED_CART') === 'Yes') $optionsLineItems = ipn_getLineItemDetails($my_currency);
     if (sizeof($optionsLineItems) > 0) {
       $optionsLineItems['cmd'] = '_cart';
 //      $optionsLineItems['num_cart_items'] = sizeof($order->products);
@@ -389,7 +389,7 @@ class paypal extends base {
     $user_locale_info[] = strtoupper($billingISO['countries_iso_code_2']);
     $custISO = zen_get_countries((int)$order->customer['country']['id'], true);
     $user_locale_info[] = strtoupper($custISO['countries_iso_code_2']);
-    $storeISO = zen_get_countries((int)STORE_COUNTRY, true);
+    $storeISO = zen_get_countries((int)zen_config('STORE_COUNTRY'), true);
     $user_locale_info[] = strtoupper($storeISO['countries_iso_code_2']);
 
     $to_match = array_map('strtoupper', array_merge($allowed_country_codes, $allowed_language_codes));
@@ -411,7 +411,7 @@ class paypal extends base {
     unset($_SESSION['paypal_transaction_info']);
     if (isset($_GET['referer']) && $_GET['referer'] == 'paypal') {
       $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE', $_GET);
-      if (defined('MODULE_PAYMENT_PAYPAL_PDTTOKEN') && MODULE_PAYMENT_PAYPAL_PDTTOKEN != '' && isset($_GET['tx']) && $_GET['tx'] != '') {
+      if (zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN', '') !== '' && isset($_GET['tx']) && $_GET['tx'] != '') {
         $pdtStatus = $this->_getPDTresults($this->transaction_amount, $this->transaction_currency, $_GET['tx']);
       } else {
         $pdtStatus = false;
@@ -548,8 +548,8 @@ class paypal extends base {
       $check_query = $db->Execute("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_STATUS'");
       $this->_check = $check_query->RecordCount();
     }
-    if (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && !in_array(MODULE_PAYMENT_PAYPAL_HANDLER, array('live', 'sandbox'))) {
-      $val = (stristr(MODULE_PAYMENT_PAYPAL_HANDLER, 'sand')) ? 'sandbox' : 'live';
+    if (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && !in_array(zen_config('MODULE_PAYMENT_PAYPAL_HANDLER'), array('live', 'sandbox'))) {
+      $val = (stristr(zen_config('MODULE_PAYMENT_PAYPAL_HANDLER'), 'sand')) ? 'sandbox' : 'live';
       $sql = "UPDATE " . TABLE_CONFIGURATION . " SET configuration_title = 'Live or Sandbox', configuration_value = '" . $val . "', configuration_description= '<strong>Live: </strong> Used to process Live transactions<br><strong>Sandbox: </strong>For developers and testing', set_function='zen_cfg_select_option(array(\'live\', \'sandbox\'), ' WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_HANDLER'";
       $db->Execute($sql);
     }

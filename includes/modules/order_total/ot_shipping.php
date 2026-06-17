@@ -49,7 +49,7 @@ class ot_shipping extends base
         $this->code = 'ot_shipping';
         $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
         $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
-        $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') ? (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER');
         if (null === $this->sort_order) {
             return false;
         }
@@ -66,16 +66,16 @@ class ot_shipping extends base
         $this->output = [];
         unset($_SESSION['shipping_tax_description']);
 
-        if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING === 'true') {
+        if (zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') === 'true') {
             $pass = false;
-            switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
+            switch (zen_config('MODULE_ORDER_TOTAL_SHIPPING_DESTINATION')) {
                 case 'national':
-                    if ($order->delivery['country_id'] == STORE_COUNTRY) {
+                    if ($order->delivery['country_id'] == zen_config('STORE_COUNTRY')) {
                         $pass = true;
                     }
                     break;
               case 'international':
-                    if ($order->delivery['country_id'] != STORE_COUNTRY) {
+                    if ($order->delivery['country_id'] != zen_config('STORE_COUNTRY')) {
                         $pass = true;
                     }
                     break;
@@ -86,7 +86,7 @@ class ot_shipping extends base
                     break;
             }
 
-            if ($pass &&  ($order->info['total'] - $order->info['shipping_cost']) >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) {
+            if ($pass &&  ($order->info['total'] - $order->info['shipping_cost']) >= zen_config('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER')) {
                 $order->info['shipping_method'] = $this->title;
                 $order->info['total'] -= $order->info['shipping_cost'];
                 $order->info['shipping_cost'] = 0;
@@ -123,10 +123,10 @@ class ot_shipping extends base
                         $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
                         $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
                     } else {
-                        if (STORE_ZONE == $order->billing['zone_id']) {
+                        if (zen_config('STORE_ZONE') === $order->billing['zone_id']) {
                             $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
                             $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
-                        } elseif (STORE_ZONE == $order->delivery['zone_id']) {
+                        } elseif (zen_config('STORE_ZONE') === $order->delivery['zone_id']) {
                             $shipping_tax = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
                             $shipping_tax_description = zen_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
                         } else {
@@ -144,7 +144,7 @@ class ot_shipping extends base
                 $order->info['total'] += $shipping_tax_amount;
                 $_SESSION['shipping_tax_description'] = $shipping_tax_description;
                 $_SESSION['shipping_tax_amount'] =  $shipping_tax_amount;
-                if (DISPLAY_PRICE_WITH_TAX === 'true') {
+                if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true') {
                     $order->info['shipping_cost'] += $shipping_tax_amount;
                 }
             }

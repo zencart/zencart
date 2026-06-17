@@ -50,7 +50,7 @@ class ot_tax
             $this->code = 'ot_tax';
             $this->title = MODULE_ORDER_TOTAL_TAX_TITLE;
             $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;
-            $this->sort_order = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') ? MODULE_ORDER_TOTAL_TAX_SORT_ORDER : null;
+            $this->sort_order = zen_config('MODULE_ORDER_TOTAL_TAX_SORT_ORDER');
             if (null === $this->sort_order) {
                 return false;
             }
@@ -67,7 +67,7 @@ class ot_tax
 
             $taxDescription = '';
             $taxValue = 0;
-            if (STORE_TAX_DISPLAY_STATUS === '1') {
+            if (zen_config('STORE_TAX_DISPLAY_STATUS') === '1') {
                 $taxAddress = zen_get_tax_locations();
                 $result = zen_get_all_tax_descriptions($taxAddress['country_id'], $taxAddress['zone_id']);
                 if (count($result) !== 0) {
@@ -82,8 +82,8 @@ class ot_tax
                 unset($order->info['tax_groups'][0]);
             }
             foreach ($order->info['tax_groups'] as $key => $value) {
-                if (SHOW_SPLIT_TAX_CHECKOUT === 'true') {
-                    if ($value > 0 || (abs($value) < PHP_FLOAT_EPSILON && STORE_TAX_DISPLAY_STATUS === '1')) {
+                if (zen_config('SHOW_SPLIT_TAX_CHECKOUT') === 'true') {
+                    if ($value > 0 || (abs($value) < PHP_FLOAT_EPSILON && zen_config('STORE_TAX_DISPLAY_STATUS') === '1')) {
                         $this->output[] = [
                             'title' => ((is_numeric($key) && $key == 0) ? TEXT_UNKNOWN_TAX_RATE : $key) . ':',
                             'text' => $currencies->format($value, true, $order->info['currency'], $order->info['currency_value']),
@@ -91,13 +91,13 @@ class ot_tax
                         ];
                     }
                 } else {
-                    if ($value > 0 || (abs($value) < PHP_FLOAT_EPSILON && STORE_TAX_DISPLAY_STATUS === '1')) {
+                    if ($value > 0 || (abs($value) < PHP_FLOAT_EPSILON && zen_config('STORE_TAX_DISPLAY_STATUS') === '1')) {
                         $taxDescription .= ((is_numeric($key) && $key == 0) ? TEXT_UNKNOWN_TAX_RATE : $key) . ' + ';
                         $taxValue += $value;
                     }
                 }
             }
-            if (SHOW_SPLIT_TAX_CHECKOUT !== 'true' && ($taxValue > 0 || STORE_TAX_DISPLAY_STATUS === '1')) {
+            if (zen_config('SHOW_SPLIT_TAX_CHECKOUT') !== 'true' && ($taxValue > 0 || zen_config('STORE_TAX_DISPLAY_STATUS') === '1')) {
                 $this->output[] = [
                     'title' => mb_substr($taxDescription, 0, mb_strlen($taxDescription) - 3) . ':',
                     'text' => $currencies->format($taxValue, true, $order->info['currency'], $order->info['currency_value']),
