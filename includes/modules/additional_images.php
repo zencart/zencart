@@ -25,7 +25,7 @@ $images_array = [];
 // do not check for additional images when turned off
 if ($products_image !== '' && !empty($flag_show_product_info_additional_images)) {
 
-    if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
+    if (zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') {
         $products_image_directory = DIR_WS_IMAGES;
         $images_array = (new Product((int)$_GET['products_id']))->get('additional_images') ?? [];
         $images_array = array_map(static fn($f) => $f['image_filename'], $images_array);
@@ -42,7 +42,7 @@ $num_images = count($images_array);
 $list_box_contents = [];
 $title = '';
 
-$max_image_grid_columns = (int)IMAGES_AUTO_ADDED; // "Number of additional-images per row"
+$max_image_grid_columns = (int)zen_config('IMAGES_AUTO_ADDED'); // "Number of additional-images per row"
 
 if ($num_images > 0) {
     $row = 0;
@@ -56,7 +56,7 @@ if ($num_images > 0) {
     for ($i = 0, $n = $num_images; $i < $n; $i++) {
         $file = $images_array[$i];
         $products_image_extension = substr($file, strrpos($file, '.'));
-        $products_image_large = str_replace(DIR_WS_IMAGES, DIR_WS_IMAGES . 'large/', $products_image_directory) . str_replace($products_image_extension, '', $file) . IMAGE_SUFFIX_LARGE . $products_image_extension;
+        $products_image_large = str_replace(DIR_WS_IMAGES, DIR_WS_IMAGES . 'large/', $products_image_directory) . str_replace($products_image_extension, '', $file) . zen_config('IMAGE_SUFFIX_LARGE') . $products_image_extension;
 
         // -----
         // This notifier lets any image-handler know the current image being processed, providing the following parameters:
@@ -70,7 +70,7 @@ if ($num_images > 0) {
         $products_image_large = ($flag_has_large ? $products_image_large : $products_image_directory . $file);
         $flag_display_large = (IMAGE_ADDITIONAL_DISPLAY_LINK_EVEN_WHEN_NO_LARGE === 'Yes' || $flag_has_large);
         $base_image = $products_image_directory . $file;
-        $thumb_slashes = zen_image(addslashes($base_image), addslashes($products_name), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+        $thumb_slashes = zen_image(addslashes($base_image), addslashes($products_name), (int)zen_config('SMALL_IMAGE_WIDTH'), (int)zen_config('SMALL_IMAGE_HEIGHT'));
 
         // -----
         // This notifier lets any image-handler "massage" the name of the current thumbnail image name (with appropriate
@@ -81,7 +81,7 @@ if ($num_images > 0) {
         //
         $GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_ADDITIONAL_IMAGES_THUMB_SLASHES', [], $thumb_slashes);
 
-        $thumb_regular = zen_image($base_image, $products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT);
+        $thumb_regular = zen_image($base_image, $products_name, (int)zen_config('SMALL_IMAGE_WIDTH'), (int)zen_config('SMALL_IMAGE_HEIGHT'));
         $large_link = zen_href_link(FILENAME_POPUP_IMAGE_ADDITIONAL, 'pID=' . $_GET['products_id'] . '&pic=' . $i . '&products_image_large_additional=' . $products_image_large);
 
         // Link Preparation:

@@ -42,7 +42,7 @@ class table extends ZenShipping
         }
 
         if ($this->enabled) {
-            // check MODULE_SHIPPING_TABLE_HANDLING_METHOD is in
+            // check zen_config('MODULE_SHIPPING_TABLE_HANDLING_METHOD') is in
             if (zen_config('MODULE_SHIPPING_TABLE_HANDLING_METHOD') === null) {
                 $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Handling Per Order or Per Box', 'MODULE_SHIPPING_TABLE_HANDLING_METHOD', 'Order', 'Do you want to charge Handling Fee Per Order or Per Box?', '6', '0', 'zen_cfg_select_option(array(\'Order\', \'Box\'), ', now())");
             }
@@ -112,7 +112,7 @@ class table extends ZenShipping
         }
 
         $show_box_weight = '';
-        if (MODULE_SHIPPING_TABLE_MODE === 'weight') {
+        if (zen_config('MODULE_SHIPPING_TABLE_MODE') === 'weight') {
             $shipping = $shipping * $shipping_num_boxes;
             // show boxes if weight
             switch (zen_config('SHIPPING_BOX_WEIGHT_DISPLAY')) {

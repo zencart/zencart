@@ -20,7 +20,7 @@ global $db;
 $layoutBoxRepository = new LayoutBoxRepository($db);
 $sideboxes = $layoutBoxRepository->getActiveForLocation(1, $template_dir, 100);
 
-$column_width = (int)BOX_WIDTH_RIGHT;
+$column_width = (int)zen_config('BOX_WIDTH_RIGHT');
 foreach ($sideboxes as $sidebox) {
     $boxFile = (new SideboxFinder(new FileSystem))->sideboxPath($sidebox, $template_dir, true);
     if ($boxFile !== false) {

@@ -34,7 +34,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
     }
 
     // Stock Check to prevent checkout if cart contents rules violations exist
-    if (STOCK_CHECK === 'true' && STOCK_ALLOW_CHECKOUT !== 'true' && isset($_SESSION['cart'])) {
+    if (zen_config('STOCK_CHECK') === 'true' && zen_config('STOCK_ALLOW_CHECKOUT') !== 'true' && isset($_SESSION['cart'])) {
         $products = $_SESSION['cart']->get_products();
         for ($i = 0, $n = count($products); $i < $n; $i++) {
             $qtyAvailable = zen_get_products_stock($products[$i]['id']);
@@ -68,7 +68,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
     }
 
     // See if the paypalwpp module is enabled.
-    if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS === 'True') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True') {
         $paypalwpp_module = 'paypalwpp';
         // init the payment object
         $payment_modules = new payment($paypalwpp_module);
@@ -142,9 +142,9 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
 
     $extraDebug = (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS === 'All');
 
-    if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && str_contains(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log'))
-        || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && str_contains(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log'))
-        || (!empty($_REQUEST['ppdebug']) && $_REQUEST['ppdebug'] === 'on' && str_contains(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR']))
+    if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && str_contains(zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING'), 'Log'))
+        || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && str_contains(zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG'), 'Log'))
+        || (!empty($_REQUEST['ppdebug']) && $_REQUEST['ppdebug'] === 'on' && str_contains(zen_config('EXCLUDE_ADMIN_IP_FOR_MAINTENANCE'), $_SERVER['REMOTE_ADDR']))
         || $extraDebug) {
         $show_all_errors = true;
         $debug_logfile_path = ipn_debug_email('Breakpoint: 0 - Initializing debugging.');
@@ -234,7 +234,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
     }
 
     if (!$isECtransaction && !isset($_POST['parent_txn_id']) && $txn_type !== 'cleared-echeck') {
-        if (defined('MODULE_PAYMENT_PAYPAL_PDTTOKEN') && MODULE_PAYMENT_PAYPAL_PDTTOKEN !== '') {
+        if (zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN', '') !== '') {
             ipn_debug_email('IPN NOTICE :: IPN pausing: waiting for PDT to process. Sleeping 10 seconds ...');
             sleep(10);
         }
@@ -388,10 +388,10 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 ipn_debug_email('Breakpoint: 5e - PP hist_data:' . print_r($sql_data_array, true));
                 zen_db_perform(TABLE_PAYPAL_PAYMENT_STATUS_HISTORY, $sql_data_array);
                 ipn_debug_email('Breakpoint: 5f - PP hist saved');
-                $new_status = (int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID;
+                $new_status = (int)zen_config('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID');
                 ipn_debug_email('Breakpoint: 5g - new status code: ' . $new_status);
                 if ($_POST['payment_status'] === 'Pending') {
-                    $new_status = (defined('MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID > 0 ? (int)MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID : 2);
+                    $new_status = ((int)zen_config('MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID', '0') > 0 ? (int)zen_config('MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID') : 2);
                     ipn_debug_email('Breakpoint: 5h - newer status code: ' . (int)$new_status);
                 }
 
@@ -399,7 +399,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 zen_update_orders_history($insert_id, $comments, null, $new_status, 0);
                 ipn_debug_email("Breakpoint: 5j - order stat hist update: order-id: $insert_id, status-id: $new_status, comments: $comments");
 
-                if (MODULE_PAYMENT_PAYPAL_ADDRESS_OVERRIDE === '1') {
+                if (zen_config('MODULE_PAYMENT_PAYPAL_ADDRESS_OVERRIDE') === '1') {
                     $comments = '**** ADDRESS OVERRIDE ALERT!!! **** CHECK PAYPAL ORDER DETAILS FOR ACTUAL ADDRESS SELECTED BY CUSTOMER!!';
                     zen_update_orders_history($insert_id, $comments, null, -1, -1);
                 }
@@ -507,36 +507,36 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 case 'voided':
                 case ($_POST['payment_status'] === 'Refunded' || $_POST['payment_status'] === 'Reversed' || $_POST['payment_status'] === 'Voided'):
                     //payment_status=Refunded or payment_status=Voided
-                    $new_status = defined('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID') ? (int)MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID : 1;
-                    if (defined('MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID > 0 && !$isECtransaction) {
-                        $new_status = (int)MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID;
+                    $new_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 1);
+                    if ((int)zen_config('MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID', '0') > 0 && !$isECtransaction) {
+                        $new_status = (int)zen_config('MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID');
                     }
                     break;
                 case 'echeck-denied':
                 case 'denied-echeck':
                 case 'failed-echeck':
                     //payment_status=Denied or failed
-                    $new_status = ($isECtransaction ? (int)MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID : (int)MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID);
+                    $new_status = ($isECtransaction ? (int)zen_config('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID') : (int)zen_config('MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID'));
                     break;
                 case 'echeck-cleared':
-                    $new_status = (int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID;
+                    $new_status = (int)zen_config('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID');
                     break;
                 case ($txn_type === 'express-checkout-cleared' || str_starts_with($txn_type, 'cleared-')):
                     //express-checkout-cleared
-                    $new_status = ($isECtransaction && defined('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') ? (int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID : (int)MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID);
+                    $new_status = ($isECtransaction && defined('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') ? (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') : (int)zen_config('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID'));
                     if (empty($new_status)) {
                         $new_status = 2;
                     }
                     break;
                 case 'pending-auth':
                     // pending authorization
-                    $new_status = ($isECtransaction ? (int)MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID : (int)MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID);
+                    $new_status = ($isECtransaction ? (int)zen_config('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID') : (int)zen_config('MODULE_PAYMENT_PAYPAL_REFUND_ORDER_STATUS_ID'));
                     break;
                 case (str_starts_with($txn_type, 'denied-')):
                     // denied for any other reason - treat as pending for now
                 case (str_starts_with($txn_type, 'pending-')):
                     // pending anything
-                    $new_status = ($isECtransaction ? (int)MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID : (int)MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID);
+                    $new_status = ($isECtransaction ? (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID') : (int)zen_config('MODULE_PAYMENT_PAYPAL_PROCESSING_STATUS_ID'));
                     break;
             }
             // update order status history with new information

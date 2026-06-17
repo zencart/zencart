@@ -84,10 +84,10 @@
 
 
 // prepare output based on suitable content components
-if (defined('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS') && MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS != '') {
+if (zen_config('MODULE_PAYMENT_AUTHORIZENET_AIM_STATUS', '') !== '') {
   $output = '<!-- BOF: aim admin transaction processing tools -->';
   $output .= $outputStartBlock;
-  if (MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE == 'Authorize' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on')) {
+  if (zen_config('MODULE_PAYMENT_AUTHORIZENET_AIM_AUTHORIZATION_TYPE') === 'Authorize' || (isset($_GET['authcapt']) && $_GET['authcapt']=='on')) {
     if (method_exists($this, '_doRefund')) $output .= $outputRefund;
     if (method_exists($this, '_doCapt')) $output .= $outputCapt;
     if (method_exists($this, '_doVoid')) $output .= $outputVoid;

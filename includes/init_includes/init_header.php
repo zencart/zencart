@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // give the visitors a message that the website will be down at ... time
 if (zen_config('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE') === 'false') {
-    $messageStack->add('header', TEXT_BEFORE_DOWN_FOR_MAINTENANCE . PERIOD_BEFORE_DOWN_FOR_MAINTENANCE);
+    $messageStack->add('header', TEXT_BEFORE_DOWN_FOR_MAINTENANCE . zen_config('PERIOD_BEFORE_DOWN_FOR_MAINTENANCE'));
 }
 
 // this will let the admin know that the website is DOWN FOR MAINTENANCE to the public
