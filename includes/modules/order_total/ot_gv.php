@@ -92,8 +92,8 @@ class ot_gv
 
         $this->credit_class = true;
 
-        if (!(isset($_SESSION['cot_gv']) && !empty(ltrim($_SESSION['cot_gv'], ' 0'))) || $_SESSION['cot_gv'] == '0') {
-            $_SESSION['cot_gv'] = '0.00';
+        if (!isset($_SESSION['cot_gv']) || !is_string($_SESSION['cot_gv']) || empty(ltrim($_SESSION['cot_gv'], ' 0')) || $_SESSION['cot_gv'] === '0.00') {
+            $_SESSION['cot_gv'] = '0';
         }
 
         $this->output = [];
@@ -113,34 +113,36 @@ class ot_gv
     {
         global $order, $currencies;
 
-        if (!empty($_SESSION['cot_gv'])) {
-            $order_total_details = $this->get_order_total_details();
-            $od_amount = $this->calculate_deductions($order_total_details);
-            $this->deduction = $od_amount['total'];
-            if ($od_amount['total'] > 0) {
-                $tax = 0;
-                foreach ($order->info['tax_groups'] as $key => $value) {
-                    if (isset($od_amount['tax_groups'][$key])) {
-                        $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
-                        $tax += $od_amount['tax_groups'][$key];
-                    }
+        if (empty($_SESSION['cot_gv'])) {
+            return;
+        }
+
+        $order_total_details = $this->get_order_total_details();
+        $od_amount = $this->calculate_deductions($order_total_details);
+        $this->deduction = $od_amount['total'];
+        if ($od_amount['total'] > 0) {
+            $tax = 0;
+            foreach ($order->info['tax_groups'] as $key => $value) {
+                if (isset($od_amount['tax_groups'][$key])) {
+                    $order->info['tax_groups'][$key] -= $od_amount['tax_groups'][$key];
+                    $tax += $od_amount['tax_groups'][$key];
                 }
-                $order->info['total'] -= $od_amount['total'];
-                if ($this->calculate_tax === 'Standard') {
-                    $order->info['total'] -= $tax;
-                }
-                if ($order->info['total'] < 0) {
-                    $order->info['total'] = 0;
-                }
-                $order->info['tax'] -= $od_amount['tax'];
-                // prepare order-total output for display and storing to invoice
-                $this->output[] = [
-                    'title' => $this->title . ':',
-                    // &#8209; is a non-break-hyphen so displays with number
-                    'text' => '&#8209;' . $currencies->format($od_amount['total']),
-                    'value' => $od_amount['total'],
-                ];
             }
+            $order->info['total'] -= $od_amount['total'];
+            if ($this->calculate_tax === 'Standard') {
+                $order->info['total'] -= $tax;
+            }
+            if ($order->info['total'] < 0) {
+                $order->info['total'] = 0;
+            }
+            $order->info['tax'] -= $od_amount['tax'];
+            // prepare order-total output for display and storing to invoice
+            $this->output[] = [
+                'title' => $this->title . ':',
+                // &#8209; is a non-break-hyphen so displays with number
+                'text' => '&#8209;' . $currencies->format($od_amount['total']),
+                'value' => $od_amount['total'],
+            ];
         }
     }
 
@@ -152,41 +154,34 @@ class ot_gv
     {
         unset($_SESSION['cot_gv']);
     }
-
+    
     /**
-     * Check for validity of redemption amounts and recalculate order totals to include proposed GV redemption deductions
-     *
-     * @TODO - Per order_total class, this function is not used. See process() instead.
-     * @since ZC v1.0.3
+     * Validate current $_SESSION['cot_gv'] value, redirecting to the
+     * checkout payment phase if an issue is detected. If the value **is**
+     * valid, return the session value with any ',' changed to a '.'
+     * so that the value is a valid numeric string.
      */
-    public function pre_confirmation_check($order_total): int|float
+    protected function getGvAmount(): string
     {
-        global $order, $currencies, $messageStack;
+        // -----
+        // Ensure that the session variable is set.
+        //
+        $_SESSION['cot_gv'] ??= '0';
+        $_SESSION['cot_gv'] = (string)$_SESSION['cot_gv'];
 
-        // clean out negative values and strip common currency symbols
-        $_SESSION['cot_gv'] = preg_replace('/[^0-9.,%]/', '', $_SESSION['cot_gv']);
-
-        if ($_SESSION['cot_gv'] > 0) {
-            // if cot_gv value contains any invalid characters, throw error
-            if (preg_match('/[^0-9\,.]/', trim($_SESSION['cot_gv']))) {
-                $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, 'error');
-                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-            }
-
-            // if requested redemption amount is greater than value of credits on account, throw error
-            if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
-                $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT, 'error');
-                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-            }
-
-            $od_amount = $this->calculate_deductions($this->get_order_total_details());
-            $order->info['total'] = $order->info['total'] - $od_amount['total'];
-            if (zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
-                $order->info['total'] -= $od_amount['tax'];
-            }
-            return $od_amount['total'] + $od_amount['tax'];
+        // -----
+        // Check that the session's 'cot_gv' value is a valid numeric
+        // string. If not, reset the value, set a message and return to
+        // the specified page.
+        //
+        if (!preg_match('/^\d+[\.,]?\d*$/', $_SESSION['cot_gv'])) {
+            global $messageStack;
+            $messageStack->add_session('checkout_payment', sprintf(MODULE_ORDER_TOTAL_GV_INVALID_REDEEM_AMOUNT, zen_output_string_protected($_SESSION['cot_gv'])), 'error');
+            $_SESSION['cot_gv'] = '0';
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
         }
-        return 0;
+
+        return str_replace(',', '.', $_SESSION['cot_gv']);
     }
 
     /**
@@ -200,7 +195,7 @@ class ot_gv
         }
 
         global $currencies;
-        $cot_gv = number_format($currencies->normalizeValue($_SESSION['cot_gv']), 2);
+        $cot_gv = number_format($currencies->normalizeValue($this->getGvAmount()), 2);
         $gv_account_balance = $this->user_has_gv_account($_SESSION['customer_id']);
         $checkbox =
             MODULE_ORDER_TOTAL_GV_USER_PROMPT .
@@ -324,7 +319,7 @@ class ot_gv
         $gv_payment_amount = 0;
         // check for valid redemption amount vs available credit for current customer
         if (!empty($_SESSION['cot_gv'])) {
-            $gv_result = $db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id']);
+            $gv_result = $db->Execute("SELECT amount FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = " . (int)$_SESSION['customer_id'], 1);
             // obtain final "deduction" amount
             $gv_payment_amount = $this->deduction;
             // determine amount of GV to redeem based on available balance minus qualified/calculated deduction suitable to this order
@@ -334,7 +329,7 @@ class ot_gv
         }
 
         // clear GV redemption flag since it's already been claimed and deducted
-        $_SESSION['cot_gv'] = false;
+        unset($_SESSION['cot_gv']);
 
         // send back the amount of GV used for payment on this order
         return $gv_payment_amount;
@@ -353,30 +348,26 @@ class ot_gv
         global $db, $currencies, $messageStack;
 
         // -----
-        // Check that any 'cot_gv' amount submitted is a valid numeric
-        // string. If not, reset the value, set a message and return to
-        // the checkout_payment phase.
+        // Retrieve the numeric string value associated with the session's
+        // 'cot_gv' value.  If the value's not numeric, the method will issue
+        // a message and redirect back to the checkout-payment page.
         //
-        if (isset($_SESSION['cot_gv']) && !preg_match('/^\d+[\.,]?\d*$/', $_SESSION['cot_gv'])) {
-            $messageStack->add_session('checkout_payment', sprintf(MODULE_ORDER_TOTAL_GV_INVALID_REDEEM_AMOUNT, zen_output_string_protected($_SESSION['cot_gv'])), 'error');
-            $_SESSION['cot_gv'] = '0';
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
-        }
+        $cot_gv = $this->getGvAmount();
 
         // if we have no GV amount selected, set it to 0
         // if requested redemption amount is greater than value of credits on account, throw error
-        if ($_SESSION['cot_gv'] > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
-            $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($_SESSION['cot_gv'], 2), 'error');
-            $_SESSION['cot_gv'] = 0.00;
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        if ($cot_gv > $currencies->value($this->user_has_gv_account($_SESSION['customer_id']))) {
+            $messageStack->add_session('checkout_payment', TEXT_INVALID_REDEEM_AMOUNT . ' - ' . number_format($cot_gv, 2), 'error');
+            $_SESSION['cot_gv'] = '0';
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
         }
         if (isset($_POST['cot_gv']) && $_POST['cot_gv'] == 0) {
-            $_SESSION['cot_gv'] = '0.00';
+            $_SESSION['cot_gv'] = '0';
         }
 
         if (!empty($_POST['submit_redeem_x']) && empty($_POST['gv_redeem_code'])) {
             $messageStack->add_session('checkout_payment', ERROR_NO_REDEEM_CODE, 'error');
-            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+            zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
         }
 
         // if we have a GV redemption code submitted, process it
@@ -390,16 +381,16 @@ class ot_gv
                     AND coupon_type = 'G'"
             );
             if (!$gv_result->EOF) {
-                $redeem_query = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . (int)$gv_result->fields['coupon_id'] . "'");
+                $redeem_query = $db->Execute("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = " . (int)$gv_result->fields['coupon_id'], 1);
                 // if already redeemed, throw error
                 if (!$redeem_query->EOF && $gv_result->fields['coupon_type'] === 'G') {
                     $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, 'error');
-                    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+                    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
                 }
             } else {
                 // if not valid redemption code, throw error
                 $messageStack->add_session('checkout_payment', ERROR_NO_INVALID_REDEEM_GV, 'error');
-                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+                zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT));
             }
 
             // if valid, add redeemed amount to customer's GV balance and mark as redeemed
@@ -452,8 +443,15 @@ class ot_gv
     {
         global $db, $order, $currencies;
 
+        // -----
+        // Retrieve the numeric string value associated with the session's
+        // 'cot_gv' value.  If the value's not numeric, the method will issue
+        // a message and redirect back to the checkout-payment page.
+        //
+        $cot_gv = $this->getGvAmount();
+
         // calculate value based on default currency
-        $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
+        $gv_payment_amount = $currencies->normalizeValue($cot_gv);
         $gv_payment_amount = $currencies->value($gv_payment_amount, true, zen_config('DEFAULT_CURRENCY'));
         $full_cost = $save_total_cost - $gv_payment_amount;
         if ($full_cost < 0) {
