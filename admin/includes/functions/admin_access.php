@@ -11,6 +11,39 @@ zen_define_default('ADMIN_LOGIN_SLAMMING_THRESHOLD', 3);
 // Do you want warning/courtesy emails to be sent after several login failures have occurred (determined by the threshold above)?
 zen_define_default('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes');
 
+function zen_set_admin_session_password_hash(string $passwordHash): void
+{
+    $_SESSION['admin_password_hash'] = $passwordHash;
+}
+
+function zen_is_admin_password_session_valid(): bool
+{
+    global $db;
+
+    if (empty($_SESSION['admin_id'])) {
+        return true;
+    }
+
+    $sql = "SELECT admin_pass
+            FROM " . TABLE_ADMIN . "
+            WHERE admin_id = :adminId:";
+    $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
+    $result = $db->Execute($sql, 1);
+
+    if ($result->EOF) {
+        return false;
+    }
+
+    $currentPasswordHash = (string)$result->fields['admin_pass'];
+
+    if (empty($_SESSION['admin_password_hash'])) {
+        zen_set_admin_session_password_hash($currentPasswordHash);
+        return true;
+    }
+
+    return hash_equals((string)$_SESSION['admin_password_hash'], $currentPasswordHash);
+}
+
 /**
  * Checks whether the currently logged on user has permission to access
  * the page passed as parameter $page, with GET $params . The function returns boolean
@@ -476,6 +509,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
         $db->Execute($sql);
         $_SESSION['admin_id'] = $result['admin_id'];
+        zen_set_admin_session_password_hash($token);
         if (zen_config('SESSION_RECREATE') === 'True') {
             zen_session_recreate();
         }
@@ -579,6 +613,9 @@ function zen_reset_password($id, $password, $compare): array
         $sql = $db->bindVars($sql, ':adminID:', $id, 'integer');
         $sql = $db->bindVars($sql, ':newpwd:', $encryptedPassword, 'string');
         $db->Execute($sql);
+        if (isset($_SESSION['admin_id']) && (int)$_SESSION['admin_id'] === $id) {
+            zen_set_admin_session_password_hash($encryptedPassword);
+        }
         zen_record_admin_activity('Account password change saved.', 'warning');
     }
     return $errors;

@@ -186,6 +186,7 @@ $define = [
     'ERROR_CORRECTIONS_HEADING' => 'Please correct the following: <br>',
     'ERROR_CUSTOMERS_ID_INVALID' => 'Customer information cannot be validated!<br>Please login or recreate your account ...',
     'ERROR_DATABASE_MAINTENANCE_NEEDED' => '<a href="https://docs.zen-cart.com/user/troubleshooting/error_71_maintenance_required/" rel="noopener" target="_blank">ERROR 0071 There appears to be a problem with the database. Maintenance is required.</a>',
+    'ERROR_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE' => 'Your session has expired because your password was changed. Please login again.',
     'ERROR_DESTINATION_DOES_NOT_EXIST' => 'Error: destination does not exist.',
     'ERROR_DESTINATION_NOT_WRITEABLE' => 'Error:  destination not writeable.',
     'ERROR_FILETYPE_NOT_ALLOWED' => 'Error: An uploaded file type (%1$s) is not supported. Please try again.',

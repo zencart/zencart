@@ -223,6 +223,7 @@ $define = [
     'ENTRY_TELEPHONE_NUMBER' => 'Telephone Number:',
     'ENTRY_TELEPHONE_NUMBER_ERROR' => '&nbsp;<span class="errorText">min ' . zen_config('ENTRY_TELEPHONE_MIN_LENGTH') . ' chars</span>',
     'ERROR_ADMIN_SECURITY_WARNING' => 'Warning: Your Admin login is not secure ... either you still have default login settings for: Admin admin or have not removed or changed: demo demoonly<br>The login(s) should be changed as soon as possible for the Security of your shop.',
+    'ERROR_ADMIN_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE' => 'Your session has expired because your password was changed. Please login again.',
     'ERROR_CANNOT_DELETE_CUSTOMER_GROUP_DUE_TO_LINKED_CUSTOMERS' => 'ERROR: cannot delete group because %s customers are still assigned, and override was not specified.',
     'ERROR_CANNOT_LINK_TO_SAME_CATEGORY' => 'Error: a linked product cannot be created in the same category.',
     'ERROR_CANNOT_MOVE_CATEGORY_TO_CATEGORY_SELF' => 'Error: Cannot move Category to the same Category! ID#',

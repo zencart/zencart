@@ -14,6 +14,22 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 define('SUPERUSER_PROFILE', 1);
 
+if (!empty($_SESSION['admin_id']) && !zen_is_admin_password_session_valid()) {
+    if (basename($PHP_SELF) === FILENAME_AJAX . '.php') {
+        unset($_SESSION['admin_id'], $_SESSION['admin_password_hash'], $_SESSION['mfa']);
+        $ajax_response = [
+            'error' => 'logged_out',
+            'redirect' => zen_href_link(FILENAME_LOGIN, '', 'SSL'),
+        ];
+        echo json_encode($ajax_response);
+        exit;
+    }
+
+    $_SESSION['login_message'] = ERROR_ADMIN_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE;
+    unset($_SESSION['admin_id'], $_SESSION['admin_password_hash'], $_SESSION['mfa']);
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
+
 // -----
 // Special handling for AJAX requests.  Return a 'logged_out' error if no admin session
 // is active; otherwise, bypass the remainder of the authorization checks.

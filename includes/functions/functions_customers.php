@@ -159,6 +159,46 @@ function zen_get_customer_validate_session(int $customer_id): bool
 }
 
 /**
+ * Store the current customer's password hash in the session so other sessions can be invalidated
+ * when the password changes out-of-band.
+ */
+function zen_set_customer_session_password_hash(string $passwordHash): void
+{
+    $_SESSION['customer_password_hash'] = $passwordHash;
+}
+
+/**
+ * Validate that the logged-in session still matches the customer's current password hash.
+ */
+function zen_is_customer_password_session_valid(): bool
+{
+    global $db;
+
+    if (!zen_is_logged_in()) {
+        return true;
+    }
+
+    $sql = "SELECT customers_password
+            FROM " . TABLE_CUSTOMERS . "
+            WHERE customers_id = :customersID";
+    $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
+    $result = $db->Execute($sql, 1);
+
+    if ($result->EOF) {
+        return false;
+    }
+
+    $currentPasswordHash = (string)$result->fields['customers_password'];
+
+    if (empty($_SESSION['customer_password_hash'])) {
+        zen_set_customer_session_password_hash($currentPasswordHash);
+        return true;
+    }
+
+    return hash_equals((string)$_SESSION['customer_password_hash'], $currentPasswordHash);
+}
+
+/**
  * This function identifies whether (true) or not (false) the current customer session is
  * associated with a guest-checkout process.
  * @alias Customer::isInGuestCheckout()

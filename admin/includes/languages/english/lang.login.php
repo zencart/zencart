@@ -16,6 +16,7 @@ $define = [
     'TEXT_ADMIN_CONFIRM_PASSWORD' => 'Confirm Password',
     'ERROR_WRONG_LOGIN' => 'You entered the wrong username or password.',
     'ERROR_SECURITY_ERROR' => 'There was a security error when trying to login.',
+    'ERROR_ADMIN_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE' => 'Your session has expired because your password was changed. Please login again.',
     'TEXT_PASSWORD_FORGOTTEN' => 'Forgot Password?',
     'LOGIN_EXPIRY_NOTICE' => '',
     'ERROR_PASSWORD_EXPIRED' => 'NOTE: Your password has expired. Please select a new password. Your password <strong>must contain both NUMBERS and LETTERS and minimum 7 characters.</strong>',
