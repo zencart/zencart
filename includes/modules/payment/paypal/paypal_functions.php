@@ -207,7 +207,7 @@ if (!function_exists('convertToLocalTimeZone')) {
    * @since ZC v1.3.7.1
    */
   function select_pp_currency() {
-    if (zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY') === 'Selected Currency') {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY', 'Selected Currency') === 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
     } else {
       $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY'), 5);
