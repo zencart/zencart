@@ -15,7 +15,7 @@ $zco_notifier->notify('NOTIFY_START_EZPAGES_HEADERBAR');
 $var_linksList = array();
 
 // test if bar should display:
-if ($detect->isMobile() || EZPAGES_STATUS_HEADER == '1' || (EZPAGES_STATUS_HEADER == '2' && zen_is_whitelisted_admin_ip())) {
+if ($detect->isMobile() || zen_config('EZPAGES_STATUS_HEADER') === '1' || (zen_config('EZPAGES_STATUS_HEADER') === '2' && zen_is_whitelisted_admin_ip())) {
 
   if (!$sniffer->table_exists(TABLE_EZPAGES_CONTENT)) {
     return; // early exit; db not upgraded

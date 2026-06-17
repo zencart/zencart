@@ -18,7 +18,7 @@ $box_cnt=0;
 if (defined('BOX_WIDTH_SINGLE')) {
   $column_width = (int)BOX_WIDTH_SINGLE;
 } else {
-  $column_width = (int)BOX_WIDTH_LEFT;
+  $column_width = (int)zen_config('BOX_WIDTH_LEFT');
 }
 while (!$column_single_display->EOF and $box_cnt < 100) {
   $box_cnt++;

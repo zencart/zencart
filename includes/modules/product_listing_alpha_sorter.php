@@ -13,7 +13,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 // build alpha sorter dropdown
-if (PRODUCT_LIST_ALPHA_SORTER === 'true') {
+if (zen_config('PRODUCT_LIST_ALPHA_SORTER') === 'true') {
     $letters_list = [];
     if (empty($_GET['alpha_filter_id'])) {
         $letters_list[] = ['id' => '0', 'text' => TEXT_PRODUCTS_LISTING_ALPHA_SORTER_NAMES];

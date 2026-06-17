@@ -88,40 +88,40 @@ class authorizenet extends base {
       $this->title = MODULE_PAYMENT_AUTHORIZENET_TEXT_ADMIN_TITLE; // Payment module title in Admin
     }
 
-    $this->sort_order = defined('MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER : null;
-    $this->enabled = defined('MODULE_PAYMENT_AUTHORIZENET_STATUS') && MODULE_PAYMENT_AUTHORIZENET_STATUS == 'True' && $this->hashingMode() !== false;
+    $this->sort_order = zen_config('MODULE_PAYMENT_AUTHORIZENET_SORT_ORDER');
+    $this->enabled = zen_config('MODULE_PAYMENT_AUTHORIZENET_STATUS') === 'True' && $this->hashingMode() !== false;
 
     if (null === $this->sort_order) return;
 
     if (IS_ADMIN_FLAG === true) {
-      if (MODULE_PAYMENT_AUTHORIZENET_STATUS == 'True'
-          && (MODULE_PAYMENT_AUTHORIZENET_LOGIN == 'testing'
-              || MODULE_PAYMENT_AUTHORIZENET_TXNKEY == 'Test'
+      if (zen_config('MODULE_PAYMENT_AUTHORIZENET_STATUS') === 'True'
+          && (zen_config('MODULE_PAYMENT_AUTHORIZENET_LOGIN') === 'testing'
+              || zen_config('MODULE_PAYMENT_AUTHORIZENET_TXNKEY') === 'Test'
               || $this->hashingMode() === false
           )) {
         $this->title .=  '<span class="alert"> (Not Configured)</span>';
-      } elseif (MODULE_PAYMENT_AUTHORIZENET_TESTMODE == 'Test') {
+      } elseif (zen_config('MODULE_PAYMENT_AUTHORIZENET_TESTMODE') === 'Test') {
         $this->title .= '<span class="alert"> (in Testing mode)</span>';
-      } elseif (MODULE_PAYMENT_AUTHORIZENET_TESTMODE == 'Sandbox') {
+      } elseif (zen_config('MODULE_PAYMENT_AUTHORIZENET_TESTMODE') === 'Sandbox') {
         $this->title .= '<span class="alert"> (in Sandbox Developer mode)</span>';
       }
     }
 
-    if (defined('MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID > 0) {
+    if ((int)zen_config('MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID') > 0) {
       $this->order_status = MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID;
 
       // Reset order status to pending if capture pending:
-      if (MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize') $this->order_status = 1;
+      if (zen_config('MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE') === 'Authorize') $this->order_status = 1;
     }
 
     if (is_object($order)) $this->update_status();
 
     $this->form_action_url = 'https://secure2.authorize.net/gateway/transact.dll';
-    if (MODULE_PAYMENT_AUTHORIZENET_TESTMODE == 'Sandbox') $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_TESTMODE') === 'Sandbox') $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
 
 //     $this->form_action_url = 'https://www.eprocessingnetwork.com/cgi-bin/an/order.pl';
 
-    if ((defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') $this->form_action_url = 'https://developer.authorize.net/param_dump.asp';
+    if ((defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING') === 'echo') $this->form_action_url = 'https://developer.authorize.net/param_dump.asp';
     if (defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'certify') $this->form_action_url = 'https://certification.authorize.net/gateway/transact.dll';
 
     $this->gateway_mode = MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE;
@@ -142,9 +142,9 @@ class authorizenet extends base {
   function update_status() {
     global $order, $db;
 
-    if ($this->enabled && (int)MODULE_PAYMENT_AUTHORIZENET_ZONE > 0 && isset($order->billing['country']['id'])) {
+    if ($this->enabled && (int)zen_config('MODULE_PAYMENT_AUTHORIZENET_ZONE') > 0 && isset($order->billing['country']['id'])) {
       $check_flag = false;
-      $check = $db->Execute("SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_ZONE . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id");
+      $check = $db->Execute("SELECT zone_id FROM " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . zen_config('MODULE_PAYMENT_AUTHORIZENET_ZONE') . "' AND zone_country_id = '" . (int)$order->billing['country']['id'] . "' ORDER BY zone_id");
       while (!$check->EOF) {
         if ($check->fields['zone_id'] < 1) {
           $check_flag = true;
@@ -178,18 +178,18 @@ class authorizenet extends base {
     $js = '  if (payment_value == "' . $this->code . '") {' . "\n" .
           '    var cc_owner = document.checkout_payment.authorizenet_cc_owner.value;' . "\n" .
           '    var cc_number = document.checkout_payment.authorizenet_cc_number.value;' . "\n";
-    if (MODULE_PAYMENT_AUTHORIZENET_USE_CVV == 'True')  {
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_USE_CVV') === 'True')  {
       $js .= '    var cc_cvv = document.checkout_payment.authorizenet_cc_cvv.value;' . "\n";
     }
-    $js .= '    if (cc_owner == "" || cc_owner.length < ' . CC_OWNER_MIN_LENGTH . ') {' . "\n" .
+    $js .= '    if (cc_owner == "" || cc_owner.length < ' . (int)zen_config('CC_OWNER_MIN_LENGTH') . ') {' . "\n" .
           '      error_message = error_message + "' . MODULE_PAYMENT_AUTHORIZENET_TEXT_JS_CC_OWNER . '";' . "\n" .
           '      error = 1;' . "\n" .
           '    }' . "\n" .
-          '    if (cc_number == "" || cc_number.length < ' . CC_NUMBER_MIN_LENGTH . ') {' . "\n" .
+          '    if (cc_number == "" || cc_number.length < ' . (int)zen_config('CC_NUMBER_MIN_LENGTH') . ') {' . "\n" .
           '      error_message = error_message + "' . MODULE_PAYMENT_AUTHORIZENET_TEXT_JS_CC_NUMBER . '";' . "\n" .
           '      error = 1;' . "\n" .
           '    }' . "\n";
-    if (MODULE_PAYMENT_AUTHORIZENET_USE_CVV == 'True')  {
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_USE_CVV') === 'True')  {
       $js .= '    if (cc_cvv == "" || cc_cvv.length < "3" || cc_cvv.length > "4") {' . "\n".
       '      error_message = error_message + "' . MODULE_PAYMENT_AUTHORIZENET_TEXT_JS_CC_CVV . '";' . "\n" .
       '      error = 1;' . "\n" .
@@ -233,7 +233,7 @@ class authorizenet extends base {
                                          array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CREDIT_CARD_EXPIRES,
                                                'field' => zen_draw_pull_down_menu('authorizenet_cc_expires_month', $expires_month, $zcDate->output('%m'), 'id="'.$this->code.'-cc-expires-month"' . $onFocus) . '&nbsp;' . zen_draw_pull_down_menu('authorizenet_cc_expires_year', $expires_year, '', 'id="'.$this->code.'-cc-expires-year"' . $onFocus),
                                                'tag' => $this->code.'-cc-expires-month')));
-      if (MODULE_PAYMENT_AUTHORIZENET_USE_CVV == 'True') {
+      if (zen_config('MODULE_PAYMENT_AUTHORIZENET_USE_CVV') === 'True') {
         $selection['fields'][] = array('title' => MODULE_PAYMENT_AUTHORIZENET_TEXT_CVV,
                                        'field' => zen_draw_input_field('authorizenet_cc_cvv', '', 'size="4" maxlength="4"' . ' id="'.$this->code.'-cc-cvv"' . $onFocus . ' autocomplete="off"') . ' ' . '<a href="javascript:popupWindow(\'' . zen_href_link(FILENAME_POPUP_CVV_HELP) . '\')">' . MODULE_PAYMENT_AUTHORIZENET_TEXT_POPUP_CVV_LINK . '</a>',
                                        'tag' => $this->code.'-cc-cvv');
@@ -313,13 +313,13 @@ class authorizenet extends base {
 
     $sequence = random_int(1, 1000);
     $submit_data_core = array(
-      'x_login' => MODULE_PAYMENT_AUTHORIZENET_LOGIN,
+      'x_login' => zen_config('MODULE_PAYMENT_AUTHORIZENET_LOGIN'),
       'x_amount' => round($order->info['total'], 2),
       'x_currency_code' => $_SESSION['currency'],
-      'x_method' => ((MODULE_PAYMENT_AUTHORIZENET_METHOD == 'Credit Card') ? 'CC' : 'ECHECK'),
-      'x_type' => MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE == 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
+      'x_method' => ((zen_config('MODULE_PAYMENT_AUTHORIZENET_METHOD') === 'Credit Card') ? 'CC' : 'ECHECK'),
+      'x_type' => zen_config('MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE') === 'Authorize' ? 'AUTH_ONLY': 'AUTH_CAPTURE',
       'x_cust_ID' => $_SESSION['customer_id'],
-      'x_email_customer' => ((MODULE_PAYMENT_AUTHORIZENET_EMAIL_CUSTOMER == 'True') ? 'TRUE': 'FALSE'),
+      'x_email_customer' => zen_config('MODULE_PAYMENT_AUTHORIZENET_EMAIL_CUSTOMER', 'False'),
       'x_company' => $order->billing['company'],
       'x_first_name' => $order->billing['firstname'],
       'x_last_name' => $order->billing['lastname'],
@@ -347,7 +347,7 @@ class authorizenet extends base {
       'x_invoice_num' => '',
       'x_duplicate_window' => '120',
       'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
-      'x_description' => 'Website Purchase from ' . str_replace('"',"'", STORE_NAME),
+      'x_description' => 'Website Purchase from ' . str_replace('"',"'", zen_config('STORE_NAME')),
     );
 
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
@@ -391,7 +391,7 @@ class authorizenet extends base {
       'x_card_num' => $this->cc_card_number,
       'x_exp_date' => $this->cc_expiry_month . substr($this->cc_expiry_year, -2));
 
-    if (MODULE_PAYMENT_AUTHORIZENET_USE_CVV == 'True') {
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_USE_CVV') === 'True') {
       if ($this->gateway_mode == 'onsite') $submit_data_onsite['x_card_code'] = $_POST['authorizenet_cc_cvv'];
     }
 
@@ -400,7 +400,7 @@ class authorizenet extends base {
     } else {
       $submit_data = array_merge($submit_data_core, $submit_data_security, $submit_data_offline, $submit_data_extras);
     }
-    if (MODULE_PAYMENT_AUTHORIZENET_TESTMODE == 'Test') $submit_data['x_Test_Request'] = 'TRUE';
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_TESTMODE') === 'Test') $submit_data['x_Test_Request'] = 'TRUE';
     $submit_data[zen_session_name()] = zen_session_id();
 
     $process_button_string = "\n";
@@ -437,7 +437,7 @@ class authorizenet extends base {
     $this->_debugActions($this->authorize, 'Response-Data', '', zen_session_id());
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
-    if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') {
+    if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING') === 'echo') {
       echo 'Returned Response Codes:<br><pre>' . print_r($_POST, true) . '</pre><br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
@@ -565,7 +565,7 @@ class authorizenet extends base {
    * @since ZC v1.5.6b
    */
   function hashingMode() {
-    if (MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY !== '*Get from Authorizenet Account*' && trim(MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY) !== '') {
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY') !== '*Get from Authorizenet Account*' && trim(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '')) !== '') {
       return 'sha';
     }
     return false;
@@ -582,8 +582,8 @@ class authorizenet extends base {
    */
   function getHmacFingerprintFields($amount, $sequence, $currency = '') {
     $timestamp = time();
-    $key = hex2bin(strtoupper(MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY));
-    $hashString = hash_hmac('sha512', MODULE_PAYMENT_AUTHORIZENET_LOGIN . '^' . $sequence . '^' . $timestamp . '^' . $amount . '^' . $currency, $key);
+    $key = hex2bin(strtoupper(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY')));
+    $hashString = hash_hmac('sha512', zen_config('MODULE_PAYMENT_AUTHORIZENET_LOGIN') . '^' . $sequence . '^' . $timestamp . '^' . $amount . '^' . $currency, $key);
     $security_array = array('x_fp_sequence' => $sequence,
                             'x_fp_timestamp' => $timestamp,
                             'x_fp_hash' => $hashString);
@@ -630,7 +630,7 @@ class authorizenet extends base {
         $data['x_invoice_num'],
     );
     $string = '^' . implode('^', $dataArray) . '^';
-    return strtoupper(hash_hmac('sha512', $string, hex2bin(MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY)));
+    return strtoupper(hash_hmac('sha512', $string, hex2bin(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY'))));
   }
 
   /**
@@ -653,7 +653,7 @@ class authorizenet extends base {
                     ($response['x_response_code'] == 3 && $response['x_response_reason_code'] == 11 ? ' DUPLICATE TRANSACTION ATTEMPT ' : '') .
                     'Results Received back from Authorizenet: ' . print_r($response, true) . "\n\n";
     // store log file if log mode enabled
-    if (stristr(MODULE_PAYMENT_AUTHORIZENET_DEBUGGING, 'Log') || strstr(MODULE_PAYMENT_AUTHORIZENET_DEBUGGING, 'All') || (defined('AUTHORIZENET_DEVELOPER_MODE') && in_array(AUTHORIZENET_DEVELOPER_MODE, array('on', 'certify')))) {
+    if (stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'Log') || strstr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'All') || (defined('AUTHORIZENET_DEVELOPER_MODE') && in_array(AUTHORIZENET_DEVELOPER_MODE, array('on', 'certify')))) {
       $key = ($response['x_trans_id'] != '' ? $response['x_trans_id'] . '_' : '') . time() . '_' . zen_create_random_value(4);
       $file = $this->_logDir . '/' . 'SIM_Debug_' . $key . '.log';
       $fp = @fopen($file, 'a');
@@ -661,15 +661,15 @@ class authorizenet extends base {
       @fclose($fp);
     }
     // send email alerts only if in alert mode or if email specifically requested as logging mode
-    if ((isset($response['x_response_code']) && $response['x_response_code'] != '1' && stristr(MODULE_PAYMENT_AUTHORIZENET_DEBUGGING, 'Alerts')) || stristr(MODULE_PAYMENT_AUTHORIZENET_DEBUGGING, 'Email')) {
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Authorizenet-SIM Alert ' . $response['x_invoice_num'] . ' ' . date('M-d-Y h:i:s') . ' ' . $response['x_trans_id'], $errorMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorMessage)), 'debug');
+    if ((isset($response['x_response_code']) && $response['x_response_code'] != '1' && stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'Alerts')) || stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'Email')) {
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), 'Authorizenet-SIM Alert ' . $response['x_invoice_num'] . ' ' . date('M-d-Y h:i:s') . ' ' . $response['x_trans_id'], $errorMessage, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorMessage)), 'debug');
     }
 
     // DATABASE SECTION
     // Insert the send and receive response data into the database.
     // This can be used for testing or for implementation in other applications
     // This can be turned on and off if the Admin Section
-    if (MODULE_PAYMENT_AUTHORIZENET_STORE_DATA == 'True' && $mode == 'Response-Data'){
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_STORE_DATA') === 'True' && $mode == 'Response-Data'){
       $db_response_text = $response['x_response_reason_text'];
       $db_response_text .= ($response['x_response_code'] == 2 && $response['x_response_reason_code'] == 4) ? ' NOTICE: Card should be picked up - possibly stolen ' : '';
       $db_response_text .= ($response['x_response_code'] == 3 && $response['x_response_reason_code'] == 11) ? ' DUPLICATE TRANSACTION ATTEMPT ' : '';

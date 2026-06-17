@@ -446,7 +446,7 @@ class ot_gv
 
         // calculate value based on default currency
         $gv_payment_amount = $currencies->normalizeValue($_SESSION['cot_gv']);
-        $gv_payment_amount = $currencies->value($gv_payment_amount, true, DEFAULT_CURRENCY);
+        $gv_payment_amount = $currencies->value($gv_payment_amount, true, zen_config('DEFAULT_CURRENCY'));
         $full_cost = $save_total_cost - $gv_payment_amount;
         if ($full_cost < 0) {
             $gv_payment_amount = $save_total_cost;

@@ -289,7 +289,7 @@ switch ($metatag_page_name) {
                 $metatags_description = $product_info_metatags->fields['metatags_description'];
             } else {
                 // no custom description defined use product_description
-                $metatags_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
+                $metatags_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), (int)zen_config('MAX_META_TAG_DESCRIPTION_LENGTH'));
             }
 
             $metatags_description = zen_clean_html($metatags_description);
@@ -311,7 +311,7 @@ switch ($metatag_page_name) {
         $meta_products_price = '';
 
         // build un-customized meta tag
-        if (META_TAG_INCLUDE_PRICE === '1' && !str_contains($_GET['main_page'], 'document_general')) {
+        if (zen_config('META_TAG_INCLUDE_PRICE') === '1' && !str_contains($_GET['main_page'], 'document_general')) {
             if ($product_info_metatags->fields['product_is_free'] !== '1') {
                 if (zen_check_show_prices()) {
                     $meta_products_price = zen_get_products_actual_price($product_info_metatags->fields['products_id']);
@@ -323,14 +323,14 @@ switch ($metatag_page_name) {
             }
         }
 
-        if (META_TAG_INCLUDE_MODEL == '1' && !empty($product_info_metatags->fields['products_model'])) {
+        if (zen_config('META_TAG_INCLUDE_MODEL') === '1' && !empty($product_info_metatags->fields['products_model'])) {
             $meta_products_name = $product_info_metatags->fields['products_name'] . ' [' . $product_info_metatags->fields['products_model'] . ']';
         } else {
             $meta_products_name = $product_info_metatags->fields['products_name'];
         }
         $meta_products_name = zen_clean_html($meta_products_name);
 
-        $meta_products_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), MAX_META_TAG_DESCRIPTION_LENGTH);
+        $meta_products_description = zen_truncate_paragraph(strip_tags(stripslashes($product_info_metatags->fields['products_description'])), (int)zen_config('MAX_META_TAG_DESCRIPTION_LENGTH'));
 
         $meta_products_description = zen_clean_html($meta_products_description);
 
@@ -356,7 +356,7 @@ switch ($metatag_page_name) {
             break;
         }
 
-        if (META_TAG_INCLUDE_PRICE == '1') {
+        if (zen_config('META_TAG_INCLUDE_PRICE') === '1') {
             if ($review_metatags->fields['product_is_free'] != '1') {
                 $meta_products_price = zen_get_products_actual_price($review_metatags->fields['products_id']);
                 $meta_products_price = SECONDARY_SECTION . $currencies->display_price($meta_products_price, zen_get_tax_rate($review_metatags->fields['products_tax_class_id']));

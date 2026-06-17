@@ -69,18 +69,18 @@ class moneyorder extends base
             $this->code = 'moneyorder';
             $this->title = MODULE_PAYMENT_MONEYORDER_TEXT_TITLE;
             $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
-            $this->sort_order = defined('MODULE_PAYMENT_MONEYORDER_SORT_ORDER') ? MODULE_PAYMENT_MONEYORDER_SORT_ORDER : null;
-            $this->enabled = (defined('MODULE_PAYMENT_MONEYORDER_STATUS') && MODULE_PAYMENT_MONEYORDER_STATUS == 'True');
+            $this->sort_order = zen_config('MODULE_PAYMENT_MONEYORDER_SORT_ORDER');
+            $this->enabled = (zen_config('MODULE_PAYMENT_MONEYORDER_STATUS') === 'True');
 
             if (null === $this->sort_order) {
                 return false;
             }
 
-            if (IS_ADMIN_FLAG === true && (MODULE_PAYMENT_MONEYORDER_PAYTO == 'the Store Owner/Website Name' || MODULE_PAYMENT_MONEYORDER_PAYTO == '')) {
+            if (IS_ADMIN_FLAG === true && (zen_config('MODULE_PAYMENT_MONEYORDER_PAYTO') === 'the Store Owner/Website Name' || zen_config('MODULE_PAYMENT_MONEYORDER_PAYTO') === '')) {
                 $this->title .= '<span class="alert">' . MODULE_PAYMENT_MONEYORDER_TEXT_MISSING_INFO . '</span>';
             }
 
-            if ((int)MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
+            if ((int)zen_config('MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID') > 0) {
                 $this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
             }
 
@@ -101,9 +101,9 @@ class moneyorder extends base
         {
             global $order, $db;
 
-            if ($this->enabled && (int)MODULE_PAYMENT_MONEYORDER_ZONE > 0 && isset($order->billing['country']['id'])) {
+            if ($this->enabled && (int)zen_config('MODULE_PAYMENT_MONEYORDER_ZONE') > 0 && isset($order->billing['country']['id'])) {
                 $check_flag = false;
-                $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_MONEYORDER_ZONE . "' and zone_country_id = '" . (int)$order->billing['country']['id'] . "' order by zone_id");
+                $check = $db->Execute("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . zen_config('MODULE_PAYMENT_MONEYORDER_ZONE') . "' and zone_country_id = '" . (int)$order->billing['country']['id'] . "' order by zone_id");
                 while (!$check->EOF) {
                     if ($check->fields['zone_id'] < 1) {
                         $check_flag = true;
