@@ -167,7 +167,7 @@ class ot_gv
         // Ensure that the session variable is set.
         //
         $_SESSION['cot_gv'] ??= '0';
-        $_SESSION['cot_gv'] = (string)$_SESSION['cot_gv'];
+        $_SESSION['cot_gv'] = trim((string)$_SESSION['cot_gv']);
 
         // -----
         // Check that the session's 'cot_gv' value is a valid numeric
@@ -190,13 +190,18 @@ class ot_gv
      */
     protected function use_credit_amount(): string
     {
-        if (IS_ADMIN_FLAG === true || !zen_is_logged_in() || zen_in_guest_checkout() || !$this->user_has_gv_account($_SESSION['customer_id'])) {
+        if (IS_ADMIN_FLAG === true || !zen_is_logged_in() || zen_in_guest_checkout()) {
+            return '';
+        }
+
+        $gv_account_balance = $this->user_has_gv_account($_SESSION['customer_id']);
+        if (!$gv_account_balance) {
             return '';
         }
 
         global $currencies;
         $cot_gv = number_format($currencies->normalizeValue($this->getGvAmount()), 2);
-        $gv_account_balance = $this->user_has_gv_account($_SESSION['customer_id']);
+
         $checkbox =
             MODULE_ORDER_TOTAL_GV_USER_PROMPT .
             '<input type="text" size="6" onkeyup="submitFunction()" name="cot_gv" value="' . $cot_gv . '" onfocus="if (this.value == \'' . $cot_gv . '\') this.value = \'\';">';
