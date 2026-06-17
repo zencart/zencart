@@ -18,27 +18,27 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $zc_hidden_discounts_on = false;
 $zc_hidden_discounts_text = '';
 switch (true) {
-    case (CUSTOMERS_APPROVAL == '1' && !zen_is_logged_in()):
+    case (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()):
         // customer must be logged in to browse
         $zc_hidden_discounts_on = true;
         $zc_hidden_discounts_text = 'MUST LOGIN';
         break;
-    case (STORE_STATUS === '1' || CUSTOMERS_APPROVAL === '2' && !zen_is_logged_in()):
+    case (zen_config('STORE_STATUS') === '1' || zen_config('CUSTOMERS_APPROVAL') === '2' && !zen_is_logged_in()):
         // customer may browse but no prices
         $zc_hidden_discounts_on = true;
         $zc_hidden_discounts_text = TEXT_LOGIN_FOR_PRICE_PRICE;
         break;
-    case (CUSTOMERS_APPROVAL === '3' && TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM !== ''):
+    case (zen_config('CUSTOMERS_APPROVAL') === '3' && TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM !== ''):
         // customer may browse but no prices
         $zc_hidden_discounts_on = true;
         $zc_hidden_discounts_text = TEXT_LOGIN_FOR_PRICE_PRICE_SHOWROOM;
         break;
-    case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && !zen_is_logged_in()):
+    case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && !zen_is_logged_in()):
         // customer must be logged in to browse
         $zc_hidden_discounts_on = true;
         $zc_hidden_discounts_text = TEXT_AUTHORIZATION_PENDING_PRICE;
         break;
-    case (CUSTOMERS_APPROVAL_AUTHORIZATION !== '0' && CUSTOMERS_APPROVAL_AUTHORIZATION !== '3' && $_SESSION['customers_authorization'] > '0'):
+    case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '0' && zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') !== '3' && $_SESSION['customers_authorization'] > '0'):
         // customer must be logged in to browse
         $zc_hidden_discounts_on = true;
         $zc_hidden_discounts_text = TEXT_AUTHORIZATION_PENDING_PRICE;
@@ -62,7 +62,7 @@ $products_discounts_query = $db->Execute(
       ORDER BY discount_qty"
 );
 
-$discount_col_cnt = (int)DISCOUNT_QUANTITY_PRICES_COLUMN;
+$discount_col_cnt = (int)zen_config('DISCOUNT_QUANTITY_PRICES_COLUMN');
 
 $display_price = zen_get_products_base_price($products_id_current);
 $display_specials_price = zen_get_products_special_price($products_id_current, false);

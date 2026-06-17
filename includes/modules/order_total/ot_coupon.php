@@ -112,7 +112,7 @@ class ot_coupon extends base
         $this->description = MODULE_ORDER_TOTAL_COUPON_DESCRIPTION;
         $this->credit_class = true;
         $this->user_prompt = '';
-        $this->sort_order = defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER') ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : null;
+        $this->sort_order = zen_config('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER');
         if (null === $this->sort_order) return false;
 
         $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
@@ -166,7 +166,7 @@ class ot_coupon extends base
             $order->info['total'] -= $od_amount['total'];
             $order->info['coupon_amount'] = $od_amount['total'];
 
-            if (DISPLAY_PRICE_WITH_TAX != 'true') {
+            if (zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
                 $order->info['total'] -= $tax;
             }
             $order->info['tax'] -= $tax;
@@ -608,7 +608,7 @@ class ot_coupon extends base
                             $od_amount['tax_groups'][$key] = zen_round($this_tax * $ratio, $currencyDecimalPlaces);
                             $od_amount['tax'] += $od_amount['tax_groups'][$key];
                         }
-                        if (DISPLAY_PRICE_WITH_TAX == 'true' && $coupon_details['coupon_type'] == 'F') {
+                        if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true' && $coupon_details['coupon_type'] == 'F') {
                             $od_amount['total'] += $od_amount['tax'];
                         }
                         break;
@@ -675,7 +675,7 @@ class ot_coupon extends base
 
                 $orderTotal -= $product['final_price'] * $product['quantity'];
 
-                if ($this->include_tax === 'true' || DISPLAY_PRICE_WITH_TAX === 'true') {
+                if ($this->include_tax === 'true' || zen_config('DISPLAY_PRICE_WITH_TAX') === 'true') {
                     $orderTotal -= $productsTaxAmount;
                 }
                 $orderTotalTax -= $productsTaxAmount;
@@ -695,7 +695,7 @@ class ot_coupon extends base
                 $orderTotalTax -= $order->info['shipping_tax'] ?? 0;
             }
         }
-        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
+        if (zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
             $orderTotal -= $orderTotalTax;
         }
 

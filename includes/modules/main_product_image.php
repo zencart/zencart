@@ -18,8 +18,8 @@ $GLOBALS['zco_notifier']->notify('NOTIFY_MODULES_MAIN_PRODUCT_IMAGE_START');
 
 $products_image_extension = '.' . pathinfo($products_image, PATHINFO_EXTENSION);
 $products_image_base = str_replace($products_image_extension, '', $products_image);
-$products_image_medium = $products_image_base . IMAGE_SUFFIX_MEDIUM . $products_image_extension;
-$products_image_large = $products_image_base . IMAGE_SUFFIX_LARGE . $products_image_extension;
+$products_image_medium = $products_image_base . zen_config('IMAGE_SUFFIX_MEDIUM') . $products_image_extension;
+$products_image_large = $products_image_base . zen_config('IMAGE_SUFFIX_LARGE') . $products_image_extension;
 
 // -----
 // This notifier lets an image-handling observer know that it's time to determine the image information,

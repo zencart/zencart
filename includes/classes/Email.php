@@ -598,7 +598,7 @@ class Email
                         default => 'image/png',
                     };
                     $substitute = $name . $i;
-                    $mail->AddEmbeddedImage(
+                    $mail->addEmbeddedImage(
                         DIR_FS_CATALOG . $imagesToProcess[1][$i],
                         $substitute,
                         $name . '.' . $ext,

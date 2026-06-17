@@ -45,14 +45,14 @@ if (!function_exists('convertToLocalTimeZone')) {
     static $paypal_error_counter;
     static $paypal_instance_id;
     $logfile = '';
-    if ($email_address == '') $email_address = (defined('MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS') ? MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS : STORE_OWNER_EMAIL_ADDRESS);
+    if ($email_address == '') $email_address = (defined('MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS') ? zen_config('MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS') : zen_config('STORE_OWNER_EMAIL_ADDRESS'));
     if(!isset($paypal_error_counter)) $paypal_error_counter = 0;
     if(!isset($paypal_instance_id)) $paypal_instance_id = time() . '_' . zen_create_random_value(4);
-    if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email') || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Log and Email') || $always_send) {
+    if ((zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email') || (zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'Log and Email') || $always_send) {
       $paypal_error_counter ++;
-      zen_mail(STORE_OWNER, $email_address, $subjecttext . ' (' . $paypal_instance_id . ') #' . $paypal_error_counter, $message, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>$message), 'debug');
+      zen_mail(zen_config('STORE_OWNER'), $email_address, $subjecttext . ' (' . $paypal_instance_id . ') #' . $paypal_error_counter, $message, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>$message), 'debug');
     }
-    if ((defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && (MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Log and Email' || MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Log File' || MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Yes')) || (defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email'))) $logfile = ipn_add_error_log($message, $paypal_instance_id);
+    if ((zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'Log and Email' || zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'Yes') || ((zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email'))) $logfile = ipn_add_error_log($message, $paypal_instance_id);
     return $logfile;
   }
 
@@ -191,13 +191,13 @@ if (!function_exists('convertToLocalTimeZone')) {
     $ppBusEmail = false;
     $ppRecEmail = false;
     if (defined('MODULE_PAYMENT_PAYPAL_BUSINESS_ID')) {
-      if (strtolower(trim($postArray['business'])) == strtolower(trim(MODULE_PAYMENT_PAYPAL_BUSINESS_ID))) $ppBusEmail = true;
-      if (strtolower(trim($postArray['receiver_email'])) == strtolower(trim(MODULE_PAYMENT_PAYPAL_BUSINESS_ID))) $ppRecEmail = true;
+      if (strtolower(trim($postArray['business'])) == strtolower(trim(zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID')))) $ppBusEmail = true;
+      if (strtolower(trim($postArray['receiver_email'])) == strtolower(trim(zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID')))) $ppRecEmail = true;
       if (!$ppBusEmail && !$ppRecEmail) {
-        ipn_debug_email('IPN WARNING :: Transaction email address NOT matched.' . "\n" . 'From IPN = ' . $postArray['business'] . ' | ' . $postArray['receiver_email'] . "\n" . 'From CONFIG = ' .  MODULE_PAYMENT_PAYPAL_BUSINESS_ID);
+        ipn_debug_email('IPN WARNING :: Transaction email address NOT matched.' . "\n" . 'From IPN = ' . $postArray['business'] . ' | ' . $postArray['receiver_email'] . "\n" . 'From CONFIG = ' .  zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID'));
         return false;
       }
-      ipn_debug_email('IPN INFO :: Transaction email details.' . "\n" . 'From IPN = ' . $postArray['business'] . ' | ' . $postArray['receiver_email'] . "\n" . 'From CONFIG = ' .  MODULE_PAYMENT_PAYPAL_BUSINESS_ID);
+      ipn_debug_email('IPN INFO :: Transaction email details.' . "\n" . 'From IPN = ' . $postArray['business'] . ' | ' . $postArray['receiver_email'] . "\n" . 'From CONFIG = ' .  zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID'));
     }
     return true;
   }
@@ -207,10 +207,10 @@ if (!function_exists('convertToLocalTimeZone')) {
    * @since ZC v1.3.7.1
    */
   function select_pp_currency() {
-    if (!defined('MODULE_PAYMENT_PAYPAL_CURRENCY') || MODULE_PAYMENT_PAYPAL_CURRENCY == 'Selected Currency') {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY', 'Selected Currency') === 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
     } else {
-      $my_currency = substr(MODULE_PAYMENT_PAYPAL_CURRENCY, 5);
+      $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY'), 5);
     }
     $pp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'INR');
     if (!in_array($my_currency, $pp_currencies)) {
@@ -475,11 +475,11 @@ function ipn_create_order_history_array($insert_id)
       ipn_debug_email('PDT PROCESSING INITIATED.' . "\n" . 'Preparing to verify transaction via PDT.' . "\n\n" . 'The TX token for verification is: ' . print_r($_GET, TRUE));
       $postback .= "cmd=_notify-synch";
       $postback .= "&tx=" . $_GET['tx'];
-      $postback .= "&at=" . trim(MODULE_PAYMENT_PAYPAL_PDTTOKEN);
+      $postback .= "&at=" . trim(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN'));
       $postback .= "&";
       $postback_array['cmd'] = "_notify-sync";
       $postback_array['tx'] = $_GET['tx'];
-      $postback_array['at'] = substr(MODULE_PAYMENT_PAYPAL_PDTTOKEN, 0, 5) . '**********' . substr(MODULE_PAYMENT_PAYPAL_PDTTOKEN,-5);
+      $postback_array['at'] = substr(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN'), 0, 5) . '**********' . substr(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN'),-5);
     } elseif ($mode == 'IPN') {
       $postback .= "cmd=_notify-validate";
       $postback .= "&";
@@ -508,7 +508,7 @@ function ipn_create_order_history_array($insert_id)
     $scheme = 'https://';
     //Parse url
     $web = parse_url($scheme . 'ipnpb.paypal.com/cgi-bin/webscr');
-    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && MODULE_PAYMENT_PAYPAL_HANDLER == 'sandbox')) {
+    if ((isset($_POST['test_ipn']) && $_POST['test_ipn'] == 1) || (zen_config('MODULE_PAYMENT_PAYPAL_HANDLER') === 'sandbox')) {
       $web = parse_url($scheme . 'ipnpb.sandbox.paypal.com/cgi-bin/webscr');
     }
     //Set the port number
@@ -553,7 +553,7 @@ function ipn_create_order_history_array($insert_id)
     ipn_debug_email('IPN INFO - POST VARS to be sent back (unsorted) for validation (using fsockopen): ' . "\n" . 'To: ' . $ssl . $web['host'] . ':' . $web['port'] . "\n" . $header . stripslashes(print_r($postback_array, true)));
 
     //Create paypal connection
-    if (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && MODULE_PAYMENT_PAYPAL_IPN_DEBUG == 'Yes') {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'Yes') {
       $fp=fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     } else {
       $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
@@ -639,7 +639,7 @@ function ipn_create_order_history_array($insert_id)
                       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                       CURLOPT_USERAGENT => 'Zen Cart(R) - IPN Postback',
                       );
-    if (CURL_PROXY_REQUIRED == 'True') {
+    if (zen_config('CURL_PROXY_REQUIRED') === 'True') {
       $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       $curlOpts[CURLOPT_HTTPPROXYTUNNEL] = $proxy_tunnel_flag;
       $curlOpts[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
@@ -728,9 +728,9 @@ function ipn_create_order_history_array($insert_id)
  */
     if ($txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared' || substr($txn_type,0,8) == 'cleared-') {
       $check_status = $db->Execute("SELECT date_purchased FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$ordersID . "'");
-      $zc_max_days = zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + (int)DOWNLOAD_MAX_DAYS;
-      ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' downloads (if any).  New max days: ' . (int)$zc_max_days . ', New count: ' . (int)DOWNLOAD_MAX_COUNT);
-      $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " SET download_maxdays='" . (int)$zc_max_days . "', download_count='" . (int)DOWNLOAD_MAX_COUNT . "' WHERE orders_id='" . (int)$ordersID . "'";
+      $zc_max_days = zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + (int)zen_config('DOWNLOAD_MAX_DAYS');
+      ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' downloads (if any).  New max days: ' . (int)$zc_max_days . ', New count: ' . (int)zen_config('DOWNLOAD_MAX_COUNT'));
+      $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " SET download_maxdays='" . (int)$zc_max_days . "', download_count='" . (int)zen_config('DOWNLOAD_MAX_COUNT') . "' WHERE orders_id='" . (int)$ordersID . "'";
       $db->Execute($update_downloads_query);
     }
   }
@@ -743,7 +743,7 @@ function ipn_create_order_history_array($insert_id)
     global $order, $currencies, $order_totals, $order_total_modules;
 
     // if not default currency, do not send subtotals or line-item details
-    if (DEFAULT_CURRENCY != $order->info['currency'] || $restrictedCurrency != DEFAULT_CURRENCY) {
+    if (zen_config('DEFAULT_CURRENCY') != $order->info['currency'] || $restrictedCurrency != zen_config('DEFAULT_CURRENCY')) {
       ipn_logging('getLineItemDetails 1', 'Not using default currency. Thus, no line-item details can be submitted.');
       return array();
     }
@@ -800,14 +800,14 @@ function ipn_create_order_history_array($insert_id)
       $optionsNB['creditsExist'] = ($creditsApplied > 0) ? TRUE : FALSE;
 
       // Handle tax-included scenario
-      if (DISPLAY_PRICE_WITH_TAX == 'true') $optionsST['tax_cart'] = 0;
+      if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true') $optionsST['tax_cart'] = 0;
 
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = strpos($_SESSION['shipping']['id'], '_') > 0 ? substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_')) : $_SESSION['shipping']['id'];
-      if (isset($GLOBALS[$module]) && !empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (isset($GLOBALS[$module]) && !empty($order->info['shipping_method']) && zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
         if ($GLOBALS[$module]->tax_class > 0) {
-          $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
+          $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? zen_config('STORE_SHIPPING_TAX_BASIS') : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
           $shippingOnDelivery = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           if ($shipping_tax_basis == 'Billing') {
@@ -815,9 +815,9 @@ function ipn_create_order_history_array($insert_id)
           } elseif ($shipping_tax_basis == 'Shipping') {
             $shipping_tax = $shippingOnDelivery;
           } else {
-            if (STORE_ZONE == $order->billing['zone_id']) {
+            if (zen_config('STORE_ZONE') === $order->billing['zone_id']) {
               $shipping_tax = $shippingOnBilling;
-            } elseif (STORE_ZONE == $order->delivery['zone_id']) {
+            } elseif (zen_config('STORE_ZONE') === $order->delivery['zone_id']) {
               $shipping_tax = $shippingOnDelivery;
             } else {
               $shipping_tax = 0;
@@ -849,7 +849,7 @@ function ipn_create_order_history_array($insert_id)
       $optionsLI["item_number_$k"] = $order->products[$i]['model'];
       $optionsLI["item_name_$k"]   = $order->products[$i]['name'] . ' [' . (int)$order->products[$i]['id'] . ']';
       // Append *** if out-of-stock.
-      $optionsLI["item_name_$k"]  .= ((zen_get_products_stock($order->products[$i]['id']) - $order->products[$i]['qty']) < 0 ? STOCK_MARK_PRODUCT_OUT_OF_STOCK : '');
+      $optionsLI["item_name_$k"]  .= ((zen_get_products_stock($order->products[$i]['id']) - $order->products[$i]['qty']) < 0 ? zen_config('STOCK_MARK_PRODUCT_OUT_OF_STOCK') : '');
       // if there are attributes, loop thru them and add to description
       if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0 ) {
         for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
@@ -954,7 +954,7 @@ function ipn_create_order_history_array($insert_id)
 
 //    // Sanity check -- if tax-included pricing is causing problems, remove the numbers and put them in a comment instead:
 //    $stDiffTaxOnly = (strval($sumOfLineItems - $sumOfLineTax - round($optionsST['amount'], 2)) + 0);
-//    if (DISPLAY_PRICE_WITH_TAX == 'true' && $stDiffTaxOnly == 0 && ($optionsST['tax_cart'] != 0 && $sumOfLineTax != 0)) {
+//    if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true' && $stDiffTaxOnly == 0 && ($optionsST['tax_cart'] != 0 && $sumOfLineTax != 0)) {
 //      $optionsNB['DESC'] = 'Tax included in prices: ' . $sumOfLineTax . ' (' . $optionsST['tax_cart'] . ') ';
 //      $optionsST['tax_cart'] = 0;
 //      for ($k=1, $n=$numberOfLineItemsProcessed+1; $k<$n; $k++) {

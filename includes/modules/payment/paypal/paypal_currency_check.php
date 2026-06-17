@@ -25,19 +25,19 @@ function paypalUSDCheck ($amount) : bool
         
         // Get the exchange rate functions to calculate USD exchange rate
         require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_exchange_rates.php';
-        $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
+        $quote_function = 'quote_' . zen_config('CURRENCY_SERVER_PRIMARY') . '_currency';
         if (function_exists($quote_function)) {
             $rate = $quote_function('USD');
         }
-        if (empty($rate) && !empty(CURRENCY_SERVER_BACKUP)) {
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
+        if (empty($rate) && !empty(zen_config('CURRENCY_SERVER_BACKUP'))) {
+            $quote_function = 'quote_' . zen_config('CURRENCY_SERVER_BACKUP') . '_currency';
             if (function_exists($quote_function)) {
                 $rate = $quote_function('USD');
             }
         }
         
         // Use the system CURRENCY_UPLIFT_RATIO to adjust the rate
-        $multiplier = (defined('CURRENCY_UPLIFT_RATIO') && (int) CURRENCY_UPLIFT_RATIO != 0) ? CURRENCY_UPLIFT_RATIO : 1;
+        $multiplier = (defined('CURRENCY_UPLIFT_RATIO') && (int) zen_config('CURRENCY_UPLIFT_RATIO') != 0) ? zen_config('CURRENCY_UPLIFT_RATIO') : 1;
         
         // Calculate the value in USD
         $amount = ($amount * $rate * $multiplier);

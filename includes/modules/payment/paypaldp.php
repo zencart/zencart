@@ -259,22 +259,22 @@ class paypaldp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
-    $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired')));
-    $this->merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
+    $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'Retired'));
+    $this->merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? zen_config('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') : null;
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
 
       $merchant_country = $this->merchant_country;
-      $country = $merchant_country ?? STORE_COUNTRY;
+      $country = $merchant_country ?? zen_config('STORE_COUNTRY');
       $this->title = $country == '223' || $country == 'USA' ? MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP : MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_NONUSA;
       $this->title .= ($merchant_country !== null) ? " ($merchant_country)" : '';
       if ($this->enabled) {
-        if ((($merchant_country === 'USA' || $merchant_country === 'Canada') && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
-              || (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True')
+        if ((($merchant_country === 'USA' || $merchant_country === 'Canada') && (zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD') === ''))
+              || (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS', 'False') !== 'True')
           ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
-        if (MODULE_PAYMENT_PAYPALDP_SERVER =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
-        if (MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
+        if (zen_config('MODULE_PAYMENT_PAYPALDP_SERVER') =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
+        if (zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') =='Log File' || zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
         if (!function_exists('curl_init')) $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
       }
     } else {
@@ -282,32 +282,32 @@ class paypaldp extends base {
       $this->title = MODULE_PAYMENT_PAYPALDP_TEXT_TITLE; //cc
     }
 
-    $this->sort_order = defined('MODULE_PAYMENT_PAYPALDP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALDP_SORT_ORDER : null;
+    $this->sort_order = zen_config('MODULE_PAYMENT_PAYPALDP_SORT_ORDER');
 
     if (null === $this->sort_order) return false;
 
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
 
-    $this->enableDebugging = (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email');
-    $this->emailAlerts = (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALDP_DEBUGGING =='Log and Email' || MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Alerts Only');
+    $this->enableDebugging = (zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') =='Log and Email');
+    $this->emailAlerts = (zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') =='Log and Email' || zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') === 'Alerts Only');
 
     $this->buttonSource = ($this->merchant_country == 'UK') ? 'ZenCart-DP_uk' : 'ZenCart-DP_us';
 
     $this->order_pending_status = MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID;
-    if ((int)MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID > 0) {
+    if ((int)zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID') > 0) {
       $this->order_status = MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID;
     }
 //    $this->new_acct_notify = MODULE_PAYMENT_PAYPALDP_NEW_ACCT_NOTIFY;
-    $this->zone = (int)MODULE_PAYMENT_PAYPALDP_ZONE;
+    $this->zone = (int)zen_config('MODULE_PAYMENT_PAYPALDP_ZONE');
     if (is_object($order)) $this->update_status();
 
     // offer credit card choices for pull-down menu -- only needed for UK version
     $this->cards = array();
     if ($this->merchant_country == 'UK') {
-      if (CC_ENABLED_VISA=='1')    $this->cards[] = array('id' => 'Visa', 'text' => 'Visa');
-      if (CC_ENABLED_MC=='1')      $this->cards[] = array('id' => 'MasterCard', 'text' => 'MasterCard');
-      if (CC_ENABLED_MAESTRO=='1') $this->cards[] = array('id' => 'Maestro', 'text' => 'Maestro');
-      if (CC_ENABLED_SOLO=='1')    $this->cards[] = array('id' => 'Solo', 'text' => 'Solo');
+      if (zen_config('CC_ENABLED_VISA') === '1')    $this->cards[] = array('id' => 'Visa', 'text' => 'Visa');
+      if (zen_config('CC_ENABLED_MC') === '1')      $this->cards[] = array('id' => 'MasterCard', 'text' => 'MasterCard');
+      if (zen_config('CC_ENABLED_MAESTRO') === '1') $this->cards[] = array('id' => 'Maestro', 'text' => 'Maestro');
+      if (zen_config('CC_ENABLED_SOLO') === '1')    $this->cards[] = array('id' => 'Solo', 'text' => 'Solo');
     }
 
     // -----
@@ -316,7 +316,7 @@ class paypaldp extends base {
     // the PayFlow-UK mode is currently in use, that class variable is 'reset' to enable the 3DS handling
     // to proceed without issue.
     //
-    if ($this->merchant_country === 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR !== '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD !== '')) {
+    if ($this->merchant_country === 'UK' || (zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '') !== '' && zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD', '') !== '')) {
       $this->collectsCardDataOnsite = false;
     }
 
@@ -403,11 +403,11 @@ class paypaldp extends base {
            '    var cc_lastname = document.checkout_payment.paypalwpp_cc_lastname.value;' . "\n" .
            '    var cc_number = document.checkout_payment.paypalwpp_cc_number.value;' . "\n" .
            '    var cc_checkcode = document.checkout_payment.paypalwpp_cc_checkcode.value;' . "\n" .
-           '    if (cc_firstname == "" || cc_lastname == "" || eval(cc_firstname.length) + eval(cc_lastname.length) < ' . CC_OWNER_MIN_LENGTH . ') {' . "\n" .
+           '    if (cc_firstname == "" || cc_lastname == "" || eval(cc_firstname.length) + eval(cc_lastname.length) < ' . (int)zen_config('CC_OWNER_MIN_LENGTH') . ') {' . "\n" .
            '      error_message = error_message + "' . MODULE_PAYMENT_PAYPALDP_TEXT_JS_CC_OWNER . '";' . "\n" .
            '      error = 1;' . "\n" .
            '    }' . "\n" .
-           '    if (cc_number == "" || cc_number.length < ' . CC_NUMBER_MIN_LENGTH . ') {' . "\n" .
+           '    if (cc_number == "" || cc_number.length < ' . (int)zen_config('CC_NUMBER_MIN_LENGTH') . ') {' . "\n" .
            '      error_message = error_message + "' . MODULE_PAYMENT_PAYPALDP_TEXT_JS_CC_NUMBER . '";' . "\n" .
            '      error = 1;' . "\n" .
            '    }' . "\n" .
@@ -480,7 +480,7 @@ class paypaldp extends base {
                        'module' => MODULE_PAYMENT_PAYPALDP_TEXT_TITLE,
                        'fields' => $fieldsArray);
 
-    if ($this->merchant_country == 'UK' && (CC_ENABLED_MAESTRO=='1' || CC_ENABLED_SOLO=='1')) {
+    if ($this->merchant_country == 'UK' && (zen_config('CC_ENABLED_MAESTRO') === '1' || zen_config('CC_ENABLED_SOLO') === '1')) {
       // add extra fields for UK cards
       for ($i = $today['year'] - 10; $i <= $today['year']; $i++) {
         $issue_year[] = array('id' => $zcDate->output('%y', mktime(0,0,0,1,1,$i)), 'text' => $zcDate->output('%Y', mktime(0,0,0,1,1,$i)));
@@ -636,7 +636,7 @@ class paypaldp extends base {
             $reason = $errorNo . ' - ' . $errorDesc;
             $messageStack->add_session('checkout_payment', $error . '<!-- ['.$this->code.'] -->' . '<!-- result: ' . $reason . ' -->', 'error');
             $errorText = $error . "\n\n" . $reason . "\n(" . $this->code . ")\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' ' . $reason, $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+            zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' ' . $reason, $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
 
           } else {
@@ -859,7 +859,7 @@ class paypaldp extends base {
             $messageStack->add_session('checkout_payment', $error . '<!-- ['.$this->code.'] -->' . '<!-- result: ' . $reason . ' -->', 'error');
             $errorText = $reason ."\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
             $errorText .= $this->code;
-            zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT, $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+            zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT, $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
           }
           // if enrolled, validate an acceptable authentication result
@@ -870,7 +870,7 @@ class paypaldp extends base {
               $messageStack->add_session('checkout_payment', $error . '<!-- ['.$this->code.'] -->' . '<!-- result: ' . $reason . ' -->', 'error');
               $errorText = $reason ."\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
               $errorText .= $this->code;
-              zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT, $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+              zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT, $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
 
               // remove the lookup/auth attempted status
               unset($_SESSION['3Dsecure_enroll_lookup_attempted']);
@@ -930,8 +930,8 @@ class paypaldp extends base {
       if ((!isset($optionsShip['SHIPTOSTATE']) || trim($optionsShip['SHIPTOSTATE']) == '') && isset($optionsShip['SHIPTOCITY'])) $optionsShip['SHIPTOSTATE'] = $optionsShip['SHIPTOCITY'];
 
       // Payment Transaction/Authorization Mode
-      $optionsNVP['PAYMENTACTION'] = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Sale';
-      if (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') $this->order_status = $this->order_pending_status;
+      $optionsNVP['PAYMENTACTION'] = (zen_config('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE') === 'Auth Only') ? 'Authorization' : 'Sale';
+      if (zen_config('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE') === 'Auth Only') $this->order_status = $this->order_pending_status;
 
       $optionsAll['BUTTONSOURCE'] = $this->buttonSource;
       $optionsAll['CURRENCY']     = $my_currency;
@@ -947,13 +947,13 @@ class paypaldp extends base {
       $optionsAll['CUSTOM'] = 'DP-' . (int)$_SESSION['customer_id'] . '-' . time();
 
       // send the store name as transaction identifier, to help distinguish payments between multiple stores:
-      $optionsAll['INVNUM'] = (int)$_SESSION['customer_id'] . '-' . (floor(time()/60)) . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', STORE_NAME), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
+      $optionsAll['INVNUM'] = (int)$_SESSION['customer_id'] . '-' . (floor(time()/60)) . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', zen_config('STORE_NAME')), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
 
 //       This feature must be enabled in your PayPal account, by contacting PayPal Support:
 //       $optionsAll['SOFTDESCRIPTOR'] = substr(preg_replace('/[^a-zA-Z0-9. ]/', '', STORE_NAME), 0, 23);
 //       $optionsAll['SOFTDESCRIPTORCITY'] = substr(preg_replace('/[^a-zA-Z0-9. !,' . preg_quote('"$%&\'()+-*/:;<=>?@') . ']/', '', STORE_TELEPHONE_CUSTSERVICE), 0, 23);
 
-      if ($this->merchant_country == 'UK' || (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' && MODULE_PAYMENT_PAYPALWPP_PFPASSWORD != '')) { // Payflow params required
+      if ($this->merchant_country == 'UK' || (zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '') !== '' && zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD', '') !== '')) { // Payflow params required
         if (isset($optionsAll['COUNTRYCODE'])) {
           $optionsAll['COUNTRY'] = $optionsAll['COUNTRYCODE'];
           unset($optionsAll['COUNTRYCODE']);
@@ -996,7 +996,7 @@ class paypaldp extends base {
       // PNREF only comes from payflow mode
         $this->payment_type = MODULE_PAYMENT_PAYPALDP_PF_TEXT_TYPE;
         $this->transaction_id = $response['PNREF'];
-        $this->payment_status = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Completed';
+        $this->payment_status = (zen_config('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE') === 'Auth Only') ? 'Authorization' : 'Completed';
         $this->avs = 'AVSADDR: ' . $response['AVSADDR'] . ', AVSZIP: ' . $response['AVSZIP'] . ', IAVS: ' . $response['IAVS'];
         $this->cvv2 = $response['CVV2MATCH'] ?? '';
         $this->amt = $display_order_amount . ' ' . $my_currency;
@@ -1008,8 +1008,8 @@ class paypaldp extends base {
         // here we're in NVP mode
         $this->transaction_id = $response['TRANSACTIONID'];
         $this->payment_type = MODULE_PAYMENT_PAYPALDP_DP_TEXT_TYPE;
-        $this->payment_status = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Completed';
-        $this->pendingreason = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'authorization' : '';
+        $this->payment_status = (zen_config('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE') === 'Auth Only') ? 'Authorization' : 'Completed';
+        $this->pendingreason = (zen_config('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE') === 'Auth Only') ? 'authorization' : '';
         $this->avs = $response['AVSCODE'];
         $this->cvv2 = $response['CVV2MATCH'] ?? '';
         $this->correlationid = $response['CORRELATIONID'];
@@ -1028,7 +1028,7 @@ class paypaldp extends base {
     // FMF
     if ($this->fmfResponse != '') {
       $detailedMessage = $insert_id . "\n" . $this->fmfResponse . "\n" . MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_INTRO . "\n" . print_r($this->fmfErrors, TRUE);
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_SUBJECT . ' (' . $insert_id . ')', $detailedMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($detailedMessage)), 'paymentalert');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_SUBJECT . ' (' . $insert_id . ')', $detailedMessage, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($detailedMessage)), 'paymentalert');
     }
 
     // add a new OSH record for this order's PP details
@@ -1079,7 +1079,7 @@ class paypaldp extends base {
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'] ?? '',
                           'payment_date' => convertToLocalTimeZone(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
-                          'receiver_email' => (MODULE_PAYMENT_PAYPALWPP_PFVENDOR != '' ? MODULE_PAYMENT_PAYPALWPP_PFVENDOR : str_replace('_api1', '', MODULE_PAYMENT_PAYPALWPP_APIUSERNAME)),
+                          'receiver_email' => (zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '') !== '' ? zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') : str_replace('_api1', '', zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME'))),
                           'receiver_id' => '',
                           'txn_id' => $this->transaction_id,
                           'parent_txn_id' => '',
@@ -1222,7 +1222,7 @@ class paypaldp extends base {
       return 'failed';
     }
     // cannot install DP if EC not already enabled:
-    if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || MODULE_PAYMENT_PAYPALWPP_STATUS != 'True') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS', 'False') !== 'True') {
       $messageStack->add_session('<strong>Sorry, you must install and configure PayPal Express Checkout first.</strong> PayPal Website Payments Pro requires that you offer Express Checkout to your customers.<br><a href="' . zen_href_link('modules.php?set=payment&module=paypalwpp', '', 'NONSSL') . '">Click here to set up Express Checkout.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypaldp', 'NONSSL'));
       return 'failed';
@@ -1262,7 +1262,7 @@ class paypaldp extends base {
    */
   function keys() {
     $keys_list = array('MODULE_PAYMENT_PAYPALDP_STATUS', 'MODULE_PAYMENT_PAYPALDP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALDP_ZONE', 'MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALDP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALDP_CURRENCY', 'MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY', 'MODULE_PAYMENT_PAYPALDP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALDP_SERVER', 'MODULE_PAYMENT_PAYPALDP_DEBUGGING');
-    if (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') && MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY == 'UK') {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') === 'UK') {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALDP_CARDINAL_PROCESSOR','MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT','MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD','MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ'));
     }
     return $keys_list;
@@ -1281,7 +1281,7 @@ class paypaldp extends base {
    * @since ZC v1.3.8
    */
   function in_special_checkout() {
-    if ((defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS == 'True') &&
+    if ((zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True') &&
              !empty($_SESSION['paypal_ec_token']) &&
              !empty($_SESSION['paypal_ec_payer_id']) &&
              !empty($_SESSION['paypal_ec_payer_info'])) {
@@ -1295,7 +1295,7 @@ class paypaldp extends base {
   function zcLog($stage, $message) {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
-    if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email' || MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log File') {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') === 'Log and Email' || zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') === 'Log File') {
       $token = (isset($_SESSION['paypal_ec_token'])) ? $_SESSION['paypal_ec_token'] : (isset($_GET['token']) ? preg_replace('/[^0-9.A-Z\-]/', '', $_GET['token']) : '');
       $token = ($token == '') ? date('m-d-Y-H-i') : $token; // or time()
       $token .= $tokenHash;
@@ -1312,10 +1312,10 @@ class paypaldp extends base {
    * @since ZC v1.3.8
    */
   function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
-    if (MODULE_PAYMENT_PAYPALDP_DEBUGGING == 'Log and Email') {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_DEBUGGING') === 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, $subject, $this->code . "\n" . $data, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($this->code . "\n" . $data)), 'debug');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), $subject, $this->code . "\n" . $data, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($this->code . "\n" . $data)), 'debug');
     }
   }
   /**
@@ -1323,24 +1323,24 @@ class paypaldp extends base {
    * @since ZC v1.3.8
    */
   function paypal_init() {
-    $nvp = (MODULE_PAYMENT_PAYPALWPP_APIPASSWORD != '' && MODULE_PAYMENT_PAYPALWPP_APISIGNATURE != '') ? true : false;
+    $nvp = (zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', '') !== '' && zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', '') !== '') ? true : false;
     $ec = ($nvp && isset($_GET['type']) && $_GET['type'] == 'ec') ? true : false;
     if ($this->merchant_country == 'UK' && !$ec) {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
-                                        'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
-                                        'vendor' => trim(MODULE_PAYMENT_PAYPALWPP_PFVENDOR),
-                                        'partner'=> trim(MODULE_PAYMENT_PAYPALWPP_PFPARTNER),
-                                        'pwd' =>    trim(MODULE_PAYMENT_PAYPALWPP_PFPASSWORD),
-                                        'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
+                                        'user' =>   trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER')),
+                                        'vendor' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR')),
+                                        'partner'=> trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER')),
+                                        'pwd' =>    trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD')),
+                                        'server' => zen_config('MODULE_PAYMENT_PAYPALDP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
                                     'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
     } else {
       $doPayPal = new paypal_curl(array('mode' => 'nvp',
-                                        'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
-                                        'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
-                                        'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
+                                        'user' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')),
+                                        'pwd' =>  trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD')),
+                                        'signature' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')),
                                         'version' => '124.0',
-                                        'server' => MODULE_PAYMENT_PAYPALDP_SERVER));
+                                        'server' => zen_config('MODULE_PAYMENT_PAYPALDP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
     }
@@ -1350,15 +1350,15 @@ class paypaldp extends base {
     $doPayPal->_logLevel = $this->_logLevel;
 
     // set proxy options if configured
-    if (CURL_PROXY_REQUIRED == 'True' && CURL_PROXY_SERVER_DETAILS != '') {
+    if (zen_config('CURL_PROXY_REQUIRED') === 'True' && zen_config('CURL_PROXY_SERVER_DETAILS', '') !== '') {
       $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       $doPayPal->setCurlOption(CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
       $doPayPal->setCurlOption(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-      $doPayPal->setCurlOption(CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+      $doPayPal->setCurlOption(CURLOPT_PROXY, zen_config('CURL_PROXY_SERVER_DETAILS'));
     }
 
     // transaction processing mode
-    $doPayPal->_trxtype = (MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE == 'Auth Only') ? 'A' : 'S';
+    $doPayPal->_trxtype = (zen_config('MODULE_PAYMENT_PAYPALDP_TRANSACTION_MODE') === 'Auth Only') ? 'A' : 'S';
 
     return $doPayPal;
   }
@@ -1367,7 +1367,7 @@ class paypaldp extends base {
    * @since ZC v1.3.8
    */
   function getPayPalLoginServer() {
-    if (MODULE_PAYMENT_PAYPALDP_SERVER == 'live') {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_SERVER') === 'live') {
       // live url
       $paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
     } else {
@@ -1383,7 +1383,7 @@ class paypaldp extends base {
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALDP_REFUNDED_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALDP_REFUNDED_STATUS_ID');
     $orig_order_amount = 0;
     $doPayPal = $this->paypal_init();
     $proceedToRefund = false;
@@ -1443,7 +1443,7 @@ class paypaldp extends base {
     $doPayPal = $this->paypal_init();
 
     //@TODO: Read current order status and determine best status to set this to
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID');
 
     $orig_order_amount = 0;
     $doPayPal = $this->paypal_init();
@@ -1501,7 +1501,7 @@ class paypaldp extends base {
    */
   function _doVoid($oID, $note = '') {
     global $db, $doPayPal, $messageStack;
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALDP_REFUNDED_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALDP_REFUNDED_STATUS_ID');
     $doPayPal = $this->paypal_init();
     $voidNote = strip_tags(zen_db_input($_POST['voidnote']));
     $voidAuthID = trim(strip_tags(zen_db_input($_POST['voidauthid'])));
@@ -1549,8 +1549,8 @@ class paypaldp extends base {
     // in USA, only 6 currencies are supported. But UK and Canada support 16 currencies (as of Jan 2011):
     $paypalSupportedCurrencies = ($this->merchant_country == 'UK' || $this->merchant_country == 'Canada') ? $dp_currencies : $dpus_currencies;
 
-    $my_currency = substr(MODULE_PAYMENT_PAYPALDP_CURRENCY, 5);
-    if (MODULE_PAYMENT_PAYPALDP_CURRENCY == 'Selected Currency') {
+    $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPALDP_CURRENCY'), 5);
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_CURRENCY') === 'Selected Currency') {
       $my_currency = ($val == '') ? $_SESSION['currency'] : $val;
     }
 
@@ -1616,7 +1616,7 @@ class paypaldp extends base {
     global $order, $currencies, $order_totals, $order_total_modules;
 
     // if not default currency, do not send subtotals or line-item details
-    if (DEFAULT_CURRENCY != $order->info['currency'] || $restrictedCurrency != DEFAULT_CURRENCY) {
+    if (zen_config('DEFAULT_CURRENCY') != $order->info['currency'] || $restrictedCurrency != zen_config('DEFAULT_CURRENCY')) {
       $this->zcLog('getLineItemDetails 1', 'Not using default currency. Thus, no line-item details can be submitted.');
       return array();
     }
@@ -1680,14 +1680,14 @@ class paypaldp extends base {
       if ($surcharges > 0) $optionsST['ITEMAMT'] += $surcharges;
 
       // Handle tax-included scenario
-      if (DISPLAY_PRICE_WITH_TAX == 'true') $optionsST['TAXAMT'] = 0;
+      if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true') $optionsST['TAXAMT'] = 0;
 
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (!empty($order->info['shipping_method']) && zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
         if (isset($GLOBALS[$module]) && ($GLOBALS[$module]->tax_class ?? 0) > 0) {
-          $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
+          $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? zen_config('STORE_SHIPPING_TAX_BASIS') : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
           $shippingOnDelivery = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           if ($shipping_tax_basis == 'Billing') {
@@ -1695,9 +1695,9 @@ class paypaldp extends base {
           } elseif ($shipping_tax_basis == 'Shipping') {
             $shipping_tax = $shippingOnDelivery;
           } else {
-            if (STORE_ZONE == $order->billing['zone_id']) {
+            if (zen_config('STORE_ZONE') === $order->billing['zone_id']) {
               $shipping_tax = $shippingOnBilling;
-            } elseif (STORE_ZONE == $order->delivery['zone_id']) {
+            } elseif (zen_config('STORE_ZONE') === $order->delivery['zone_id']) {
               $shipping_tax = $shippingOnDelivery;
             } else {
               $shipping_tax = 0;
@@ -1729,7 +1729,7 @@ class paypaldp extends base {
       $optionsLI["L_NUMBER$k"] = $order->products[$i]['model'];
       $optionsLI["L_NAME$k"]   = $order->products[$i]['name'] . ' [' . (int)$order->products[$i]['id'] . ']';
       // Append *** if out-of-stock.
-      $optionsLI["L_NAME$k"]  .= ((zen_get_products_stock($order->products[$i]['id']) - $order->products[$i]['qty']) < 0 ? STOCK_MARK_PRODUCT_OUT_OF_STOCK : '');
+      $optionsLI["L_NAME$k"]  .= ((zen_get_products_stock($order->products[$i]['id']) - $order->products[$i]['qty']) < 0 ? zen_config('STOCK_MARK_PRODUCT_OUT_OF_STOCK') : '');
       // if there are attributes, loop thru them and add to description
       if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0 ) {
         for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
@@ -1833,7 +1833,7 @@ class paypaldp extends base {
 //    // Sanity check -- if tax-included pricing is causing problems, remove the numbers and put them in a comment instead:
 //    $stDiffTaxOnly = (strval($sumOfLineItems - $sumOfLineTax - round($optionsST['AMT'], 2)) + 0);
 //    $this->zcLog('tax sanity check', 'stDiffTaxOnly: ' . $stDiffTaxOnly . "\nsumOfLineItems: " . $sumOfLineItems . "\nsumOfLineTax: " . $sumOfLineTax . ' ' . $subTotalTax . ' ' . print_r(array_merge($optionsST, $optionsLI), true));
-//    if (DISPLAY_PRICE_WITH_TAX == 'true' && $stDiffTaxOnly == 0 && ($optionsST['TAXAMT'] != 0 && $sumOfLineTax != 0)) {
+//    if DISPLAY_PRICE_WITH_TAX == 'true' && $stDiffTaxOnly == 0 && ($optionsST['TAXAMT'] != 0 && $sumOfLineTax != 0)) {
 //      $optionsNB['DESC'] = 'Tax included in prices: ' . $sumOfLineTax . ' (' . $optionsST['TAXAMT'] . ') ';
 //      $optionsST['TAXAMT'] = 0;
 //      for ($k=0, $n=$numberOfLineItemsProcessed+1; $k<$n; $k++) {
@@ -2068,7 +2068,7 @@ class paypaldp extends base {
           $detailedEmailMessage = MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0']  . ' ' . ($response['RESPMSG'] ?? ''). "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . ($response['L_ERRORCODE1'] ?? '') . "\n" . ($response['L_SHORTMESSAGE1'] ?? '') . "\n" . ($response['L_LONGMESSAGE1'] ?? ''). ($response['L_ERRORCODE2'] ?? '') . "\n" . ($response['L_SHORTMESSAGE2'] ?? '') . "\n" . ($response['L_LONGMESSAGE2']  ?? ''). ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . $errorInfo . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
           $detailedEmailMessage .= $explain;
           if (!isset($response['L_ERRORCODE0']) && isset($response['RESULT'])) $detailedEmailMessage .= "\n\n" . print_r($response, TRUE);
-          zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . zen_uncomment($errorNum) . ')', zen_uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br(zen_uncomment($detailedEmailMessage))), 'paymentalert');
+          zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . zen_uncomment($errorNum) . ')', zen_uncomment($detailedEmailMessage), zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br(zen_uncomment($detailedEmailMessage))), 'paymentalert');
           if ($response['L_ERRORCODE0'] == 15012) $detailedEmailMessage = '';
           $this->terminateEC(($detailedEmailMessage == '' ? $errorText . ' (' . $errorNum . ') ' : $detailedMessage), ($gateway_mode ? true : false), FILENAME_CHECKOUT_PAYMENT);
           return true;
@@ -2173,7 +2173,7 @@ class paypaldp extends base {
           $explain = "\n\nProblem occurred while customer #" . $_SESSION['customer_id'] . ' -- ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' -- was attempting checkout.' . "\n";
           $detailedEmailMessage = ($detailedMessage == '') ? '' : MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_MESSAGE . ' ' . $response['RESPMSG'] . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . $errorInfo . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
           if ($detailedEmailMessage != '') $detailedEmailMessage .= $explain;
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . zen_uncomment($errorNum) . ')', zen_uncomment($detailedMessage . $explain), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br(zen_uncomment($detailedEmailMessage))), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . zen_uncomment($errorNum) . ')', zen_uncomment($detailedMessage . $explain), zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br(zen_uncomment($detailedEmailMessage))), 'paymentalert');
           $messageStack->add_session($errorText . $errorNum . $detailedMessage, 'error');
           return true;
         }
@@ -2335,9 +2335,9 @@ class paypaldp extends base {
     $data = '<CardinalMPI>';
     $data .= '<MsgType>cmpi_lookup</MsgType>';
     $data .= '<Version>1.7</Version>';
-    $data .= '<ProcessorId>' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_PROCESSOR) . '</ProcessorId>';
-    $data .= '<MerchantId><![CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT) . ']]></MerchantId>';
-    $data .= '<TransactionPwd><![CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD) . ']]></TransactionPwd>';
+    $data .= '<ProcessorId>' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_PROCESSOR')) . '</ProcessorId>';
+    $data .= '<MerchantId><![CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT')) . ']]></MerchantId>';
+    $data .= '<TransactionPwd><![CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD')) . ']]></TransactionPwd>';
     $data .= '<TransactionType>CC</TransactionType>';
     $data .= '<TransactionMode>S</TransactionMode>';
     $data .= '<OrderNumber>' . $this->escapeXML($lookup_data_array['order_number']) . '</OrderNumber>';
@@ -2357,7 +2357,7 @@ class paypaldp extends base {
     if (isset($lookup_data_array['merchantData'])) $data .= '<MerchantData>' . $this->escapeXML($lookup_data_array['merchantData']) . '</MerchantData>';
     if ($prodCode !== FALSE && $prodCode != '') $data .= '<ProductCode>' . $this->escapeXML($prodCode) . '</ProductCode>';
     $data .= '</CardinalMPI>';
-    $debugData = str_replace(array('[CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT) . ']]', '[CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD) . ']]', $this->escapeXML($lookup_data_array['cc3d_card_number']), $this->escapeXML($lookup_data_array['cc3d_checkcode'])), '********', $data);
+    $debugData = str_replace(array('[CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT')) . ']]', '[CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD')) . ']]', $this->escapeXML($lookup_data_array['cc3d_card_number']), $this->escapeXML($lookup_data_array['cc3d_checkcode'])), '********', $data);
 
     if (MODULE_PAYMENT_CARDINAL_CENTINEL_DEBUGGING !== FALSE) {
       $this->zcLog('Cardinal Lookup 1', '[' . zen_session_id() . '] Cardinal Centinel - cmpi_lookup request (' . MODULE_PAYMENT_PAYPALDP_CARDINAL_TXN_URL . ') - ' . $debugData);
@@ -2382,7 +2382,7 @@ class paypaldp extends base {
       $errorText = 'Cardinal Lookup 3' . '[' . zen_session_id() . '] Cardinal Centinel - cmpi_lookup error - ' . $errorNo . ' - ' . $errorDesc;
       $errorText .= "\n\n" . 'There are 3 steps to configuring your Cardinal 3D-Secure service properly: ' . "\n1-Login to the Cardinal Merchant Admin URL supplied in your welcome package (NOT the test URL), and accept the license agreement.\n2-Set a transaction password.\n3-Copy your Cardinal Merchant ID and Cardinal Transaction Password into your ZC PayPal module.\n\nFor specific help, please contact implement@cardinalcommerce.com to sort out your account configuration issues.";
       $errorText .= "\n\nProblem observed while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication. THEIR PURCHASE WAS NOT SUCCESSFUL. Please resolve this matter to enable future checkouts.';
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, substr($errorDesc, 0, 75) . ' (' . $errorNo . ')', $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), substr($errorDesc, 0, 75) . ' (' . $errorNo . ')', $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
     }
 
     // default the continue flag to 'N'
@@ -2390,7 +2390,7 @@ class paypaldp extends base {
 
     // determine whether the transaction should continue or fail based upon
     // the enrollment lookup results
-    if (strcasecmp(MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ, 'No') == 0) {
+    if (strcasecmp(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ'), 'No') == 0) {
       $continue_flag = 'Y';
     } else if (strcmp($errorNo, '0') == 0) {
       if (strcasecmp($enrolled, 'Y') == 0) {
@@ -2404,7 +2404,7 @@ class paypaldp extends base {
     } else if ($errorNo == 1001) { // merchant has an account configuration problem to fix
       $errorText = CENTINEL_ERROR_CODE_1001 . ' - ' . CENTINEL_ERROR_CODE_1001_DESC;
       $errorText .= "\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, CENTINEL_ERROR_CODE_1001_DESC . ' (' . CENTINEL_ERROR_CODE_1001 . ')', $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), CENTINEL_ERROR_CODE_1001_DESC . ' (' . CENTINEL_ERROR_CODE_1001 . ')', $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
       $continue_flag = 'Y';
     }
 
@@ -2443,15 +2443,15 @@ class paypaldp extends base {
     $data = '<CardinalMPI>';
     $data .= '<MsgType>cmpi_authenticate</MsgType>';
     $data .= '<Version>1.7</Version>';
-    $data .= '<ProcessorId>' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_PROCESSOR) . '</ProcessorId>';
-    $data .= '<MerchantId><![CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT) . ']]></MerchantId>';
+    $data .= '<ProcessorId>' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_PROCESSOR')) . '</ProcessorId>';
+    $data .= '<MerchantId><![CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT')) . ']]></MerchantId>';
     $data .= '<TransactionType>CC</TransactionType>';
-    $data .= '<TransactionPwd><![CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD) . ']]></TransactionPwd>';
+    $data .= '<TransactionPwd><![CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD')) . ']]></TransactionPwd>';
     $data .= '<TransactionId>' . $this->escapeXML($authenticate_data_array['transaction_id']) . '</TransactionId>';
     $data .= '<PAResPayload>' . $this->escapeXML($authenticate_data_array['payload']) . '</PAResPayload>';
     if (isset($authenticate_data_array['merchantData'])) $data .= '<MerchantData>' . $this->escapeXML($authenticate_data_array['merchantData']) . '</MerchantData>';
     $data .= '</CardinalMPI>';
-    $debugData = str_replace(array('[CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT) . ']]', '[CDATA[' . $this->escapeXML(MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD) . ']]'), '********', $data);
+    $debugData = str_replace(array('[CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_MERCHANT')) . ']]', '[CDATA[' . $this->escapeXML(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_PASSWORD')) . ']]'), '********', $data);
 
     if (MODULE_PAYMENT_CARDINAL_CENTINEL_DEBUGGING !== FALSE) {
       $this->zcLog('Cardinal Auth 1', '[' . zen_session_id() . '] Cardinal Centinel - cmpi_authenticate request (' . MODULE_PAYMENT_PAYPALDP_CARDINAL_TXN_URL . ') - ' . $debugData);
@@ -2484,7 +2484,7 @@ class paypaldp extends base {
       } else if (strcasecmp($authStatus, 'N') == 0) {
         $continue_flag = 'N';
       } else if (strcasecmp($authStatus, 'U') == 0) {
-        if (strcasecmp(MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ, 'No') == 0) {
+        if (strcasecmp(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ'), 'No') == 0) {
           $this->zcLog('Cardinal Auth 3', 'Business rule in effect (not requiring chargeback protection), so setting to continue to Y');
           $continue_flag = 'Y';
         }
@@ -2565,7 +2565,7 @@ class paypaldp extends base {
         $errorText = CENTINEL_ERROR_CODE_8030 . ' - ' . CENTINEL_ERROR_CODE_8030_DESC;
         $errorText .= "\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
         if ($error != '-') $errorText .= "\n\nCURL error: " . $error;
-        zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, CENTINEL_ERROR_CODE_8030_DESC . ' (' . CENTINEL_ERROR_CODE_8030 . ')', $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+        zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), CENTINEL_ERROR_CODE_8030_DESC . ' (' . CENTINEL_ERROR_CODE_8030 . ')', $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
       } else if (strpos($result, "<CardinalMPI>") === false) {
         // Assert that we received an expected Centinel Message in response.
         $this->zcLog('Cardinal Send 4', '[' . zen_session_id() . '] Cardinal Centinel - ' . CENTINEL_ERROR_CODE_8010_DESC);
@@ -2574,7 +2574,7 @@ class paypaldp extends base {
         $result = $this->setErrorResponse(CENTINEL_ERROR_CODE_8010, CENTINEL_ERROR_CODE_8010_DESC);
         $errorText = CENTINEL_ERROR_CODE_8010 . ' - ' . CENTINEL_ERROR_CODE_8010_DESC;
         $errorText .= "\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
-        zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, CENTINEL_ERROR_CODE_8010_DESC . ' (' . CENTINEL_ERROR_CODE_8010 . ')', $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+        zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), CENTINEL_ERROR_CODE_8010_DESC . ' (' . CENTINEL_ERROR_CODE_8010 . ')', $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
       } else {
         // Check whether the merchant has a properly configured 3D-Secure account
         if (strpos($result, "<ErrorNo>4243") > 0) {
@@ -2584,7 +2584,7 @@ class paypaldp extends base {
           $result = $this->setErrorResponse(CENTINEL_ERROR_CODE_4243, CENTINEL_ERROR_CODE_4243_DESC);
           $errorText = CENTINEL_ERROR_CODE_4243 . ' - ' . CENTINEL_ERROR_CODE_4243_DESC;
           $errorText .= "\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
-          zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, CENTINEL_ERROR_CODE_4243_DESC . ' (' . CENTINEL_ERROR_CODE_4243 . ')', $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+          zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), CENTINEL_ERROR_CODE_4243_DESC . ' (' . CENTINEL_ERROR_CODE_4243 . ')', $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
         }
       }
     } else {
@@ -2592,7 +2592,7 @@ class paypaldp extends base {
       $result = $this->setErrorResponse(CENTINEL_ERROR_CODE_8000, CENTINEL_ERROR_CODE_8000_DESC);
       $errorText = CENTINEL_ERROR_CODE_8000 . ' - ' . CENTINEL_ERROR_CODE_8000_DESC;
       $errorText .= "\n\nProblem occurred while customer " . $_SESSION['customer_id'] . ' ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' was attempting checkout with 3D-Secure authentication.';
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, CENTINEL_ERROR_CODE_8000_DESC . ' (' . CENTINEL_ERROR_CODE_8000 . ')', $errorText, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), CENTINEL_ERROR_CODE_8000_DESC . ' (' . CENTINEL_ERROR_CODE_8000 . ')', $errorText, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorText)), 'paymentalert');
     }
 
     return $result;

@@ -159,11 +159,11 @@ class paypalwpp extends base {
     $this->code = 'paypalwpp';
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.5.8';
-    $this->enabled = (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && (MODULE_PAYMENT_PAYPALWPP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALWPP_STATUS === 'Retired')));
+    $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'Retired'));
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
-      switch (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE) {
+      switch (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE')) {
         case ('PayPal'):
           $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
         break;
@@ -181,16 +181,16 @@ class paypalwpp extends base {
           $this->title = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
       }
 
-      $this->sort_order = defined('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER') ? MODULE_PAYMENT_PAYPALWPP_SORT_ORDER : null;
+      $this->sort_order = zen_config('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER');
 
       if (null === $this->sort_order) return false;
 
       if ($this->enabled) {
-        if ( (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'PayPal' && (MODULE_PAYMENT_PAYPALWPP_APISIGNATURE == '' || MODULE_PAYMENT_PAYPALWPP_APIUSERNAME == '' || MODULE_PAYMENT_PAYPALWPP_APIPASSWORD == ''))
-          || (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow' && (MODULE_PAYMENT_PAYPALWPP_PFPARTNER == '' || MODULE_PAYMENT_PAYPALWPP_PFVENDOR == '' || MODULE_PAYMENT_PAYPALWPP_PFUSER == '' || MODULE_PAYMENT_PAYPALWPP_PFPASSWORD == ''))
+        if ( (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'PayPal' && (zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD') === ''))
+          || (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),0,7) == 'Payflow' && (zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD') === ''))
           ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
-        if (MODULE_PAYMENT_PAYPALWPP_SERVER =='sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
-        if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
+        if (zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER') === 'sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
+        if (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
         if (!function_exists('curl_init')) $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
       }
     } else {
@@ -200,26 +200,26 @@ class paypalwpp extends base {
 
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
 
-    $this->enableDebugging = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email');
-    $this->emailAlerts = (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING =='Log and Email' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Alerts Only');
-    $this->showPaymentPage = (MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE == 'No') ? true : false;
+    $this->enableDebugging = (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email');
+    $this->emailAlerts = (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Alerts Only');
+    $this->showPaymentPage = (zen_config('MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE') === 'No') ? true : false;
 
     $this->buttonSourceEC = 'ZenCart-EC_us';
     $this->buttonSourceDP = 'ZenCart-DP_us';
-    if (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'Payflow-UK') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'Payflow-UK') {
       $this->buttonSourceEC = 'ZenCart-EC_uk';
       $this->buttonSourceDP = 'ZenCart-DP_uk';
     }
-    if (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'Payflow-US') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'Payflow-US') {
       $this->buttonSourceEC = 'ZenCart-ECGW_us';
       $this->buttonSourceDP = 'ZenCart-GW_us';
     }
 
-    $this->order_pending_status = (int)MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID;
-    $this->order_status = ((int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID;
+    $this->order_pending_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID');
+    $this->order_status = ((int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') > 0) ? (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') : (int)zen_config('DEFAULT_ORDERS_STATUS_ID');
 
     $this->new_acct_notify = MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY;
-    $this->zone = (int)MODULE_PAYMENT_PAYPALWPP_ZONE;
+    $this->zone = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ZONE');
     if (is_object($order)) $this->update_status();
 
     // if operating in markflow mode, start EC process when submitting order
@@ -227,10 +227,10 @@ class paypalwpp extends base {
       $this->form_action_url = zen_href_link('ipn_main_handler.php', 'type=ec&markflow=1&clearSess=1&stage=final', 'SSL', true, true, true);
     }
 
-    if (!defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE') || MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE != 'InContext') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', '') !== 'InContext') {
       $this->use_incontext_checkout = false;
     }
-    if (!defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID') || MODULE_PAYMENT_PAYPALWPP_MERCHANTID == '') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_MERCHANTID') === '') {
       $this->use_incontext_checkout = false;
     }
 
@@ -352,9 +352,9 @@ class paypalwpp extends base {
     // send the PayPal-provided javascript to trigger the incontext checkout experience
     return "      <script>
         window.paypalCheckoutReady = function () {
-        paypal.checkout.setup('" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "', {
+        paypal.checkout.setup('" . zen_config('MODULE_PAYMENT_PAYPALWPP_MERCHANTID') . "', {
           //locale: '" . $this->getLanguageCode('incontext') . "',"
-          . (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live' ? '' : "\n          environment: 'sandbox',") . "
+          . (zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER') === 'live' ? '' : "\n          environment: 'sandbox',") . "
           container: 'checkout_confirmation',
           button: 'btn_submit'
         });
@@ -376,10 +376,10 @@ class paypalwpp extends base {
 
     // Allow delayed payments such as eCheck? (can only use InstantPayment if Action is Sale)
     // Payment Transaction/Authorization Mode
-    $options['PAYMENTREQUEST_0_PAYMENTACTION'] = (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Sale';
+    $options['PAYMENTREQUEST_0_PAYMENTACTION'] = (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') === 'Auth Only') ? 'Authorization' : 'Sale';
     // for future:
-    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Order') $options['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Order';
-    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTREQUEST_0_PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') === 'Order') $options['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Order';
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', '') !== 'Auth Only' && zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', '') !== 'Sale' && $options['PAYMENTREQUEST_0_PAYMENTACTION'] == 'Sale' && zen_config('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') === 'Instant Only') {
         $options['ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
     }
 
@@ -439,13 +439,13 @@ class paypalwpp extends base {
       }
 
       // FMF support
-      $options['RETURNFMFDETAILS'] = (MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS == 'Yes') ? 1 : 0;
+      $options['RETURNFMFDETAILS'] = (zen_config('MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS') === 'Yes') ? 1 : 0;
 
       // Add note to track that this was an EC transaction (used in properly handling update IPNs related to EC transactions):
       $options['PAYMENTREQUEST_0_CUSTOM'] = 'EC-' . (int)$_SESSION['customer_id'] . '-' . time();
 
       // send the store name as transaction identifier, to help distinguish payments between multiple stores:
-      $options['PAYMENTREQUEST_0_INVNUM'] = (int)$_SESSION['customer_id'] . '-' . time() . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', STORE_NAME), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
+      $options['PAYMENTREQUEST_0_INVNUM'] = (int)$_SESSION['customer_id'] . '-' . time() . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', zen_config('STORE_NAME')), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
 
       $options['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->selectCurrency($order->info['currency']);
 //      $order->info['total'] = zen_round($order->info['total'], 2);
@@ -544,7 +544,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // FMF
     if ($this->fmfResponse != '') {
       $detailedMessage = $insert_id . "\n" . $this->fmfResponse . "\n" . MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_INTRO . "\n" . print_r($this->fmfErrors, TRUE);
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_SUBJECT . ' (' . $insert_id . ')', $detailedMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($detailedMessage)), 'paymentalert');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULES_PAYMENT_PAYPALDP_TEXT_EMAIL_FMF_SUBJECT . ' (' . $insert_id . ')', $detailedMessage, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($detailedMessage)), 'paymentalert');
     }
 
     // add a new OSH record for this order's PP details
@@ -563,7 +563,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $paypal_order = array('order_id' => $insert_id,
                           'txn_type' => $this->transactiontype,
                           'module_name' => $this->code,
-                          'module_mode' => MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,
+                          'module_mode' => zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),
                           'reason_code' => $this->reasoncode,
                           'payment_type' => $this->payment_type,
                           'payment_status' => $this->payment_status,
@@ -584,7 +584,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'],
                           'payment_date' => convertToLocalTimeZone(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
-                          'receiver_email' => (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow' ? MODULE_PAYMENT_PAYPALWPP_PFVENDOR : str_replace('_api1', '', MODULE_PAYMENT_PAYPALWPP_APIUSERNAME)),
+                          'receiver_email' => (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),0,7) == 'Payflow' ? zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') : str_replace('_api1', '', zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME'))),
                           'receiver_id' => '',
                           'txn_id' => $this->transaction_id,
                           'parent_txn_id' => '',
@@ -786,7 +786,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       }
     }
     $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
-    if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE, 'Payflow'))) {
+    if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'), 'Payflow'))) {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
     }
     return $keys_list;
@@ -822,7 +822,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * @since ZC v1.3.7
    */
   function in_special_checkout() {
-    if ((defined('MODULE_PAYMENT_PAYPALWPP_STATUS') && MODULE_PAYMENT_PAYPALWPP_STATUS == 'True') &&
+    if ((zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True') &&
              !empty($_SESSION['paypal_ec_token']) &&
              !empty($_SESSION['paypal_ec_payer_id']) &&
              !empty($_SESSION['paypal_ec_payer_info'])) {
@@ -847,7 +847,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   function zcLog($stage, $message) {
     static $tokenHash;
     if ($tokenHash == '') $tokenHash = '_' . zen_create_random_value(4);
-    if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email' || MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log File') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File') {
       $token = (isset($_SESSION['paypal_ec_token'])) ? $_SESSION['paypal_ec_token'] : ((isset($_GET['token'])) ? preg_replace('/[^0-9.A-Z\-]/', '', $_GET['token']) : '');
       $token = ($token == '') ? date('m-d-Y-H-i') : $token; // or time()
       $token .= $tokenHash;
@@ -864,10 +864,10 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * @since ZC v1.3.7
    */
   function _doDebug($subject = 'PayPal debug data', $data = '', $useSession = true) {
-    if (MODULE_PAYMENT_PAYPALWPP_DEBUGGING == 'Log and Email') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email') {
       $data =  urldecode($data) . "\n\n";
       if ($useSession) $data .= "\nSession data: " . print_r($_SESSION, true);
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, $subject, $this->code . "\n" . $data, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($this->code . "\n" . $data)), 'debug');
+      zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), $subject, $this->code . "\n" . $data, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($this->code . "\n" . $data)), 'debug');
     }
   }
   /**
@@ -885,13 +885,13 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // The PayFlow processing uses older-style, unprefixed, NVP variable names while the PayPal processing
     // uses the PAYMENTREQUEST_0_ and PAYMENT_INFO_0_ prefixes!
     //
-    if (substr(MODULE_PAYMENT_PAYPALWPP_MODULE_MODE,0,7) == 'Payflow') {
+    if (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),0,7) == 'Payflow') {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
-                                        'user' =>   trim(MODULE_PAYMENT_PAYPALWPP_PFUSER),
-                                        'vendor' => trim(MODULE_PAYMENT_PAYPALWPP_PFVENDOR),
-                                        'partner'=> trim(MODULE_PAYMENT_PAYPALWPP_PFPARTNER),
-                                        'pwd' =>    trim(MODULE_PAYMENT_PAYPALWPP_PFPASSWORD),
-                                        'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
+                                        'user' =>   trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER')),
+                                        'vendor' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR')),
+                                        'partner'=> trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER')),
+                                        'pwd' =>    trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD')),
+                                        'server' => zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
                                     'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
 
@@ -899,11 +899,11 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->infoPrefix = '';
     } else {
       $doPayPal = new paypal_curl(array('mode' => 'nvp',
-                                        'user' => trim(MODULE_PAYMENT_PAYPALWPP_APIUSERNAME),
-                                        'pwd' =>  trim(MODULE_PAYMENT_PAYPALWPP_APIPASSWORD),
-                                        'signature' => trim(MODULE_PAYMENT_PAYPALWPP_APISIGNATURE),
+                                        'user' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')),
+                                        'pwd' =>  trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD')),
+                                        'signature' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')),
                                         'version' => '124.0',
-                                        'server' => MODULE_PAYMENT_PAYPALWPP_SERVER));
+                                        'server' => zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
                                     'sandbox' => 'https://api-3t.sandbox.paypal.com/nvp');
 
@@ -916,15 +916,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $doPayPal->_logLevel = $this->_logLevel;
 
     // set proxy options if configured
-    if (CURL_PROXY_REQUIRED == 'True' && CURL_PROXY_SERVER_DETAILS != '') {
+    if (zen_config('CURL_PROXY_REQUIRED') === 'True' && zen_config('CURL_PROXY_SERVER_DETAILS', '') !== '') {
       $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       $doPayPal->setCurlOption(CURLOPT_HTTPPROXYTUNNEL, $proxy_tunnel_flag);
       $doPayPal->setCurlOption(CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-      $doPayPal->setCurlOption(CURLOPT_PROXY, CURL_PROXY_SERVER_DETAILS);
+      $doPayPal->setCurlOption(CURLOPT_PROXY, zen_config('CURL_PROXY_SERVER_DETAILS'));
     }
 
     // transaction processing mode
-    $doPayPal->_trxtype = (in_array(MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE, array('Auth Only', 'Order'))) ? 'A' : 'S';
+    $doPayPal->_trxtype = (in_array(zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE'), array('Auth Only', 'Order'))) ? 'A' : 'S';
 
     return $doPayPal;
   }
@@ -933,7 +933,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * @since ZC v1.3.7
    */
   function getPayPalLoginServer() {
-    if (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER') === 'live') {
       // live url
       $paypal_url = 'https://www.paypal.com/cgi-bin/webscr';
     } else {
@@ -949,7 +949,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function _doRefund($oID, $amount = 'Full', $note = '') {
     global $db, $doPayPal, $messageStack;
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID');
     $orig_order_amount = 0;
     $doPayPal = $this->paypal_init();
     $proceedToRefund = false;
@@ -1011,7 +1011,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     global $db, $doPayPal, $messageStack;
     $doPayPal = $this->paypal_init();
     $authAmt = $amt;
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID');
 
     if (isset($_POST['orderauth']) && $_POST['orderauth'] == MODULE_PAYMENT_PAYPAL_ENTRY_AUTH_BUTTON_TEXT_PARTIAL) {
       $authAmt = (float)$_POST['authamt'];
@@ -1063,7 +1063,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $doPayPal = $this->paypal_init();
 
     //@TODO: Read current order status and determine best status to set this to
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID');
 
     $orig_order_amount = 0;
     $doPayPal = $this->paypal_init();
@@ -1122,7 +1122,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function _doVoid($oID, $note = '') {
     global $db, $doPayPal, $messageStack;
-    $new_order_status = (int)MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID;
+    $new_order_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID');
     $doPayPal = $this->paypal_init();
     $voidNote = strip_tags(zen_db_input($_POST['voidnote']));
     $voidAuthID = trim(strip_tags(zen_db_input($_POST['voidauthid'])));
@@ -1208,7 +1208,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             $user_locale_info[] = strtoupper($custISO['countries_iso_code_2']);
         }
 
-        $storeISO = zen_get_countries_with_iso_codes(STORE_COUNTRY);
+        $storeISO = zen_get_countries_with_iso_codes(zen_config('STORE_COUNTRY'));
         $user_locale_info[] = strtoupper($storeISO['countries_iso_code_2']);
 
         $to_match = array_map('strtoupper', array_merge($allowed_country_codes, $allowed_language_codes));
@@ -1233,15 +1233,15 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $paypalSupportedCurrencies = ($subset == 'EC') ? $ec_currencies : $dp_currencies;
 
     // if using Pro 2.0 (UK), only the 6 currencies are supported.
-    $paypalSupportedCurrencies = (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'Payflow-UK') ? $dp_currencies : $paypalSupportedCurrencies;
+    $paypalSupportedCurrencies = (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'Payflow-UK') ? $dp_currencies : $paypalSupportedCurrencies;
 
-    $my_currency = substr(MODULE_PAYMENT_PAYPALWPP_CURRENCY, 5);
-    if (MODULE_PAYMENT_PAYPALWPP_CURRENCY == 'Selected Currency') {
+    $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPALWPP_CURRENCY'), 5);
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_CURRENCY') === 'Selected Currency') {
       $my_currency = ($val == '') ? $_SESSION['currency'] : $val;
     }
 
     if (!in_array($my_currency, $paypalSupportedCurrencies)) {
-      $my_currency = (MODULE_PAYMENT_PAYPALWPP_MODULE_MODE == 'Payflow-UK') ? 'GBP' : 'USD';
+      $my_currency = (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'Payflow-UK') ? 'GBP' : 'USD';
     }
     return $my_currency;
   }
@@ -1304,7 +1304,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     global $order, $currencies, $order_totals, $order_total_modules;
 
     // if not default currency, do not send subtotals or line-item details
-    if (DEFAULT_CURRENCY != $order->info['currency'] || $restrictedCurrency != DEFAULT_CURRENCY) {
+    if (zen_config('DEFAULT_CURRENCY') != $order->info['currency'] || $restrictedCurrency != zen_config('DEFAULT_CURRENCY')) {
       $this->zcLog('getLineItemDetails 1', 'Not using default currency. Thus, no line-item details can be submitted.');
       return array();
     }
@@ -1368,14 +1368,14 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       if ($surcharges > 0) $optionsST['PAYMENTREQUEST_0_ITEMAMT'] += $surcharges;
 
       // Handle tax-included scenario
-      if (DISPLAY_PRICE_WITH_TAX == 'true') $optionsST['PAYMENTREQUEST_0_TAXAMT'] = 0;
+      if (zen_config('DISPLAY_PRICE_WITH_TAX') === 'true') $optionsST['PAYMENTREQUEST_0_TAXAMT'] = 0;
 
       $subtotalPRE = $optionsST;
       // Move shipping tax amount from Tax subtotal into Shipping subtotal for submission to PayPal, since PayPal applies tax to each line-item individually
-      if (!empty($order->info['shipping_method']) && DISPLAY_PRICE_WITH_TAX != 'true') {
+      if (!empty($order->info['shipping_method']) && zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
         $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
         if (isset($GLOBALS[$module]) && $GLOBALS[$module]->tax_class > 0) {
-          $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? STORE_SHIPPING_TAX_BASIS : $GLOBALS[$module]->tax_basis;
+          $shipping_tax_basis = (!isset($GLOBALS[$module]->tax_basis)) ? zen_config('STORE_SHIPPING_TAX_BASIS') : $GLOBALS[$module]->tax_basis;
           $shippingOnBilling = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->billing['country']['id'], $order->billing['zone_id']);
           $shippingOnDelivery = zen_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           if ($shipping_tax_basis == 'Billing') {
@@ -1383,9 +1383,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           } elseif ($shipping_tax_basis == 'Shipping') {
             $shipping_tax = $shippingOnDelivery;
           } else {
-            if (STORE_ZONE == $order->billing['zone_id']) {
+            if (zen_config('STORE_ZONE') === $order->billing['zone_id']) {
               $shipping_tax = $shippingOnBilling;
-            } elseif (STORE_ZONE == $order->delivery['zone_id']) {
+            } elseif (zen_config('STORE_ZONE') === $order->delivery['zone_id']) {
               $shipping_tax = $shippingOnDelivery;
             } else {
               $shipping_tax = 0;
@@ -1418,7 +1418,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $optionsLI["L_PAYMENTREQUEST_0_NUMBER$k"] = $order->products[$i]['model'];
       $optionsLI["L_PAYMENTREQUEST_0_NAME$k"]   = $order->products[$i]['name'] . ' [' . (int)$order->products[$i]['id'] . ']';
       // Append *** if out-of-stock.
-      $optionsLI["L_PAYMENTREQUEST_0_NAME$k"]  .= ((zen_get_products_stock($order->products[$i]['id']) - $order->products[$i]['qty']) < 0 ? STOCK_MARK_PRODUCT_OUT_OF_STOCK : '');
+      $optionsLI["L_PAYMENTREQUEST_0_NAME$k"]  .= ((zen_get_products_stock($order->products[$i]['id']) - $order->products[$i]['qty']) < 0 ? zen_config('STOCK_MARK_PRODUCT_OUT_OF_STOCK') : '');
       // if there are attributes, loop thru them and add to description
       if (isset($order->products[$i]['attributes']) && sizeof($order->products[$i]['attributes']) > 0 ) {
         for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
@@ -1525,7 +1525,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 //    // Sanity check -- if tax-included pricing is causing problems, remove the numbers and put them in a comment instead:
 //    $stDiffTaxOnly = (strval($sumOfLineItems - $sumOfLineTax - round($optionsST['AMT'], 2)) + 0);
 //    $this->zcLog('tax sanity check', 'stDiffTaxOnly: ' . $stDiffTaxOnly . "\nsumOfLineItems: " . $sumOfLineItems . "\nsumOfLineTax: " . $sumOfLineTax . ' ' . $subTotalTax . ' ' . print_r(array_merge($optionsST, $optionsLI), true));
-//    if (DISPLAY_PRICE_WITH_TAX == 'true' && $stDiffTaxOnly == 0 && ($optionsST['TAXAMT'] != 0 && $sumOfLineTax != 0)) {
+//    if DISPLAY_PRICE_WITH_TAX == 'true' && $stDiffTaxOnly == 0 && ($optionsST['TAXAMT'] != 0 && $sumOfLineTax != 0)) {
 //      $optionsNB['DESC'] = 'Tax included in prices: ' . $sumOfLineTax . ' (' . $optionsST['TAXAMT'] . ') ';
 //      $optionsST['TAXAMT'] = 0;
 //      for ($k=0, $n=$numberOfLineItemsProcessed+1; $k<$n; $k++) {
@@ -1702,17 +1702,17 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     $options['BUYEREMAILOPTINENABLE'] = 0;
 
-    $options['CUSTOMERSERVICENUMBER'] = (defined('STORE_TELEPHONE_CUSTSERVICE') && STORE_TELEPHONE_CUSTSERVICE != '') ? substr(STORE_TELEPHONE_CUSTSERVICE, 0, 16) : '';
+    $options['CUSTOMERSERVICENUMBER'] = (zen_config('STORE_TELEPHONE_CUSTSERVICE', '') !== '') ? substr(zen_config('STORE_TELEPHONE_CUSTSERVICE'), 0, 16) : '';
 
     // Store Name to appear on PayPal page
-    $options['BRANDNAME'] = (defined('MODULE_PAYMENT_PAYPALWPP_BRANDNAME') && strlen(MODULE_PAYMENT_PAYPALWPP_BRANDNAME) > 3) ? substr(MODULE_PAYMENT_PAYPALWPP_BRANDNAME, 0, 127) : substr(STORE_NAME, 0, 127);
+    $options['BRANDNAME'] = (defined('MODULE_PAYMENT_PAYPALWPP_BRANDNAME') && strlen(zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME')) > 3) ? substr(zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME'), 0, 127) : substr(zen_config('STORE_NAME'), 0, 127);
 
     // Payment Transaction/Authorization Mode
-    $options['PAYMENTREQUEST_0_PAYMENTACTION'] = (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Auth Only') ? 'Authorization' : 'Sale';
+    $options['PAYMENTREQUEST_0_PAYMENTACTION'] = (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') === 'Auth Only') ? 'Authorization' : 'Sale';
     // for future:
-    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE == 'Order') $options['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Order';
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') === 'Order') $options['PAYMENTREQUEST_0_PAYMENTACTION'] = 'Order';
     // Allow delayed payments such as eCheck? (can only use InstantPayment if Action is Sale)
-    if (MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Auth Only' && MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE != 'Sale' && $options['PAYMENTREQUEST_0_PAYMENTACTION'] == 'Sale' && defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') && MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT == 'Instant Only') {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') !== 'Auth Only' && zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') !== 'Sale' && $options['PAYMENTREQUEST_0_PAYMENTACTION'] == 'Sale' && zen_config('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') === 'Instant Only') {
         $options['PAYMENTREQUEST_0_ALLOWEDPAYMENTMETHOD'] = 'InstantPaymentOnly';
     }
 
@@ -1758,7 +1758,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       // If we are in a "mark" flow and the customer has a usable address, set the addressoverride variable to 1.
       // This will override the shipping address in PayPal with the shipping address that is selected in Zen Cart.
       // @TODO: consider using address-validation against Paypal's addresses via API to help customers understand why they may be having difficulties during checkout
-      if (MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS != 'Yes' && ($address_arr = $this->getOverrideAddress()) !== false) {
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS') !== 'Yes' && ($address_arr = $this->getOverrideAddress()) !== false) {
         $address_error = false;
         foreach(array('entry_firstname','entry_lastname','entry_street_address','entry_city','entry_postcode','zone_code','countries_iso_code_2') as $val) {
           if ($address_arr[$val] == '') $address_error = true;
@@ -1784,7 +1784,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->zcLog('ec-step1-addr_check3', 'address details from override check:'.(empty($address_arr) ? ' <NONE FOUND>' : print_r($address_arr, true)));
 
       // Do we require a "confirmed" shipping address ?
-      if (MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS == 'Yes') {
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS') === 'Yes') {
         $options['REQCONFIRMSHIPPING'] = 1;
       }
     }
@@ -2335,7 +2335,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
 
       // select a shipping method, based on cheapest available option
-      if (MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING == 'Yes') $this->setShippingMethod();
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING') === 'Yes') $this->setShippingMethod();
 
       // send the user on
       if (!empty($_SESSION['paypal_ec_markflow']) && $_SESSION['paypal_ec_markflow'] == 1) {
@@ -2391,7 +2391,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
             'customers_firstname'           => $paypal_ec_payer_info['payer_firstname'],
             'customers_lastname'            => $paypal_ec_payer_info['payer_lastname'],
             'customers_email_address'       => $paypal_ec_payer_info['payer_email'],
-            'customers_email_format'        => (ACCOUNT_EMAIL_PREFERENCE == '1' ? 'HTML' : 'TEXT'),
+            'customers_email_format'        => (zen_config('ACCOUNT_EMAIL_PREFERENCE') === '1' ? 'HTML' : 'TEXT'),
             'customers_telephone'           => $paypal_ec_payer_info['ship_phone'],
             'customers_fax'                 => '',
             'customers_gender'              => $paypal_ec_payer_info['payer_gender'],
@@ -2465,17 +2465,17 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $email_text .= "\n\n" . EMAIL_EC_ACCOUNT_INFORMATION . "\nUsername: " . $paypal_ec_payer_info['payer_email'] . "\nPassword: " . $password . "\n\n";
           $email_text .= EMAIL_CONTACT;
           // include create-account-specific disclaimer
-          $email_text .= "\n\n" . sprintf(EMAIL_DISCLAIMER_NEW_CUSTOMER, STORE_OWNER_EMAIL_ADDRESS). "\n\n";
+          $email_text .= "\n\n" . sprintf(EMAIL_DISCLAIMER_NEW_CUSTOMER, zen_config('STORE_OWNER_EMAIL_ADDRESS')). "\n\n";
           $email_html = array();
           $email_html['EMAIL_GREETING']      = sprintf(EMAIL_GREET_NONE, $paypal_ec_payer_info['payer_firstname']) ;
           $email_html['EMAIL_WELCOME']       = EMAIL_WELCOME;
           $email_html['EMAIL_MESSAGE_HTML']  = nl2br(EMAIL_TEXT . "\n\n" . EMAIL_EC_ACCOUNT_INFORMATION . "\nUsername: " . $paypal_ec_payer_info['payer_email'] . "\nPassword: " . $password . "\n\n");
           $email_html['EMAIL_CONTACT_OWNER'] = EMAIL_CONTACT;
           $email_html['EMAIL_CLOSURE']       = nl2br(EMAIL_GV_CLOSURE);
-          $email_html['EMAIL_DISCLAIMER']    = sprintf(EMAIL_DISCLAIMER_NEW_CUSTOMER, '<a href="mailto:' . STORE_OWNER_EMAIL_ADDRESS . '">'. STORE_OWNER_EMAIL_ADDRESS .' </a>');
+          $email_html['EMAIL_DISCLAIMER']    = sprintf(EMAIL_DISCLAIMER_NEW_CUSTOMER, '<a href="mailto:' . zen_config('STORE_OWNER_EMAIL_ADDRESS') . '">'. zen_config('STORE_OWNER_EMAIL_ADDRESS') .' </a>');
 
           // send the mail
-          if (trim(EMAIL_SUBJECT) != 'n/a') zen_mail($paypal_ec_payer_info['payer_firstname'] . " " . $paypal_ec_payer_info['payer_lastname'], $paypal_ec_payer_info['payer_email'], EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, $email_html, 'welcome');
+          if (trim(EMAIL_SUBJECT) != 'n/a') zen_mail($paypal_ec_payer_info['payer_firstname'] . " " . $paypal_ec_payer_info['payer_lastname'], $paypal_ec_payer_info['payer_email'], EMAIL_SUBJECT, $email_text, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), $email_html, 'welcome');
 
           // set the express checkout temp -- false means the account is no longer "only" for EC ... it'll be permanent
           $_SESSION['paypal_ec_temp'] = false;
@@ -2528,7 +2528,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 
       // select a shipping method, based on cheapest available option
-      if (MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING == 'Yes') $this->setShippingMethod();
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING') === 'Yes') $this->setShippingMethod();
 
       // debug
       $this->zcLog('ec_step2_finish - 8', 'Exiting via terminateEC (from originally-not-logged-in mode).' . "\n" . 'Selected address: ' . $address_book_id . "\nOriginal was: " . (int)$original_default_address_id . "\nprepared data: " . print_r($order->customer, true));
@@ -2981,7 +2981,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     if ($check_customer->EOF) {
       $this->terminateEC(MODULE_PAYMENT_PAYPALWPP_TEXT_BAD_LOGIN, true);
     }
-    if (SESSION_RECREATE == 'True') {
+    if (zen_config('SESSION_RECREATE') === 'True') {
       zen_session_recreate();
     }
     $sql = "SELECT entry_country_id, entry_zone_id
@@ -3024,9 +3024,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // See if a message to the customer (possibly with a redirect back to the shopping-cart page)
         // is required if the cart's contents have changed.
         //
-        if (SHOW_SHOPPING_CART_COMBINED !== '0' && $zc_check_basket_before > 0) {
+        if (zen_config('SHOW_SHOPPING_CART_COMBINED') !== '0' && $zc_check_basket_before > 0) {
             if ($zc_check_basket_before != $zc_check_basket_after && $zc_check_basket_after > 0) {
-                if (SHOW_SHOPPING_CART_COMBINED === '2') {
+                if (zen_config('SHOW_SHOPPING_CART_COMBINED') === '2') {
                     // warning only do not send to cart ('2')
                     $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
                 } else {
@@ -3112,7 +3112,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     $this->zcLog('termEC-2', 'BEFORE: $this->showPaymentPage = ' . (int)$this->showPaymentPage . "\nToken Data:" . (!isset($_SESSION['paypal_ec_token']) ? 'not set' : $_SESSION['paypal_ec_token'])) ;
     // force display of payment page if GV/DC active for this customer
-    if (MODULE_ORDER_TOTAL_INSTALLED && $this->showPaymentPage !== true && isset($_SESSION['paypal_ec_token']) ) {
+    if (zen_config('MODULE_ORDER_TOTAL_INSTALLED') && $this->showPaymentPage !== true && isset($_SESSION['paypal_ec_token']) ) {
       require_once(DIR_WS_CLASSES . 'order.php');
       $order = new order;
       require_once(DIR_WS_CLASSES . 'order_total.php');
@@ -3267,7 +3267,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_ERROR || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? $errorNum . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . (isset($response['RESPMSG']) ? ' ' . $response['RESPMSG'] : '') . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : $errorInfo . MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $errorText);
           if (!isset($response['L_ERRORCODE0']) && isset($response['RESULT'])) $detailedEmailMessage .= "\n\n" . print_r($response, TRUE);
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)), 'paymentalert');
           $this->terminateEC($errorText . ' (' . $errorNum . ') ' . $detailedMessage, true);
           return true;
         }
@@ -3313,7 +3313,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_INVALID_RESPONSE || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? $errorNum . ' ' . urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ($response['RESULT'] ?? '') . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : $errorInfo . MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . ($response['L_ERRORCODE1'] ?? '') . "\n" . ($response['L_SHORTMESSAGE1'] ?? '') . "\n" . ($response['L_LONGMESSAGE1'] ?? '') . ($response['L_ERRORCODE2'] ?? '') . "\n" . ($response['L_SHORTMESSAGE2'] ?? '') . "\n" . ($response['L_LONGMESSAGE2'] ?? '') . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $errorText);
           if (!isset($response['L_ERRORCODE0']) && isset($response['RESULT'])) $detailedEmailMessage .= "\n\n" . print_r($response, TRUE);
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedEmailMessage), zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>$this->uncomment($detailedMessage)), 'paymentalert');
           $this->terminateEC(($detailedEmailMessage == '' ? $errorText . ' (' . urldecode($response['L_SHORTMESSAGE0'] . $response['RESULT']) . ') ' : $detailedMessage), true);
           return true;
         }
@@ -3415,7 +3415,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
           $errorNum .= ' (' . urldecode($response['L_SHORTMESSAGE0'] . ' <!-- ' . $response['RESPMSG']) . ' -->) ' . $response['L_ERRORCODE0'];
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_GEN_API_ERROR || $errorText == MODULE_PAYMENT_PAYPALWPP_TEXT_DECLINED || (int)trim($errorNum) > 0 || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ' ' . $response['CURL_ERRORS']) : '';
           $detailedEmailMessage = ($detailedMessage == '') ? '' : MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_MESSAGE .  ' ' . $response['RESPMSG'] . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
-          if ($detailedEmailMessage != '') zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedMessage), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($this->uncomment($detailedEmailMessage))), 'paymentalert');
+          if ($detailedEmailMessage != '') zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), MODULE_PAYMENT_PAYPALWPP_TEXT_EMAIL_ERROR_SUBJECT . ' (' . $this->uncomment($errorNum) . ')', $this->uncomment($detailedMessage), zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($this->uncomment($detailedEmailMessage))), 'paymentalert');
           $messageStack->add_session($errorText . $errorNum . $detailedMessage, 'error');
           return true;
         }

@@ -63,8 +63,8 @@ if ($downloadsOnThisOrder) {
                              opd.orders_products_filename, opd.download_count
                         from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
                         where o.orders_id = '" . (int)$last_order . "'
-                        and (o.orders_status >= '" . DOWNLOADS_CONTROLLER_ORDERS_STATUS . "'
-                        and o.orders_status <= '" . DOWNLOADS_CONTROLLER_ORDERS_STATUS_END . "')" .
+                        and (o.orders_status >= '" . (int)zen_config('DOWNLOADS_CONTROLLER_ORDERS_STATUS') . "'
+                        and o.orders_status <= '" . (int)zen_config('DOWNLOADS_CONTROLLER_ORDERS_STATUS_END') . "')" .
                         $lookup_clause . "
                         and o.orders_id = op.orders_id
                         and op.orders_products_id = opd.orders_products_id
