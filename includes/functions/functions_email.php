@@ -176,6 +176,9 @@
             // clean up &amp; and && from email text
             $email_text = preg_replace('/((&amp;)|&)+/', '&', $email_text);
 
+            // Convert non-breaking hyphen to regular hyphen for text message
+            $email_text = str_replace('&#8209;', '-', $email_text);
+
             // clean up currencies for text emails
             if (defined('CURRENCIES_TRANSLATIONS') && !empty(CURRENCIES_TRANSLATIONS)) {
                 $zen_fix_currencies = preg_split("/[:,]/", str_replace(' ', '', CURRENCIES_TRANSLATIONS));
