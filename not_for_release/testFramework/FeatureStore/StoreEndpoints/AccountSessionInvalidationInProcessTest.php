@@ -74,7 +74,7 @@ class AccountSessionInvalidationInProcessTest extends zcInProcessFeatureTestCase
             'customers_basket_date_added' => date('Ymd'),
         ]);
 
-        $this->removeSessionValue('zenid', 'customer_password_hash');
+        $this->updateSessionValue('zenid', 'customer_password_hash', null, true);
 
         $response = $this->getSslMainPage('account');
         $response->assertRedirect('main_page=login');
@@ -91,7 +91,36 @@ class AccountSessionInvalidationInProcessTest extends zcInProcessFeatureTestCase
         $this->assertSame(1, $savedCartRows);
     }
 
-    private function removeSessionValue(string $sessionCookieName, string $sessionKey): void
+    public function testCustomerSessionAllowsExplicitEmptyBaselineHash(): void
+    {
+        $profile = ProfileManager::getProfileForLogin('florida-basic2');
+        TestDb::update(
+            'customers',
+            ['customers_password' => password_hash((string) $profile['password'], PASSWORD_DEFAULT)],
+            'customers_email_address = :email_address',
+            [':email_address' => $profile['email_address']]
+        );
+        $this->createCustomerAccountOrLogin('florida-basic2');
+        $customerId = (int) TestDb::selectValue(
+            'SELECT customers_id FROM customers WHERE customers_email_address = :email_address',
+            [':email_address' => $profile['email_address']]
+        );
+
+        TestDb::update(
+            'customers',
+            ['customers_password' => ''],
+            'customers_id = :customer_id',
+            [':customer_id' => $customerId]
+        );
+
+        $this->updateSessionValue('zenid', 'customer_password_hash', '');
+
+        $this->getSslMainPage('account')
+            ->assertOk()
+            ->assertSee('My Account');
+    }
+
+    private function updateSessionValue(string $sessionCookieName, string $sessionKey, ?string $sessionValue, bool $remove = false): void
     {
         $sessionId = $this->cookies[$sessionCookieName] ?? '';
         $this->assertNotSame('', $sessionId);
@@ -108,7 +137,11 @@ class AccountSessionInvalidationInProcessTest extends zcInProcessFeatureTestCase
         session_id(bin2hex(random_bytes(8)));
         session_start();
         session_decode(base64_decode($encodedSession));
-        unset($_SESSION[$sessionKey]);
+        if ($remove) {
+            unset($_SESSION[$sessionKey]);
+        } else {
+            $_SESSION[$sessionKey] = $sessionValue;
+        }
         $updatedSession = session_encode();
         session_write_close();
         session_id('');

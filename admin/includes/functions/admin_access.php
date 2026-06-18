@@ -36,7 +36,7 @@ function zen_is_admin_password_session_valid(): bool
 
     $currentPasswordHash = (string)$result->fields['admin_pass'];
 
-    if (empty($_SESSION['admin_password_hash'])) {
+    if (!array_key_exists('admin_password_hash', $_SESSION)) {
         return false;
     }
 
