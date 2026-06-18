@@ -25,7 +25,7 @@ if (zen_is_logged_in()) {
   if (!zen_is_customer_password_session_valid()) {
     global $messageStack, $customer;
 
-    $_SESSION['cart']->reset(true);
+    $_SESSION['cart']->reset(false);
     if (!isset($customer) || !is_a($customer, Customer::class)) {
       $customer = new Customer($_SESSION['customer_id']);
     }

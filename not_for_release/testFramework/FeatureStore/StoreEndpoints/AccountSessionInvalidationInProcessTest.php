@@ -24,6 +24,17 @@ class AccountSessionInvalidationInProcessTest extends zcInProcessFeatureTestCase
     {
         $profile = ProfileManager::getProfileForLogin('florida-basic2');
         $this->createCustomerAccountOrLogin('florida-basic2');
+        $customerId = (int) TestDb::selectValue(
+            'SELECT customers_id FROM customers WHERE customers_email_address = :email_address',
+            [':email_address' => $profile['email_address']]
+        );
+
+        TestDb::insert('customers_basket', [
+            'customers_id' => $customerId,
+            'products_id' => '3',
+            'customers_basket_quantity' => 2,
+            'customers_basket_date_added' => date('Ymd'),
+        ]);
 
         TestDb::update(
             'customers',
@@ -38,5 +49,12 @@ class AccountSessionInvalidationInProcessTest extends zcInProcessFeatureTestCase
         $this->followRedirect($response)
             ->assertOk()
             ->assertSee('Your session has expired because your password was changed. Please login again.');
+
+        $savedCartRows = (int) TestDb::selectValue(
+            'SELECT COUNT(*) FROM customers_basket WHERE customers_id = :customer_id',
+            [':customer_id' => $customerId]
+        );
+
+        $this->assertSame(1, $savedCartRows);
     }
 }
