@@ -353,6 +353,7 @@ class Customer extends base
         $_SESSION['customer_country_id'] = (int)$this->data['country_id'];
         $_SESSION['customer_zone_id'] = (int)$this->data['zone_id'];
         $_SESSION['customers_authorization'] = (int)$this->data['customers_authorization'];
+        zen_set_customer_session_password_hash((string)$this->getPasswordHash($customer_id));
 
         // @TODO - should we add $this->data to a session var, and replace numerous other lookups?
 
@@ -377,6 +378,25 @@ class Customer extends base
               WHERE customer_id = :customerID";
         $sql = $db->bindVars($sql, ':customerID', $customers_id, 'integer');
         $db->Execute($sql);
+    }
+
+
+    /**
+     * Retrieves the password hash for the specified customer.
+     * @since ZC v3.0.0
+     */
+    protected function getPasswordHash(int $customer_id): string
+    {
+        global $db;
+
+        $sql =
+            "SELECT customers_password
+               FROM " . TABLE_CUSTOMERS . "
+              WHERE customers_id = :customersID";
+        $sql = $db->bindVars($sql, ':customersID', $customer_id, 'integer');
+        $result = $db->Execute($sql, 1);
+
+        return $result->EOF ? '' : (string)$result->fields['customers_password'];
     }
 
     /**
@@ -1116,12 +1136,13 @@ class Customer extends base
     public function setPassword(string $new_password): void
     {
         global $db;
+        $encryptedPassword = zen_encrypt_password($new_password);
         $sql =
             "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_password = :password
               WHERE customers_id = :customersID";
         $sql = $db->bindVars($sql, ':customersID', $this->customer_id, 'integer');
-        $sql = $db->bindVars($sql, ':password', zen_encrypt_password($new_password), 'string');
+        $sql = $db->bindVars($sql, ':password', $encryptedPassword, 'string');
         $db->Execute($sql, 1);
         $sql =
             "UPDATE " . TABLE_CUSTOMERS_INFO . "
@@ -1131,6 +1152,10 @@ class Customer extends base
         $db->Execute($sql, 1);
 
         $this->clearPasswordResetTokens($this->customer_id);
+
+        if ($this->isSameAsLoggedIn()) {
+            zen_set_customer_session_password_hash($encryptedPassword);
+        }
     }
 
     /**

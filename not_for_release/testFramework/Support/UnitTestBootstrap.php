@@ -61,6 +61,7 @@ class UnitTestBootstrap
         require_once DIR_FS_INCLUDES . 'defined_paths.php';
         require_once DIR_FS_INCLUDES . 'database_tables.php';
         require_once DIR_FS_INCLUDES . 'filenames.php';
+        self::registerCoreAutoloadMappings();
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/Singleton.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'EventDto.php';
         require_once DIR_FS_CATALOG . DIR_WS_CLASSES . 'traits/NotifierManager.php';
@@ -97,6 +98,22 @@ class UnitTestBootstrap
     private static function loadSessionStubs(): void
     {
         require_once TESTCWD . 'Support/helpers/unit_test_session_stubs.php';
+    }
+
+    private static function registerCoreAutoloadMappings(): void
+    {
+        static $registered = false;
+
+        if ($registered) {
+            return;
+        }
+
+        /** @var \Aura\Autoload\Loader $psr4Autoloader */
+        $psr4Autoloader = new \Aura\Autoload\Loader();
+        require DIR_FS_CATALOG . 'includes/psr4Autoload.php';
+        $psr4Autoloader->register();
+
+        $registered = true;
     }
 
     private static function defineIfMissing(string $name, mixed $value): void

@@ -21,6 +21,28 @@ if (zen_is_logged_in()) {
     zen_session_destroy();
     zen_redirect(zen_href_link(FILENAME_TIME_OUT));
   }
+
+  if (!zen_is_customer_password_session_valid()) {
+    global $messageStack, $customer;
+
+    $_SESSION['cart']->reset(false);
+    if (!isset($customer) || !is_a($customer, Customer::class)) {
+      $customer = new Customer($_SESSION['customer_id']);
+    }
+    $customer->forceLogout();
+    unset(
+      $_SESSION['customer_password_hash'],
+      $_SESSION['customers_email_address'],
+      $_SESSION['customer_first_name'],
+      $_SESSION['customer_last_name'],
+      $_SESSION['customer_default_address_id'],
+      $_SESSION['customer_country_id'],
+      $_SESSION['customer_zone_id'],
+      $_SESSION['customers_authorization']
+    );
+    $messageStack->add_session('header', ERROR_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE, 'warning');
+    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+  }
 }
 
 $down_for_maint_flag = false;

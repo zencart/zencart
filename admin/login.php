@@ -9,6 +9,8 @@ require 'includes/application_top.php';
 
 //////////
 $admin_name = $admin_pass = $message = "";
+$message = $_SESSION['login_message'] ?? '';
+unset($_SESSION['login_message']);
 $errors = array();
 $error = $expired = false;
 if (isset($_POST['action']) && $_POST['action'] != '') {
