@@ -331,8 +331,8 @@ class Email
         }
 
         $email_text = str_replace(
-            ['&quot;', '&lt;', '&gt;', "\x00"],
-            ['"', '<', '>', ' '],
+            ['&quot;', '&lt;', '&gt;', "\x00", '&#8209;'],
+            ['"', '<', '>', ' ', '-'],
             $email_text
         );
         $email_text = str_replace('&nbsp;', ' ', $email_text);
