@@ -25,6 +25,7 @@ class UnitTestBootstrapTest extends TestCase
         $this->assertTrue(function_exists('zen_session_id'));
         $this->assertSame('zenid', \zen_session_name());
         $this->assertSame('1234567890', \zen_session_id());
+        $this->assertTrue(class_exists('Email'));
         $this->assertArrayHasKey('zco_notifier', $GLOBALS);
         $this->assertInstanceOf(\notifier::class, $GLOBALS['zco_notifier']);
     }
