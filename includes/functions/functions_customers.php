@@ -191,8 +191,7 @@ function zen_is_customer_password_session_valid(): bool
     $currentPasswordHash = (string)$result->fields['customers_password'];
 
     if (empty($_SESSION['customer_password_hash'])) {
-        zen_set_customer_session_password_hash($currentPasswordHash);
-        return true;
+        return false;
     }
 
     return hash_equals((string)$_SESSION['customer_password_hash'], $currentPasswordHash);
