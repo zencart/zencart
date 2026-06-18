@@ -42,15 +42,13 @@ if ($flag_show_about_us_sidebox_link === true) {
     <li><span><?php echo BOX_HEADING_CATEGORIES; ?></span>
 <?php
 // load the UL-generator class and produce the menu list dynamically from there
-require_once (DIR_WS_CLASSES . 'categories_ul_generator.php');
-$zen_CategoriesUL = new zen_categories_ul_generator;
+require_once DIR_WS_CLASSES . 'categories_ul_generator.php';
+$zen_CategoriesUL = new zen_categories_ul_generator(parent_group_end_string: "</ul>", child_end_string: "</li>\n");
 $menulist = $zen_CategoriesUL->buildTree(true);
-$menulist = str_replace('"level4"','"level5"',$menulist);
-$menulist = str_replace('"level3"','"level4"',$menulist);
-$menulist = str_replace('"level2"','"level3"',$menulist);
-$menulist = str_replace('"level1"','"level2"',$menulist);
-$menulist = str_replace('<li>','<li>',$menulist);
-$menulist = str_replace("</li>\n</ul>\n</li>\n</ul>\n","</li>\n</ul>\n",$menulist);
+$menulist = str_replace(
+    ['"level4"', '"level3"', '"level2"', '"level1"', '<li>', "</li>\n</ul>\n</li>\n</ul>\n"],
+    ['"level5"', '"level4"', '"level3"', '"level2"', '<li>', "</li>\n</ul>\n"],
+    $menulist);
 echo $menulist;
 ?>
     </li>
