@@ -380,6 +380,11 @@ class Customer extends base
         $db->Execute($sql);
     }
 
+
+    /**
+     * Retrieves the password hash for the specified customer.
+     * @since ZC v3.0.0
+     */
     protected function getPasswordHash(int $customer_id): string
     {
         global $db;

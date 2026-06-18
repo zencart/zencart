@@ -161,6 +161,7 @@ function zen_get_customer_validate_session(int $customer_id): bool
 /**
  * Store the current customer's password hash in the session so other sessions can be invalidated
  * when the password changes out-of-band.
+ * @since ZC v3.0.0
  */
 function zen_set_customer_session_password_hash(string $passwordHash): void
 {
@@ -169,6 +170,7 @@ function zen_set_customer_session_password_hash(string $passwordHash): void
 
 /**
  * Validate that the logged-in session still matches the customer's current password hash.
+ * @since ZC v3.0.0
  */
 function zen_is_customer_password_session_valid(): bool
 {

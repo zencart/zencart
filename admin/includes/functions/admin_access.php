@@ -11,11 +11,19 @@ zen_define_default('ADMIN_LOGIN_SLAMMING_THRESHOLD', 3);
 // Do you want warning/courtesy emails to be sent after several login failures have occurred (determined by the threshold above)?
 zen_define_default('ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS', 'Yes');
 
+/**
+ * Store the current admin user's password hash in the session so other sessions can be invalidated
+ * @since ZC v3.0.0
+ */
 function zen_set_admin_session_password_hash(string $passwordHash): void
 {
     $_SESSION['admin_password_hash'] = $passwordHash;
 }
 
+/**
+ * Validate that the logged-in admin session still matches the admin's current password hash.
+ * @since ZC v3.0.0
+ */
 function zen_is_admin_password_session_valid(): bool
 {
     global $db;

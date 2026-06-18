@@ -22,10 +22,6 @@
 zen_define_default('EMAIL_SYSTEM_DEBUG', 0);
 zen_define_default('EMAIL_ATTACHMENTS_ENABLED', true);
 
-if (!class_exists(Email::class, false)) {
-    require_once DIR_FS_CATALOG . 'includes/classes/Email.php';
-}
-
 /**
  * enable embedded image support
  */

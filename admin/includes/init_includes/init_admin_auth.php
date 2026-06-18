@@ -19,7 +19,7 @@ if (!empty($_SESSION['admin_id']) && !zen_is_admin_password_session_valid()) {
         unset($_SESSION['admin_id'], $_SESSION['admin_password_hash'], $_SESSION['mfa']);
         $ajax_response = [
             'error' => 'logged_out',
-            'redirect' => zen_href_link(FILENAME_LOGIN, '', 'SSL'),
+            'redirect' => zen_href_link(FILENAME_LOGIN),
         ];
         echo json_encode($ajax_response);
         exit;
@@ -27,7 +27,7 @@ if (!empty($_SESSION['admin_id']) && !zen_is_admin_password_session_valid()) {
 
     $_SESSION['login_message'] = ERROR_ADMIN_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE;
     unset($_SESSION['admin_id'], $_SESSION['admin_password_hash'], $_SESSION['mfa']);
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+    zen_redirect(zen_href_link(FILENAME_LOGIN));
 }
 
 // -----
