@@ -1,0 +1,19 @@
+#Ignore everything except the .gitignore file
+*
+!.gitignore
+
+#specifically ignore test plugin
+zenTestPlugin/
+
+#specifically allow the following, using the ! prefix:
+!DisplayLogs/
+!DisplayLogs/**
+!PayPalRestful/
+!PayPalRestful/**
+!POSM/
+!POSM/**
+!SystemInspection/
+!SystemInspection/**
+!ScanAdditionalImages/
+!ScanAdditionalImages/**
+
