@@ -42,6 +42,46 @@ Key developer workflows (commands & examples)
 - DB and install
     - Copy `includes/dist-configure.php` and `admin/includes/dist-configure.php` to `configure.php` (in those same folders) and make the files writable. Fill DB constants (see `includes/configure.php` example in repo).
     - Make `cache/` and `logs/` writable.
+  - Make `cache/` and `logs/` writable.
+
+Code review guidance
+--------------------
+When asked to review a pull request or patch, review it as a Zen Cart maintainer, not as a general PHP style checker. Lead with material findings: bugs, security regressions, backwards-compatibility breaks, deployment risks, and missing tests for changed behavior.
+
+Use `CONVENTIONS.md` as the review baseline:
+- Favor stability over purity. Do not ask for broad rewrites, unrelated refactors, or legacy cleanup unless the change introduces a real defect.
+- Apply PSR-12, naming, `declare(strict_types=1)`, and no-colon-syntax rules to new code and files already being modified, while respecting documented legacy exceptions.
+- Flag direct edits to bootstrap/path files that are listed as "should never be directly edited"; prefer `extra_configures`, `init_includes`, plugin hooks, or other established extension points.
+
+Review security-sensitive changes closely:
+- Preserve the early request-sanitizing behavior in `includes/application_top.php`.
+- Ensure user-supplied output is protected with `zen_output_string_protected()`.
+- Avoid spreading direct `$_GET`, `$_POST`, or `$_REQUEST` access where sanitized helpers are available.
+- For admin fields, require the documented admin sanitization whitelist approach before relaxing sanitization.
+- Check file/path handling, upload/download behavior, redirects, webhook/payment listeners, and plugin autoload paths for traversal or trust-boundary mistakes.
+
+Review data and compatibility carefully:
+- SQL should use table-name constants such as `TABLE_ORDERS`, not raw or prefixed table names.
+- Check query construction for unsafe interpolation, missing casting, and changed assumptions about Zen Cart's database layer.
+- Keep compatibility with the supported runtime documented for this branch: PHP 8.3-8.5 and the supported MySQL/MariaDB versions.
+- Do not introduce production dependencies on Composer autoloading; Composer is used for the test suite, while runtime code uses Zen Cart's own autoloading and plugin loading.
+
+For plugin-related changes:
+- Verify the `zc_plugins/<unique_key>/<version>/catalog|admin/...` layout, plugin `manifest.php`, `filenames.php`, `database_tables.php`, PSR-4 mappings, and installer patterns match this file.
+- Installer scripts should be idempotent and should use Plugin Manager conventions. Direct `plugin_control` database inserts are acceptable only in tests/CI setup, not application code.
+- If a new plugin is added, ensure `zc_plugins/.gitignore` allowlists it.
+
+Review testing expectations by changed area:
+- Unit-level logic should have focused PHPUnit coverage where practical.
+- Storefront/admin behavior changes should use the relevant feature test suite.
+- Plugin filesystem/bootstrap changes should exercise plugin enablement/loading paths.
+- Prefer the composer scripts defined in `composer.json` and referenced in this file; mention when a useful test was not run or cannot be run.
+
+Review output should be concise and actionable:
+- Put findings first, ordered by severity, with file/line references where possible.
+- Flag only material issues. Do not nitpick spelling, formatting, or style unless it causes a defect or violates a project rule being applied to new/touched code.
+- Prefer minimal, deterministic fixes that fit the existing procedural, bootstrap, template, and plugin patterns.
+- If no issues are found, say so clearly and note any remaining test gaps or assumptions.
 
 Project-specific conventions and patterns
 ---------------------------------------
@@ -53,6 +93,7 @@ Project-specific conventions and patterns
 - These same patterns apply to the admin side. 
 - Template overrides: The non-admin side supports template-specific overrides for modules and classes. For example, if the active template is `my_template`, the system will look for files in `includes/templates/my_template/` before falling back to the `template_default` paths. This allows for customization without modifying core files.
 - `index.php` flow: includes application_top.php, loops over `header_php` files from PageLoader->listModulePagesFiles('header_php', '.php'), then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
+- Language files: `lang.foo.php` files return an array of `'CONSTANT_NAME' => 'value'` pairs. These get merged across load layers (core → plugin, English → active language) and converted to real constants via `define()`. Values may reference other keys in the same array via `%%OTHER_KEY%%` placeholders.
 
 Integration points and external dependencies
 -------------------------------------------
@@ -126,7 +167,7 @@ Minimal plugin file structure layout (example)
 - zc_plugins/myplugin/1.0.0/manifest.php
 - zc_plugins/myplugin/1.0.0/filenames.php
 - zc_plugins/myplugin/1.0.0/Installer/ScriptedInstaller.php
-- zc_plugins/myplugin/1.0.0/Installer/languages/english/main.php
+- zc_plugins/myplugin/1.0.0/Installer/languages/english/main.php (optional, skip if no strings added)
 # for catalog-side pages, use the following:
 - zc_plugins/myplugin/1.0.0/catalog/includes/classes/observers/auto_MyClass.php
 - zc_plugins/myplugin/1.0.0/catalog/includes/languages/english/lang.my_page.php
@@ -144,7 +185,13 @@ Quick tips for agents that create plugins
 - Test by enabling the plugin via admin `Plugin Manager` (or insert a `plugin_control` DB record in tests), then exercise plugin pages (storefront/admin) and run relevant PHPUnit feature tests.
 - `zc_plugins/.gitignore` uses a blanket deny-all (`*`) with an explicit allowlist. When adding a new plugin, append `!PluginName/` and `!PluginName/**` to that file, or the plugin's files will be invisible to git.
 
-A payment/shipping plugin may have `install()` and `remove()` methods, but those should only handle configuration entries and not database schema changes. For any database schema changes, use `ScriptedInstaller` methods for install/upgrade/remove, and ensure they are idempotent.
+A payment/shipping/order-total plugin may keep `install()`, `remove()`, and `keys()` methods on its module class to manage its own `configuration`-table records (these are invoked from the admin Modules pages independently of Plugin Manager). Those methods should only handle configuration entries, never database schema changes; for schema changes use `ScriptedInstaller` methods for install/upgrade/remove, and ensure they are idempotent.
+
+Notes on `Installer/ScriptedInstaller.php`:
+- In rare cases (such as for some payment/shipping/order-total module-style plugins it's optional. If `Installer/ScriptedInstaller.php` doesn't exist, `BasePluginInstaller` simply registers/deregisters the `plugin_control` entry and the install returns are treated as a no-op success.
+- When converting a previously-unencapsulated module, set `'removesUnencapsulatedVersion' => true` in `manifest.php` and implement `executeInstall()` in `ScriptedInstaller` to purge the old dropped-in files — use the inherited `removeFiles($files_to_remove, $context)` helper — before calling `parent::executeInstall()`.
+- If the module class's own `remove()` deletes its `configuration` records, call it from `ScriptedInstaller::executeUninstall()` (guarded by `defined('MODULE_..._STATUS')`) so a full Plugin Manager uninstall also cleans up the module's configuration.
+- `PayPalRestful`'s `Installer/ScriptedInstaller.php` is a working example of both patterns above.
 
 Official docs
 -------------
