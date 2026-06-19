@@ -1187,7 +1187,7 @@ class paypaldp extends base {
     /**
      * Read data from PayPal
      */
-    $response = $doPayPal->TransactionSearch($startDate, $txnID, $email, $criteria);
+    $response = $doPayPal->TransactionSearch($startDate, $txnID, $email ?? '', $criteria);
 
     $error = $this->_errorHandler($response, 'TransactionSearch');
     if ($error === false) {
@@ -2033,7 +2033,7 @@ class paypaldp extends base {
            ((isset($_SESSION['paypal_ec_token']) && isset($response['TOKEN'])) && $_SESSION['paypal_ec_token'] != urldecode($response['TOKEN'])) ) {
             // Error, so send the store owner a complete dump of the transaction.
           if ($this->enableDebugging) {
-            $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\nDid first contact attempt return error? " . ($error_occurred ? "Yes" : "No") . " \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
+            $this->_doDebug('PayPal Error Log - before_process() - DP', "In function: before_process() - Direct Payment \r\n\r\nValue List:\r\n" . str_replace('&',"\r\n", urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList)))) . "\r\n\r\nResponse:\r\n" . urldecode(print_r($response, true)));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_INVALID_RESPONSE;
           $errorNum = urldecode($response['L_ERRORCODE0'] . ' ' . ($response['RESULT'] ?? '') . ' <!-- ' . ($response['RESPMSG'] ?? '') . ' -->');
@@ -2168,7 +2168,7 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_GEN_API_ERROR;
-          $errorNum .= ' (' . urldecode($response['L_SHORTMESSAGE0'] . ' <!-- ' . $response['RESPMSG']) . ' -->) ' . $response['L_ERRORCODE0'];
+          $errorNum = ' (' . urldecode($response['L_SHORTMESSAGE0'] . ' <!-- ' . $response['RESPMSG']) . ' -->) ' . $response['L_ERRORCODE0'];
           $detailedMessage = ($errorText == MODULE_PAYMENT_PAYPALDP_TEXT_GEN_API_ERROR || $errorText == MODULE_PAYMENT_PAYPALDP_TEXT_DECLINED || $this->enableDebugging || $response['CURL_ERRORS'] != '' || $this->emailAlerts) ? urldecode(' ' . $response['L_SHORTMESSAGE0'] . ' - ' . $response['L_LONGMESSAGE0'] . ' ' . $response['CURL_ERRORS']) : '';
           $explain = "\n\nProblem occurred while customer #" . $_SESSION['customer_id'] . ' -- ' . $_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name'] . ' -- was attempting checkout.' . "\n";
           $detailedEmailMessage = ($detailedMessage == '') ? '' : MODULE_PAYMENT_PAYPALDP_TEXT_EMAIL_ERROR_MESSAGE . ' ' . $response['RESPMSG'] . urldecode($response['L_ERRORCODE0'] . "\n" . $response['L_SHORTMESSAGE0'] . "\n" . $response['L_LONGMESSAGE0'] . $response['L_ERRORCODE1'] . "\n" . $response['L_SHORTMESSAGE1'] . "\n" . $response['L_LONGMESSAGE1'] . $response['L_ERRORCODE2'] . "\n" . $response['L_SHORTMESSAGE2'] . "\n" . $response['L_LONGMESSAGE2'] . ($response['CURL_ERRORS'] != '' ? "\n" . $response['CURL_ERRORS'] : '') . "\n\n" . 'Zen Cart message: ' . $detailedMessage . "\n\n" . $errorInfo . "\n\n" . 'Transaction Response Details: ' . print_r($response, true) . "\n\n" . 'Transaction Submission: ' . urldecode($doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList), true)));
@@ -2792,7 +2792,7 @@ class paypaldp extends base {
 class CardinalXMLParser{
 
   var $xml_parser;
-  var $deseralizedResponse;
+  var $deserializedResponse;
   var $elementName;
   var $elementValue;
 
