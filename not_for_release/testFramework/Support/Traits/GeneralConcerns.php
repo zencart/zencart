@@ -13,7 +13,7 @@ trait GeneralConcerns
 
     public static function detectUser()
     {
-        if (isset($_SERVER['IS_DDEV_PROJECT'])) {
+        if (isset($_SERVER['IS_DDEV_PROJECT']) || getenv('IS_DDEV_PROJECT')) {
             return 'ddev';
         }
         $user = $_SERVER['USER'] ?? $_SERVER['MY_USER'];

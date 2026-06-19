@@ -85,7 +85,7 @@ jobs:
       - name: Execute Admin Feature Tests
         env:
           HTTP_SERVER: http://localhost:8000
-        run: php vendor/bin/phpunit --verbose --testsuite FeatureAdmin --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+        run: php vendor/bin/phpunit --testsuite FeatureAdmin
 
       - name: Show PHP Server Log On Failure
         if: failure()
