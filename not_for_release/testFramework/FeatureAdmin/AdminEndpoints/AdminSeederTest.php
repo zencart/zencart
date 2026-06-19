@@ -14,10 +14,10 @@ class AdminSeederTest extends zcFeatureTestCaseAdmin
     public function testSetupWizardSeeder()
     {
         $this->runCustomSeeder('StoreWizardSeeder');
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
         $this->browser->submitForm('Submit', [

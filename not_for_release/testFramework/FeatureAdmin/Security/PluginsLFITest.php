@@ -17,7 +17,7 @@ class PluginsLFITest extends zcFeatureTestCaseAdmin
         // note probably need to make the login a separate method
         $this->runCustomSeeder('StoreWizardSeeder');
         $this->runCustomSeeder('DisplayLogsSeeder');
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
         $this->browser->submitForm('Submit', [
