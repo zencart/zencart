@@ -130,7 +130,7 @@ class Customer extends base
             return false;
         }
 
-        $length = defined('PASSWORD_RESET_TOKEN_LENGTH') ? (int)constant('PASSWORD_RESET_TOKEN_LENGTH') : 24;
+        $length = (int)zen_config('PASSWORD_RESET_TOKEN_LENGTH', 24);
         if ($length < 12 || $length > 100) { // under 12 is impractical; over 100 is too large for db field
             $length = 24;
         }
@@ -197,7 +197,7 @@ class Customer extends base
      */
     public static function getPasswordResetTokenMinutesValid(): int
     {
-        $token_valid_minutes = defined('PASSWORD_RESET_TOKEN_MINUTES_VALID') ? (int)constant('PASSWORD_RESET_TOKEN_MINUTES_VALID') : 60;
+        $token_valid_minutes = (int)zen_config('PASSWORD_RESET_TOKEN_MINUTES_VALID', 60);
         if ($token_valid_minutes < 1 || $token_valid_minutes > 1440) {
             $token_valid_minutes = 60;
         }

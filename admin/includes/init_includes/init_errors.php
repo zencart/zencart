@@ -9,7 +9,7 @@ if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 // check if a default currency is set
-if (!defined('DEFAULT_CURRENCY')) {
+if (empty(zen_config('DEFAULT_CURRENCY'))) {
     $messageStack->add(ERROR_NO_DEFAULT_CURRENCY_DEFINED, 'error');
 }
 

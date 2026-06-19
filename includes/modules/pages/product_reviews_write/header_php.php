@@ -98,7 +98,7 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
       $db->Execute($sql);
 
       $email_text = '';
-      $send_admin_email = REVIEWS_APPROVAL == '1' && zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS') === '1' && zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', '') !== '';
+      $send_admin_email = zen_config('REVIEWS_APPROVAL') == '1' && zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO_STATUS') === '1' && zen_config('SEND_EXTRA_REVIEW_NOTIFICATION_EMAILS_TO', '') !== '';
 
       $zco_notifier->notify('NOTIFY_SEND_ADMIN_EMAIL_WRITE_REVIEW');
       // send review-notification email to admin
@@ -137,7 +137,7 @@ if ($product_info->fields['products_model'] != '') {
 // set image
 $products_image = $product_info->fields['products_image'];
 if ($product_info->fields['products_image'] == '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
-  $products_image = PRODUCTS_IMAGE_NO_IMAGE;
+  $products_image = zen_config('PRODUCTS_IMAGE_NO_IMAGE');
 }
 
 $breadcrumb->add(NAVBAR_TITLE);

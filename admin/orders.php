@@ -86,8 +86,7 @@ if (!empty($oID) && !empty($action)) {
 // based on configuration setting in 'My Store'.    Set a default, just in case that configuration
 // setting isn't set!
 //
-if (!defined('NOTIFY_CUSTOMER_DEFAULT')) define('NOTIFY_CUSTOMER_DEFAULT', '1');
-switch (zen_config('NOTIFY_CUSTOMER_DEFAULT')) {
+switch (zen_config('NOTIFY_CUSTOMER_DEFAULT', '1')) {
     case '0':
         $notify_email = false;
         $notify_no_email = true;

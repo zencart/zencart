@@ -4,7 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: John 2022 Nov 06 Modified in v1.5.8a $
  */
-if (!defined('SESSION_USE_ROOT_COOKIE_PATH') || !defined('SESSION_ADD_PERIOD_PREFIX'))
+if (zen_config('SESSION_USE_ROOT_COOKIE_PATH') === null || zen_config('SESSION_ADD_PERIOD_PREFIX') === null)
 {
   $sql = "SELECT configuration_group_id FROM " . TABLE_CONFIGURATION_GROUP . "
           WHERE configuration_group_title = 'Sessions'";
@@ -16,7 +16,7 @@ if (!defined('SESSION_USE_ROOT_COOKIE_PATH') || !defined('SESSION_ADD_PERIOD_PRE
   {
     $id = 15;
   }
-  if (!defined('SESSION_USE_ROOT_COOKIE_PATH'))
+  if (zen_config('SESSION_USE_ROOT_COOKIE_PATH') === null)
   {
     $sql = "INSERT INTO " . TABLE_CONFIGURATION . "
            SET configuration_key = 'SESSION_USE_ROOT_COOKIE_PATH',
@@ -29,7 +29,7 @@ if (!defined('SESSION_USE_ROOT_COOKIE_PATH') || !defined('SESSION_ADD_PERIOD_PRE
                  " ;
     $result = $db->Execute($sql);
   }
-  if (!defined('SESSION_ADD_PERIOD_PREFIX'))
+  if (zen_config('SESSION_ADD_PERIOD_PREFIX') === null)
   {
     $sql = "INSERT INTO " . TABLE_CONFIGURATION . "
            SET configuration_key = 'SESSION_ADD_PERIOD_PREFIX',

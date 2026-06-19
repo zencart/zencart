@@ -136,7 +136,7 @@ if ($_GET['action'] == 'process') {
       $db->Execute($gv_query);
 
       // build email content:
-      $gv_email = STORE_NAME . "\n" .
+      $gv_email = zen_config('STORE_NAME') . "\n" .
       EMAIL_SEPARATOR . "\n" .
       sprintf(EMAIL_GV_TEXT_HEADER, $currencies->format($_POST['amount'], false)) . "\n" .
       EMAIL_SEPARATOR . "\n\n" .

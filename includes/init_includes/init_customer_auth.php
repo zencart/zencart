@@ -108,13 +108,13 @@ switch (true) {
 
   case ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'strict'):
     // if DFM is in strict mode, then block access to all pages:
-    zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
+    zen_redirect(zen_href_link(zen_config('DOWN_FOR_MAINTENANCE_FILENAME', '')));
   break;
 
   case ((zen_config('DOWN_FOR_MAINTENANCE') == 'true') && !in_array($_GET['main_page'], array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING))):
     // on special pages, if DFM mode is "relaxed", allow access to these pages
     if ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'relaxed') {
-      zen_redirect(zen_href_link(DOWN_FOR_MAINTENANCE_FILENAME));
+      zen_redirect(zen_href_link(zen_config('DOWN_FOR_MAINTENANCE_FILENAME', '')));
     }
   break;
 
@@ -202,7 +202,7 @@ switch (true) {
    */
   if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
     if ($_GET['main_page'] != zen_config('CUSTOMERS_AUTHORIZATION_FILENAME')) {
-      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', zen_config('CUSTOMERS_AUTHORIZATION_FILENAME'))));
+      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''))));
     }
   }
   break;

@@ -42,7 +42,7 @@ $pid = $_GET['pID'] ?? $_GET['pid'] ?? $_GET['products_id'] ?? $_GET['product_id
 
   //auto replace with defined missing image
   if ($products_image === '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
-    $products_image = PRODUCTS_IMAGE_NO_IMAGE;
+    $products_image = zen_config('PRODUCTS_IMAGE_NO_IMAGE');
   }
 
   if ($products_image === '') {

@@ -111,29 +111,17 @@ require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 
 // Pull settings from admin switches to determine what, if any, header/column/footer "disable" options need to be set
 // Note that these are defined normally under Admin->Configuration->EZ-Pages-Settings
-if (!defined('EZPAGES_DISABLE_HEADER_DISPLAY_LIST')) {
-    define('EZPAGES_DISABLE_HEADER_DISPLAY_LIST', '');
-}
-if (!defined('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST')) {
-    define('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST', '');
-}
-if (!defined('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST')) {
-    define('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST', '');
-}
-if (!defined('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST')) {
-    define('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', '');
-}
 if ($ezpage_id > 0) {
-    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_HEADER_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_HEADER_DISPLAY_LIST'), '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_HEADER_DISPLAY_LIST', ''))) || strstr(zen_config('EZPAGES_DISABLE_HEADER_DISPLAY_LIST', ''), '*')) {
         $flag_disable_header = true;
     }
-    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST'), '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST', ''))) || strstr(zen_config('EZPAGES_DISABLE_FOOTER_DISPLAY_LIST', ''), '*')) {
         $flag_disable_footer = true;
     }
-    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST'), '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST', ''))) || strstr(zen_config('EZPAGES_DISABLE_LEFTCOLUMN_DISPLAY_LIST', ''), '*')) {
         $flag_disable_left = true;
     }
-    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST'))) || strstr(zen_config('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST'), '*')) {
+    if (in_array($ezpage_id, explode(",", zen_config('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', ''))) || strstr(zen_config('EZPAGES_DISABLE_RIGHTCOLUMN_DISPLAY_LIST', ''), '*')) {
         $flag_disable_right = true;
     }
 }

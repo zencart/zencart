@@ -129,7 +129,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
             ];
         } else {
             // first timer
-            $_SESSION['cart_country_id'] = STORE_COUNTRY;
+            $_SESSION['cart_country_id'] = zen_config('STORE_COUNTRY');
             $_SESSION['country_info'] = zen_get_countries((int)zen_config('STORE_COUNTRY'), true);
             $country_info = $_SESSION['country_info'];
             $order->delivery = [

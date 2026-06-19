@@ -37,7 +37,7 @@ function paypalUSDCheck ($amount) : bool
         }
         
         // Use the system CURRENCY_UPLIFT_RATIO to adjust the rate
-        $multiplier = (defined('CURRENCY_UPLIFT_RATIO') && (int) zen_config('CURRENCY_UPLIFT_RATIO') != 0) ? zen_config('CURRENCY_UPLIFT_RATIO') : 1;
+        $multiplier = !empty(zen_config('CURRENCY_UPLIFT_RATIO', 0)) ? zen_config('CURRENCY_UPLIFT_RATIO') : 1;
         
         // Calculate the value in USD
         $amount = ($amount * $rate * $multiplier);

@@ -42,7 +42,7 @@ $sql_joins = '';
 $and = ' '; // is a space, not an empty string, to prevent clash with fallback category filter
 
 // display sort order dropdown
-$disp_order_default = PRODUCT_ALL_LIST_SORT_DEFAULT;
+$disp_order_default = zen_config('PRODUCT_ALL_LIST_SORT_DEFAULT');
 
 // set the product filters according to selected product type
 $typefilter = $_GET['typefilter'] ?? 'default';

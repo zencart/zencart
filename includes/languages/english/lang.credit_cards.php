@@ -1,5 +1,5 @@
 <?php
-if (!defined('SHOW_ACCEPTED_CREDIT_CARDS')) {
+if (!empty(zen_config('SHOW_ACCEPTED_CREDIT_CARDS'))) {
     return;
 }
 global $template, $current_page_base;

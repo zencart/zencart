@@ -21,7 +21,7 @@ $error_categories = false;
 
 $show_submit = zen_run_normal();
 
-$columns_per_row = defined('PRODUCT_LISTING_COLUMNS_PER_ROW') ? (int)zen_config('PRODUCT_LISTING_COLUMNS_PER_ROW') : 1;
+$columns_per_row = (int)zen_config('PRODUCT_LISTING_COLUMNS_PER_ROW', 1);
 if (empty($product_listing_layout_style) || !in_array($product_listing_layout_style, ['columns', 'table', 'fluid'])) {
     $product_listing_layout_style = $columns_per_row > 1 ? 'columns' : 'table';
     if (empty($columns_per_row)) {

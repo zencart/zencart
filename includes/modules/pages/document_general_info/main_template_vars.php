@@ -96,8 +96,8 @@ if ($product_not_found) {
 
     require DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php');
 
-    $module_show_categories = PRODUCT_INFO_CATEGORIES;
-    $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
+    $module_show_categories = zen_config('PRODUCT_INFO_CATEGORIES');
+    $module_next_previous = zen_config('PRODUCT_INFO_PREVIOUS_NEXT');
 
     /**
      * Load product-type-specific main_template_vars

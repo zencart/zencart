@@ -63,7 +63,7 @@ if (count($_GET) > 0 ) {
 }
 
 // check for SSL configuration changes:
-if (!defined('SSLPWSTATUSCHECK')) {
+if (zen_config('SSLPWSTATUSCHECK') === null) {
     die('database upgrade required. please run the 1.3.9-to-1.5.0 upgrade via zc_install');
 }
 $e = (str_starts_with(HTTP_SERVER, 'https')) ? '1' : '0';

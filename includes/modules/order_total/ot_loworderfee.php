@@ -117,10 +117,10 @@ class ot_loworderfee
                 $tax_description = zen_get_tax_description(zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS'), $tax_address['country_id'], $tax_address['zone_id']);
 
                 // calculate from flat fee or percentage
-                if (str_ends_with(zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE'), '%')) {
-                    $low_order_fee = $order->info['subtotal'] * rtrim(zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE'), '%') / 100;
+                if (str_ends_with(zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE', ''), '%')) {
+                    $low_order_fee = $order->info['subtotal'] * rtrim(zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE', ''), '%') / 100;
                 } else {
-                    $low_order_fee = MODULE_ORDER_TOTAL_LOWORDERFEE_FEE;
+                    $low_order_fee = zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_FEE');
                 }
 
                 $tax_amount = zen_calculate_tax($low_order_fee, $tax);
@@ -219,7 +219,7 @@ class ot_loworderfee
      */
     public function isEnabled(): bool
     {
-        if (!defined('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') || !defined('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE')) {
+        if (zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') === null || zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE') === null) {
             return false;
         }
         if (zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') !== 'true' || zen_config('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE') !== 'true') {

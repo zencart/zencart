@@ -29,7 +29,7 @@ if (!empty($_GET['reset_token'])) {
             header('HTTP/1.1 406 Not Acceptable');
             zen_exit();
         }
-        zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
+        zen_redirect(zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), '', 'SSL'));
     }
 
     unset($_SESSION['auth_token_activation_attempts']);
@@ -98,7 +98,7 @@ if (empty($customer_data['activation_required'])) {
         $main_content .= ' ' . TEXT_INFORMATION_LINK_ACTIVE . ' <span id="countdown">&nbsp;</span>';
     }
 
-    $resend_activation_link = '<a href="' . zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, 'action=resend', 'SSL') . '">' . TEXT_HERE . '</a>';
+    $resend_activation_link = '<a href="' . zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), 'action=resend', 'SSL') . '">' . TEXT_HERE . '</a>';
     $account_edit_link = '<a href="' . zen_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL') . '">' . TEXT_HERE . '</a>';
     $main_content .= '<br><br>' . sprintf(TEXT_INFORMATION_RESEND, $resend_activation_link, $account_edit_link) . '<br><br>';
 }

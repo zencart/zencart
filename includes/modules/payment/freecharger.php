@@ -63,7 +63,7 @@
       if (null === $this->sort_order) return false;
 
       if ((int)zen_config('MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID') > 0) {
-        $this->order_status = MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID;
+        $this->order_status = (int)zen_config('MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID');
       }
 
       if (is_object($order)) $this->update_status();
@@ -178,7 +178,7 @@
      */
     function install() {
       global $db, $messageStack;
-      if (defined('MODULE_PAYMENT_FREECHARGER_STATUS')) {
+      if (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') !== null) {
         $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
         zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=freecharger', 'SSL'));
         return 'failed';

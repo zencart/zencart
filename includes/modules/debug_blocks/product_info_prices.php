@@ -24,10 +24,10 @@ if ($debug_on == '1') {
   zen_get_show_product_switch($products_id_current, 'date_added') . '<br>' .
   zen_get_show_product_switch($products_id_current, 'quantity') . '<br>' .
   zen_get_show_product_switch($products_id_current, 'model') . '<br>' .
-  SHOW_PRODUCT_INFO_WEIGHT_ATTRIBUTES . '<br>' .
-  SHOW_PRODUCT_INFO_WEIGHT . '<br>' .
-  SHOW_PRODUCT_INFO_MANUFACTURER . '<br>' .
-  SHOW_PRODUCT_INFO_QUANTITY . '<br>' .
+  zen_config('SHOW_PRODUCT_INFO_WEIGHT_ATTRIBUTES') . '<br>' .
+  zen_config('SHOW_PRODUCT_INFO_WEIGHT') . '<br>' .
+  zen_config('SHOW_PRODUCT_INFO_MANUFACTURER') . '<br>' .
+  zen_config('SHOW_PRODUCT_INFO_QUANTITY') . '<br>' .
   '<br>';
 }
 ?>

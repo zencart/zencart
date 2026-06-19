@@ -51,7 +51,7 @@ if ($product_not_found) {
     }
 
     // set flag for attributes module usage:
-    $flag_show_weight_attrib_for_this_prod_type = SHOW_PRODUCT_INFO_WEIGHT_ATTRIBUTES;
+    $flag_show_weight_attrib_for_this_prod_type = zen_config('SHOW_PRODUCT_INFO_WEIGHT_ATTRIBUTES');
     // get attributes
     require DIR_WS_MODULES . zen_get_module_directory(FILENAME_ATTRIBUTES);
 
@@ -97,8 +97,8 @@ if ($product_not_found) {
 
     require DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php');
 
-    $module_show_categories = PRODUCT_INFO_CATEGORIES;
-    $module_next_previous = PRODUCT_INFO_PREVIOUS_NEXT;
+    $module_show_categories = zen_config('PRODUCT_INFO_CATEGORIES');
+    $module_next_previous = zen_config('PRODUCT_INFO_PREVIOUS_NEXT');
 
     /**
      * Load product-type-specific main_template_vars

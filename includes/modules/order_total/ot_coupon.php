@@ -115,10 +115,10 @@ class ot_coupon extends base
         $this->sort_order = zen_config('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER');
         if (null === $this->sort_order) return false;
 
-        $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
-        $this->include_tax = MODULE_ORDER_TOTAL_COUPON_INC_TAX;
-        $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
-        $this->tax_class = MODULE_ORDER_TOTAL_COUPON_TAX_CLASS;
+        $this->include_shipping = zen_config('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING');
+        $this->include_tax = zen_config('MODULE_ORDER_TOTAL_COUPON_INC_TAX');
+        $this->calculate_tax = zen_config('MODULE_ORDER_TOTAL_COUPON_CALC_TAX');
+        $this->tax_class = zen_config('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS');
         if (IS_ADMIN_FLAG === true) {
             if ($this->include_tax == 'true' && $this->calculate_tax != "None") {
                 $this->title .= '<span class="alert">' . MODULE_ORDER_TOTAL_COUPON_INCLUDE_ERROR . '</span>';

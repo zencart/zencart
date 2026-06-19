@@ -162,7 +162,7 @@ if (!empty($_POST['action']) && $_POST['action'] === 'process') {
             if ($auth_token_info === false || $auth_token_info['email_address'] !== $email_address || strtotime($auth_token_info['created_at']) + $token_valid_minutes > time()) {
                 require DIR_WS_MODULES . zen_get_module_directory(FILENAME_SEND_AUTH_TOKEN_EMAIL);
             }
-            zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
+            zen_redirect(zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), '', 'SSL'));
         }
 
         zen_redirect(zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));

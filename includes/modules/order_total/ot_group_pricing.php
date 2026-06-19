@@ -79,10 +79,10 @@ class ot_group_pricing {
     $this->sort_order = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER');
     if (null === $this->sort_order) return false;
 
-    $this->include_shipping = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING;
-    $this->include_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX;
-    $this->calculate_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX;
-    $this->tax_class = MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS;
+    $this->include_shipping = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING');
+    $this->include_tax = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX');
+    $this->calculate_tax = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_CALC_TAX');
+    $this->tax_class = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_TAX_CLASS');
     $this->credit_class = true;
     $this->output = array();
   }

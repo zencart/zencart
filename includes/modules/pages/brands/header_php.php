@@ -38,7 +38,7 @@ $brands = [
 $listing = $db->Execute($listing_sql);
 foreach ($listing as $record) {
     if ($record['manufacturers_image'] === '' || !file_exists(DIR_WS_IMAGES . $record['manufacturers_image'])) {
-        $record['manufacturers_image'] = PRODUCTS_IMAGE_NO_IMAGE;
+        $record['manufacturers_image'] = zen_config('PRODUCTS_IMAGE_NO_IMAGE');
     }
 
     if ($record['featured'] === '0') {

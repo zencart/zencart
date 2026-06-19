@@ -19,9 +19,6 @@ $zco_notifier->notify('NOTIFY_HEADER_START_ADVANCED_SEARCH_RESULTS');
 if (!defined('KEYWORD_FORMAT_STRING')) {
     define('KEYWORD_FORMAT_STRING', 'keywords');
 }
-if (!defined('ADVANCED_SEARCH_INCLUDE_METATAGS')) {
-    define('ADVANCED_SEARCH_INCLUDE_METATAGS', 'true');
-}
 
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 

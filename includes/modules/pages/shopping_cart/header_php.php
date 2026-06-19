@@ -79,7 +79,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
                 continue;
             }
 
-            if ($value == PRODUCTS_OPTIONS_VALUES_TEXT_ID) {
+            if ($value == zen_config('PRODUCTS_OPTIONS_VALUES_TEXT_ID')) {
                 $attributeHiddenField .= zen_draw_hidden_field('id[' . $products[$i]['id'] . '][' . zen_config('TEXT_PREFIX') . $option . ']', $products[$i]['attributes_values'][$option]);
                 $attr_value = htmlspecialchars($products[$i]['attributes_values'][$option], ENT_COMPAT, CHARSET, TRUE);
             } else {

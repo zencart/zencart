@@ -108,7 +108,7 @@ class authorizenet extends base {
     }
 
     if ((int)zen_config('MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID') > 0) {
-      $this->order_status = MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID;
+      $this->order_status = (int)zen_config('MODULE_PAYMENT_AUTHORIZENET_ORDER_STATUS_ID');
 
       // Reset order status to pending if capture pending:
       if (zen_config('MODULE_PAYMENT_AUTHORIZENET_AUTHORIZATION_TYPE') === 'Authorize') $this->order_status = 1;
@@ -347,7 +347,7 @@ class authorizenet extends base {
       'x_invoice_num' => '',
       'x_duplicate_window' => '120',
       'x_allow_partial_Auth' => 'FALSE', // unable to accept partial authorizations at this time
-      'x_description' => 'Website Purchase from ' . str_replace('"',"'", zen_config('STORE_NAME')),
+      'x_description' => 'Website Purchase from ' . str_replace('"',"'", zen_config('STORE_NAME', '')),
     );
 
     // force conversion to supported currencies: USD, GBP, CAD, EUR, AUD, NZD
@@ -505,7 +505,7 @@ class authorizenet extends base {
    */
   function install() {
     global $db, $messageStack;
-    if (defined('MODULE_PAYMENT_AUTHORIZENET_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_STATUS') !== null) {
       $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=authorizenet', 'SSL'));
       return 'failed';
@@ -543,12 +543,12 @@ class authorizenet extends base {
    * @since ZC v1.0.3
    */
   function keys() {
-    if (defined('MODULE_PAYMENT_AUTHORIZENET_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_AUTHORIZENET_STATUS') !== null) {
       global $db;
       if (!defined('MODULE_PAYMENT_AUTHORIZENET_CURRENCY')) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Currency Supported', 'MODULE_PAYMENT_AUTHORIZENET_CURRENCY', 'USD', 'Which currency is your Authnet Gateway Account configured to accept?<br>(Purchases in any other currency will be pre-converted to this currency before submission using the exchange rates in your store admin.)', '6', '0', 'zen_cfg_select_option(array(\'USD\', \'CAD\', \'GBP\', \'EUR\', \'AUD\', \'NZD\'), ', now())");
       }
-      if (!defined('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY')) {
+      if (zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY') === null) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added, use_function) VALUES ('Security Key', 'MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '*Get from Authorizenet Account*', 'REQUIRED Security Key used for validating transactions (128 characters). See <a href=\"https://support.authorize.net/s/article/What-is-a-Signature-Key\" rel=\"noopener\" target=\"_blank\">What-is-a-Signature-Key</a> for instructions.', '6', '0', now(), 'zen_cfg_password_display')");
       }
       if (defined('MODULE_PAYMENT_AUTHORIZENET_MD5HASH')) {
@@ -582,8 +582,8 @@ class authorizenet extends base {
    */
   function getHmacFingerprintFields($amount, $sequence, $currency = '') {
     $timestamp = time();
-    $key = hex2bin(strtoupper(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY')));
-    $hashString = hash_hmac('sha512', zen_config('MODULE_PAYMENT_AUTHORIZENET_LOGIN') . '^' . $sequence . '^' . $timestamp . '^' . $amount . '^' . $currency, $key);
+    $key = hex2bin(strtoupper(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', '')));
+    $hashString = hash_hmac('sha512', zen_config('MODULE_PAYMENT_AUTHORIZENET_LOGIN', '') . '^' . $sequence . '^' . $timestamp . '^' . $amount . '^' . $currency, $key);
     $security_array = array('x_fp_sequence' => $sequence,
                             'x_fp_timestamp' => $timestamp,
                             'x_fp_hash' => $hashString);
@@ -630,7 +630,7 @@ class authorizenet extends base {
         $data['x_invoice_num'],
     );
     $string = '^' . implode('^', $dataArray) . '^';
-    return strtoupper(hash_hmac('sha512', $string, hex2bin(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY'))));
+    return strtoupper(hash_hmac('sha512', $string, hex2bin(zen_config('MODULE_PAYMENT_AUTHORIZENET_SECURITYKEY', ''))));
   }
 
   /**
@@ -653,7 +653,7 @@ class authorizenet extends base {
                     ($response['x_response_code'] == 3 && $response['x_response_reason_code'] == 11 ? ' DUPLICATE TRANSACTION ATTEMPT ' : '') .
                     'Results Received back from Authorizenet: ' . print_r($response, true) . "\n\n";
     // store log file if log mode enabled
-    if (stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'Log') || strstr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'All') || (defined('AUTHORIZENET_DEVELOPER_MODE') && in_array(AUTHORIZENET_DEVELOPER_MODE, array('on', 'certify')))) {
+    if (stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING', ''), 'Log') || strstr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING', ''), 'All') || (defined('AUTHORIZENET_DEVELOPER_MODE') && in_array(AUTHORIZENET_DEVELOPER_MODE, array('on', 'certify')))) {
       $key = ($response['x_trans_id'] != '' ? $response['x_trans_id'] . '_' : '') . time() . '_' . zen_create_random_value(4);
       $file = $this->_logDir . '/' . 'SIM_Debug_' . $key . '.log';
       $fp = @fopen($file, 'a');
@@ -661,7 +661,7 @@ class authorizenet extends base {
       @fclose($fp);
     }
     // send email alerts only if in alert mode or if email specifically requested as logging mode
-    if ((isset($response['x_response_code']) && $response['x_response_code'] != '1' && stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'Alerts')) || stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING'), 'Email')) {
+    if ((isset($response['x_response_code']) && $response['x_response_code'] != '1' && stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING', ''), 'Alerts')) || stristr(zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING', ''), 'Email')) {
       zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), 'Authorizenet-SIM Alert ' . $response['x_invoice_num'] . ' ' . date('M-d-Y h:i:s') . ' ' . $response['x_trans_id'], $errorMessage, zen_config('STORE_OWNER'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), array('EMAIL_MESSAGE_HTML'=>nl2br($errorMessage)), 'debug');
     }
 

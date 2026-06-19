@@ -124,7 +124,7 @@ class zcAjaxScanAdditionalImages
             $image_dir = DIR_FS_CATALOG_IMAGES . $subdir;
 
             // Use '_' suffix unless legacy mode
-            if (defined('ADDITIONAL_IMAGES_MODE') && zen_config('ADDITIONAL_IMAGES_MODE') !== 'legacy' && !str_ends_with($image_base, '_')) {
+            if (zen_config('ADDITIONAL_IMAGES_MODE', 'strict') !== 'legacy' && !str_ends_with($image_base, '_')) {
                 $image_base .= '_';
             }
 

@@ -111,7 +111,7 @@ class ot_shipping extends base
             if ($external_shipping_tax_handler === true || (!empty($module) && $module !== 'free' && isset($GLOBALS[$module]->tax_class) && $GLOBALS[$module]->tax_class > 0)) {
                 if ($external_shipping_tax_handler !== true) {
                     if (!isset($GLOBALS[$module]->tax_basis)) {
-                        $shipping_tax_basis = STORE_SHIPPING_TAX_BASIS;
+                        $shipping_tax_basis = zen_config('STORE_SHIPPING_TAX_BASIS');
                     } else {
                         $shipping_tax_basis = $GLOBALS[$module]->tax_basis;
                     }

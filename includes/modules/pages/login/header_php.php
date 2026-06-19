@@ -126,7 +126,7 @@ if (($_GET['action'] ?? '') === 'process') {
 
             if ($customer->getData('activation_required')) {
                 $_SESSION['navigation']->clear_snapshot();
-                zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
+                zen_redirect(zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), '', 'SSL'));
             }
 
             if (count($_SESSION['navigation']->snapshot) > 0) {
