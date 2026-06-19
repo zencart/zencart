@@ -77,7 +77,7 @@ trait GeneralConcerns
     protected function browserAdminLogin()
     {
         $this->runCustomSeeder('StoreWizardSeeder');
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
         $this->browser->submitForm('Submit', [

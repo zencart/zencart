@@ -87,10 +87,10 @@ class AdminEndpointsTest extends zcFeatureTestCaseAdmin
 
     public function testSimpleEndpoints()
     {
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('Admin Login', (string)$response->getContent() );

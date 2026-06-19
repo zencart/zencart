@@ -13,8 +13,8 @@
  * Enter the domain for your store
  * If you have SSL, enter the correct https address in BOTH the HTTP_SERVER and HTTPS_SERVER settings, instead of just an http address.
  */
-define('HTTP_SERVER', 'http://127.0.0.1');
-define('HTTPS_SERVER', 'http://127.0.0.1');
+define('HTTP_SERVER', getenv('HTTP_SERVER') ?: 'http://127.0.0.1');
+define('HTTPS_SERVER', getenv('HTTPS_SERVER') ?: (getenv('HTTP_SERVER') ?: 'http://127.0.0.1'));
 
 /**
  * If you have https enabled on your website, set this to 'true'

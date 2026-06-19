@@ -10,14 +10,18 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if  (isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] === 'Symfony BrowserKit') {
+if (
+    (isset($_SERVER['HTTP_USER_AGENT']) && $_SERVER['HTTP_USER_AGENT'] === 'Symfony BrowserKit')
+    || getenv('ZENCART_TESTFRAMEWORK_RUNNING') === '1'
+) {
     define('ZENCART_TESTFRAMEWORK_RUNNING', true);
 }
 
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     return;
 }
-$user = $_SERVER['USER'] ?? $_SERVER['MY_USER'] ?? 'runner';
+$configuredUser = getenv('ZENCART_TESTFRAMEWORK_CONFIG_USER') ?: '';
+$user = $configuredUser !== '' ? $configuredUser : ($_SERVER['USER'] ?? $_SERVER['MY_USER'] ?? 'runner');
 if (isset($_SERVER['IS_DDEV_PROJECT']) || getenv('IS_DDEV_PROJECT')) {
     $user = 'ddev';
 }
@@ -40,4 +44,3 @@ if (!defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE')) {
     define('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', '');
 }
 require($config);
-
