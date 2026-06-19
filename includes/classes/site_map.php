@@ -76,8 +76,8 @@ class zen_SiteMapTree
 
     public function __construct()
     {
-        if (zen_config('TOPMOST_CATEGORY_PARENT_ID', 0) > 0) {
-            $this->root_category_id = zen_config('TOPMOST_CATEGORY_PARENT_ID');
+        if (TOPMOST_CATEGORY_PARENT_ID > 0) {
+            $this->root_category_id = TOPMOST_CATEGORY_PARENT_ID;
         }
 
         global $db;
