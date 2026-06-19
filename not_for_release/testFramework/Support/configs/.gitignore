@@ -2,6 +2,10 @@
 *.configure.php.example
 *.db_configure.php
 
+# Local branch-family-specific files are supported, for example:
+# ddev.master.store.configure.php
+# ddev.2.2.store.configure.php
+
 !runner.admin.configure.php
 !runner.store.configure.php
 !runner.main.configure.php

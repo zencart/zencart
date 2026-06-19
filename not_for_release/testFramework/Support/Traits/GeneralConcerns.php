@@ -2,6 +2,8 @@
 
 namespace Tests\Support\Traits;
 
+require_once __DIR__ . '/../configs/config_resolver.php';
+
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\HttpClient;
@@ -28,10 +30,13 @@ trait GeneralConcerns
         }
         $user = self::detectUser();
         echo 'This user = ' . $user . PHP_EOL;
-        $basePath = $configFile = TESTCWD . 'Support/configs/';
-        $configFile =  $basePath . $user . '.' . $context . '.configure.php';
-        if (!file_exists($configFile)) {
-            die('could not find config file ' .$configFile);
+        $basePath = TESTCWD . 'Support/configs/';
+        $branchFamily = zc_test_framework_detect_branch_family(ROOTCWD);
+        echo 'This branch family = ' . ($branchFamily ?? 'none') . PHP_EOL;
+        $configFile = zc_test_framework_resolve_config_file($basePath, [$user, 'ddev', 'runner'], $context, ROOTCWD);
+        if ($configFile === null) {
+            $branchHint = $branchFamily === null ? '' : ' for branch family "' . $branchFamily . '"';
+            die('could not find config file in ' . $basePath . ' for context "' . $context . '"' . $branchHint);
         }
         echo $configFile . PHP_EOL;
         $file = require($configFile);

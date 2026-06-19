@@ -20,6 +20,7 @@ if (
 if (!defined('ZENCART_TESTFRAMEWORK_RUNNING')) {
     return;
 }
+require_once __DIR__ . '/configs/config_resolver.php';
 $configuredUser = getenv('ZENCART_TESTFRAMEWORK_CONFIG_USER') ?: '';
 $user = $configuredUser !== '' ? $configuredUser : ($_SERVER['USER'] ?? $_SERVER['MY_USER'] ?? 'runner');
 if (isset($_SERVER['IS_DDEV_PROJECT']) || getenv('IS_DDEV_PROJECT')) {
@@ -29,16 +30,12 @@ $prefix = (IS_ADMIN_FLAG === true) ? '..' : '.';
 $context = (IS_ADMIN_FLAG === true) ? 'admin' : 'store';
 $basePath = $prefix . '/not_for_release/testFramework/Support/configs/';
 $candidates = [$user, 'ddev', 'runner'];
-$config = null;
-foreach (array_unique($candidates) as $candidate) {
-    $candidateFile = $basePath . $candidate . '.' . $context . '.configure.php';
-    if (file_exists($candidateFile)) {
-        $config = $candidateFile;
-        break;
-    }
-}
+$branchFamily = zc_test_framework_detect_branch_family();
+echo 'This branch family = ' . ($branchFamily ?? 'none') . PHP_EOL;
+$config = zc_test_framework_resolve_config_file($basePath, $candidates, $context);
 if ($config === null) {
-  die($basePath . $user . '.' . $context . '.configure.php does not exist');
+    $branchHint = $branchFamily === null ? '' : ' for branch family "' . $branchFamily . '"';
+    die('No test config file found in ' . $basePath . ' for context "' . $context . '"' . $branchHint);
 }
 if (!defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE')) {
     define('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE', '');
