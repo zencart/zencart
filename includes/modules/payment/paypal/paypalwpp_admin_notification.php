@@ -464,7 +464,7 @@ if (isset($response['RESPMSG']) /*|| defined('MODULE_PAYMENT_PAYFLOW_STATUS')*/)
     $output .= $outputPayPal; // one table row, four cells, one table in each
     $output .= $outputEndBlock; // close first table
 
-    if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') !== null || zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') !== null) {
         $output .= $outputStartBlock; //start second table
 
         $transaction_type_authorization = (isset($response['TRANSACTION_TYPE']) && $response['TRANSACTION_TYPE'] == 'Authorization');

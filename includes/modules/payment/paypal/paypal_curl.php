@@ -152,7 +152,7 @@ class paypal_curl extends base {
     }
 
     // allow page-styling support -- see language file for definitions
-    if (defined('MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE'))   $values['PAGESTYLE'] = MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE;
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE') !== null) $values['PAGESTYLE'] = zen_config('MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE');
     if (defined('MODULE_PAYMENT_PAYPAL_LOGO_IMAGE')) $values['LOGOIMG'] = urlencode(MODULE_PAYMENT_LOGO_IMAGE);
     if (defined('MODULE_PAYMENT_PAYPAL_CART_BORDER_COLOR')) $values['CARTBORDERCOLOR'] = MODULE_PAYMENT_PAYPAL_CART_BORDER_COLOR;
     if (defined('MODULE_PAYMENT_PAYPALWPP_HEADER_IMAGE')) $values['HDRIMG'] = urlencode(MODULE_PAYMENT_PAYPALWPP_HEADER_IMAGE);
@@ -551,7 +551,7 @@ class paypal_curl extends base {
 
     // Accelerated/Unilateral Boarding support:
     if ($this->checkHasApiCredentials() == FALSE) {
-      $commpairs['SUBJECT'] = STORE_OWNER_EMAIL_ADDRESS;
+      $commpairs['SUBJECT'] = zen_config('STORE_OWNER_EMAIL_ADDRESS');
       $commpairs['USER'] = '';
       $commpairs['PWD'] = '';
       $commpairs['SIGNATURE'] = '';

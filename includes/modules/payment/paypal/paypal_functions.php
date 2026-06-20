@@ -45,7 +45,7 @@ if (!function_exists('convertToLocalTimeZone')) {
     static $paypal_error_counter;
     static $paypal_instance_id;
     $logfile = '';
-    if ($email_address == '') $email_address = (defined('MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS') ? zen_config('MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS') : zen_config('STORE_OWNER_EMAIL_ADDRESS'));
+    if ($email_address == '') $email_address = zen_config('MODULE_PAYMENT_PAYPAL_DEBUG_EMAIL_ADDRESS', zen_config('STORE_OWNER_EMAIL_ADDRESS', ''));
     if(!isset($paypal_error_counter)) $paypal_error_counter = 0;
     if(!isset($paypal_instance_id)) $paypal_instance_id = time() . '_' . zen_create_random_value(4);
     if ((zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email') || (zen_config('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') === 'Log and Email') || $always_send) {
@@ -190,9 +190,9 @@ if (!function_exists('convertToLocalTimeZone')) {
     }
     $ppBusEmail = false;
     $ppRecEmail = false;
-    if (defined('MODULE_PAYMENT_PAYPAL_BUSINESS_ID')) {
-      if (strtolower(trim($postArray['business'])) == strtolower(trim(zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID')))) $ppBusEmail = true;
-      if (strtolower(trim($postArray['receiver_email'])) == strtolower(trim(zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID')))) $ppRecEmail = true;
+    if (zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID') !== null) {
+      if (strtolower(trim($postArray['business'])) == strtolower(trim(zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID', '')))) $ppBusEmail = true;
+      if (strtolower(trim($postArray['receiver_email'])) == strtolower(trim(zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID', '')))) $ppRecEmail = true;
       if (!$ppBusEmail && !$ppRecEmail) {
         ipn_debug_email('IPN WARNING :: Transaction email address NOT matched.' . "\n" . 'From IPN = ' . $postArray['business'] . ' | ' . $postArray['receiver_email'] . "\n" . 'From CONFIG = ' .  zen_config('MODULE_PAYMENT_PAYPAL_BUSINESS_ID'));
         return false;
@@ -210,7 +210,7 @@ if (!function_exists('convertToLocalTimeZone')) {
     if (zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY', 'Selected Currency') === 'Selected Currency') {
       $my_currency = $_SESSION['currency'];
     } else {
-      $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY'), 5);
+      $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPAL_CURRENCY', ''), 5);
     }
     $pp_currencies = array('CAD', 'EUR', 'GBP', 'JPY', 'USD', 'AUD', 'CHF', 'CZK', 'DKK', 'HKD', 'HUF', 'NOK', 'NZD', 'PLN', 'SEK', 'SGD', 'THB', 'MXN', 'ILS', 'PHP', 'TWD', 'BRL', 'MYR', 'INR');
     if (!in_array($my_currency, $pp_currencies)) {
@@ -227,7 +227,7 @@ if (!function_exists('convertToLocalTimeZone')) {
     $my_currency = select_pp_currency();
     $exchanged_amount = ($mode == 'IPN' ? ($amount * $currencies->get_value($my_currency)) : $amount);
     $transaction_amount = preg_replace('/[^0-9.]/', '', number_format($exchanged_amount, $currencies->get_decimal_places($my_currency), '.', ''));
-    if ($_POST['mc_currency'] != $my_currency || ($_POST['mc_gross'] != $transaction_amount && $_POST['mc_gross'] != -0.01) && (!defined('MODULE_PAYMENT_PAYPAL_TESTING') || MODULE_PAYMENT_PAYPAL_TESTING != 'Test') ) {
+    if ($_POST['mc_currency'] != $my_currency || ($_POST['mc_gross'] != $transaction_amount && $_POST['mc_gross'] != -0.01) && (zen_config('MODULE_PAYMENT_PAYPAL_TESTING') === null || zen_config('MODULE_PAYMENT_PAYPAL_TESTING') != 'Test') ) {
       ipn_debug_email('IPN WARNING :: Currency/Amount Mismatch.  Details: ' . "\n" . 'PayPal email address = ' . $_POST['business'] . "\n" . ' | mc_currency = ' . $_POST['mc_currency'] . "\n" . ' | submitted_currency = ' . $my_currency . "\n" . ' | order_currency = ' . $currency . "\n" . ' | mc_gross = ' . $_POST['mc_gross'] . "\n" . ' | converted_amount = ' . $transaction_amount . "\n" . ' | order_amount = ' . $amount );
       return false;
     }
@@ -475,11 +475,11 @@ function ipn_create_order_history_array($insert_id)
       ipn_debug_email('PDT PROCESSING INITIATED.' . "\n" . 'Preparing to verify transaction via PDT.' . "\n\n" . 'The TX token for verification is: ' . print_r($_GET, TRUE));
       $postback .= "cmd=_notify-synch";
       $postback .= "&tx=" . $_GET['tx'];
-      $postback .= "&at=" . trim(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN'));
+      $postback .= "&at=" . trim(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN', ''));
       $postback .= "&";
       $postback_array['cmd'] = "_notify-sync";
       $postback_array['tx'] = $_GET['tx'];
-      $postback_array['at'] = substr(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN'), 0, 5) . '**********' . substr(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN'),-5);
+      $postback_array['at'] = substr(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN', ''), 0, 5) . '**********' . substr(zen_config('MODULE_PAYMENT_PAYPAL_PDTTOKEN', ''),-5);
     } elseif ($mode == 'IPN') {
       $postback .= "cmd=_notify-validate";
       $postback .= "&";
@@ -643,7 +643,7 @@ function ipn_create_order_history_array($insert_id)
       $proxy_tunnel_flag = (defined('CURL_PROXY_TUNNEL_FLAG') && strtoupper(CURL_PROXY_TUNNEL_FLAG) == 'FALSE') ? false : true;
       $curlOpts[CURLOPT_HTTPPROXYTUNNEL] = $proxy_tunnel_flag;
       $curlOpts[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
-      $curlOpts[CURLOPT_PROXY] = CURL_PROXY_SERVER_DETAILS;
+      $curlOpts[CURLOPT_PROXY] = zen_config('CURL_PROXY_SERVER_DETAILS');
     }
     $ch = curl_init();
     curl_setopt_array($ch, $curlOpts);

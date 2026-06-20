@@ -95,7 +95,7 @@ class paypaldp extends base {
    * order status setting for completed orders
    * @var int
    */
-  public $order_status = DEFAULT_ORDERS_STATUS_ID;
+  public $order_status = 1;
   /**
    * Debug tools
    */
@@ -256,11 +256,12 @@ class paypaldp extends base {
   function __construct() {
     global $order;
     $this->code = 'paypaldp';
+    $this->order_status = (int)zen_config('DEFAULT_ORDERS_STATUS_ID');
     $this->codeTitle = MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_TITLE_WPP;
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
     $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'Retired'));
-    $this->merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? zen_config('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') : null;
+    $this->merchant_country = zen_config('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY');
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALDP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
@@ -295,7 +296,7 @@ class paypaldp extends base {
 
     $this->order_pending_status = MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID;
     if ((int)zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID') > 0) {
-      $this->order_status = MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID;
+      $this->order_status = (int)zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID');
     }
 //    $this->new_acct_notify = MODULE_PAYMENT_PAYPALDP_NEW_ACCT_NOTIFY;
     $this->zone = (int)zen_config('MODULE_PAYMENT_PAYPALDP_ZONE');
@@ -947,7 +948,7 @@ class paypaldp extends base {
       $optionsAll['CUSTOM'] = 'DP-' . (int)$_SESSION['customer_id'] . '-' . time();
 
       // send the store name as transaction identifier, to help distinguish payments between multiple stores:
-      $optionsAll['INVNUM'] = (int)$_SESSION['customer_id'] . '-' . (floor(time()/60)) . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', zen_config('STORE_NAME')), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
+      $optionsAll['INVNUM'] = (int)$_SESSION['customer_id'] . '-' . (floor(time()/60)) . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', zen_config('STORE_NAME', '')), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
 
 //       This feature must be enabled in your PayPal account, by contacting PayPal Support:
 //       $optionsAll['SOFTDESCRIPTOR'] = substr(preg_replace('/[^a-zA-Z0-9. ]/', '', STORE_NAME), 0, 23);
@@ -1079,7 +1080,7 @@ class paypaldp extends base {
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'] ?? '',
                           'payment_date' => convertToLocalTimeZone(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
-                          'receiver_email' => (zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '') !== '' ? zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') : str_replace('_api1', '', zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME'))),
+                          'receiver_email' => (zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '') !== '' ? zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') : str_replace('_api1', '', zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', ''))),
                           'receiver_id' => '',
                           'txn_id' => $this->transaction_id,
                           'parent_txn_id' => '',
@@ -1114,7 +1115,7 @@ class paypaldp extends base {
    * @since ZC v1.3.8
     */
   function admin_notification($zf_order_id) {
-    if (!defined('MODULE_PAYMENT_PAYPALDP_STATUS')) return '';
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === null) return '';
     global $db;
     $module = $this->code;
     $output = '';
@@ -1201,7 +1202,7 @@ class paypaldp extends base {
    */
   function check() {
     global $db;
-    if (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && !defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') !== null && zen_config('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY') === null) {
        $db->Execute("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Merchant Country', 'MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY', 'USA', 'Which country is your PayPal Account registered to? <br><u>Choices:</u><br><font color=green>You will need to supply <strong>API Settings</strong> in the Express Checkout module.</font><br><strong>USA and Canada merchants</strong> need PayPal API credentials and a PayPal Payments Pro account.<br><strong>UK merchants</strong> need to supply <strong>PAYFLOW settings</strong> (and have a Payflow account)<br><strong>Australia merchants</strong> choose Canada<br><em>(This setting is really about the internal PayPal API specification, and not so much about country: US=1.5, UK=2.0, Canada/Australia=3.0)</em>', '6', '25',  'zen_cfg_select_option(array(\'USA\', \'UK\', \'Canada\'), ', now())");
     }
     if (!isset($this->_check)) {
@@ -1216,7 +1217,7 @@ class paypaldp extends base {
    */
   function install() {
     global $db, $messageStack;
-    if (defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') !== null) {
       $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypaldp', 'NONSSL'));
       return 'failed';
@@ -1327,18 +1328,18 @@ class paypaldp extends base {
     $ec = ($nvp && isset($_GET['type']) && $_GET['type'] == 'ec') ? true : false;
     if ($this->merchant_country == 'UK' && !$ec) {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
-                                        'user' =>   trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER')),
-                                        'vendor' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR')),
-                                        'partner'=> trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER')),
-                                        'pwd' =>    trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD')),
+                                        'user' =>   trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER', '')),
+                                        'vendor' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '')),
+                                        'partner'=> trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', '')),
+                                        'pwd' =>    trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD', '')),
                                         'server' => zen_config('MODULE_PAYMENT_PAYPALDP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
                                     'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
     } else {
       $doPayPal = new paypal_curl(array('mode' => 'nvp',
-                                        'user' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')),
-                                        'pwd' =>  trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD')),
-                                        'signature' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')),
+                                        'user' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', '')),
+                                        'pwd' =>  trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', '')),
+                                        'signature' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', '')),
                                         'version' => '124.0',
                                         'server' => zen_config('MODULE_PAYMENT_PAYPALDP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
@@ -1549,7 +1550,7 @@ class paypaldp extends base {
     // in USA, only 6 currencies are supported. But UK and Canada support 16 currencies (as of Jan 2011):
     $paypalSupportedCurrencies = ($this->merchant_country == 'UK' || $this->merchant_country == 'Canada') ? $dp_currencies : $dpus_currencies;
 
-    $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPALDP_CURRENCY'), 5);
+    $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPALDP_CURRENCY', ''), 5);
     if (zen_config('MODULE_PAYMENT_PAYPALDP_CURRENCY') === 'Selected Currency') {
       $my_currency = ($val == '') ? $_SESSION['currency'] : $val;
     }
@@ -2390,7 +2391,7 @@ class paypaldp extends base {
 
     // determine whether the transaction should continue or fail based upon
     // the enrollment lookup results
-    if (strcasecmp(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ'), 'No') == 0) {
+    if (strcasecmp(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ', ''), 'No') == 0) {
       $continue_flag = 'Y';
     } else if (strcmp($errorNo, '0') == 0) {
       if (strcasecmp($enrolled, 'Y') == 0) {
@@ -2484,7 +2485,7 @@ class paypaldp extends base {
       } else if (strcasecmp($authStatus, 'N') == 0) {
         $continue_flag = 'N';
       } else if (strcasecmp($authStatus, 'U') == 0) {
-        if (strcasecmp(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ'), 'No') == 0) {
+        if (strcasecmp(zen_config('MODULE_PAYMENT_PAYPALDP_CARDINAL_AUTHENTICATE_REQ', ''), 'No') == 0) {
           $this->zcLog('Cardinal Auth 3', 'Business rule in effect (not requiring chargeback protection), so setting to continue to Y');
           $continue_flag = 'Y';
         }

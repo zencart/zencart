@@ -186,11 +186,11 @@ class paypalwpp extends base {
       if (null === $this->sort_order) return false;
 
       if ($this->enabled) {
-        if ( (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'PayPal' && (zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD') === ''))
-          || (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),0,7) == 'Payflow' && (zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER') === '' || zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD') === ''))
+        if ( (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'PayPal' && (empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD'))))
+          || (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', ''), 0, 7) === 'Payflow' && (empty(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'))))
           ) $this->title .= '<span class="alert"><strong> NOT CONFIGURED YET</strong></span>';
         if (zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER') === 'sandbox') $this->title .= '<strong><span class="alert"> (sandbox active)</span></strong>';
-        if (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') =='Log and Email') $this->title .= '<strong> (Debug)</strong>';
+        if (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email') $this->title .= '<strong> (Debug)</strong>';
         if (!function_exists('curl_init')) $this->title .= '<strong><span class="alert"> CURL NOT FOUND. Cannot Use.</span></strong>';
       }
     } else {
@@ -202,7 +202,7 @@ class paypalwpp extends base {
 
     $this->enableDebugging = (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email');
     $this->emailAlerts = (zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log File' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Log and Email' || zen_config('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') === 'Alerts Only');
-    $this->showPaymentPage = (zen_config('MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE') === 'No') ? true : false;
+    $this->showPaymentPage = (zen_config('MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE') === 'No');
 
     $this->buttonSourceEC = 'ZenCart-EC_us';
     $this->buttonSourceDP = 'ZenCart-DP_us';
@@ -218,7 +218,7 @@ class paypalwpp extends base {
     $this->order_pending_status = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID');
     $this->order_status = ((int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') > 0) ? (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID') : (int)zen_config('DEFAULT_ORDERS_STATUS_ID');
 
-    $this->new_acct_notify = MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY;
+    $this->new_acct_notify = zen_config('MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY');
     $this->zone = (int)zen_config('MODULE_PAYMENT_PAYPALWPP_ZONE');
     if (is_object($order)) $this->update_status();
 
@@ -445,7 +445,7 @@ class paypalwpp extends base {
       $options['PAYMENTREQUEST_0_CUSTOM'] = 'EC-' . (int)$_SESSION['customer_id'] . '-' . time();
 
       // send the store name as transaction identifier, to help distinguish payments between multiple stores:
-      $options['PAYMENTREQUEST_0_INVNUM'] = (int)$_SESSION['customer_id'] . '-' . time() . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', zen_config('STORE_NAME')), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
+      $options['PAYMENTREQUEST_0_INVNUM'] = (int)$_SESSION['customer_id'] . '-' . time() . '-[' . substr(preg_replace('/[^a-zA-Z0-9_]/', '', zen_config('STORE_NAME', '')), 0, 30) . ']';  // (cannot send actual invoice number because it's not assigned until after payment is completed)
 
       $options['PAYMENTREQUEST_0_CURRENCYCODE'] = $this->selectCurrency($order->info['currency']);
 //      $order->info['total'] = zen_round($order->info['total'], 2);
@@ -584,7 +584,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
                           'payer_status' => $_SESSION['paypal_ec_payer_info']['payer_status'],
                           'payment_date' => convertToLocalTimeZone(trim(preg_replace('/[^0-9-:]/', ' ', $this->payment_time))),
                           'business' => '',
-                          'receiver_email' => (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),0,7) == 'Payflow' ? zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') : str_replace('_api1', '', zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME'))),
+                          'receiver_email' => (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', ''),0,7) == 'Payflow' ? zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR') : str_replace('_api1', '', zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', ''))),
                           'receiver_id' => '',
                           'txn_id' => $this->transaction_id,
                           'parent_txn_id' => '',
@@ -620,7 +620,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     * @since ZC v1.3.7
     */
   function admin_notification($zf_order_id) {
-    if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) return '';
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === null) return '';
     global $db;
     $module = $this->code;
     $output = '';
@@ -715,12 +715,12 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    */
   function install() {
     global $db, $messageStack;
-    if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') !== null) {
       $messageStack->add_session(sprintf(TEXT_ERROR_MODULE_ALREADY_INSTALLED, $this->title), 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypalwpp', 'NONSSL'));
       return 'failed';
     }
-    if (defined('MODULE_PAYMENT_PAYPAL_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_PAYPAL_STATUS') !== null) {
       $messageStack->add_session('NOTE: You already have the PayPal Website Payments Standard module installed. You should REMOVE it if you want to install Express Checkout.', 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypal', 'NONSSL'));
       return 'failed';
@@ -767,26 +767,26 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * @since ZC v1.3.7
    */
   function keys() {
-    if (defined('MODULE_PAYMENT_PAYPALWPP_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') !== null) {
       global $db;
-      if (!defined('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON')) {
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON') === null) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Express Checkout Shortcut Button', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'On', 'The Express Checkout Shortcut button shows up on your shopping cart page to invite your customers to pay using PayPal without having to give all their address details on your site first before selecting shipping options.<br>It has been shown to increase sales and conversions when enabled.<br>Default: On ', '6', '25', 'zen_cfg_select_option(array(\'On\', \'Off\'), ', now())");
       }
-      if (!defined('MODULE_PAYMENT_PAYPALWPP_BRANDNAME')) {
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME') === null) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Store Brand Name at PayPal', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', '', 'The name of your store as it should appear on the PayPal login page. If blank, your store name will be used.', '6', '25', now())");
       }
-      if (!defined('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT')) {
+      if (zen_config('MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT') === null) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Allow eCheck?', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'Any', 'Do you want to allow non-instant payments like eCheck/EFT/ELV?', '6', '25', 'zen_cfg_select_option(array(\'Any\', \'Instant Only\'), ', now())");
       }
-      if (!defined('MODULE_PAYMENT_PAYPALWPP_MERCHANTID')) {
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_MERCHANTID') === null) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('PayPal Merchant ID', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', '', 'Enter your PayPal Merchant ID here. This is used for the more user-friendly In-Context checkout mode. You can obtain this value by going to your PayPal account, clicking on your account name at the top right, then clicking Account Settings, and navigating to the Business Information section; You will find your Merchant Account ID on that screen. A typical Merchant ID looks like FDEFDEFDEFDE11.', '6', '25', now())");
       }
-      if (!defined('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE')) {
+      if (zen_config('MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE') === null) {
         $db->Execute("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Use InContext Checkout?', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'InContext', 'PayPal now offers a newer friendlier InContext (in-page) checkout mode (Requires that you enter your MerchantID in the Merchant ID Setting above). Or you can use the older checkout style which offers Pay Without Account by default but with a full-page-redirect.', '6', '25', 'zen_cfg_select_option(array(\'InContext\', \'Old\'), ', now())");
       }
     }
     $keys_list = array('MODULE_PAYMENT_PAYPALWPP_STATUS', 'MODULE_PAYMENT_PAYPALWPP_SORT_ORDER', 'MODULE_PAYMENT_PAYPALWPP_ZONE', 'MODULE_PAYMENT_PAYPALWPP_ECS_BUTTON', 'MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_ORDER_PENDING_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_REFUNDED_STATUS_ID', 'MODULE_PAYMENT_PAYPALWPP_CONFIRMED_ADDRESS', 'MODULE_PAYMENT_PAYPALWPP_AUTOSELECT_CHEAPEST_SHIPPING', 'MODULE_PAYMENT_PAYPALWPP_SKIP_PAYMENT_PAGE', 'MODULE_PAYMENT_PAYPALWPP_NEW_ACCT_NOTIFY', 'MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE', 'MODULE_PAYMENT_PAYPALWPP_CURRENCY', 'MODULE_PAYMENT_PAYPALWPP_BRANDNAME', 'MODULE_PAYMENT_PAYPALEC_ALLOWEDPAYMENT', 'MODULE_PAYMENT_PAYPALWPP_EC_RETURN_FMF_DETAILS', 'MODULE_PAYMENT_PAYPALWPP_PAGE_STYLE', 'MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', 'MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', 'MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', 'MODULE_PAYMENT_PAYPALWPP_MERCHANTID', 'MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', 'MODULE_PAYMENT_PAYPALWPP_CHECKOUTSTYLE', 'MODULE_PAYMENT_PAYPALWPP_SERVER', 'MODULE_PAYMENT_PAYPALWPP_DEBUGGING');
-    if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'), 'Payflow'))) {
+    if (defined('PAYPAL_DEV_MODE') && IS_ADMIN_FLAG === true && (PAYPAL_DEV_MODE == 'true' || strstr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', ''), 'Payflow'))) {
       $keys_list = array_merge($keys_list, array('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', 'MODULE_PAYMENT_PAYPALWPP_PFVENDOR', 'MODULE_PAYMENT_PAYPALWPP_PFUSER', 'MODULE_PAYMENT_PAYPALWPP_PFPASSWORD'));
     }
     return $keys_list;
@@ -798,7 +798,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
   function remove() {
     global $messageStack;
     // cannot remove EC if DP installed:
-    if (defined('MODULE_PAYMENT_PAYPALDP_STATUS')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') !== null) {
       // this language text is hard-coded in english since Website Payments Pro is not yet available in any countries that speak any other language at this time.
       $messageStack->add_session('<strong>Sorry, you must remove PayPal Payments Pro (paypaldp) first.</strong> PayPal Payments Pro (Website Payments Pro) requires that you offer Express Checkout to your customers.<br><a href="' . zen_href_link('modules.php?set=payment&module=paypaldp', '', 'NONSSL') . '">Click here to edit or remove your PayPal Payments Pro module.</a>' , 'error');
       zen_redirect(zen_href_link(FILENAME_MODULES, 'set=payment&module=paypalwpp', 'NONSSL'));
@@ -875,7 +875,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
    * @since ZC v1.3.7
    */
   function paypal_init() {
-    if (!defined('MODULE_PAYMENT_PAYPALWPP_STATUS') || !defined('MODULE_PAYMENT_PAYPALWPP_SERVER')) {
+    if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === null || zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER') === null) {
       $doPayPal = new paypal_curl(array('mode' => 'NOTCONFIGURED'));
       return $doPayPal;
     }
@@ -885,12 +885,12 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // The PayFlow processing uses older-style, unprefixed, NVP variable names while the PayPal processing
     // uses the PAYMENTREQUEST_0_ and PAYMENT_INFO_0_ prefixes!
     //
-    if (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE'),0,7) == 'Payflow') {
+    if (substr(zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE', ''),0,7) == 'Payflow') {
       $doPayPal = new paypal_curl(array('mode' => 'payflow',
-                                        'user' =>   trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER')),
-                                        'vendor' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR')),
-                                        'partner'=> trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER')),
-                                        'pwd' =>    trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD')),
+                                        'user' =>   trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFUSER', '')),
+                                        'vendor' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFVENDOR', '')),
+                                        'partner'=> trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPARTNER', '')),
+                                        'pwd' =>    trim(zen_config('MODULE_PAYMENT_PAYPALWPP_PFPASSWORD', '')),
                                         'server' => zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://payflowpro.paypal.com/transaction',
                                     'sandbox' => 'https://pilot-payflowpro.paypal.com/transaction');
@@ -899,9 +899,9 @@ if (false) { // disabled until clarification is received about coupons in PayPal
       $this->infoPrefix = '';
     } else {
       $doPayPal = new paypal_curl(array('mode' => 'nvp',
-                                        'user' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')),
-                                        'pwd' =>  trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD')),
-                                        'signature' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')),
+                                        'user' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME', '')),
+                                        'pwd' =>  trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD', '')),
+                                        'signature' => trim(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE', '')),
                                         'version' => '124.0',
                                         'server' => zen_config('MODULE_PAYMENT_PAYPALWPP_SERVER')));
       $doPayPal->_endpoints = array('live'    => 'https://api-3t.paypal.com/nvp',
@@ -1015,7 +1015,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
 
     if (isset($_POST['orderauth']) && $_POST['orderauth'] == MODULE_PAYMENT_PAYPAL_ENTRY_AUTH_BUTTON_TEXT_PARTIAL) {
       $authAmt = (float)$_POST['authamt'];
-      $new_order_status = MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID;
+      $new_order_status = zen_config('MODULE_PAYMENT_PAYPALWPP_ORDER_STATUS_ID');
       if (isset($_POST['authconfirm']) && $_POST['authconfirm'] == 'on') {
         $proceedToAuth = true;
       } else {
@@ -1235,7 +1235,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // if using Pro 2.0 (UK), only the 6 currencies are supported.
     $paypalSupportedCurrencies = (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'Payflow-UK') ? $dp_currencies : $paypalSupportedCurrencies;
 
-    $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPALWPP_CURRENCY'), 5);
+    $my_currency = substr(zen_config('MODULE_PAYMENT_PAYPALWPP_CURRENCY', ''), 5);
     if (zen_config('MODULE_PAYMENT_PAYPALWPP_CURRENCY') === 'Selected Currency') {
       $my_currency = ($val == '') ? $_SESSION['currency'] : $val;
     }
@@ -1705,7 +1705,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     $options['CUSTOMERSERVICENUMBER'] = (zen_config('STORE_TELEPHONE_CUSTSERVICE', '') !== '') ? substr(zen_config('STORE_TELEPHONE_CUSTSERVICE'), 0, 16) : '';
 
     // Store Name to appear on PayPal page
-    $options['BRANDNAME'] = (defined('MODULE_PAYMENT_PAYPALWPP_BRANDNAME') && strlen(zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME')) > 3) ? substr(zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME'), 0, 127) : substr(zen_config('STORE_NAME'), 0, 127);
+    $options['BRANDNAME'] = (strlen(zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME', '')) > 3) ? substr(zen_config('MODULE_PAYMENT_PAYPALWPP_BRANDNAME', ''), 0, 127) : substr(zen_config('STORE_NAME', ''), 0, 127);
 
     // Payment Transaction/Authorization Mode
     $options['PAYMENTREQUEST_0_PAYMENTACTION'] = (zen_config('MODULE_PAYMENT_PAYPALWPP_TRANSACTION_MODE') === 'Auth Only') ? 'Authorization' : 'Sale';
