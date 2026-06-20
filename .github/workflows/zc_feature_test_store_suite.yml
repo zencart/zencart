@@ -38,27 +38,6 @@ jobs:
           ini-values: log_errors=On
           tools: composer, phpunit
 
-      - name: Install Apache2
-        run: sudo apt-get update && sudo apt-get install apache2 -y
-
-      - name: Enable Apache2 Rewrite Module
-        run: sudo a2enmod rewrite
-
-      - name: Configure Apache2 Document Root
-        run: sudo sed -i "s|/var/www/html|$GITHUB_WORKSPACE|g" /etc/apache2/sites-available/000-default.conf
-
-      - name: Configure Apache2 Conf
-        run: sudo sed -i "s|/var/www|$GITHUB_WORKSPACE|g" /etc/apache2/apache2.conf
-
-      - name: SHOW GITHUB WORKSPACE
-        run: echo $GITHUB_WORKSPACE
-
-      - name: Open Firewall
-        run: sudo ufw allow 'Apache Full'
-
-      - name: Enable PHP Modules
-        run: sudo apt-get install libapache2-mod-php${{ matrix.php-version }} && sudo a2enmod php${{ matrix.php-version }}
-
       - name: Install Composer Dependencies
         run: |
           php not_for_release/testFramework/fp_diagnostic.php
@@ -70,28 +49,67 @@ jobs:
           composer update
           sh not_for_release/testFramework/copyVendorFiles.sh
 
-      - name: Set Apache2 Environment Variables
+      - name: Wait for Database to be Ready
         run: |
-            echo "export APACHE_RUN_USER=$USER" | sudo tee -a /etc/apache2/envvars
-            echo "export APACHE_RUN_GROUP=$(id -g -n $USER)" | sudo tee -a /etc/apache2/envvars
+          for i in {1..30}; do
+            if mysqladmin ping -h127.0.0.1 -udb -proot --silent; then
+              echo "Database is ready"
+              exit 0
+            fi
+            echo "Waiting for database... attempt $i"
+            sleep 1
+          done
+          echo "Database failed to start"
+          exit 1
 
-      - name: Set Apache User and Group on Web Server Files
-        run: sudo chown -R $USER:$(id -g -n $USER) $GITHUB_WORKSPACE
+      - name: Configure UTF-8 Locale
+        run: |
+          sudo locale-gen en_US.UTF-8
+          echo "LANG=en_US.UTF-8" >> "$GITHUB_ENV"
+          echo "LC_ALL=en_US.UTF-8" >> "$GITHUB_ENV"
+          echo "LANGUAGE=en_US:en" >> "$GITHUB_ENV"
 
-      - name: Start Apache2
-        run: sudo service apache2 start
+      - name: Start PHP Built-in Server
+        env:
+          HTTP_SERVER: http://localhost:8000
+        run: |
+          ZENCART_TESTFRAMEWORK_RUNNING=1 ZENCART_TESTFRAMEWORK_CONFIG_USER=runner php -d display_errors=1 -d display_startup_errors=1 -d auto_prepend_file="$GITHUB_WORKSPACE/not_for_release/testFramework/Support/php_server_prepend.php" -S localhost:8000 -t . > /tmp/php_server.log 2>&1 &
+          sleep 2
+          curl -I http://localhost:8000/ || (cat /tmp/php_server.log && exit 1)
 
-      - name: Test Apache Status
-        run: sudo service apache2 status
+      - name: Smoke Test Store Endpoint
+        run: |
+          curl -sS -D /tmp/store_smoke_headers.txt http://localhost:8000/index.php -o /tmp/store_smoke_body.html
+          echo "=== store headers ==="
+          cat /tmp/store_smoke_headers.txt
+          echo "=== store body (first 200 lines) ==="
+          sed -n '1,200p' /tmp/store_smoke_body.html
+          grep -qE '^HTTP/[0-9.]+ 200' /tmp/store_smoke_headers.txt
 
       - name: Execute Store Feature Tests
-        run: php vendor/bin/phpunit  --verbose --testsuite FeatureStore --printer 'Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9'
+        env:
+          HTTP_SERVER: http://localhost:8000
+        run: php vendor/bin/phpunit --testsuite FeatureStore
+
+      - name: Show PHP Server Log On Failure
+        if: failure()
+        run: |
+          echo "=== php server log ==="
+          cat /tmp/php_server.log
+          echo "=== store headers ==="
+          cat /tmp/store_smoke_headers.txt
+          echo "=== store body (first 200 lines) ==="
+          sed -n '1,200p' /tmp/store_smoke_body.html
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: artifacts-${{ matrix.php-version }}
-          path: not_for_release/testFramework/logs/console
+          path: |
+            not_for_release/testFramework/logs/console
+            /tmp/php_server.log
+            /tmp/store_smoke_headers.txt
+            /tmp/store_smoke_body.html
           if-no-files-found: warn
           retention-days: 90

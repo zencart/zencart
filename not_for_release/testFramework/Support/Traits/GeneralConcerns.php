@@ -2,6 +2,8 @@
 
 namespace Tests\Support\Traits;
 
+require_once __DIR__ . '/../configs/config_resolver.php';
+
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\HttpClient;
@@ -13,7 +15,7 @@ trait GeneralConcerns
 
     public static function detectUser()
     {
-        if (isset($_SERVER['IS_DDEV_PROJECT'])) {
+        if (isset($_SERVER['IS_DDEV_PROJECT']) || getenv('IS_DDEV_PROJECT')) {
             return 'ddev';
         }
         $user = $_SERVER['USER'] ?? $_SERVER['MY_USER'];
@@ -28,10 +30,13 @@ trait GeneralConcerns
         }
         $user = self::detectUser();
         echo 'This user = ' . $user . PHP_EOL;
-        $basePath = $configFile = TESTCWD . 'Support/configs/';
-        $configFile =  $basePath . $user . '.' . $context . '.configure.php';
-        if (!file_exists($configFile)) {
-            die('could not find config file ' .$configFile);
+        $basePath = TESTCWD . 'Support/configs/';
+        $branchFamily = zc_test_framework_detect_branch_family(ROOTCWD);
+        echo 'This branch family = ' . ($branchFamily ?? 'none') . PHP_EOL;
+        $configFile = zc_test_framework_resolve_config_file($basePath, [$user, 'ddev', 'runner'], $context, ROOTCWD);
+        if ($configFile === null) {
+            $branchHint = $branchFamily === null ? '' : ' for branch family "' . $branchFamily . '"';
+            die('could not find config file in ' . $basePath . ' for context "' . $context . '"' . $branchHint);
         }
         echo $configFile . PHP_EOL;
         $file = require($configFile);
@@ -77,7 +82,7 @@ trait GeneralConcerns
     protected function browserAdminLogin()
     {
         $this->runCustomSeeder('StoreWizardSeeder');
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
         $this->browser->submitForm('Submit', [

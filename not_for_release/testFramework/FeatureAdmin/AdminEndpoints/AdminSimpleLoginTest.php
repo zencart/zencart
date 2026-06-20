@@ -13,10 +13,10 @@ class AdminTest extends zcFeatureTestCaseAdmin
 
     public function testSimpleAdmin()
     {
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertStringContainsString('Admin Login', (string)$response->getContent() );
         $this->browser->submitForm('Submit', [
@@ -29,10 +29,10 @@ class AdminTest extends zcFeatureTestCaseAdmin
 
     public function testInitialLogin()
     {
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-        $this->browser->request('GET', HTTP_SERVER . '/admin');
+        $this->browser->request('GET', HTTP_SERVER . '/admin/index.php');
         $response = $this->browser->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->browser->submitForm('Submit', [

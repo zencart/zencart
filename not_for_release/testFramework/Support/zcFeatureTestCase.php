@@ -7,7 +7,6 @@
 namespace Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestResult;
 use Tests\Support\Traits\ConfigurationSettingsConcerns;
 use Tests\Support\Traits\DiscountCouponConcerns;
 use Tests\Support\Traits\LowOrderFeeConcerns;
@@ -25,18 +24,6 @@ abstract class zcFeatureTestCase extends WebTestCase
     use DatabaseConcerns, GeneralConcerns, CustomerAccountConcerns, ConfigurationSettingsConcerns, LogFileConcerns, LowOrderFeeConcerns, DiscountCouponConcerns;
 
     static $firstrun = false;
-
-    /**
-     * @param TestResult|null $result
-     * @return TestResult
-     *
-     * This allows us to run in full isolation mode including
-     * classes, functions, and defined statements
-     */
-    public function run(?TestResult $result = null): TestResult
-    {
-        return parent::run($result);
-    }
 
     public function setUp(): void
     {
@@ -101,5 +88,4 @@ abstract class zcFeatureTestCase extends WebTestCase
     }
 
 }
-
 
