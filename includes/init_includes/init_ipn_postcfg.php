@@ -1,6 +1,6 @@
 <?php
 /**
- * Load the IPN checkout-language data 
+ * Load the IPN checkout-language data
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @copyright Copyright 2003-2022 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -19,4 +19,3 @@ if (!isset($_SESSION['language'])) $_SESSION['language'] = 'english';
 
 zen_include_language_file('checkout_process.php', '/', 'inline');
 
-?>
