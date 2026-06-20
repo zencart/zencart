@@ -294,7 +294,7 @@ class paypaldp extends base {
 
     $this->buttonSource = ($this->merchant_country == 'UK') ? 'ZenCart-DP_uk' : 'ZenCart-DP_us';
 
-    $this->order_pending_status = MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID;
+    $this->order_pending_status = zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_PENDING_STATUS_ID');
     if ((int)zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID') > 0) {
       $this->order_status = (int)zen_config('MODULE_PAYMENT_PAYPALDP_ORDER_STATUS_ID');
     }

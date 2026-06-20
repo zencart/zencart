@@ -29,7 +29,7 @@ if ($messageStack->size('account') > 0) {
     <div id="customerAuthDefaultSecondaryContent" class="content"><?= CUSTOMERS_AUTHORIZATION_STATUS_TEXT ?></div>
 
     <div class="buttonRow forward">
-        <a href="<?= zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL') ?>">
+        <a href="<?= zen_href_link(zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''), '', 'SSL') ?>">
             <?= zen_image_button(BUTTON_IMAGE_CONTINUE, BUTTON_CONTINUE_ALT) ?>
         </a>
     </div>

@@ -124,7 +124,7 @@ class authorizenet extends base {
     if ((defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || zen_config('MODULE_PAYMENT_AUTHORIZENET_DEBUGGING') === 'echo') $this->form_action_url = 'https://developer.authorize.net/param_dump.asp';
     if (defined('AUTHORIZNET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'certify') $this->form_action_url = 'https://certification.authorize.net/gateway/transact.dll';
 
-    $this->gateway_mode = MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE;
+    $this->gateway_mode = zen_config('MODULE_PAYMENT_AUTHORIZENET_GATEWAY_MODE');
 
     $this->_logDir = defined('DIR_FS_LOGS') ? DIR_FS_LOGS : DIR_FS_SQL_CACHE;
 
@@ -132,7 +132,7 @@ class authorizenet extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // set the currency for the gateway (others will be converted to this one before submission)
-    $this->gateway_currency = MODULE_PAYMENT_AUTHORIZENET_CURRENCY;
+    $this->gateway_currency = zen_config('MODULE_PAYMENT_AUTHORIZENET_CURRENCY');
   }
 
   /**

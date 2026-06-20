@@ -147,7 +147,7 @@ class authorizenet_aim extends base {
     if (IS_ADMIN_FLAG === true) $this->tableCheckup();
 
     // set the currency for the gateway (others will be converted to this one before submission)
-    $this->gateway_currency = MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY;
+    $this->gateway_currency = zen_config('MODULE_PAYMENT_AUTHORIZENET_AIM_CURRENCY');
   }
   /**
    * calculate zone matches and flag settings to determine whether this module should display to customers or not
