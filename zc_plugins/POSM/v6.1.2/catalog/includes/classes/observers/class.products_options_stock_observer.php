@@ -39,7 +39,7 @@ class products_options_stock_observer extends base
         // the value's initialized to prevent PHP notices!
         //
         $this->debug = false;
-        $this->enabled = (defined('POSM_ENABLE') && zen_config('POSM_ENABLE') === 'true');
+        $this->enabled = (zen_config('POSM_ENABLE') === 'true');
         if ($this->enabled === false) {
             return;
         }
