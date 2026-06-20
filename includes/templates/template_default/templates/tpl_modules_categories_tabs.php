@@ -12,7 +12,7 @@
 
 include DIR_WS_MODULES . zen_get_module_directory(FILENAME_CATEGORIES_TABS);
 
-if ((int)zen_config('CATEGORIES_TABS_STATUS') !== 1 || (empty($links_list) && empty($links_list_by_category))) {
+if ((int)$tplSetting->CATEGORIES_TABS_STATUS !== 1 || (empty($links_list) && empty($links_list_by_category))) {
     return;
 }
 ?>

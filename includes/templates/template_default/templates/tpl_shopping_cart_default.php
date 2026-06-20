@@ -147,7 +147,7 @@
 <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_CONTINUE_SHOPPING, BUTTON_CONTINUE_SHOPPING_ALT) . '</a>'; ?></div>
 <?php
 // show update cart button
-  if ((int)zen_config('SHOW_SHOPPING_CART_UPDATE') === 2 || (int)zen_config('SHOW_SHOPPING_CART_UPDATE') === 3) {
+  if ((int)$tplSetting->SHOW_SHOPPING_CART_UPDATE === 2 || (int)$tplSetting->SHOW_SHOPPING_CART_UPDATE === 3) {
 ?>
 <div class="buttonRow back"><?php echo zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT); ?></div>
 <?php
@@ -161,7 +161,7 @@
 
 <br class="clearBoth">
 <?php
-    if (zen_config('SHOW_SHIPPING_ESTIMATOR_BUTTON') === '1') {
+    if ($tplSetting->SHOW_SHIPPING_ESTIMATOR_BUTTON === '1') {
 ?>
 
 <div class="buttonRow back"><?php echo '<a href="javascript:popupWindow(\'' . zen_href_link(FILENAME_POPUP_SHIPPING_ESTIMATOR) . '\')">' .
@@ -179,7 +179,7 @@ if (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True') {
 <!-- ** END PAYPAL EXPRESS CHECKOUT ** -->
 
 <?php
-      if (zen_config('SHOW_SHIPPING_ESTIMATOR_BUTTON') === '2') {
+      if ($tplSetting->SHOW_SHIPPING_ESTIMATOR_BUTTON === '2') {
 /**
  * load the shipping estimator code if needed
  */

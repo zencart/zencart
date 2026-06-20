@@ -35,9 +35,9 @@ if (isset($_GET['products_id']) && zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PU
 
             $list_box_contents[$row][$col] = [
                 'params' => 'class="centerBoxContentsAlsoPurch"' . ' ' . 'style="width:' . $col_width . '%;"',
-                'text' => ((empty($data['products_image']) && (int)zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === 0) ? ''
+                'text' => ((empty($data['products_image']) && (int)$tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === 0) ? ''
                         : '<a href="' . zen_href_link(zen_get_info_page($data['products_id']), 'products_id=' . $data['products_id']) . '">'
-                        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT'))
+                        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], $tplSetting->SMALL_IMAGE_WIDTH, $tplSetting->SMALL_IMAGE_HEIGHT)
                         . '</a><br>')
                     . '<a href="' . zen_href_link(zen_get_info_page($data['products_id']), 'products_id=' . $data['products_id']) . '">' . $data['products_name'] . '</a>',
             ];

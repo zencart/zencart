@@ -253,7 +253,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     // set cheapest last
     $selected_shipping = $shipping_modules->cheapest();
     $shipping = $selected_shipping;
-    if (zen_config('SHOW_SHIPPING_ESTIMATOR_BUTTON') === '1') {
+    if ($tplSetting->SHOW_SHIPPING_ESTIMATOR_BUTTON === '1') {
         $show_in = FILENAME_POPUP_SHIPPING_ESTIMATOR;
     } else {
         $show_in = FILENAME_SHOPPING_CART;
@@ -283,15 +283,15 @@ if ($_SESSION['cart']->count_contents() > 0) {
     // This is done after quote-calcs in order to include Tare info accurately.
     // NOTE: tare values are *not* included in weights shown on-screen.
     $totalsDisplay = '';
-    if ((int)zen_config('SHOW_SHIPPING_ESTIMATOR_BUTTON') !== 2) {
+    if ((int)$tplSetting->SHOW_SHIPPING_ESTIMATOR_BUTTON !== 2) {
         switch (true) {
-            case (zen_config('SHOW_TOTALS_IN_CART') === '1'):
+            case ($tplSetting->SHOW_TOTALS_IN_CART === '1'):
                 $totalsDisplay = TEXT_TOTAL_ITEMS . $_SESSION['cart']->count_contents() . TEXT_TOTAL_WEIGHT . $shipping_estimator_display_weight . TEXT_PRODUCT_WEIGHT_UNIT . TEXT_TOTAL_AMOUNT . $currencies->format($_SESSION['cart']->show_total());
                 break;
-            case (zen_config('SHOW_TOTALS_IN_CART') === '2'):
+            case ($tplSetting->SHOW_TOTALS_IN_CART === '2'):
                 $totalsDisplay = TEXT_TOTAL_ITEMS . $_SESSION['cart']->count_contents() . ($shipping_estimator_display_weight > 0 ? TEXT_TOTAL_WEIGHT . $shipping_estimator_display_weight . TEXT_PRODUCT_WEIGHT_UNIT : '') . TEXT_TOTAL_AMOUNT . $currencies->format($_SESSION['cart']->show_total());
                 break;
-            case (zen_config('SHOW_TOTALS_IN_CART') === '3'):
+            case ($tplSetting->SHOW_TOTALS_IN_CART === '3'):
                 $totalsDisplay = TEXT_TOTAL_ITEMS . $_SESSION['cart']->count_contents() . TEXT_TOTAL_AMOUNT . $currencies->format($_SESSION['cart']->show_total());
                 break;
         }

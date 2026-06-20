@@ -51,7 +51,7 @@
 
 <?php
   if ($reviews_split->number_of_rows > 0) {
-    if ((zen_config('PREV_NEXT_BAR_LOCATION') === '1') || (zen_config('PREV_NEXT_BAR_LOCATION') === '3')) {
+    if (($tplSetting->PREV_NEXT_BAR_LOCATION === '1') || ($tplSetting->PREV_NEXT_BAR_LOCATION === '3')) {
 ?>
 <div class="prod-list-wrap group">
 <div id="productReviewsDefaultListingTopNumber" class="navSplitPagesResult"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
@@ -74,7 +74,7 @@
     <?php if(!empty($reviews['reviewsTitle'])) { ?>
         <h6><?php echo $reviews['reviewsTitle']; ?></h6>
     <?php } ?>
-    <?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)zen_config('MAX_PREVIEW')); ?>
+    <?php echo zen_trunc_string(zen_output_string_protected(stripslashes($reviews['reviewsText'])), (int)$tplSetting->MAX_PREVIEW); ?>
 </div>
 
 <div class="productReviewsDefaultReviewer"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($reviews['dateAdded'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($reviews['customersName'])); ?></div>
@@ -94,7 +94,7 @@
 <?php
   }
 
-  if (($reviews_split->number_of_rows > 0) && ((zen_config('PREV_NEXT_BAR_LOCATION') === '2') || (zen_config('PREV_NEXT_BAR_LOCATION') === '3'))) {
+  if (($reviews_split->number_of_rows > 0) && (($tplSetting->PREV_NEXT_BAR_LOCATION === '2') || ($tplSetting->PREV_NEXT_BAR_LOCATION === '3'))) {
 ?>
 
 <div class="prod-list-wrap group prod-list-bottom">

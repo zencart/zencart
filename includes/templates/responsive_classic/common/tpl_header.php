@@ -192,7 +192,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa-solid 
 <!--bof branding display-->
 <div id="logoWrapper" class="group onerow-fluid">
     <div id="logo"><?php echo '<a href="' . HTTP_SERVER . DIR_WS_CATALOG . '">' . zen_image($template->get_template_dir(HEADER_LOGO_IMAGE, DIR_WS_TEMPLATE, $current_page_base,'images'). '/' . HEADER_LOGO_IMAGE, HEADER_ALT_TEXT) . '</a>'; ?>
-<?php if (HEADER_SALES_TEXT != '' || (zen_config('SHOW_BANNERS_GROUP_SET2', '') !== '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET2')))) { ?>
+<?php if (HEADER_SALES_TEXT != '' || (!empty($tplSetting->SHOW_BANNERS_GROUP_SET2) && $banner = zen_banner_exists('dynamic', $tplSetting->SHOW_BANNERS_GROUP_SET2))) { ?>
     <div id="taglineWrapper">
 <?php
   if (HEADER_SALES_TEXT != '') {
@@ -202,7 +202,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa-solid 
   }
 ?>
 <?php
-  if (zen_config('SHOW_BANNERS_GROUP_SET2', '') !== '' && $banner = zen_banner_exists('dynamic', zen_config('SHOW_BANNERS_GROUP_SET2'))) {
+  if (!empty($tplSetting->SHOW_BANNERS_GROUP_SET2) && $banner = zen_banner_exists('dynamic', $tplSetting->SHOW_BANNERS_GROUP_SET2)) {
     if ($banner->RecordCount() > 0) {
 ?>
   <div id="bannerTwo" class="banners"><?php echo zen_display_banner('static', $banner);?></div>
@@ -237,7 +237,7 @@ echo '<div class="header Fixed"><a href="#menu" title="Menu"><i class="fa-solid 
 <!--eof optional categories tabs navigation display-->
 
 <!--bof header ezpage links-->
-<?php if (zen_config('EZPAGES_STATUS_HEADER') === '1' or (zen_config('EZPAGES_STATUS_HEADER') === '2' && zen_is_whitelisted_admin_ip())) { ?>
+<?php if ($tplSetting->EZPAGES_STATUS_HEADER === '1' or ($tplSetting->EZPAGES_STATUS_HEADER === '2' && zen_is_whitelisted_admin_ip())) { ?>
 <?php   require($template->get_template_dir('tpl_ezpages_bar_header.php',DIR_WS_TEMPLATE, $current_page_base,'templates'). '/tpl_ezpages_bar_header.php'); ?>
 <?php } ?>
 <!--eof header ezpage links-->

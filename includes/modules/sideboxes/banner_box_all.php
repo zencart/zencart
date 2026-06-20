@@ -13,14 +13,14 @@
 
 // test if box should display
   $show_banner_box_all = true;
-  if (zen_config('SHOW_BANNERS_GROUP_SET_ALL') === '') {
+  if (empty($tplSetting->SHOW_BANNERS_GROUP_SET_ALL)) {
     $show_banner_box_all = false;
   }
 
   if ($show_banner_box_all == true) {
     $banner_box = array();
     $banner_box[] = TEXT_BANNER_BOX_ALL;
-    $banner_box_group= zen_config('SHOW_BANNERS_GROUP_SET_ALL');
+    $banner_box_group= $tplSetting->SHOW_BANNERS_GROUP_SET_ALL;
 
     require($template->get_template_dir('tpl_banner_box_all.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_banner_box_all.php');
 

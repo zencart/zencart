@@ -136,8 +136,8 @@ if ($product_info->fields['products_model'] != '') {
 
 // set image
 $products_image = $product_info->fields['products_image'];
-if ($product_info->fields['products_image'] == '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
-  $products_image = zen_config('PRODUCTS_IMAGE_NO_IMAGE');
+if ($product_info->fields['products_image'] == '' && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+  $products_image = $tplSetting->PRODUCTS_IMAGE_NO_IMAGE;
 }
 
 $breadcrumb->add(NAVBAR_TITLE);

@@ -113,7 +113,7 @@ class Search extends \base
      */
     public function buildSearchSQL(): string
     {
-        global $db, $messageStack, $currencies, $column_list;
+        global $db, $messageStack, $currencies, $column_list, $tplSetting;
 
         if (empty($this->searchOptions)) {
             throw new SearchException(ERROR_MISSING_SEARCH_OPTIONS);
@@ -171,13 +171,13 @@ class Search extends \base
         }
 
         $define_list = [
-            'PRODUCT_LIST_MODEL' => zen_config('PRODUCT_LIST_MODEL'),
-            'PRODUCT_LIST_NAME' => zen_config('PRODUCT_LIST_NAME'),
-            'PRODUCT_LIST_MANUFACTURER' => zen_config('PRODUCT_LIST_MANUFACTURER'),
-            'PRODUCT_LIST_PRICE' => zen_config('PRODUCT_LIST_PRICE'),
-            'PRODUCT_LIST_QUANTITY' => zen_config('PRODUCT_LIST_QUANTITY'),
-            'PRODUCT_LIST_WEIGHT' => zen_config('PRODUCT_LIST_WEIGHT'),
-            'PRODUCT_LIST_IMAGE' => zen_config('PRODUCT_LIST_IMAGE'),
+            'PRODUCT_LIST_MODEL' => $tplSetting->PRODUCT_LIST_MODEL,
+            'PRODUCT_LIST_NAME' => $tplSetting->PRODUCT_LIST_NAME,
+            'PRODUCT_LIST_MANUFACTURER' => $tplSetting->PRODUCT_LIST_MANUFACTURER,
+            'PRODUCT_LIST_PRICE' => $tplSetting->PRODUCT_LIST_PRICE,
+            'PRODUCT_LIST_QUANTITY' => $tplSetting->PRODUCT_LIST_QUANTITY,
+            'PRODUCT_LIST_WEIGHT' => $tplSetting->PRODUCT_LIST_WEIGHT,
+            'PRODUCT_LIST_IMAGE' => $tplSetting->PRODUCT_LIST_IMAGE,
         ];
 
         asort($define_list);
@@ -220,13 +220,13 @@ class Search extends \base
         }
         /*
         // always add quantity regardless of whether or not it is in the listing for add to cart buttons
-        if (zen_config('PRODUCT_LIST_QUANTITY') < 1) {
+        if ($tplSetting->PRODUCT_LIST_QUANTITY < 1) {
         $select_column_list .= ', p.products_quantity ';
         }
         */
 
         // always add quantity regardless of whether or not it is in the listing for add to cart buttons
-        if ((int)zen_config('PRODUCT_LIST_QUANTITY') < 1) {
+        if ((int)$tplSetting->PRODUCT_LIST_QUANTITY < 1) {
             if (empty($select_column_list)) {
                 $select_column_list .= ' p.products_quantity ';
             } else {

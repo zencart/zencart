@@ -14,7 +14,7 @@
 <div class="centerColumn" id="conditions">
 <h1 id="conditionsHeading"><?php echo HEADING_TITLE; ?></h1>
 
-<?php if ((int)zen_config('DEFINE_CONDITIONS_STATUS') >= 1 && (int)zen_config('DEFINE_CONDITIONS_STATUS') <= 2) { ?>
+<?php if ((int)$tplSetting->DEFINE_CONDITIONS_STATUS >= 1 && (int)$tplSetting->DEFINE_CONDITIONS_STATUS <= 2) { ?>
 <div id="conditionsMainContent" class="content">
 <?php
 /**

@@ -46,7 +46,7 @@ switch(true) {
     break;
   default:
     // name and image always display image regardless
-    $category_icon_display_image = zen_image(DIR_WS_IMAGES . $category_icon_display_image, $category_icon_display_name, zen_config('CATEGORY_ICON_IMAGE_WIDTH'), zen_config('CATEGORY_ICON_IMAGE_HEIGHT')) . '<br>';
+    $category_icon_display_image = zen_image(DIR_WS_IMAGES . $category_icon_display_image, $category_icon_display_name, $tplSetting->CATEGORY_ICON_IMAGE_WIDTH, $tplSetting->CATEGORY_ICON_IMAGE_HEIGHT) . '<br>';
     break;
 }
 //    }

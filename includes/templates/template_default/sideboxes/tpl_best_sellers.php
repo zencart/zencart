@@ -13,7 +13,7 @@ foreach ($bestsellers_list as $next_bestseller) {
     $content .=
         '<li>' .
             '<a href="' . zen_href_link(zen_get_info_page($next_bestseller['id']), 'products_id=' . $next_bestseller['id']) . '">' .
-                zen_trunc_string($next_bestseller['name'], (int)zen_config('BEST_SELLERS_TRUNCATE'), zen_config('BEST_SELLERS_TRUNCATE_MORE')) .
+                zen_trunc_string($next_bestseller['name'], (int)$tplSetting->BEST_SELLERS_TRUNCATE, $tplSetting->BEST_SELLERS_TRUNCATE_MORE) .
             '</a>' .
         '</li>' . "\n";
 }

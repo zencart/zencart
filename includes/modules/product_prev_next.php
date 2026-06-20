@@ -15,7 +15,7 @@ $prev_next_override = false;
 $zco_notifier->notify('NOTIFY_PRODUCT_PREV_NEXT_OVERRIDE', [], $prev_next_override);
 
 // bof: previous next
-if ($prev_next_override === false && (int)zen_config('PRODUCT_INFO_PREVIOUS_NEXT') !== 0) {
+if ($prev_next_override === false && (int)$tplSetting->PRODUCT_INFO_PREVIOUS_NEXT !== 0) {
 
   // sort order
     $prev_next_order = zen_products_sort_order();

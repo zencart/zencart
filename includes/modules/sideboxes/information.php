@@ -26,13 +26,13 @@ if ($flag_show_brand_sidebox_link === true) {
     $information[] = '<a href="' . zen_href_link(FILENAME_BRANDS) . '">' . BOX_HEADING_BRANDS . '</a>';
 }
 
-if (zen_config('DEFINE_SHIPPINGINFO_STATUS') <= 1) {
+if ($tplSetting->DEFINE_SHIPPINGINFO_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_SHIPPING) . '">' . BOX_INFORMATION_SHIPPING . '</a>';
 }
-if (zen_config('DEFINE_PRIVACY_STATUS') <= 1) {
+if ($tplSetting->DEFINE_PRIVACY_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_PRIVACY) . '">' . BOX_INFORMATION_PRIVACY . '</a>';
 }
-if (zen_config('DEFINE_CONDITIONS_STATUS') <= 1) {
+if ($tplSetting->DEFINE_CONDITIONS_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_CONDITIONS) . '">' . BOX_INFORMATION_CONDITIONS . '</a>';
 }
 
@@ -43,7 +43,7 @@ if (zen_config('DEFINE_CONDITIONS_STATUS') <= 1) {
 if ($flag_show_accessibility_sidebox_link === true) {
     $information[] = '<a href="' . zen_href_link(FILENAME_ACCESSIBILITY) . '">' . BOX_INFORMATION_ACCESSIBILITY . '</a>';
 }
-if (zen_config('DEFINE_CONTACT_US_STATUS') <= 1) {
+if ($tplSetting->DEFINE_CONTACT_US_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . BOX_INFORMATION_CONTACT . '</a>';
 }
 
@@ -60,7 +60,7 @@ if (!empty($external_bb_url) && !empty($external_bb_text)) {
     $information[] = '<a href="' . $external_bb_url . '" rel="noopener" target="_blank">' . $external_bb_text . '</a>';
 }
 
-if (zen_config('DEFINE_SITE_MAP_STATUS') <= 1) {
+if ($tplSetting->DEFINE_SITE_MAP_STATUS <= 1) {
     $information[] = '<a href="' . zen_href_link(FILENAME_SITE_MAP) . '">' . BOX_INFORMATION_SITE_MAP . '</a>';
 }
 
@@ -69,7 +69,7 @@ if (zen_config('MODULE_ORDER_TOTAL_GV_STATUS') === 'true') {
     $information[] = '<a href="' . zen_href_link(FILENAME_GV_FAQ) . '">' . BOX_INFORMATION_GV . '</a>';
 }
 // only show Discount Coupon FAQ when feature enabled
-if (zen_config('DEFINE_DISCOUNT_COUPON_STATUS') <= 1 && zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') === 'true') {
+if ($tplSetting->DEFINE_DISCOUNT_COUPON_STATUS <= 1 && zen_config('MODULE_ORDER_TOTAL_COUPON_STATUS') === 'true') {
     $information[] = '<a href="' . zen_href_link(FILENAME_DISCOUNT_COUPON) . '">' . BOX_INFORMATION_DISCOUNT_COUPONS . '</a>';
 }
 
