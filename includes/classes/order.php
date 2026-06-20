@@ -506,7 +506,7 @@ class order extends base
         }
 
         $this->info = [
-            'order_status' => zen_config('DEFAULT_ORDERS_STATUS_ID'),
+            'order_status' => (int)zen_config('DEFAULT_ORDERS_STATUS_ID'),
             'currency' => $_SESSION['currency'],
             'currency_value' => $currencies->get_value($_SESSION['currency']),
             'payment_method' => (isset($GLOBALS[$paymentModule]) && is_object($GLOBALS[$paymentModule])) ? $GLOBALS[$paymentModule]->title : '',
