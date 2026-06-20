@@ -213,3 +213,13 @@ $autoLoadConfig[170][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_ipn_postcfg.php',
 ];
+/**
+ * Breakpoint 175.
+ *
+ * require 'includes/init_includes/init_observers.php';
+ *
+ */
+$autoLoadConfig[175][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_observers.php',
+];
