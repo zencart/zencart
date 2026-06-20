@@ -41,7 +41,7 @@ INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, count
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (24,'Bermuda','BM','BMU','10');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (25,'Bhutan','BT','BTN','10');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (26,'Bolivia','BO','BOL','8');
-INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (27,'Bosnia and Herzegowina','BA','BIH','5');
+INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (27,'Bosnia and Herzegovina','BA','BIH','5');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (28,'Botswana','BW','BWA','8');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (29,'Bouvet Island','BV','BVT','8');
 INSERT INTO countries (countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) VALUES (30,'Brazil','BR','BRA','11');

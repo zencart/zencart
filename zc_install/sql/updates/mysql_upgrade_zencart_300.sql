@@ -54,7 +54,8 @@ DELETE FROM configuration WHERE configuration_group_id IN (21, 22, 23, 14);
 DELETE FROM configuration_group WHERE configuration_group_id IN (21, 22, 23, 14);
 DELETE FROM admin_pages WHERE page_key IN ('configNewListing', 'configFeaturedListing', 'configAllListing', 'configGzipCompression');
 
-
+# Correct name for Bosnia and Herzegovina
+UPDATE countries SET countries_name = 'Bosnia and Herzegovina' WHERE countries_iso_code_2 = 'BA' LIMIT 1;
 
 #PROGRESS_FEEDBACK:!TEXT=Finalizing ... Done!
 
