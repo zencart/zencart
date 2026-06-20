@@ -150,10 +150,10 @@ if (!$demo_check->EOF) {
 }
 
 // Check that shipping/payment modules have been defined
-if (zen_get_configuration_key_value('MODULE_PAYMENT_INSTALLED') === '') {
+if (empty(zen_config('MODULE_PAYMENT_INSTALLED'))) {
     $messageStack->add(ERROR_PAYMENT_MODULES_NOT_DEFINED, 'caution');
 }
-if (zen_get_configuration_key_value('MODULE_SHIPPING_INSTALLED') === '') {
+if (empty(zen_config('MODULE_SHIPPING_INSTALLED'))) {
     $messageStack->add(ERROR_SHIPPING_MODULES_NOT_DEFINED, 'caution');
 }
 
