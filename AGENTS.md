@@ -94,6 +94,19 @@ Project-specific conventions and patterns
 - `index.php` flow: includes application_top.php, loops over `header_php` files from PageLoader->listModulePagesFiles('header_php', '.php'), then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
 - Language files: `lang.foo.php` files return an array of `'CONSTANT_NAME' => 'value'` pairs. These get merged across load layers (core → plugin, English → active language) and converted to real constants via `define()`. Values may reference other keys in the same array via `%%OTHER_KEY%%` placeholders.
 
+Configuration: `zen_config()` vs `$tplSetting` (TemplateSettings)
+-------------------------------------------------------------
+Two distinct mechanisms read configuration values; pick based on what's being read and where the code runs.
+
+- `zen_config('KEY', $default = null)` (`includes/functions/zen_config.php`) reads from the DB-backed `configuration`/`product_type_layout` repositories, falling back to a same-named `defined()` constant, then to `$default`. Available everywhere (catalog **and** Admin). Use this for core, site-wide, security-sensitive, or business-logic settings, and for any key that's called with a meaningful default-value second argument.
+- `$tplSetting->KEY` (object of class `TemplateSettings extends Settings`, see `includes/classes/TemplateSettings.php` / `includes/classes/Settings.php`) is a per-template settings store layering an explicit override (a template's `template_settings.php`, or a DB-stored per-template override) on top of the same global-constant fallback. Use this only for display/layout/template-presentation settings that a template should be able to override. It has no default-parameter support, so it's not a drop-in replacement for `zen_config('KEY', $default)`.
+- See `CONVENTIONS.md` → "Template settings: choosing `zen_config()` vs `$tplSetting->`" for the rules on which keys are appropriate to convert.
+
+`$tplSetting` availability rules — verify these before converting a `zen_config()` call to `$tplSetting->`:
+- It is only initialized in `includes/init_includes/init_templates.php`, which runs during the **catalog** bootstrap only. It is never initialized in Admin context — do not convert code reachable from `admin/*`.
+- It is a true PHP global, automatically visible in top-level procedural include files (page modules, templates), but inside a function or class method body it requires an explicit `global $tplSetting;` declaration, like any other global.
+- `Settings::setFromArray()` treats an explicit override and a same-named global constant as separate concepts: a key already explicitly set (e.g. from `template_settings.php`) always wins over a constant of the same name, regardless of which was resolved first. If you're extending `Settings`, don't reintroduce a check that conflates "has a constant" with "has an explicit value" — that previously caused overrides to be silently discarded whenever a same-named config constant existed.
+
 Integration points and external dependencies
 -------------------------------------------
 - Plugins: `zc_plugins/` is the place for third-party extensions and versioned code; new automations should inspect existing plugins for common structure. For very deep code inspection, reference `PluginManager` and `FileSystem` usage in `includes/application_top.php`.
