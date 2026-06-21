@@ -161,7 +161,7 @@
       <hr>
 
 <?php
-  if (zen_config('MODULE_ORDER_TOTAL_INSTALLED')) {
+  if (!empty(zen_config('MODULE_ORDER_TOTAL_INSTALLED'))) {
     $order_totals = $order_total_modules->process();
 ?>
 <div id="orderTotals"><?php $order_total_modules->output(); ?></div>
