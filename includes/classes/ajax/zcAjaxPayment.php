@@ -39,7 +39,7 @@ class zcAjaxPayment extends base
      */
     public function prepareConfirmation(): array
     {
-        global $messageStack, $template, $breadcrumb, $template_dir_select, $template_dir, $language_page_directory, $currencies, $order, $zco_notifier, $db, $current_page_base, $order_total_modules, $credit_covers;
+        global $messageStack, $template, $breadcrumb, $template_dir_select, $template_dir, $language_page_directory, $currencies, $order, $zco_notifier, $db, $current_page_base, $order_total_modules, $credit_covers, $tplSetting;
         $_GET['main_page'] = $current_page_base = $current_page = FILENAME_CHECKOUT_CONFIRMATION;
         if ($_SESSION['cart']->count_contents() <= 0) {
             zen_redirect(zen_href_link(FILENAME_TIME_OUT));
@@ -199,7 +199,7 @@ class zcAjaxPayment extends base
         $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
         $breadcrumb->add(NAVBAR_TITLE_2);
 
-        $breadCrumbHtml = $breadcrumb->trail(zen_config('BREAD_CRUMBS_SEPARATOR'));
+        $breadCrumbHtml = $breadcrumb->trail($tplSetting->BREAD_CRUMBS_SEPARATOR ?? zen_config('BREAD_CRUMBS_SEPARATOR', ' :: '));
         $body_code = DIR_FS_CATALOG . $template->get_template_dir('tpl_ajax_checkout_confirmation_default.php', DIR_WS_TEMPLATE, $current_page_base, 'templates') . '/tpl_ajax_checkout_confirmation_default.php';
         ob_start();
         require_once $body_code;

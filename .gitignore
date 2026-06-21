@@ -2,6 +2,7 @@ configure.php
 configure.php.save
 local/configure*.php
 /vendor
+/tmp/
 
 *.php1
 *.bak

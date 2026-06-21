@@ -9,6 +9,7 @@ namespace Tests\Unit\testsNotifiers;
 use notifier;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 use zcObserverLogEventListener;
 use zcObserverLogWriterDatabase;
@@ -17,11 +18,9 @@ use zcObserverLogWriterTextfile;
 /**
  * Testing Library
  */
+#[RunTestsInSeparateProcesses]
 class AdminLoggingTest extends zcUnitTestCase
 {
-    protected $preserveGlobalState = FALSE;
-    protected $runTestInSeparateProcess = TRUE;
-
     public function setUp(): void
     {
         parent::setUp();

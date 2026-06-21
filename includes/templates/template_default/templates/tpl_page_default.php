@@ -12,20 +12,20 @@
 ?>
 <div class="centerColumn" id="ezPageDefault">
   <h1 id="ezPagesHeading"><?php echo $var_pageDetails->fields['pages_title']; ?></h1>
-  <?php if (zen_config('EZPAGES_SHOW_PREV_NEXT_BUTTONS') === '2' && $counter > 1) { ?>
+  <?php if ($tplSetting->EZPAGES_SHOW_PREV_NEXT_BUTTONS === '2' && $counter > 1) { ?>
     <div id="navEZPageNextPrev">
       <a href="<?php echo $prev_link; ?>"><?php echo $previous_button; ?></a>
       <?php echo zen_back_link() . $home_button; ?></a>
       <a href="<?php echo $next_link; ?>"><?php echo $next_item_button; ?></a>
     </div>
-  <?php } elseif (zen_config('EZPAGES_SHOW_PREV_NEXT_BUTTONS') === '1') { ?>
+  <?php } elseif ($tplSetting->EZPAGES_SHOW_PREV_NEXT_BUTTONS === '1') { ?>
     <div id="navEZPageNextPrev"><?php echo zen_back_link() . $home_button . '</a>'; ?></div>
   <?php } ?>
 
   <?php
 // vertical TOC listing
 // create a table of contents for chapter when more than 1 page in the TOC
-  if (count($toc_links) > 1 && zen_config('EZPAGES_SHOW_TABLE_CONTENTS') === '1') {
+  if (count($toc_links) > 1 && $tplSetting->EZPAGES_SHOW_TABLE_CONTENTS === '1') {
     ?>
     <div id="navEZPagesTOCWrapper">
       <h2 id="ezPagesTOCHeading"><?php echo TEXT_EZ_PAGES_TABLE_CONTEXT; ?></h2>

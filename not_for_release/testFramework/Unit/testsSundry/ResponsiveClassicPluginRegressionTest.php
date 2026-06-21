@@ -15,13 +15,12 @@ if (!function_exists('zen_href_link')) {
 
 namespace Tests\Unit\testsSundry {
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
+#[RunTestsInSeparateProcesses]
 class ResponsiveClassicPluginRegressionTest extends zcUnitTestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
-
     public function testCategoriesSideboxShowsSpecialsLinkWhenSpecialsExist(): void
     {
         defined('SHOW_CATEGORIES_SEPARATOR_LINK') || define('SHOW_CATEGORIES_SEPARATOR_LINK', '0');
@@ -41,6 +40,7 @@ class ResponsiveClassicPluginRegressionTest extends zcUnitTestCase
             }
         };
         $db = $GLOBALS['db'];
+        $tplSetting = new \TemplateSettings();
         $box_id = 'categories';
         $box_categories_array = [];
 

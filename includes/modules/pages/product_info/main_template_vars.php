@@ -71,8 +71,8 @@ if ($product_not_found) {
     $products_description = $product_data['products_description'] ?? '';
     $products_description = (!preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $products_description) ? nl2br($products_description, false) : $products_description);
 
-    $products_image = (($product_not_found || $product_data['products_image'] == '') && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') ? zen_config('PRODUCTS_IMAGE_NO_IMAGE', '') : '';
-    if ($product_data['products_image'] != '' || zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') !== '1') {
+    $products_image = (($product_not_found || $product_data['products_image'] == '') && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') ? $tplSetting->PRODUCTS_IMAGE_NO_IMAGE : '';
+    if ($product_data['products_image'] != '' || $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS !== '1') {
         $products_image = $product_data['products_image'];
     }
 
@@ -97,8 +97,8 @@ if ($product_not_found) {
 
     require DIR_WS_MODULES . zen_get_module_directory('product_prev_next.php');
 
-    $module_show_categories = zen_config('PRODUCT_INFO_CATEGORIES');
-    $module_next_previous = zen_config('PRODUCT_INFO_PREVIOUS_NEXT');
+    $module_show_categories = $tplSetting->PRODUCT_INFO_CATEGORIES;
+    $module_next_previous = $tplSetting->PRODUCT_INFO_PREVIOUS_NEXT;
 
     /**
      * Load product-type-specific main_template_vars

@@ -6,6 +6,7 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\Traits\DatabaseConcerns;
 
@@ -19,10 +20,9 @@ final class DatabaseConcernsRuntimeHarness
     }
 }
 
+#[RunTestsInSeparateProcesses]
 class DatabaseConcernsRuntimeTest extends TestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
 
     public function testDatabaseRuntimeConstantsUseWorkerScopedLogDirectoryWhenConfigured(): void
     {

@@ -6,13 +6,12 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
+#[RunTestsInSeparateProcesses]
 class OtGvShippingDetailsTaxInclusiveTest extends zcUnitTestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
-
     private function createResult(array $rows): \queryFactoryResult
     {
         $result = new \queryFactoryResult(null);

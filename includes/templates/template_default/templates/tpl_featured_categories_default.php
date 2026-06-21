@@ -23,11 +23,11 @@ if (count($listing) === 0) {
         'text' => defined('TEXT_NO_FEATURED_CATEGORIES') ? TEXT_NO_FEATURED_CATEGORIES : 'No products to show.',
     ];
 } else {
-    $col_width = floor(100 / (int)zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS', 1));
+    $col_width = floor(100 / (int)$tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
 
     foreach ($listing as $record) {
         $lc_text = '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . zen_get_generated_category_path_rev($record['categories_id'])) . '">'
-                 . zen_image(DIR_WS_IMAGES . $record['categories_image'], $record['categories_name'], (int)zen_config('SMALL_IMAGE_WIDTH'), (int)zen_config('SMALL_IMAGE_HEIGHT'));
+                 . zen_image(DIR_WS_IMAGES . $record['categories_image'], $record['categories_name'], (int)$tplSetting->SMALL_IMAGE_WIDTH, (int)$tplSetting->SMALL_IMAGE_HEIGHT);
         $lc_text .= '<div class="categoryName">' . $record['categories_name'] . '</div>';
         $lc_text .= '</a>';
 
@@ -37,7 +37,7 @@ if (count($listing) === 0) {
         ];
 
         $col++;
-        if ($col >= (int)zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS')) {
+        if ($col >= (int)$tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS) {
             $col = 0;
             $row++;
         }

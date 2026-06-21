@@ -36,10 +36,10 @@ $num_categories_count = $featured_categories->RecordCount();
 
 // show only when 1 or more
 if ($num_categories_count > 0) {
-    if ($num_categories_count < zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') || zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') == 0) {
+    if ($num_categories_count < $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS || $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS == 0) {
         $col_width = floor(100 / $num_categories_count);
     } else {
-        $col_width = floor(100 / zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS', 1));
+        $col_width = floor(100 / $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
     }
     while (!$featured_categories->EOF) {
         $category_info = new Category((int)$featured_categories->fields['categories_id']);
@@ -47,16 +47,16 @@ if ($num_categories_count > 0) {
 
         $list_box_contents[$row][$col] = [
             'params' => 'class="centerBoxContentsFeaturedCategories centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
-            'text' => (($data['categories_image'] === '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') == 0) ? ''
+            'text' => (($data['categories_image'] === '' && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
                     : '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' .  zen_get_generated_category_path_rev($data['categories_id'])) . '">'
-                        . zen_image(DIR_WS_IMAGES . $data['categories_image'] , $data['categories_name'] , zen_config('IMAGE_PRODUCT_LISTING_WIDTH') , zen_config('IMAGE_PRODUCT_LISTING_HEIGHT'))
+                        . zen_image(DIR_WS_IMAGES . $data['categories_image'] , $data['categories_name'] , $tplSetting->IMAGE_PRODUCT_LISTING_WIDTH , $tplSetting->IMAGE_PRODUCT_LISTING_HEIGHT)
                     . '</a><br>')
                 . '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' .  zen_get_generated_category_path_rev($data['categories_id'])) . '">' . $data['categories_name']
                 . '</a><br>',
         ];
 
         $col++;
-        if ($col > (zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') - 1)) {
+        if ($col > ($tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS - 1)) {
             $col = 0;
             $row++;
         }

@@ -38,7 +38,7 @@ if (empty($flag_show_product_info_additional_images) || empty($modal_images)) {
         $modal_link_id = 'modalLink' . $i;
         $modal_link_js = 'openModal(\'' . $modal_id . '\')';
         $modal_link_attributes = 'href="#" onclick="' . $modal_link_js . '; return false;"';
-        $modal_link_img = zen_image($image['base_image'], $image['products_name'], (int)zen_config('MEDIUM_IMAGE_WIDTH'), (int)zen_config('MEDIUM_IMAGE_HEIGHT'));
+        $modal_link_img = zen_image($image['base_image'], $image['products_name'], (int)$tplSetting->MEDIUM_IMAGE_WIDTH, (int)$tplSetting->MEDIUM_IMAGE_HEIGHT);
 
         // Call the modal template to render the image and its modal
         require $template->get_template_dir('tpl_image_additional.php', DIR_WS_TEMPLATE, $current_page_base, 'modalboxes') . '/tpl_image_additional.php';

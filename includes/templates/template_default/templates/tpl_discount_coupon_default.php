@@ -12,7 +12,7 @@
 <h1 id="discountcouponInfoHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <div id="discountcouponInfoMainContent" class="content">
-<?php if (((int)zen_config('DEFINE_DISCOUNT_COUPON_STATUS') >= 1 and (int)zen_config('DEFINE_DISCOUNT_COUPON_STATUS') <= 2) && $text_coupon_help == '') {
+<?php if (((int)$tplSetting->DEFINE_DISCOUNT_COUPON_STATUS >= 1 && (int)$tplSetting->DEFINE_DISCOUNT_COUPON_STATUS <= 2) && $text_coupon_help == '') {
   require($define_page);
  } else {
   echo $text_coupon_help;

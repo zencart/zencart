@@ -25,7 +25,7 @@
 
 <?php
   if ($reviews_split->number_of_rows > 0) {
-    if (in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['1', '3'], true)) {
+    if (in_array($tplSetting->PREV_NEXT_BAR_LOCATION, ['1', '3'], true)) {
 ?>
 <div class="prod-list-wrap group">
 <div id="reviewsDefaultListingTopNumber" class="navSplitPagesResult back"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
@@ -39,14 +39,14 @@
 ?>
 
 <div class="reviews-wrapper group">
-<div class="smallProductImage back"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews->fields['products_id'] . '&reviews_id=' . $reviews->fields['reviews_id']) . '">' . zen_image(DIR_WS_IMAGES . $reviews->fields['products_image'], $reviews->fields['products_name'], zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT')) . '</a>'; ?></div>
+<div class="smallProductImage back"><?php echo '<a href="' . zen_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews->fields['products_id'] . '&reviews_id=' . $reviews->fields['reviews_id']) . '">' . zen_image(DIR_WS_IMAGES . $reviews->fields['products_image'], $reviews->fields['products_name'], $tplSetting->SMALL_IMAGE_WIDTH, $tplSetting->SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
 
 <div class="reviews-middle group back">
 <h2><?php echo $reviews->fields['products_name']; ?></h2>
 
 <div class="rating"><?php echo zen_image(DIR_WS_TEMPLATE_IMAGES . 'stars_' . $reviews->fields['reviews_rating'] . '.png', sprintf(TEXT_OF_5_STARS, $reviews->fields['reviews_rating'])), sprintf(TEXT_OF_5_STARS, $reviews->fields['reviews_rating']); ?></div>
 
-<div class="content"><?php echo zen_trunc_string(nl2br(zen_output_string_protected(stripslashes($reviews->fields['reviews_text'])), false), (int)zen_config('MAX_PREVIEW')); ?></div>
+<div class="content"><?php echo zen_trunc_string(nl2br(zen_output_string_protected(stripslashes($reviews->fields['reviews_text'])), false), (int)$tplSetting->MAX_PREVIEW); ?></div>
 
 <div><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, zen_date_short($reviews->fields['date_added'])); ?>&nbsp;<?php echo sprintf(TEXT_REVIEW_BY, zen_output_string_protected($reviews->fields['customers_name'])); ?></div>
 </div>
@@ -75,7 +75,7 @@
 
 
 <?php
-  if ($reviews_split->number_of_rows > 0 && in_array(zen_config('PREV_NEXT_BAR_LOCATION'), ['2', '3'], true)) {
+  if ($reviews_split->number_of_rows > 0 && in_array($tplSetting->PREV_NEXT_BAR_LOCATION, ['2', '3'], true)) {
 ?>
 <div class="prod-list-wrap group">
 <div id="reviewsDefaultListingBottomNumber" class="navSplitPagesResult back"><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>

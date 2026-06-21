@@ -6,13 +6,12 @@
 
 namespace Tests\Unit\testsTemplateResolver;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
+#[RunTestsInSeparateProcesses]
 class AdminInitTemplatesTest extends zcUnitTestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
-
     private string $repoRoot;
 
     public function setUp(): void

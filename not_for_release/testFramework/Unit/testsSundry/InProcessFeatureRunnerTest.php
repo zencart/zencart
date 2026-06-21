@@ -6,6 +6,7 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\InProcess\AdminFeatureRunner;
 use Tests\Support\InProcess\ApplicationStateResetter;
@@ -14,10 +15,9 @@ use Tests\Support\InProcess\FeatureRequest;
 use Tests\Support\InProcess\FeatureResponse;
 use Tests\Support\InProcess\StorefrontFeatureRunner;
 
+#[RunTestsInSeparateProcesses]
 class InProcessFeatureRunnerTest extends TestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
     private string $fixture;
 
     protected function setUp(): void

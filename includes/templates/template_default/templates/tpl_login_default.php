@@ -14,7 +14,7 @@
         echo $messageStack->output('login');
     } ?>
 
-    <?php if (zen_config('USE_SPLIT_LOGIN_MODE') === 'True' || $ec_button_enabled) { ?>
+    <?php if ($tplSetting->USE_SPLIT_LOGIN_MODE === 'True' || $ec_button_enabled) { ?>
         <!--BOF PPEC split login- DO NOT REMOVE-->
         <fieldset class="floatingBox back">
             <legend><?php echo HEADING_NEW_CUSTOMER_SPLIT; ?></legend>
