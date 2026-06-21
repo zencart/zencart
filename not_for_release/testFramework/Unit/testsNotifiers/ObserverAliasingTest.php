@@ -6,17 +6,16 @@
 
 namespace Tests\Unit\testsNotifiers;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcNotifierBaseAliasTestObject;
 use Tests\Support\zcNotifierTraitAliasTestObject;
 use Tests\Support\zcObserverAliasTestObject;
 use Tests\Support\zcUnitTestCase;
 
 
+#[RunTestsInSeparateProcesses]
 class ObserverAliasingTest extends zcUnitTestCase
 {
-    protected $preserveGlobalState = FALSE;
-    protected $runTestInSeparateProcess = TRUE;
-
     public function setUp(): void
     {
         parent::setUp();

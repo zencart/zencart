@@ -22,7 +22,7 @@ $breadcrumb->add(NAVBAR_TITLE_2);
 
 $history_split = [];
 $customer = new Customer;
-$accountHistory = $customer->getOrderHistory(zen_config('MAX_DISPLAY_ORDER_HISTORY'), $history_split);
+$accountHistory = $customer->getOrderHistory($tplSetting->MAX_DISPLAY_ORDER_HISTORY, $history_split);
 $accountHasHistory = !empty($accountHistory);
 
 // This should be last line of the script:

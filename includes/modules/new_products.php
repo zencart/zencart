@@ -56,10 +56,10 @@ $title = '';
 
 // show only when 1 or more
 if ($num_products_count > 0) {
-    if ($num_products_count < zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS') || zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS') === '0') {
+    if ($num_products_count < $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS || $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS === '0') {
         $col_width = floor(100/$num_products_count);
     } else {
-        $col_width = floor(100/zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS', 1));
+        $col_width = floor(100/$tplSetting->SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS);
     }
 
     while (!$new_products->EOF) {
@@ -72,7 +72,7 @@ if ($num_products_count > 0) {
         $new_products_link = zen_href_link(zen_get_info_page($new_products_id), 'cPath=' . $productsInCategory[$new_products_id] . '&products_id=' . $new_products_id);
         $new_products_name = zen_get_products_name($new_products->fields['products_id']);
 
-        if ($new_products->fields['products_image'] === '' && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '0') {
+        if ($new_products->fields['products_image'] === '' && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === '0') {
             $new_products_image = '';
         } else {
             $new_products_image =
@@ -89,7 +89,7 @@ if ($num_products_count > 0) {
         ];
 
         $col++;
-        if ($col >= zen_config('SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS')) {
+        if ($col >= $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_NEW_PRODUCTS) {
             $col = 0;
             $row++;
         }

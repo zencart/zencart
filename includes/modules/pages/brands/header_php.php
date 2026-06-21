@@ -38,7 +38,7 @@ $brands = [
 $listing = $db->Execute($listing_sql);
 foreach ($listing as $record) {
     if ($record['manufacturers_image'] === '' || !file_exists(DIR_WS_IMAGES . $record['manufacturers_image'])) {
-        $record['manufacturers_image'] = zen_config('PRODUCTS_IMAGE_NO_IMAGE');
+        $record['manufacturers_image'] = $tplSetting->PRODUCTS_IMAGE_NO_IMAGE;
     }
 
     if ($record['featured'] === '0') {
@@ -53,13 +53,13 @@ foreach ($listing as $record) {
 // These are "soft" configuration setting that can be overridden on a site-specific basis.
 //
 if (!defined('BRANDS_IMAGE_WIDTH')) {
-    define('BRANDS_IMAGE_WIDTH', zen_config('IMAGE_PRODUCT_LISTING_WIDTH'));
+    define('BRANDS_IMAGE_WIDTH', $tplSetting->IMAGE_PRODUCT_LISTING_WIDTH);
 }
 if (!defined('BRANDS_IMAGE_HEIGHT')) {
-    define('BRANDS_IMAGE_HEIGHT', zen_config('IMAGE_PRODUCT_LISTING_HEIGHT'));
+    define('BRANDS_IMAGE_HEIGHT', $tplSetting->IMAGE_PRODUCT_LISTING_HEIGHT);
 }
 if (!defined('BRANDS_MAX_COLUMNS')) {
-    $product_listing_columns_per_row = (int)zen_config('PRODUCT_LISTING_COLUMNS_PER_ROW');
+    $product_listing_columns_per_row = (int)$tplSetting->PRODUCT_LISTING_COLUMNS_PER_ROW;
     if ($product_listing_columns_per_row < 1) {
         $product_listing_columns_per_row = 1;
     }

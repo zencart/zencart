@@ -123,7 +123,7 @@ function zen_get_box_id(string $box_id)
  */
 function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_link = false)
 {
-    global $db, $zco_notifier, $current_page_base;
+    global $db, $zco_notifier, $current_page_base, $tplSetting;
 
 // show case only supercedes all other settings
     if (zen_config('STORE_STATUS') !== '0') {
@@ -190,11 +190,11 @@ function zen_get_buy_now_button($product_id, string $buy_now_link, $additional_l
         case ($button_check->fields['product_is_call'] == '1'):
             $return_button = '<a href="' . zen_href_link(FILENAME_ASK_A_QUESTION, 'pID=' . (int)$product_id . '&cfp=true', 'SSL') . '">' . TEXT_CALL_FOR_PRICE . '</a>';
             break;
-        case ($button_check->fields['products_quantity'] <= 0 and zen_config('SHOW_PRODUCTS_SOLD_OUT_IMAGE') === '1'):
+        case ($button_check->fields['products_quantity'] <= 0 && $tplSetting->SHOW_PRODUCTS_SOLD_OUT_IMAGE === '1'):
             global $template;
             $image = BUTTON_IMAGE_SOLD_OUT;
             $alt = BUTTON_SOLD_OUT_ALT;
-            if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found') {
+            if (strtolower($tplSetting->IMAGE_USE_CSS_BUTTONS) === 'yes' || strtolower($tplSetting->IMAGE_USE_CSS_BUTTONS) === 'found') {
                 $return_button = zen_image_button($image, $alt);
             } else {
                 $return_button = '<span class="text-center">' . zen_image($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language'] . '/') . $image, $alt, '', '', '') . '</span>';

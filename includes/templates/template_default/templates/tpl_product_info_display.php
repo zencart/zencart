@@ -43,7 +43,7 @@ if ($module_show_categories != 0) {
 
 <!--bof Prev/Next top position -->
 <?php
-if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '1' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
+if ($tplSetting->PRODUCT_INFO_PREVIOUS_NEXT === '1' || $tplSetting->PRODUCT_INFO_PREVIOUS_NEXT === '3') {
     /**
      * display the product previous/next helper
      */
@@ -220,7 +220,7 @@ require $template->get_template_dir('/tpl_modules_additional_images.php', DIR_WS
 
 <!--bof Prev/Next bottom position -->
 <?php
-if (zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '2' || zen_config('PRODUCT_INFO_PREVIOUS_NEXT') === '3') {
+if ($tplSetting->PRODUCT_INFO_PREVIOUS_NEXT === '2' || $tplSetting->PRODUCT_INFO_PREVIOUS_NEXT === '3') {
     /**
      * display the product previous/next helper
      */

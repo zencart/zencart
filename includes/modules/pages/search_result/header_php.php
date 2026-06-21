@@ -43,7 +43,7 @@ try {
     $listing_sql = $search->buildSearchSQL();
     $keywords = $searchOptions->keywords;
 
-    $result = new \splitPageResults($listing_sql, zen_config('MAX_DISPLAY_PRODUCTS_LISTING'), 'p.products_id', 'page');
+    $result = new \splitPageResults($listing_sql, $tplSetting->MAX_DISPLAY_PRODUCTS_LISTING, 'p.products_id', 'page');
     $zco_notifier->notify('NOTIFY_SEARCH_RESULTS', $listing_sql, $keywords, $result);
 
     // -----

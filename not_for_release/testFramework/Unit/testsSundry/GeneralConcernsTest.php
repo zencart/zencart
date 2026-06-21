@@ -6,13 +6,13 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Tests\Support\Traits\GeneralConcerns;
 
+#[RunTestsInSeparateProcesses]
 class GeneralConcernsTest extends TestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
 
     public function testLoadConfigureFileStillLoadsContextWhenHttpServerExistsButDbConstantsDoNot(): void
     {

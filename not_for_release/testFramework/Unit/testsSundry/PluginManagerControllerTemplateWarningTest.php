@@ -18,6 +18,7 @@ namespace Zencart\ViewBuilders {
 
 namespace Tests\Unit\testsSundry {
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 use Zencart\PluginSupport\PluginStatus;
 use Zencart\ViewBuilders\PluginManagerController;
@@ -26,10 +27,9 @@ use Zencart\ViewBuilders\TableViewDefinition;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
 
+#[RunTestsInSeparateProcesses]
 class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
 
     public function testTemplatePluginAssignedToOtherLanguageShowsUninstallWarning(): void
     {

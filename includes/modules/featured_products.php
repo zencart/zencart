@@ -59,10 +59,10 @@ $num_products_count = ($sql === '') ? 0 : $featured_products->RecordCount();
 
 // show only when 1 or more
 if ($num_products_count > 0) {
-    if ($num_products_count < zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') || zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') == 0) {
+    if ($num_products_count < $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS || $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS == 0) {
         $col_width = floor(100 / $num_products_count);
     } else {
-        $col_width = floor(100 / zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS', 1));
+        $col_width = floor(100 / $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS);
     }
     while (!$featured_products->EOF) {
         $product_info = new Product((int)$featured_products->fields['products_id']);
@@ -77,7 +77,7 @@ if ($num_products_count > 0) {
 
         $list_box_contents[$row][$col] = [
             'params' => 'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
-            'text' => (($data['products_image'] === '' and zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') == 0) ? ''
+            'text' => (($data['products_image'] === '' && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
                     : '<a href="'
                         . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . $productsInCategory[$data['products_id']] . '&products_id=' . $data['products_id']) . '">'
                         . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH'), zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT'))
@@ -87,7 +87,7 @@ if ($num_products_count > 0) {
         ];
 
         $col++;
-        if ($col > (zen_config('SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS') - 1)) {
+        if ($col > ($tplSetting->SHOW_PRODUCT_INFO_COLUMNS_FEATURED_PRODUCTS - 1)) {
             $col = 0;
             $row++;
         }

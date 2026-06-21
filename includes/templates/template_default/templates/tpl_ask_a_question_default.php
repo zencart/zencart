@@ -27,7 +27,7 @@
   } else {
 ?>
 
-<?php echo '<a href="' . zen_href_link(zen_get_info_page((int)$pid), 'products_id=' . (int)$pid, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . $product_details['products_image'], $product_details['products_name'], (int)zen_config('IMAGE_PRODUCT_LISTING_WIDTH'), (int)zen_config('IMAGE_PRODUCT_LISTING_HEIGHT')) . '</a>'; ?>
+<?php echo '<a href="' . zen_href_link(zen_get_info_page((int)$pid), 'products_id=' . (int)$pid, 'SSL') . '">' . zen_image(DIR_WS_IMAGES . $product_details['products_image'], $product_details['products_name'], (int)$tplSetting->IMAGE_PRODUCT_LISTING_WIDTH, (int)$tplSetting->IMAGE_PRODUCT_LISTING_HEIGHT) . '</a>'; ?>
 
 <div id="contactUsNoticeContent" class="content">
 <?php
