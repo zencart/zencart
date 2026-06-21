@@ -99,9 +99,11 @@ if (!empty($result->fields['template_settings'])) {
          * Array values (e.g. an explicit ['value' => ..., 'type' => ...] override) are left untouched
          * because they're handled by Settings::offsetSet()'s own type-casting.
          */
-        foreach ($tmp as $tmpKey => $tmpValue) {
-            if (is_scalar($tmpValue)) {
-                $tmp[$tmpKey] = (string)$tmpValue;
+        foreach ($tmp as $key => $value) {
+            if (is_bool($value)) {
+                $settings[$key] = $value ? 'true' : 'false';
+            } elseif (is_scalar($value)) {
+                $tmp[$key] = (string)$value;
             }
         }
         $tpl_settings = array_merge($tmp, $tpl_settings);
