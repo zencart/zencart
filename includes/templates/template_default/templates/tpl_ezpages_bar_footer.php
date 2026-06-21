@@ -17,7 +17,7 @@
 ?>
 <?php if (!empty($var_linksList)) { ?>
 <?php for ($i=1, $n=sizeof($var_linksList); $i<=$n; $i++) {  ?>
-<?php echo ($i <= $n ? zen_config('EZPAGES_SEPARATOR_FOOTER') : '') . "\n"; ?>
+<?php echo ($i <= $n ? $tplSetting->EZPAGES_SEPARATOR_FOOTER : '') . "\n"; ?>
   <a href="<?php echo $var_linksList[$i]['link']; ?>"><?php echo $var_linksList[$i]['name']; ?></a>
 <?php } // end FOR loop ?>
 <?php } ?>

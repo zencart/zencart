@@ -17,7 +17,7 @@ while (!$random_featured_categories->EOF) {
     $featured_category_box_counter++;
     $content .= "\n" . '  <div class="sideBoxContentItem">';
     $content .= '<a href="' . zen_href_link(FILENAME_DEFAULT, 'cPath=' . zen_get_generated_category_path_rev($data['categories_id'])). '">'
-        . zen_image(DIR_WS_IMAGES . $data['categories_image'], $data['categories_name'], (int)zen_config('SMALL_IMAGE_WIDTH'), (int)zen_config('SMALL_IMAGE_HEIGHT'));
+        . zen_image(DIR_WS_IMAGES . $data['categories_image'], $data['categories_name'], (int)$tplSetting->SMALL_IMAGE_WIDTH, (int)$tplSetting->SMALL_IMAGE_HEIGHT);
     $content .= '<br>' . $data['categories_name'] . '</a>';
     $content .= '</div>';
     $random_featured_categories->MoveNextRandom();

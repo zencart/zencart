@@ -25,7 +25,7 @@
 
     <div id="siteMapList"><?php echo $zen_SiteMapTree->buildTree(); ?>
      <ul>
-<?php if (zen_config('SHOW_ACCOUNT_LINKS_ON_SITE_MAP') === 'Yes') { ?>
+<?php if ($tplSetting->SHOW_ACCOUNT_LINKS_ON_SITE_MAP === 'Yes') { ?>
        <li><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . PAGE_ACCOUNT . '</a>'; ?>
        <ul>
          <li><?php echo '<a href="' . zen_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL') . '">' . PAGE_ACCOUNT_EDIT . '</a>'; ?></li>

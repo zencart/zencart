@@ -25,7 +25,7 @@
 
     // randomly select ONE featured product from the list retrieved:
     //$random_featured_product = zen_random_select($random_featured_products_query);
-    $random_featured_product = $db->ExecuteRandomMulti($random_featured_products_query, zen_config('MAX_RANDOM_SELECT_FEATURED_PRODUCTS'));
+    $random_featured_product = $db->ExecuteRandomMulti($random_featured_products_query, $tplSetting->MAX_RANDOM_SELECT_FEATURED_PRODUCTS);
 
     if ($random_featured_product->RecordCount() > 0)  {
       require($template->get_template_dir('tpl_featured.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_featured.php');

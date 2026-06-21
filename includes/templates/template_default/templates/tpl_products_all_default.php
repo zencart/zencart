@@ -14,7 +14,7 @@
 
 <div id="filter-wrapper" class="group">
 <?php
-if (zen_config('PRODUCT_LIST_ALPHA_SORTER') === 'true') {
+if ($tplSetting->PRODUCT_LIST_ALPHA_SORTER === 'true') {
     $form = zen_draw_form('filter', zen_href_link(FILENAME_SEARCH_RESULT), 'get');
     $form .= '<label class="inputLabel">' . TEXT_SHOW . '</label>';
     echo $form;

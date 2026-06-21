@@ -31,8 +31,8 @@ $numberOfItemsInCart = $_SESSION['cart']->count_contents();
 $cartTotalPrice = $_SESSION['cart']->show_total();
 
 
-$prodImgWidth = (int)zen_config('IMAGE_SHOPPING_CART_WIDTH');
-$prodImgHeight = (int)zen_config('IMAGE_SHOPPING_CART_HEIGHT');
+$prodImgWidth = (int)$tplSetting->IMAGE_SHOPPING_CART_WIDTH;
+$prodImgHeight = (int)$tplSetting->IMAGE_SHOPPING_CART_HEIGHT;
 
 $flagAnyOutOfStock = false;
 
@@ -110,7 +110,7 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
 
     $linkProductsImage = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
     $linkProductsName = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
-    $productsImage = ((int)zen_config('IMAGE_SHOPPING_CART_STATUS') === 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], $prodImgWidth, $prodImgHeight) : '');
+    $productsImage = ((int)$tplSetting->IMAGE_SHOPPING_CART_STATUS === 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], $prodImgWidth, $prodImgHeight) : '');
     $show_products_quantity_max = zen_get_products_quantity_order_max($products[$i]['id']);
     $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
     $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
@@ -128,14 +128,14 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
 
     $buttonDelete = true;
     $checkBoxDelete = true;
-    if ((int)zen_config('SHOW_SHOPPING_CART_DELETE') === 1) {
+    if ((int)$tplSetting->SHOW_SHOPPING_CART_DELETE === 1) {
         $checkBoxDelete = false;
-    } elseif ((int)zen_config('SHOW_SHOPPING_CART_DELETE') === 2) {
+    } elseif ((int)$tplSetting->SHOW_SHOPPING_CART_DELETE === 2) {
         $buttonDelete = false;
     }
 
     $buttonUpdate = '';
-    if ((int)zen_config('SHOW_SHOPPING_CART_UPDATE') === 1 || (int)zen_config('SHOW_SHOPPING_CART_UPDATE') === 3) {
+    if ((int)$tplSetting->SHOW_SHOPPING_CART_UPDATE === 1 || (int)$tplSetting->SHOW_SHOPPING_CART_UPDATE === 3) {
         if (!$showFixedQuantity) {
             $buttonUpdate = zen_image_submit(ICON_IMAGE_UPDATE, ICON_UPDATE_ALT);
         } else {
@@ -178,7 +178,7 @@ $cartShowTotal = $currencies->format($cartTotalPrice);
 
 // build shipping/items message with Tare included. We do this here in case any custom product stuff needs to alter the original values from the cart class
 $totalsDisplay = '';
-switch (zen_config('SHOW_TOTALS_IN_CART')) {
+switch ($tplSetting->SHOW_TOTALS_IN_CART) {
     case ('1'):
         $totalsDisplay = TEXT_TOTAL_ITEMS . $numberOfItemsInCart . TEXT_TOTAL_WEIGHT . $shipping_weight . TEXT_PRODUCT_WEIGHT_UNIT . TEXT_TOTAL_AMOUNT . $cartShowTotal;
         break;

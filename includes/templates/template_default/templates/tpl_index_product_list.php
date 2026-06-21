@@ -14,12 +14,12 @@
 <div class="centerColumn" id="indexProductList">
     <h1 id="productListHeading"><?= $current_categories_name ?></h1>
 <?php
-if (zen_config('PRODUCT_LIST_CATEGORIES_IMAGE_STATUS') === 'true') {
+if ($tplSetting->PRODUCT_LIST_CATEGORIES_IMAGE_STATUS === 'true') {
     // categories_image
     if ($categories_image = zen_get_categories_image($current_category_id)) {
 ?>
     <div id="categoryImgListing" class="categoryImg">
-        <?= zen_image(DIR_WS_IMAGES . $categories_image, '', (int)zen_config('CATEGORY_ICON_IMAGE_WIDTH'), (int)zen_config('CATEGORY_ICON_IMAGE_HEIGHT')) ?>
+        <?= zen_image(DIR_WS_IMAGES . $categories_image, '', (int)$tplSetting->CATEGORY_ICON_IMAGE_WIDTH, (int)$tplSetting->CATEGORY_ICON_IMAGE_HEIGHT) ?>
     </div>
 <?php
     }
@@ -35,7 +35,7 @@ if ($current_categories_description != '') {
 $check_for_alpha = $listing_sql;
 $check_for_alpha = $db->Execute($check_for_alpha);
 
-if ($do_filter_list || isset($_GET['alpha_filter_id']) || ($check_for_alpha->RecordCount() > 0 && zen_config('PRODUCT_LIST_ALPHA_SORTER') === 'true')) {
+if ($do_filter_list || isset($_GET['alpha_filter_id']) || ($check_for_alpha->RecordCount() > 0 && $tplSetting->PRODUCT_LIST_ALPHA_SORTER === 'true')) {
 ?>
     <br class="clearBoth" />
 <?php

@@ -41,6 +41,7 @@ class ResponsiveClassicPluginRegressionTest extends zcUnitTestCase
             }
         };
         $db = $GLOBALS['db'];
+        $tplSetting = new \TemplateSettings();
         $box_id = 'categories';
         $box_categories_array = [];
 

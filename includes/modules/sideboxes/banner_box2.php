@@ -10,14 +10,14 @@
 
 // test if box should display
 $show_banner_box2 = true;
-if (zen_config('SHOW_BANNERS_GROUP_SET8') === '') {
+if (empty($tplSetting->SHOW_BANNERS_GROUP_SET8)) {
   $show_banner_box2 = false;
 }
 
 if ($show_banner_box2 == true) {
   $banner_box = array();
   $banner_box[] = TEXT_BANNER_BOX2;
-  $banner_box_group= zen_config('SHOW_BANNERS_GROUP_SET8');
+  $banner_box_group= $tplSetting->SHOW_BANNERS_GROUP_SET8;
 
   require($template->get_template_dir('tpl_banner_box2.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_banner_box2.php');
 

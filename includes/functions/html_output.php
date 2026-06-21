@@ -169,11 +169,11 @@ function zen_resolve_template_fallback_asset_path(string $src, string $template_
  */
 function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters = '')
 {
-    global $template_dir;
+    global $template_dir, $tplSetting;
 
     //auto replace with defined missing image
-    if ($src === DIR_WS_IMAGES && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
-        $src = DIR_WS_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE');
+    if ($src === DIR_WS_IMAGES && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+        $src = DIR_WS_IMAGES . $tplSetting->PRODUCTS_IMAGE_NO_IMAGE;
     }
 
     if ((empty($src) || $src === DIR_WS_IMAGES) && zen_config('IMAGE_REQUIRED') === 'false') {
@@ -241,7 +241,7 @@ function zen_image_OLD($src, $title = '', $width = '', $height = '', $parameters
 if (!function_exists('zen_image')) {
 function zen_image($src, $title = '', $width = '', $height = '', $parameters = '')
 {
-    global $template_dir, $zco_notifier;
+    global $template_dir, $zco_notifier, $tplSetting;
     // off-site images hook
     $image_html = '';
     $GLOBALS['zco_notifier']->notify('NOTIFY_CATALOG_ZEN_IMAGE_OVERRIDE', compact('src', 'title', 'width', 'height', 'parameters'), $image_html);
@@ -259,8 +259,8 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     //auto replace with defined missing image
-    if ($src === DIR_WS_IMAGES && zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1') {
-        $src = DIR_WS_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE');
+    if ($src === DIR_WS_IMAGES && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1') {
+        $src = DIR_WS_IMAGES . $tplSetting->PRODUCTS_IMAGE_NO_IMAGE;
     }
 
     if ((empty($src) || ($src === DIR_WS_IMAGES)) && zen_config('IMAGE_REQUIRED') === 'false') {
@@ -280,8 +280,8 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     //image is defined but is missing
-    if (zen_config('PRODUCTS_IMAGE_NO_IMAGE_STATUS') === '1' && !is_file($src)) {
-        $src = DIR_WS_IMAGES . zen_config('PRODUCTS_IMAGE_NO_IMAGE');
+    if ($tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS === '1' && !is_file($src)) {
+        $src = DIR_WS_IMAGES . $tplSetting->PRODUCTS_IMAGE_NO_IMAGE;
     }
 
     $zco_notifier->notify('NOTIFY_OPTIMIZE_IMAGE', $template_dir, $src, $title, $width, $height, $parameters);
@@ -341,7 +341,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
             $image .= ' width="' . (int)round($width) . '" height="' . (int)round($height) . '"';
         }
     } elseif (strpos($src, 'http') !== 0) {
-        $image .= ' width="' . (int)zen_config('SMALL_IMAGE_WIDTH') . '" height="' . (int)zen_config('SMALL_IMAGE_HEIGHT') . '"';
+        $image .= ' width="' . (int)$tplSetting->SMALL_IMAGE_WIDTH . '" height="' . (int)$tplSetting->SMALL_IMAGE_HEIGHT . '"';
     }
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
@@ -365,8 +365,8 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
  * @since ZC v1.0.3
  */
   function zen_image_submit($image, $alt = '', $parameters = '', $sec_class = '') {
-    global $template, $current_page_base, $zco_notifier;
-    if ((strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found' && !is_file(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
+    global $template, $current_page_base, $zco_notifier, $tplSetting;
+    if ((strtolower($tplSetting->IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower($tplSetting->IMAGE_USE_CSS_BUTTONS) === 'found' && !is_file(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) && mb_strlen($alt)<30) return zenCssButton($image, $alt, 'submit', $sec_class, $parameters);
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_SUBMIT');
 
     $image_submit = '<input type="image" src="' . zen_output_string($template->get_template_dir($image, DIR_WS_TEMPLATE, $current_page_base, 'buttons/' . $_SESSION['language']) . '/' . $image) . '" alt="' . zen_output_string($alt) . '"';
@@ -384,7 +384,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
  * Output a function button in the selected language
  */
   function zen_image_button($image, $alt = '', $parameters = '', $sec_class = '') {
-    global $template, $current_page_base, $zco_notifier;
+    global $template, $current_page_base, $zco_notifier, $tplSetting;
 
     // inject rollover class if one is defined. NOTE: This could end up with 2 "class" elements if $parameters contains "class" already.
     if (defined('IMAGE_ROLLOVER_CLASS') && IMAGE_ROLLOVER_CLASS != '') {
@@ -392,7 +392,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     }
 
     $zco_notifier->notify('PAGE_OUTPUT_IMAGE_BUTTON');
-    if (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', 'yes')) === 'yes' || (strtolower(zen_config('IMAGE_USE_CSS_BUTTONS', '')) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
+    if (strtolower($tplSetting->IMAGE_USE_CSS_BUTTONS) === 'yes' || (strtolower($tplSetting->IMAGE_USE_CSS_BUTTONS) === 'found' && !file_exists(DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'buttons/' . $_SESSION['language'] . '/' . $image))) {
         if (preg_match('/\.(png|gif|jpe?g|webp)/i', $image)) {
             return zenCssButton($image, $alt, 'button', $sec_class, $parameters);
         }

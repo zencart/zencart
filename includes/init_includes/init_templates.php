@@ -96,6 +96,19 @@ if (empty($tpl_settings) || !is_array($tpl_settings)) {
 if (!empty($templateSelect->getActiveTemplateSettings())) {
     $tmp = json_decode($templateSelect->getActiveTemplateSettings(), true);
     if (is_array($tmp)) {
+        /**
+         * json_decode() preserves JSON's native types (e.g. a bare numeric override becomes a PHP
+         * int), but every other source of a $tplSetting value has always been a string (from DB table).
+         * Strict (===) comparisons against string literals throughout the codebase assume that contract,
+         * so scalars decoded from a per-template JSON override need to be normalized to match it.
+         * Array values (e.g. an explicit ['value' => ..., 'type' => ...] override) are left untouched
+         * because they're handled by Settings::offsetSet()'s own type-casting.
+         */
+        foreach ($tmp as $tmpKey => $tmpValue) {
+            if (is_scalar($tmpValue)) {
+                $tmp[$tmpKey] = (string)$tmpValue;
+            }
+        }
         $tpl_settings = array_merge($tmp, $tpl_settings);
     }
 }

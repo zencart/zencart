@@ -10,16 +10,16 @@
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 $breadcrumb->add(NAVBAR_TITLE);
 
-if (zen_config('DOWN_FOR_MAINTENANCE_COLUMN_RIGHT_OFF') === 'true') {
+if ($tplSetting->DOWN_FOR_MAINTENANCE_COLUMN_RIGHT_OFF === 'true') {
     $flag_disable_right = true;
 }
-if (zen_config('DOWN_FOR_MAINTENANCE_COLUMN_LEFT_OFF') === 'true') {
+if ($tplSetting->DOWN_FOR_MAINTENANCE_COLUMN_LEFT_OFF === 'true') {
     $flag_disable_left = true;
 }
-if (zen_config('DOWN_FOR_MAINTENANCE_FOOTER_OFF') === 'true') {
+if ($tplSetting->DOWN_FOR_MAINTENANCE_FOOTER_OFF === 'true') {
     $flag_disable_footer = true;
 }
-if (zen_config('DOWN_FOR_MAINTENANCE_HEADER_OFF') === 'true') {
+if ($tplSetting->DOWN_FOR_MAINTENANCE_HEADER_OFF === 'true') {
     $flag_disable_header = true;
 }
 
