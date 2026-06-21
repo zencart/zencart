@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -46,8 +48,13 @@ abstract class Settings implements ArrayAccess, Countable
         }
 
         foreach ($settings_array as $key => $value) {
-            // caveat: offsetExists() also checks for constants if the flag is enabled; bypass by calling setType() instead.
-            if (!$overwrite && $this->offsetExists($key)) {
+            /**
+             * Skip only keys already explicitly set in $settings. offsetExists() also treats a
+             * same-named global constant as "existing" (when $includeConstants is enabled), which
+             * would wrongly block a real override (e.g. from template_settings.php) from ever being
+             * stored whenever a config constant of the same name happens to be defined.
+             */
+            if (!$overwrite && array_key_exists($key ?? '', $this->settings)) {
                 continue;
             }
 
@@ -81,12 +88,12 @@ abstract class Settings implements ArrayAccess, Countable
             return $value;
         }
 
-        // Handle boolean strings if boolean requested
-        if (is_string($value) && str_starts_with($cast_to, 'bool') && in_array($value, ['true', 'TRUE', 'false', 'FALSE',])) {
-            return match ($value) {
-                'true', 'TRUE' => true,
-                'false', 'FALSE' => false,
-            };
+        // Handle boolean strings if boolean requested. Compare case-insensitively.
+        if (is_string($value) && str_starts_with($cast_to, 'bool')) {
+            $lowerValue = strtolower($value);
+            if ($lowerValue === 'true' || $lowerValue === 'false') {
+                return $lowerValue === 'true';
+            }
         }
 
         return match ($cast_to) {
@@ -194,8 +201,13 @@ abstract class Settings implements ArrayAccess, Countable
             return null;
         }
 
-        if ($this->includeConstants) {
-            return $this->returnCastValue($this->settings[$key] ?? $this->getGlobalConstant($key), $this->types[$key] ?? null);
+        if ($this->includeConstants && !array_key_exists($key, $this->settings)) {
+            /**
+             * Only fall back to the constant when no explicit value was ever set for $key.
+             * Using ?? here would also fall back whenever the explicit value is itself null,
+             * wrongly masking a deliberately-null override with the constant's value.
+             */
+            return $this->returnCastValue($this->getGlobalConstant($key), $this->types[$key] ?? null);
         }
 
         return $this->returnCastValue($this->settings[$key], $this->types[$key] ?? null);
