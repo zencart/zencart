@@ -83,12 +83,12 @@ abstract class Settings implements ArrayAccess, Countable
             return $value;
         }
 
-        // Handle boolean strings if boolean requested
-        if (is_string($value) && str_starts_with($cast_to, 'bool') && in_array($value, ['true', 'TRUE', 'false', 'FALSE',])) {
-            return match ($value) {
-                'true', 'TRUE' => true,
-                'false', 'FALSE' => false,
-            };
+        // Handle boolean strings if boolean requested. Compare case-insensitively.
+        if (is_string($value) && str_starts_with($cast_to, 'bool')) {
+            $lowerValue = strtolower($value);
+            if ($lowerValue === 'true' || $lowerValue === 'false') {
+                return $lowerValue === 'true';
+            }
         }
 
         return match ($cast_to) {
@@ -196,8 +196,13 @@ abstract class Settings implements ArrayAccess, Countable
             return null;
         }
 
-        if ($this->includeConstants) {
-            return $this->returnCastValue($this->settings[$key] ?? $this->getGlobalConstant($key), $this->types[$key] ?? null);
+        if ($this->includeConstants && !array_key_exists($key, $this->settings)) {
+            /**
+             * Only fall back to the constant when no explicit value was ever set for $key.
+             * Using ?? here would also fall back whenever the explicit value is itself null,
+             * wrongly masking a deliberately-null override with the constant's value.
+             */
+            return $this->returnCastValue($this->getGlobalConstant($key), $this->types[$key] ?? null);
         }
 
         return $this->returnCastValue($this->settings[$key], $this->types[$key] ?? null);
