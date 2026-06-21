@@ -127,7 +127,7 @@ class OtGvShippingDetailsTest extends zcUnitTestCase
         $orderTotal = $module->fetchOrderTotal();
         $orderTotalDetails = $module->fetchOrderTotalDetails();
         $expectedTotal = 48.29 - 5.00;
-        if (DISPLAY_PRICE_WITH_TAX !== 'true') {
+        if (zen_config('DISPLAY_PRICE_WITH_TAX') !== 'true') {
             $expectedTotal -= 0.50;
         }
         $this->assertSame($expectedTotal, round($orderTotal, 2));
