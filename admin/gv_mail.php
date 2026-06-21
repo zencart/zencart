@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -15,7 +17,8 @@ if (!empty($_GET['action']) && $_GET['action'] === 'set_editor') {
     zen_redirect(zen_href_link(FILENAME_GV_MAIL));
 }
 
-$_POST['amount'] = !empty($_POST['amount']) ? preg_replace('/[^0-9.%]/', '', $_POST['amount']) : 0;
+$cleanAmount = preg_replace('/[^0-9.]/', '', (string)$_POST['amount']);
+$_POST['amount'] = is_numeric($cleanAmount) ? zen_str_to_numeric($cleanAmount) : 0;
 $_POST['amount'] = abs($_POST['amount']);
 $action = isset($_GET['action']) ? zen_db_prepare_input($_GET['action']) : '';
 if ($action !== '') {
@@ -132,7 +135,7 @@ if ($action !== '') {
             break;
     }
 }
-if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
+if (!empty($_GET['mail_sent_to'])) {
     $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['recip_count'], $_GET['mail_sent_to']), 'success');
 }
 ?>
@@ -147,7 +150,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
       let error_message = "";
 
       function check_recipient(field_cust, field_input, message) {
-//  if (form.elements[field_cust] && form.elements[field_cust].type != "hidden" && form.elements[field_input] && form.elements[field_input].type != "hidden") {
+        //  if (form.elements[field_cust] && form.elements[field_cust].type != "hidden" && form.elements[field_input] && form.elements[field_input].type != "hidden") {
         const field_value_cust = form.elements[field_cust].value;
         const field_value_input = form.elements[field_input].value;
 
@@ -220,7 +223,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             </tr>
             <tr>
               <td class="text-right"><b><?= TEXT_AMOUNT ?></b></td>
-              <td><?= $currencies->format(nl2br(htmlspecialchars(stripslashes($_POST['amount']), ENT_COMPAT, CHARSET, true), false)) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : '') ?>
+              <td><?= $currencies->format((string)$_POST['amount']) . ($_POST['amount'] <= 0 ? '&nbsp;<span class="alert">' . ERROR_NO_AMOUNT_ENTERED . '</span>' : '') ?>
               </td>
             </tr>
             <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
@@ -243,7 +246,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
           /* Re-Post all POST'ed variables */
           foreach ($_POST as $key => $value) {
               if (!is_array($value)) {
-                  echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, true));
+                  echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes((string)$value), ENT_COMPAT, CHARSET, true));
               }
           }
           echo '</form>';
