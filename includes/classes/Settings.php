@@ -48,10 +48,12 @@ abstract class Settings implements ArrayAccess, Countable
         }
 
         foreach ($settings_array as $key => $value) {
-            // Skip only keys already explicitly set in $settings. offsetExists() also treats a
-            // same-named global constant as "existing" (when $includeConstants is enabled), which
-            // would wrongly block a real override (e.g. from template_settings.php) from ever being
-            // stored whenever a config constant of the same name happens to be defined.
+            /**
+             * Skip only keys already explicitly set in $settings. offsetExists() also treats a
+             * same-named global constant as "existing" (when $includeConstants is enabled), which
+             * would wrongly block a real override (e.g. from template_settings.php) from ever being
+             * stored whenever a config constant of the same name happens to be defined.
+             */
             if (!$overwrite && array_key_exists($key ?? '', $this->settings)) {
                 continue;
             }
