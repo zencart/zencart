@@ -124,7 +124,7 @@ if ($category_depth == 'nested')
 
   //  } elseif ($category_depth == 'products' || isset($_GET['manufacturers_id']) || isset($_GET['music_genre_id'])) {
 } elseif ($category_depth == 'products' || zen_check_url_get_terms()) {
-  if ($tplSetting->SHOW_PRODUCT_INFO_ALL_PRODUCTS === '1') {
+  if (zen_config('SHOW_PRODUCT_INFO_ALL_PRODUCTS') === '1') {
     // set a category filter
     $new_products_category_id = $cPath;
   } else {
