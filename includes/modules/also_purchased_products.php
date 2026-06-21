@@ -11,8 +11,8 @@
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
-if (isset($_GET['products_id']) && zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS') > 0 && zen_config('MIN_DISPLAY_ALSO_PURCHASED') > 0) {
-    $also_purchased_products = $db->ExecuteRandomMulti(sprintf(SQL_ALSO_PURCHASED, (int)$_GET['products_id'], (int)$_GET['products_id']), (int)zen_config('MAX_DISPLAY_ALSO_PURCHASED'));
+if (isset($_GET['products_id']) && $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS > 0 && $tplSetting->MIN_DISPLAY_ALSO_PURCHASED > 0) {
+    $also_purchased_products = $db->ExecuteRandomMulti(sprintf(SQL_ALSO_PURCHASED, (int)$_GET['products_id'], (int)$_GET['products_id']), (int)$tplSetting->MAX_DISPLAY_ALSO_PURCHASED);
 
     $num_products_ordered = $also_purchased_products->RecordCount();
 
@@ -22,11 +22,11 @@ if (isset($_GET['products_id']) && zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PU
     $title = '';
 
     // show only when 1 or more and equal to or greater than minimum set in admin
-    if ($num_products_ordered >= zen_config('MIN_DISPLAY_ALSO_PURCHASED') && $num_products_ordered > 0) {
-        if ($num_products_ordered < zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS')) {
+    if ($num_products_ordered >= $tplSetting->MIN_DISPLAY_ALSO_PURCHASED && $num_products_ordered > 0) {
+        if ($num_products_ordered < $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS) {
             $col_width = floor(100 / $num_products_ordered);
         } else {
-            $col_width = floor(100 / zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS', 1));
+            $col_width = floor(100 / $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS);
         }
 
         while (!$also_purchased_products->EOF) {
@@ -43,14 +43,14 @@ if (isset($_GET['products_id']) && zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PU
             ];
 
             $col++;
-            if ($col > (zen_config('SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS') - 1)) {
+            if ($col > ($tplSetting->SHOW_PRODUCT_INFO_COLUMNS_ALSO_PURCHASED_PRODUCTS - 1)) {
                 $col = 0;
                 $row++;
             }
             $also_purchased_products->MoveNextRandom();
         }
     }
-    if ($also_purchased_products->RecordCount() > 0 && $also_purchased_products->RecordCount() >= zen_config('MIN_DISPLAY_ALSO_PURCHASED')) {
+    if ($also_purchased_products->RecordCount() > 0 && $also_purchased_products->RecordCount() >= $tplSetting->MIN_DISPLAY_ALSO_PURCHASED) {
         $title = '<h2 class="centerBoxHeading">' . TEXT_ALSO_PURCHASED_PRODUCTS . '</h2>';
         $zc_show_also_purchased = true;
     }

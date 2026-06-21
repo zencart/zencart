@@ -37,11 +37,11 @@ $category_icon_display_image = zen_get_categories_image((int)$current_category_i
 
 switch(true) {
   // name only
-  case ((int)zen_config('PRODUCT_INFO_CATEGORIES_IMAGE_STATUS') === 1):
+  case ((int)$tplSetting->PRODUCT_INFO_CATEGORIES_IMAGE_STATUS === 1):
     $category_icon_display_image = '';
     break;
   // name and image but name only when blank
-  case ((int)zen_config('PRODUCT_INFO_CATEGORIES_IMAGE_STATUS') === 2 && $category_icon_display_image === ''):
+  case ((int)$tplSetting->PRODUCT_INFO_CATEGORIES_IMAGE_STATUS === 2 && $category_icon_display_image === ''):
     $category_icon_display_image = '';
     break;
   default:

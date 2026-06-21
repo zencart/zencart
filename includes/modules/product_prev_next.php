@@ -93,7 +93,7 @@ if ($prev_next_override === false && (int)$tplSetting->PRODUCT_INFO_PREVIOUS_NEX
   // 0 = button only 1= button and product image 2= product image only
   $previous_button = '';
   $next_item_button = '';
-  if ((int)zen_config('SHOW_PREVIOUS_NEXT_STATUS') === 0 || (int)zen_config('SHOW_PREVIOUS_NEXT_IMAGES') !== 2) {
+  if ((int)$tplSetting->SHOW_PREVIOUS_NEXT_STATUS === 0 || (int)$tplSetting->SHOW_PREVIOUS_NEXT_IMAGES !== 2) {
     $previous_button = zen_image_button(BUTTON_IMAGE_PREVIOUS, BUTTON_PREVIOUS_ALT);
     $next_item_button = zen_image_button(BUTTON_IMAGE_NEXT, BUTTON_NEXT_ALT);
   }
@@ -101,9 +101,9 @@ if ($prev_next_override === false && (int)$tplSetting->PRODUCT_INFO_PREVIOUS_NEX
   $next_item_image = '';
   // identify what constitutes equality and then not that.
   $prev_not_equal_next = !((empty($previous) && empty($next_item)) || (!empty($previous) && !empty($next_item) && $previous == $next_item));
-  if ((int)zen_config('SHOW_PREVIOUS_NEXT_STATUS') !== 0 && (int)zen_config('SHOW_PREVIOUS_NEXT_IMAGES') >= 1 && $prev_not_equal_next) {
-    $previous_image = (!empty($previous) ? zen_get_products_image($previous, (int)zen_config('PREVIOUS_NEXT_IMAGE_WIDTH'), (int)zen_config('PREVIOUS_NEXT_IMAGE_HEIGHT')) : '');
-    $next_item_image = (!empty($next_item) ? zen_get_products_image($next_item, (int)zen_config('PREVIOUS_NEXT_IMAGE_WIDTH'), (int)zen_config('PREVIOUS_NEXT_IMAGE_HEIGHT')) : '');
+  if ((int)$tplSetting->SHOW_PREVIOUS_NEXT_STATUS !== 0 && (int)$tplSetting->SHOW_PREVIOUS_NEXT_IMAGES >= 1 && $prev_not_equal_next) {
+    $previous_image = (!empty($previous) ? zen_get_products_image($previous, (int)$tplSetting->PREVIOUS_NEXT_IMAGE_WIDTH, (int)$tplSetting->PREVIOUS_NEXT_IMAGE_HEIGHT) : '');
+    $next_item_image = (!empty($next_item) ? zen_get_products_image($next_item, (int)$tplSetting->PREVIOUS_NEXT_IMAGE_WIDTH, (int)$tplSetting->PREVIOUS_NEXT_IMAGE_HEIGHT) : '');
   }
 }
 // eof: previous next

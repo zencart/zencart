@@ -61,10 +61,10 @@ $num_products_count = ($specials_index_query === '') ? 0 : $specials_index->Reco
 
 // show only when 1 or more
 if ($num_products_count > 0) {
-    if ($num_products_count < zen_config('SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS') || zen_config('SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS') == 0) {
+    if ($num_products_count < $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS || $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS == 0) {
         $col_width = floor(100 / $num_products_count);
     } else {
-        $col_width = floor(100 / zen_config('SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS', 1));
+        $col_width = floor(100 / $tplSetting->SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS);
     }
 
     $list_box_contents = [];
@@ -95,7 +95,7 @@ if ($num_products_count > 0) {
         ];
 
         $col++;
-        if ($col > (zen_config('SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS') - 1)) {
+        if ($col > ($tplSetting->SHOW_PRODUCT_INFO_COLUMNS_SPECIALS_PRODUCTS - 1)) {
             $col = 0;
             $row++;
         }
