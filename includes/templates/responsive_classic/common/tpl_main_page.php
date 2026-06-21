@@ -195,7 +195,6 @@ if (!$flag_disable_left) {
 
 
 <?php
-//if ((int)$tplSetting->COLUMN_RIGHT_STATUS === 0 || (zen_config('CUSTOMERS_APPROVAL') === '1' and $_SESSION['customer_id'] == '') || ((int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === 1 && zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF') === 'true' && $_SESSION['customers_authorization'] != 0)) {
 if ((int)$tplSetting->COLUMN_RIGHT_STATUS === 0 || (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()) || ((int)zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === 1 && zen_config('CUSTOMERS_AUTHORIZATION_COLUMN_RIGHT_OFF') === 'true' && ($_SESSION['customers_authorization'] != 0 || !zen_is_logged_in()))) {
   // global disable of column_right
   $flag_disable_right = true;

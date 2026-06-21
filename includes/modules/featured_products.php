@@ -77,7 +77,7 @@ if ($num_products_count > 0) {
 
         $list_box_contents[$row][$col] = [
             'params' => 'class="centerBoxContentsFeatured centeredContent back"' . ' ' . 'style="width:' . $col_width . '%;"',
-            'text' => (($data['products_image'] === '' and $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
+            'text' => (($data['products_image'] === '' && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
                     : '<a href="'
                         . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . $productsInCategory[$data['products_id']] . '&products_id=' . $data['products_id']) . '">'
                         . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH'), zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT'))

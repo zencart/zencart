@@ -47,7 +47,7 @@
       $content .= '</a>';
 
       if (zen_config('SHOW_COUNTS') === 'true') {
-        if (($tplSetting->CATEGORIES_COUNT_ZERO === '1' and $box_categories_array[$i]['count'] == 0) or $box_categories_array[$i]['count'] >= 1) {
+        if (($tplSetting->CATEGORIES_COUNT_ZERO === '1' && $box_categories_array[$i]['count'] == 0) || $box_categories_array[$i]['count'] >= 1) {
           $content .= $tplSetting->CATEGORIES_COUNT_PREFIX . $box_categories_array[$i]['count'] . $tplSetting->CATEGORIES_COUNT_SUFFIX;
         }
       }

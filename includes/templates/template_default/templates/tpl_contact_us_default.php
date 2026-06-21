@@ -31,7 +31,7 @@
   } else {
 ?>
 
-<?php if ($tplSetting->DEFINE_CONTACT_US_STATUS >= '1' and $tplSetting->DEFINE_CONTACT_US_STATUS <= '2') { ?>
+<?php if ($tplSetting->DEFINE_CONTACT_US_STATUS >= '1' && $tplSetting->DEFINE_CONTACT_US_STATUS <= '2') { ?>
 <div id="contactUsNoticeContent" class="content">
 <?php
 /**
