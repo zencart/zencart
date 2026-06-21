@@ -5,11 +5,13 @@
  */
 
 use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
 /**
  * Testing Library
  */
+#[RunTestsInSeparateProcesses]
 class AdminUrlGenerationTest extends zcUnitTestCase
 {
     public function setUp(): void

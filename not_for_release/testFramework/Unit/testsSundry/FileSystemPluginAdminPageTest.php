@@ -17,8 +17,6 @@ class FileSystemPluginAdminPageTest extends TestCase
     private const TEST_PLUGIN = 'UnitTestAdminPagePlugin';
     private const TEST_VERSION = 'v1.0.0';
 
-    protected $preserveGlobalState = false;
-
     private string $pluginRoot;
 
     public static function setUpBeforeClass(): void
