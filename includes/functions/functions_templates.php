@@ -263,3 +263,33 @@ function zen_deregister_template_id(int|string $id): bool
     $templateSelect = new \Zencart\Templates\TemplateSelect();
     return $templateSelect->deregisterTemplateId((int)$id);
 }
+
+/**
+ * Casts scalar values in a decoded per-template settings override array to strings.
+ *
+ * json_decode() preserves JSON's native types (e.g. a bare numeric override becomes a PHP int,
+ * and a bare true/false becomes a PHP bool), but every other source of a $tplSetting value has
+ * always been a string (from DB table).
+ * Strict (===) comparisons against string literals throughout the codebase assume that contract,
+ * so scalars decoded from a per-template JSON override need to be normalized to match it.
+ * Array values (e.g. an explicit ['value' => ..., 'type' => ...] override) are left untouched
+ * because they're handled by Settings::offsetSet()'s own type-casting.
+ *
+ * Booleans need their own case rather than a plain (string) cast:
+ * PHP casts true/false to "1"/"" (empty string), not the 'true'/'false' strings we usually use
+ * (the same convention Settings::returnCastValue() special-cases for boolean strings).
+ *
+ * @since ZC v3.0.0
+ */
+function zen_normalize_scalar_template_settings(array $settings): array
+{
+    foreach ($settings as $key => $value) {
+        if (is_bool($value)) {
+            $settings[$key] = $value ? 'true' : 'false';
+        } elseif (is_scalar($value)) {
+            $settings[$key] = (string)$value;
+        }
+    }
+
+    return $settings;
+}
