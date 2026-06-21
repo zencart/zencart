@@ -39,6 +39,16 @@
 
 declare(strict_types=1);
 
+// This is a dev-only CLI tool that recursively walks a directory and, with --apply,
+// overwrites every .php file it finds a hit in. It must never run under a web SAPI:
+// if this file were ever reachable over HTTP (e.g. accidentally deployed, or via the
+// old php-cgi query-string-as-argv misconfiguration), that combination becomes an
+// arbitrary-file-write primitive. Refuse outright unless invoked from the CLI.
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('This script is a CLI-only developer tool and cannot be run via a web server.');
+}
+
 const TPLSETTING_KEYS = [
     'BEST_SELLERS_TRUNCATE',
     'BEST_SELLERS_TRUNCATE_MORE',
@@ -175,6 +185,8 @@ const TPLSETTING_KEYS = [
 
 function main(array $argv): int
 {
+    $repoRoot = realpath(dirname(__DIR__, 2));
+
     $targetDir = null;
     $apply = false;
     foreach (array_slice($argv, 1) as $arg) {
@@ -187,6 +199,15 @@ function main(array $argv): int
 
     if ($targetDir === null || !is_dir($targetDir)) {
         fwrite(STDERR, "Usage: php convert-tplsettings.php <target-dir> [--apply]\n(<target_dir> would be your /includes or a zc_plugins /catalog dir.)\n(Use --apply to write the fixes. Default mode is reporting only.)\nSee source code for more details.\n");
+        return 1;
+    }
+
+    // Containment check: refuse to touch anything outside the repo, even if a hostile
+    // or mistaken path was passed - this is the thing that turns "wrote N files" into
+    // "wrote N files in /etc" if --apply is ever combined with a bad target-dir.
+    $resolvedTarget = realpath($targetDir);
+    if ($resolvedTarget === false || !str_starts_with($resolvedTarget . DIRECTORY_SEPARATOR, $repoRoot . DIRECTORY_SEPARATOR)) {
+        fwrite(STDERR, "Refusing to run: <target-dir> must resolve to a path inside the repo ($repoRoot).\n");
         return 1;
     }
 
