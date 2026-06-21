@@ -6,6 +6,7 @@
 
 namespace Tests\Unit\testsTemplateResolver;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
 /**
@@ -13,11 +14,9 @@ use Tests\Support\zcUnitTestCase;
  * - boolean string casts must recognize mixed-case 'True'/'False', not just all-lower/all-upper.
  * - an explicitly-stored null value must not be masked by a same-named global constant.
  */
+#[RunTestsInSeparateProcesses]
 class SettingsValueCastingTest extends zcUnitTestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
-
     public function setUp(): void
     {
         parent::setUp();

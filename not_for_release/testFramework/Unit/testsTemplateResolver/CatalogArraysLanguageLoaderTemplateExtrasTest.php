@@ -6,14 +6,14 @@
 
 namespace Tests\Unit\testsTemplateResolver;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcTemplateResolverTest;
 use Zencart\LanguageLoader\CatalogArraysLanguageLoader;
 use Zencart\ResourceLoaders\TemplateResolver;
 
+#[RunTestsInSeparateProcesses]
 class CatalogArraysLanguageLoaderTemplateExtrasTest extends zcTemplateResolverTest
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
 
     private const TEMPLATE_PLUGIN = 'UnitTestCatalogTemplateLang';
     private const TEMPLATE_KEY = 'unit_test_catalog_template_lang';

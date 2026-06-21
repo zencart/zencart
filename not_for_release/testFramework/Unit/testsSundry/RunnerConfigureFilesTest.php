@@ -6,13 +6,12 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 
+#[RunTestsInSeparateProcesses]
 class RunnerConfigureFilesTest extends TestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
-
     protected function tearDown(): void
     {
         putenv('GITHUB_WORKSPACE');

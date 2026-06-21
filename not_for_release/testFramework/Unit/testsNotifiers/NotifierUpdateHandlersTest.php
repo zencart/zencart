@@ -6,15 +6,14 @@
 
 namespace Tests\Unit\testsNotifiers;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcNotifierTestObserver;
 use Tests\Support\zcUnitTestCase;
 
 
+#[RunTestsInSeparateProcesses]
 class NotifierUpdateHandlersTest extends zcUnitTestCase
 {
-    protected $preserveGlobalState = FALSE;
-    protected $runTestInSeparateProcess = TRUE;
-
     protected $base;
 
     public function setUp(): void

@@ -6,6 +6,7 @@
 
 namespace Tests\Unit\testsTemplateResolver;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
 /**
@@ -13,11 +14,9 @@ use Tests\Support\zcUnitTestCase;
  * override and a same-named global constant, as consumed by TemplateSettings
  * (the $tplSetting object set up by includes/init_includes/init_templates.php).
  */
+#[RunTestsInSeparateProcesses]
 class SettingsTemplateOverrideTest extends zcUnitTestCase
 {
-    protected $runTestInSeparateProcess = true;
-    protected $preserveGlobalState = false;
-
     public function setUp(): void
     {
         parent::setUp();
