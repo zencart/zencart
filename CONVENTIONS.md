@@ -53,6 +53,38 @@ endforeach;
 
 ---
 
+## Comment style for new code
+
+- Single-line comments: `//` is fine.
+- Multi-line comments: use `/** */` docblock style, not a run of `//` lines — even when the
+  comment isn't above a class/method/property declaration (e.g. explaining a block of logic
+  mid-method). PHPStorm renders `/**` as a doc-comment regardless of what follows, and some
+  tooling (minifiers, AI code-stripping passes) targets `//` line comments more aggressively,
+  so doc-style blocks are more reliably preserved across multiple lines.
+
+```php
+// Correct — single line
+$total = $price * $qty; // apply quantity
+
+/**
+ * Correct — multi-line, documents the code immediately below.
+ */
+class Foo
+{
+}
+
+/**
+ * Correct — also fine mid-method, documenting the next statement.
+ */
+$result = doSomethingNonObvious();
+
+// Wrong — multi-line using //
+// Explain the non-obvious reason here.
+// across multiple lines like this.
+```
+
+---
+
 ## Naming conventions for new code
 
 | Construct | Convention | Example |
