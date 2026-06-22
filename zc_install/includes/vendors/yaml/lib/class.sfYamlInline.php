@@ -1,7 +1,9 @@
 <?php
 
 /*
- * This file is part of the symfony package.
+ * This file (was originally) part of the symfony v1 package.
+ * The read-only portion of the class has been extracted for use in Zen Cart.
+ *
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
@@ -15,7 +17,7 @@
  *
  * @subpackage yaml
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
+ * @version $Id: DrByte 2026-06-21 Modified in v3.0.0 $
  * @codeCoverageIgnore
  */
 class sfYamlInline
@@ -89,7 +91,7 @@ class sfYamlInline
       case is_resource($value):
         throw new InvalidArgumentException('Unable to dump PHP resources in a YAML file.');
       case is_object($value):
-        return '!!php/object:'.serialize($value);
+        throw new InvalidArgumentException('Unable to dump PHP objects in a YAML file.');
       case is_array($value):
         return self::dumpArray($value);
       case null === $value:
@@ -397,7 +399,7 @@ class sfYamlInline
       case 0 === strpos($scalar, '! '):
         return intval(self::parseScalar(substr($scalar, 2)));
       case 0 === strpos($scalar, '!!php/object:'):
-        return unserialize(substr($scalar, 13));
+        throw new InvalidArgumentException('Unable to parse PHP objects from a YAML file.');
       case ctype_digit($scalar):
         $raw = $scalar;
         $cast = intval($scalar);
