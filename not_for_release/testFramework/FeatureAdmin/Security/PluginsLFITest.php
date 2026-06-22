@@ -38,7 +38,7 @@ class PluginsLFITest extends zcInProcessFeatureTestCaseAdmin
 
         TestDb::update(
             'plugin_control',
-            ['status' => 1, 'version' => 'v3.0.3'],
+            ['status' => 1, 'version' => 'v3.1.0'],
             'name = :name',
             [':name' => 'Display Logs']
         );
