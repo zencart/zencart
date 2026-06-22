@@ -4,6 +4,9 @@
 //
 // Copyright (c) 2012-2020, Vinos de Frutas Tropicales (lat9)
 //
+if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
+    exit('Invalid Access');
+}
 
 // -----
 // Functions that gather the log-related files and provide the ascending/descending sort thereof.
@@ -33,6 +36,15 @@ function sortLogSizeDesc($a, $b)
 // Start main processing ...
 //
 require 'includes/application_top.php';
+
+// -----
+// If the current admin isn't a superuser, redirect to the "denied" page
+// and note the occurrence in the admin activity log.
+//
+if (!zen_is_superuser()) {
+    zen_record_admin_activity('Attempted access to unauthorized page [display_logs]. Redirected to DENIED page instead.', 'notice');
+    zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
+}
 
 // -----
 // If debug-logs-only has been selected, display only those files.  If multiple file prefixes are
