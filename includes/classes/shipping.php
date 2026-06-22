@@ -76,18 +76,21 @@ class shipping
         $modules_to_quote = [];
 
         $module_name = (empty($module)) ? '0' : substr($module['id'], 0, strpos($module['id'], '_'));
-        if (!empty($module) && in_array($module_name . '.php', $this->modules) && isset($modules_found[$module_name])) {
+        if (!empty($module) && in_array($module_name . '.php', $this->modules) && isset($modules_found[$module_name . '.php'])) {
             $modules_to_quote[] = [
                 'class' => $module_name,
                 'file' => $module_name . '.php',
             ];
         } else {
             foreach ($this->modules as $value) {
-                $class = pathinfo($value, PATHINFO_FILENAME);
-                $modules_to_quote[] = [
-                    'class' => $class,
-                    'file' => $value,
-                ];
+                // double check that the module really exists before adding to the array
+                if (isset($modules_found[$value])) {
+                    $class = pathinfo($value, PATHINFO_FILENAME);
+                    $modules_to_quote[] = [
+                        'class' => $class,
+                        'file' => $value,
+                    ];
+                }
             }
         }
 
