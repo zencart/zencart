@@ -68,7 +68,7 @@ class zcAjaxOptionsStockDependencies extends base
                 $temp = explode(':', $current_value);
                 $tmp_options_id = (int)$temp[0];
                 $tmp_options_values_id = (int)$temp[1];
-                $join_clause .= (" INNER JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK_ATTRIBUTES . " $sa ON $sa.products_id = $products_id AND $sa.options_id = $tmp_options_id AND $sa.options_values_id = $tmp.options_values_id");
+                $join_clause .= (" INNER JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK_ATTRIBUTES . " $sa ON $sa.products_id = $products_id AND $sa.options_id = $tmp_options_id AND $sa.options_values_id = $tmp_options_values_id");
                 $and_clause .= " AND sa0.pos_id = $sa.pos_id";
             }
             unset($temp, $values_array);

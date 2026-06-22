@@ -246,7 +246,7 @@ switch ($action) {
 
         $contents = ['form' => zen_draw_form('status', FILENAME_PRODUCTS_OPTIONS_STOCK_NAMES, 'action=deleteconfirm', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('nID', $nInfo->pos_name_id)];
         $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
-        $contents[] = ['text' => '<br><b>' . $nInfo->pos_name . '</b>'];
+        $contents[] = ['text' => '<br><b>' . zen_output_string_protected($nInfo->pos_name) . '</b>'];
         $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK_NAMES, 'nID=' . $nInfo->pos_name_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
         break;
 
