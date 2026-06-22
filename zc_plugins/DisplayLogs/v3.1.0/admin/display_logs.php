@@ -1,8 +1,8 @@
 <?php
 // -----
-// Part of the "Display Logs" plugin for Zen Cart v1.5.7 or later
+// Part of the "Display Logs" plugin for Zen Cart v2.2.0 or later
 //
-// Copyright (c) 2012-2020, Vinos de Frutas Tropicales (lat9)
+// Copyright (c) 2012-2026, Vinos de Frutas Tropicales (lat9)
 //
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
     exit('Invalid Access');
@@ -80,21 +80,21 @@ if ($max_logs_to_display < 1) {
 // -----
 // Gather the current log files.
 //
-$logFiles = array();
-foreach (array (DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs') as $logFolder) {
+$logFiles = [];
+foreach ([DIR_FS_LOGS, DIR_FS_SQL_CACHE, DIR_FS_CATALOG . '/includes/modules/payment/paypal/logs'] as $logFolder) {
     $logFolder = rtrim($logFolder, '/');
     $dir = @dir($logFolder);
-    if ($dir != NULL) {
+    if ($dir !== null) {
         while ($file = $dir->read()) {
-            if ( ($file != '.') && ($file != '..') && substr($file, 0, 1) != '.') {
+            if ($file !== '.' && $file !== '..' && !str_starts_with($file, '.')) {
                 if (preg_match('/^' . $files_to_match . '\.log$/', $file)) {
-                    if ($files_to_exclude == '' || !preg_match('/^' . $files_to_exclude . '\.log$/', $file)) {
+                    if ($files_to_exclude === '' || !preg_match('/^' . $files_to_exclude . '\.log$/', $file)) {
                         $hash = hash('sha1', $logFolder . '/' . $file);
-                        $logFiles[$hash] = array (
+                        $logFiles[$hash] = [
                             'name'  => $logFolder . '/' . $file,
                             'mtime' => filemtime($logFolder . '/' . $file),
                             'filesize' => filesize($logFolder . '/' . $file)
-                        );
+                        ];
                     }
                 }
             }
@@ -141,16 +141,16 @@ reset($logFiles);
 $numLogFiles = count($logFiles);
 if ($numLogFiles > $max_logs_to_display) {
     for ($i = 0, $n = $numLogFiles - $max_logs_to_display; $i < $n; $i++) {
-        array_pop ($logFiles);
+        array_pop($logFiles);
     }
 }
 
 // -----
 // If any file delete requests have been made, process them first.
 //
-$action = (isset($_GET['action'])) ? $_GET['action'] : '';
-if ($action == 'delete') {
-    if (isset($_POST['dList']) && count($_POST['dList']) != 0) {
+$action = $_GET['action'] ?? '';
+if ($action === 'delete') {
+    if (count($_POST['dList'] ?? []) !== 0) {
         $numFiles = count($_POST['dList']);
         $filesDeleted = 0;
         foreach ($_POST['dList'] as $currentHash => $value) {
@@ -161,7 +161,7 @@ if ($action == 'delete') {
                 }
             }
         }
-        if ($filesDeleted == $numFiles) {
+        if ($filesDeleted === $numFiles) {
             $messageStack->add_session(sprintf(SUCCESS_FILES_DELETED, $numFiles), 'success');
         } else {
             $messageStack->add_session(sprintf(WARNING_SOME_FILES_DELETED, $filesDeleted, $numFiles), 'warning');
@@ -169,20 +169,20 @@ if ($action == 'delete') {
     } else {
         $messageStack->add_session(WARNING_NO_FILES_SELECTED, 'warning');
     }
-    zen_redirect (zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('action'))));
+    zen_redirect(zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['action'])));
 }
 
 if (isset($_GET['fID'])) {
     if (array_key_exists($_GET['fID'], $logFiles)) {
-        $getFile = $_GET['fID'];
+        $getHash = $_GET['fID'];
     } else {
         unset($_GET['fID']);
-        $getFile = key($logFiles);
+        $getHash = array_key_first($logFiles);
     }
-} elseif (count($logFiles) != 0) {
-    $getFile = key($logFiles);
+} elseif (count($logFiles) !== 0) {
+    $getHash = array_key_first($logFiles);
 } else {
-    $getFile = '';
+    $getHash = '';
 }
 
 // -----
@@ -193,158 +193,176 @@ if ($max_log_file_size < 1) {
     $max_log_file_size = 80000;
 }
 ?>
-    <!doctype html >
-    <html <?php echo HTML_PARAMS; ?>>
-    <head>
-        <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
-        <script>
-            function buttonCheck(whichButton) {
-                var submitOK = false;
-                var elements = document.getElementsByClassName('cBox');
-                var n = elements.length;
-                if (whichButton == 'all') {
-                    submitOK = confirm('<?php echo JS_MESSAGE_DELETE_ALL_CONFIRM; ?>');
-                    if (submitOK) {
-                        for (var i = 0; i < n; i++) {
-                            elements[i].checked = true;
-                        }
-                    }
-                } else if (whichButton == 'inverse') {
+<!doctype html >
+<html <?= HTML_PARAMS ?>>
+<head>
+    <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
+    <script>
+        function buttonCheck(whichButton) {
+            var submitOK = false;
+            var elements = document.getElementsByClassName('cBox');
+            var n = elements.length;
+            if (whichButton == 'all') {
+                submitOK = confirm('<?= JS_MESSAGE_DELETE_ALL_CONFIRM ?>');
+                if (submitOK) {
                     for (var i = 0; i < n; i++) {
-                        elements[i].checked = !elements[i].checked;
-                    }
-                } else {
-                    var selected = 0;
-                    for (var i = 0; i < n; i++) {
-                        if (elements[i].checked) selected++;
-                    }
-                    if (selected > 0) {
-                        submitOK = confirm('<?php echo JS_MESSAGE_DELETE_SELECTED_CONFIRM; ?>');
-                    } else {
-                        alert('<?php echo WARNING_NO_FILES_SELECTED; ?>');
+                        elements[i].checked = true;
                     }
                 }
-                return submitOK;
+            } else if (whichButton == 'inverse') {
+                for (var i = 0; i < n; i++) {
+                    elements[i].checked = !elements[i].checked;
+                }
+            } else {
+                var selected = 0;
+                for (var i = 0; i < n; i++) {
+                    if (elements[i].checked) selected++;
+                }
+                if (selected > 0) {
+                    submitOK = confirm('<?= JS_MESSAGE_DELETE_SELECTED_CONFIRM ?>');
+                } else {
+                    alert('<?= WARNING_NO_FILES_SELECTED ?>');
+                }
             }
-        </script>
-    </head>
-    <body>
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
+            return submitOK;
+        }
+    </script>
+</head>
+<body>
+<!-- header //-->
+<?php require DIR_WS_INCLUDES . 'header.php'; ?>
+<!-- header_eof //-->
 
-    <!-- body //-->
-    <table>
-        <tr>
-            <!-- body_text //-->
-            <td ><table>
-                    <tr>
-                        <td><table>
-                                <tr>
-                                    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                                    <td class="pageHeading text-right"><?php echo zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')); ?></td>
-                                </tr>
+<!-- body //-->
+<div class="container-fluid">
+    <h1><?= HEADING_TITLE ?></h1>
+    <p>
+        <?= (!str_starts_with(HTTP_SERVER, 'https') ? WARNING_NOT_SECURE : '') .
+            sprintf(
+                TEXT_INSTRUCTIONS,
+                $max_log_file_size,
+                $sort_description,
+                (($numLogFiles > $max_logs_to_display) ? $max_logs_to_display : $numLogFiles),
+                $numLogFiles,
+                $files_to_match,
+                $files_to_exclude,
+                zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true)
+            ) ?>
+    </p>
 
-                                <tr>
-                                    <td class="main"><?php echo ((substr(HTTP_SERVER, 0, 5) != 'https') ? WARNING_NOT_SECURE : '') . sprintf(TEXT_INSTRUCTIONS, $max_log_file_size, $sort_description, (($numLogFiles > $max_logs_to_display) ? $max_logs_to_display : $numLogFiles), $numLogFiles, $files_to_match, $files_to_exclude, zen_image (DIR_WS_IMAGES . 'icon_info.gif', ICON_INFO_VIEW)); ?></td>
-                                    <td class="main text-right"><?php echo zen_draw_separator('pixel_trans.gif', zen_config('HEADING_IMAGE_WIDTH'), zen_config('HEADING_IMAGE_HEIGHT')); ?></td>
-                                </tr>
+    <?= zen_draw_form('logs_form', FILENAME_DISPLAY_LOGS, '', 'get') .
+            '<b>' . DISPLAY_DEBUG_LOGS_ONLY . '</b>&nbsp;&nbsp;' .
+            zen_draw_checkbox_field('debug_only', 'on', isset($_GET['debug_only']), '', 'onclick="this.form.submit();"') .
+            zen_draw_hidden_field('sort', $sort) .
+        '</form>' ?>
 
-                                <tr>
-                                    <td  colspan="2"><?php echo zen_draw_form('logs_form', FILENAME_DISPLAY_LOGS, '', 'get') . '<b>' . DISPLAY_DEBUG_LOGS_ONLY . '</b>&nbsp;&nbsp;' . zen_draw_checkbox_field('debug_only', 'on', (isset($_GET['debug_only'])) ? true : false, '', 'onclick="this.form.submit();"') . zen_draw_hidden_field('sort', $sort) . '</form>'; ?></td>
-                                </tr>
+    <?= zen_draw_form('dlForm', FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['action']) . 'action=delete') ?>
+    <div class="row mt-2">
+        <!-- body_text //-->
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 configurationColumnLeft">
+            <table class="table table-hover" role="listbox">
+                <thead>
+                <tr class="dataTableHeadingRow">
+                    <th class="dataTableHeadingContent"><?= TABLE_HEADING_FILENAME ?></th>
+                    <th class="dataTableHeadingContent text-center">
+                        <?= TABLE_HEADING_MODIFIED ?><br>
+                        <a class="me-2" href="<?= zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['sort']) . 'sort=date_a') ?>">
+                            <?= TEXT_ASC ?>
+                        </a>
+                        <a href="<?= zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['sort']) . 'sort=date_d') ?>">
+                            <?= TEXT_DESC ?>
+                        </a>
+                    </th>
+                    <th class="dataTableHeadingContent text-center">
+                        <?= TABLE_HEADING_FILESIZE ?><br>
+                        <a class="me-2" href="<?= zen_href_link (FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['sort']) . 'sort=size_a') ?>">
+                            <?= TEXT_ASC ?>
+                        </a>
+                        <a href="<?= zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['sort']) . 'sort=size_d') ?>">
+                            <?= TEXT_DESC ?>
+                        </a>
+                    </th>
+                    <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_DELETE ?></th>
+                    <th class="dataTableHeadingContent text-right"><?= TABLE_HEADING_ACTION ?></th>
+                </tr>
+                </thead>
+                <tbody>
+<?php
+$fileData = '';
+foreach ($logFiles as $curHash => $curFile) {
+?>
+                <tr>
+                    <td class="dataTableContent"><?= str_replace(DIR_FS_CATALOG, '/', $curFile['name']) ?></td>
+                    <td class="dataTableContent text-center"><?= date(DATE_FORMAT . ' H:i:s', $curFile['mtime']) ?></td>
+                    <td class="dataTableContent<?= ($curFile['filesize'] > $max_log_file_size) ? ' text-danger' : '' ?> text-center">
+                        <?= $curFile['filesize'] ?>
+</td>
+                    <td class="dataTableContent text-center">
+                        <?= zen_draw_checkbox_field('dList[' . $curHash . ']', false, false, '', 'class="cBox"') ?>
+                    </td>
+                    <td class="dataTableContent text-right">
+<?php
+    if ($getHash === $curHash) {
+        $fileData = $curFile;
+        echo zen_icon('caret-right', '', '2x', true);
+    } else {
+        echo
+            '<a href="' . zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(['fID'])) . '&fID=' . $curHash . '">' .
+                zen_icon('circle-info', IMAGE_ICON_INFO, '2x', true) .
+            '</a>';
+    }
+}
+?>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+<?php
+if ($numLogFiles > 0) {
+?>
+            <div class="row text-center">
+                <button class="btn btn-info" type="submit" onclick="return buttonCheck('inverse');"><?= BUTTON_INVERT_SELECTED ?></button>
+                <button class="btn btn-danger" type="submit" onclick="return buttonCheck('delete');"><?= BUTTON_DELETE_SELECTED ?></button>
+                <button class="btn btn-danger" type="submit" onclick="return buttonCheck('all');"><?= BUTTON_DELETE_ALL ?></button>
+            </div>
+<?php
+}
+?>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 configurationColumnRight">
+<?php
+    $heading = [];
+    $contents = [];
+    if (is_array($fileData)) {
+        $heading[] = [
+            'text' => '<strong>' . TEXT_HEADING_INFO . '(' . str_replace(DIR_FS_CATALOG, '/', $fileData['name']) . ')</strong>',
+        ];
+        $fileContent = str_replace(
+            DIR_FS_CATALOG,
+            '/',
+            nl2br(htmlentities(trim(file_get_contents($fileData['name'], false, null, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false), false)
+        );
+        $contents[] = [
+             'text' => '<div id="fContents">' . $fileContent . '</div>',
+        ];
+        unset($fileContent);
+    }
 
-                            </table></td>
-                    </tr>
-                </table></td>
-        </tr>
+    if (!empty($heading) && !empty($contents)) {
+        $box = new box();
+        echo $box->infoBox($heading, $contents);
+    }
+?>
+        </div>
+    </div>
+    <?= '</form>' ?>
+</div>
+<!-- body_eof //-->
 
-        <tr>
-            <td>
-                <form id="dlFormID" name="dlForm" action="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params (array('action')) . 'action=delete', 'NONSSL'); ?>" method="post"><?php echo zen_draw_hidden_field('securityToken', $_SESSION['securityToken']) . "\n"; ?>
-                    <table>
+<!-- footer //-->
+<?php require DIR_WS_INCLUDES . 'footer.php'; ?>
+<!-- footer_eof //-->
 
-                        <tr>
-                            <td><table>
-                                    <tr>
-                                        <td id="logFileDetails"><table >
-                                                <tr class="dataTableHeadingRow">
-                                                    <td class="dataTableHeadingContent text-left"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                                                    <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_MODIFIED; ?><br><a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=date_a', 'NONSSL'); ?>"><?php echo TEXT_ASC; ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=date_d', 'NONSSL'); ?>"><?php echo TEXT_DESC; ?></a></td>
-                                                    <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_FILESIZE; ?><br><a href="<?php echo zen_href_link (FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=size_a', 'NONSSL'); ?>"><?php echo TEXT_ASC; ?></a>&nbsp;&nbsp;<a href="<?php echo zen_href_link(FILENAME_DISPLAY_LOGS, zen_get_all_get_params(array('sort')) . 'sort=size_d', 'NONSSL'); ?>"><?php echo TEXT_DESC; ?></a></td>
-                                                    <td class="dataTableHeadingContent text-center"><?php echo TABLE_HEADING_DELETE; ?></td>
-                                                    <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-                                                </tr>
-                                                <?php
-                                                reset($logFiles);
-                                                $fileData = '';
-                                                $heading = array();
-                                                $contents = array();
-                                                foreach ($logFiles as $curHash => $curFile) {
-                                                    ?>
-                                                    <tr>
-                                                        <td class="dataTableContent text-left"><?php echo str_replace(DIR_FS_CATALOG, '/', $curFile['name']); ?></td>
-                                                        <td class="dataTableContent text-center"><?php echo date(DATE_FORMAT . ' H:i:s', $curFile['mtime']); ?></td>
-                                                        <td class="dataTableContent<?php echo ($curFile['filesize'] > $max_log_file_size) ? ' bigfile' : ''; ?> text-center"><?php echo $curFile['filesize']; ?></td>
-                                                        <td class="dataTableContent text-center"><?php echo zen_draw_checkbox_field('dList[' . $curHash . ']', false, false, '', 'class="cBox"'); ?></td>
-                                                        <td class="dataTableContent text-right"><?php if ($getFile == $curHash) { echo zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . zen_href_link(FILENAME_DISPLAY_LOGS, 'fID=' . $curHash . '&amp;' . zen_get_all_get_params(array('fID'))) . '">' . zen_image(DIR_WS_IMAGES . 'icon_info.gif', ICON_INFO_VIEW) . '</a>'; } ?>&nbsp;</td>
-                                                    </tr>
-                                                    <?php
-                                                    if ($getFile == $curHash) {
-                                                        $heading[] = array(
-                                                            'text' => '<strong>' . TEXT_HEADING_INFO . '( ' . $curFile['name'] . ')</strong>'
-                                                        );
-                                                        $fileContent = str_replace(DIR_FS_CATALOG, '/', nl2br(htmlentities(trim(file_get_contents($curFile['name'], false, NULL, 0, $max_log_file_size)), ENT_COMPAT+ENT_IGNORE, CHARSET, false), false));
-                                                        $contents[] = array(
-                                                            'align' => 'left',
-                                                            'text' => '<div id="fContents">' . $fileContent . '</div>'
-                                                        );
-                                                        unset($fileContent);
-                                                    }
-                                                }
-                                                ?>
-                                            </table></td>
-                                        <?php
-                                        if (!empty($heading) && !empty($contents)) {
-                                            ?>
-                                            <td id="contentsOuter" >
-                                                <?php
-                                                $box = new box;
-                                                echo $box->infoBox($heading, $contents);
-                                                ?>
-                                            </td>
-                                            <?php
-                                        }
-                                        ?>
-                                    </tr>
-                                </table></td>
-                        </tr>
-                        <?php
-                        if ($numLogFiles > 0) {
-                            ?>
-                            <tr>
-                                <td id="theButtons">
-                                    <div id="dButtons">
-                                        <div id="dInv"><button class="btn btn-primary" type="submit" onclick="return buttonCheck('inverse');"><?php echo BUTTON_INVERT_SELECTED; ?></button></div>
-                                        <div id="dSel"><button class="btn btn-primary" type="submit" onclick="return buttonCheck('delete');"><?php echo BUTTON_DELETE_SELECTED; ?></button></div>
-                                        <div id="dAll"><button class="btn btn-primary" type="submit" onclick="return buttonCheck('all');"><?php echo BUTTON_DELETE_ALL; ?></button></div>
-                                    </div>
-                                    <div id="dSpace">&nbsp;</div>
-                                </td>
-                            </tr>
-                            <?php
-                        }
-                        ?>
-                    </table></form></td>
-            <!-- body_text_eof //-->
-        </tr>
-    </table>
-    <!-- body_eof //-->
-
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
-    <br>
-    </body>
-    </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+</body>
+</html>
+<?php require DIR_WS_INCLUDES . 'application_bottom.php'; ?>
