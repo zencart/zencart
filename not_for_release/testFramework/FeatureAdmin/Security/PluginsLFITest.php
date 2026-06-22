@@ -36,9 +36,43 @@ class PluginsLFITest extends zcInProcessFeatureTestCaseAdmin
 
         $this->visitAdminCommand('plugin_manager')->assertOk();
 
+        $displayLogsPluginRoot = ROOTCWD . 'zc_plugins/DisplayLogs';
+        $this->assertDirectoryExists($displayLogsPluginRoot, 'Display Logs plugin directory not found.');
+
+        $displayLogsVersions = [];
+        foreach (new \DirectoryIterator($displayLogsPluginRoot) as $pluginEntry) {
+            if (!$pluginEntry->isDir() || $pluginEntry->isDot()) {
+                continue;
+            }
+
+            $manifestPath = $pluginEntry->getPathname() . '/manifest.php';
+            if (!is_file($manifestPath)) {
+                continue;
+            }
+
+            $displayLogsVersions[] = [
+                'directory_version' => $pluginEntry->getBasename(),
+                'manifest_path' => $manifestPath,
+            ];
+        }
+
+        $this->assertNotSame([], $displayLogsVersions, 'Display Logs manifest not found.');
+
+        usort($displayLogsVersions, static function (array $left, array $right): int {
+            return version_compare($right['directory_version'], $left['directory_version']);
+        });
+
+        $displayLogsManifest = require $displayLogsVersions[0]['manifest_path'];
+        $displayLogsVersion = (string) ($displayLogsManifest['pluginVersion'] ?? '');
+
+        $this->assertNotSame('', $displayLogsVersion, 'Display Logs manifest did not provide a pluginVersion.');
+
         TestDb::update(
             'plugin_control',
-            ['status' => 1, 'version' => 'v3.0.3'],
+            [
+                'status' => 1,
+                'version' => $displayLogsVersion,
+            ],
             'name = :name',
             [':name' => 'Display Logs']
         );
