@@ -56,6 +56,11 @@ class order_total
             $module_list = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
             foreach ($module_list as $value) {
+                // If the module's not located (it might be from a disabled zc_plugin), nothing further to do
+                if (!isset($modules_found[$value])) {
+                    continue;
+                }
+
                 if (!$languageLoader->loadModuleLanguageFile($value, 'order_total')) {
                     $language_dir = (IS_ADMIN_FLAG === false) ? DIR_WS_LANGUAGES : (DIR_FS_CATALOG . DIR_WS_LANGUAGES);
                     $lang_file = zen_get_file_directory($language_dir . $_SESSION['language'] . '/modules/order_total/', $value, 'false');
