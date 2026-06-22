@@ -1,6 +1,6 @@
 <?php
 return [
-    'pluginVersion' => 'v3.0.3',
+    'pluginVersion' => 'v3.1.0',
     'pluginName' => 'Display Logs',
     'pluginDescription' => 'Display and manage Zen Cart log files.',
     'pluginAuthor' => 'Vinos de Frutas Tropicales (lat9)',
