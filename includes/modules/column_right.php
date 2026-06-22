@@ -8,8 +8,9 @@
  * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
 use Zencart\DbRepositories\LayoutBoxRepository;
 use Zencart\ResourceLoaders\SideboxFinder;
 use Zencart\FileSystem\FileSystem;
@@ -20,12 +21,20 @@ global $db;
 $layoutBoxRepository = new LayoutBoxRepository($db);
 $sideboxes = $layoutBoxRepository->getActiveForLocation(1, $template_dir, 100);
 
+$sideboxFinder = new SideboxFinder(new FileSystem());
+$modules_found = $sideboxFinder->findFromFilesystem($installedPlugins, $template_dir);
+
 $column_width = (int)BOX_WIDTH_RIGHT;
 foreach ($sideboxes as $sidebox) {
-    $boxFile = (new SideboxFinder(new FileSystem))->sideboxPath($sidebox, $template_dir, true);
+    $box_name = $sidebox['layout_box_name'];
+    if (!empty($sidebox['plugin_details']) && !isset($modules_found[$box_name])) {
+        continue;
+    }
+
+    $boxFile = $sideboxFinder->sideboxPath($sidebox, $template_dir, true);
     if ($boxFile !== false) {
-        $box_id = zen_get_box_id($sidebox['layout_box_name']);
-        include($boxFile . $sidebox['layout_box_name']);
+        $box_id = zen_get_box_id($box_name);
+        require $boxFile . $box_name;
     }
 }
 $box_id = '';

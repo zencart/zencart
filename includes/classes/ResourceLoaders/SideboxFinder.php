@@ -31,8 +31,9 @@ class SideboxFinder
                 $sideboxes[$file] = $plugin['unique_key'] . '/' . $plugin['version'];
             }
         }
-        $mainDir = DIR_FS_CATALOG_MODULES . 'sideboxes/';
-        $mainDirTpl = DIR_FS_CATALOG_MODULES . 'sideboxes/' . $templateDir . '/';
+
+        $mainDir = DIR_FS_CATALOG . DIR_WS_MODULES . 'sideboxes/';
+        $mainDirTpl = $mainDir . $templateDir . '/';
         $files = $this->filesystem->listFilesFromDirectoryAlphaSorted($mainDir);
         foreach ($files as $file) {
             $sideboxes[$file] = '';
