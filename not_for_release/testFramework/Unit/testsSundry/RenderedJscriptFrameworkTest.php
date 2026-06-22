@@ -6,8 +6,10 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
+#[RunTestsInSeparateProcesses]
 class RenderedJscriptFrameworkTest extends zcUnitTestCase
 {
     public function testRenderedJscriptFrameworkUsesCsrfHeaderForObjectPayloads(): void

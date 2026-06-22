@@ -12,7 +12,6 @@ use Zencart\Console\ConsoleInput;
 
 class ConsoleInputTest extends TestCase
 {
-    protected $preserveGlobalState = false;
 
     public static function setUpBeforeClass(): void
     {

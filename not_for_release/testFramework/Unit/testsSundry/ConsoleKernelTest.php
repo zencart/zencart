@@ -18,7 +18,6 @@ use Zencart\Console\PluginCommandDiscovery;
 
 class ConsoleKernelTest extends TestCase
 {
-    protected $preserveGlobalState = false;
     private string $basePath = '';
     private string $catalogPath = '';
     /**

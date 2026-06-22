@@ -13,7 +13,6 @@ use Zencart\Console\TrustedPluginClassLoader;
 
 class TrustedPluginClassLoaderTest extends TestCase
 {
-    protected $preserveGlobalState = false;
     /**
      * @var string[]
      */

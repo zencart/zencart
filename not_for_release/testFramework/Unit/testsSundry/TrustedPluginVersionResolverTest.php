@@ -14,7 +14,6 @@ use Zencart\PluginSupport\PluginStatus;
 
 class TrustedPluginVersionResolverTest extends TestCase
 {
-    protected $preserveGlobalState = false;
 
     public static function setUpBeforeClass(): void
     {
