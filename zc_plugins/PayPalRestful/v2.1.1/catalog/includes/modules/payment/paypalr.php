@@ -6,7 +6,7 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  *
- * Last updated: v2.1.0
+ * Last updated: v2.1.1
  */
 use PayPalRestful\Admin\AdminMain;
 use PayPalRestful\Admin\DoAuthorization;
@@ -31,7 +31,7 @@ class paypalr extends \base
 {
     use InteractsWithPlugins;
 
-    const CURRENT_VERSION = '2.1.0';
+    const CURRENT_VERSION = '2.1.1';
 
     const REDIRECT_LISTENER = HTTP_SERVER . DIR_WS_CATALOG . 'ppr_listener.php';
 
