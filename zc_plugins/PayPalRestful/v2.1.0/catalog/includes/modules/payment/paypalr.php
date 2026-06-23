@@ -494,7 +494,7 @@ class paypalr extends \base
                                   ON w2.webhook_id = w1.webhook_id
                                  AND w2.id < w1.id"
                         );
-                        if (!$sniffer->index_exists(TABLE_PAYPAL_WEBHOOKS, 'idx_pprwebhook_unique')) {
+                        if (!$sniffer->indexExists(TABLE_PAYPAL_WEBHOOKS, 'idx_pprwebhook_unique')) {
                             $db->Execute(
                                 "ALTER TABLE " . TABLE_PAYPAL_WEBHOOKS . "
                                    ADD UNIQUE KEY idx_pprwebhook_unique (webhook_id)"
