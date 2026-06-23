@@ -88,6 +88,15 @@ Review output should be concise and actionable:
 - Prefer minimal, deterministic fixes that fit the existing procedural, bootstrap, template, and plugin patterns.
 - If no issues are found, say so clearly and note any remaining test gaps or assumptions.
 
+Security Review Guidance
+------------------------
+- Input Sanitization: Admin input handling uses more than one sanitization stage. Do not assume a field is unprotected based solely on the behavior of a single helper function. Review the complete request-processing pipeline before reporting a finding.
+- Certain administrator-managed content areas intentionally support richer markup for legitimate use cases. Treat these as design decisions rather than vulnerabilities unless untrusted users can influence the content.
+- Authorization: Authorization checks are typically performed centrally during application bootstrap rather than inside each page. Absence of an explicit permission check within a page does not necessarily indicate a security issue. When introducing new admin pages or reports, consider whether existing permissions are sufficient or whether additional access restrictions are appropriate.
+- CSRF Protection: CSRF validation may be enforced globally. Verify request initialization logic before reporting missing CSRF protection on individual pages.
+- Data Exports: Some directories are shared by multiple export features. When reviewing export functionality, consider the security of generated files, storage locations, and cleanup behavior.
+- Installation and Setup: Administrative lockout mechanisms and installation safeguards may be implemented separately. Review both initialization and installation code paths before drawing conclusions about deployment protections.
+
 Project-specific conventions and patterns
 ---------------------------------------
 - Entrypoints are procedural files that require `application_top.php` and later `application_bottom.php` (see `index.php` flow comments).
