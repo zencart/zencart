@@ -506,8 +506,8 @@ class ScriptedInstaller extends ScriptedInstallBase
                     }
                     $this->executeInstallerSql(
                         "UPDATE " . TABLE_PRODUCTS . "
-                            SET products_quantity = " . $products_quantity . "
-                          WHERE products_id = $pID
+                            SET products_quantity = " . $quantity_sum->fields['quantity'] . "
+                          WHERE products_id = " . (int)$posm_product['products_id'] . "
                           LIMIT 1"
                     );
                 }

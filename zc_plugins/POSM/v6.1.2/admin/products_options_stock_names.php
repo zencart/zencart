@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2026 Vinos de Frutas Tropicales
 //
-// Last updated: POSM v5.0.0
+// Last updated: POSM v6.1.2
 //
 require 'includes/application_top.php';
 
@@ -35,6 +35,11 @@ switch ($action) {
         $max_name_length = zen_field_length(TABLE_PRODUCTS_OPTIONS_STOCK_NAMES, 'pos_name');
 
         foreach ($pos_names as $current_name) {
+            // -----
+            // The names entered are cleaned of any HTML tags prior to checking/storage.
+            //
+            $current_name = zen_clean_html($current_name);
+
             if ($posObserver->stringPos($current_name, '[date]') !== false) {
                 $num_date_inserts++;
             }
@@ -153,8 +158,8 @@ $names_list = $db->Execute(
 );
 foreach ($names_list as $name) {
     $pos_name_id = $name['pos_name_id'];
-    if ((!isset($_GET['nID']) || $_GET['nID'] == $pos_name_id) && !isset($nInfo) && strpos($action, 'new') !== 0) {
-        $nInfo = new objectInfo($names_list->fields);
+    if ((!isset($_GET['nID']) || $_GET['nID'] == $pos_name_id) && !isset($nInfo) && !str_starts_with($action, 'new')) {
+        $nInfo = new objectInfo($name);
     }
     if (isset($nInfo) && is_object($nInfo) && $pos_name_id === $nInfo->pos_name_id) {
         $action_link = zen_image(DIR_WS_IMAGES . 'icon_arrow_right.gif');
@@ -163,8 +168,8 @@ foreach ($names_list as $name) {
     }
 ?>
                     <tr class="dataTableRow">
-                        <td class="dataTableContent"><?= $names_list->fields['pos_name_id'] ?></td>
-                        <td class="dataTableContent"><?= $names_list->fields['pos_name'] ?></td>
+                        <td class="dataTableContent"><?= $name['pos_name_id'] ?></td>
+                        <td class="dataTableContent"><?= zen_output_string_protected($name['pos_name']) ?></td>
                         <td class="dataTableContent text-right"><?= $action_link ?>&nbsp;</td>
                     </tr>
 <?php
@@ -201,7 +206,11 @@ switch ($action) {
             $lang_dir = $current_language['directory'];
             $lang_img = $current_language['image'];
             $lang_name = $current_language['name'];
-            $inputs_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . "$lang_dir/images/$lang_img", $lang_name) . '&nbsp;' . zen_draw_input_field("pos_name[$lang_id]", $_POST['pos_name'][$lang_id] ?? '', 'class="name-input form-control" ' . $name_field_size);
+            $inputs_string .=
+                '<br>' .
+                zen_image(DIR_WS_CATALOG_LANGUAGES . "$lang_dir/images/$lang_img", $lang_name) .
+                '&nbsp;' .
+                zen_draw_input_field("pos_name[$lang_id]", $_POST['pos_name'][$lang_id] ?? '', 'class="name-input form-control" ' . $name_field_size);
         }
 
         $contents[] = ['text' => '<br>' . TEXT_INFO_LABEL_NAME . $inputs_string];
@@ -237,20 +246,24 @@ switch ($action) {
 
         $contents = ['form' => zen_draw_form('status', FILENAME_PRODUCTS_OPTIONS_STOCK_NAMES, 'action=deleteconfirm', 'post', 'class="form-horizontal"') . zen_draw_hidden_field('nID', $nInfo->pos_name_id)];
         $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
-        $contents[] = ['text' => '<br><b>' . $nInfo->pos_name . '</b>'];
+        $contents[] = ['text' => '<br><b>' . zen_output_string_protected($nInfo->pos_name) . '</b>'];
         $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK_NAMES, 'nID=' . $nInfo->pos_name_id) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
         break;
 
     default:
         if (isset($nInfo) && is_object($nInfo)) {
-          $heading[] = ['text' => '<h4>' . $nInfo->pos_name . '</h4>'];
+          $heading[] = ['text' => '<h4>' . zen_output_string_protected($nInfo->pos_name) . '</h4>'];
 
           $contents[] = ['align' => 'text-center', 'text' => '<a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK_NAMES, 'nID=' . $nInfo->pos_name_id . '&action=edit') . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a> <a href="' . zen_href_link(FILENAME_PRODUCTS_OPTIONS_STOCK_NAMES, 'nID=' . $nInfo->pos_name_id . '&action=delete') . '" class="btn btn-warning" role="button">' . IMAGE_DELETE . '</a>'];
 
           $inputs_string = '';
           $languages = zen_get_languages();
           foreach ($languages as $current_language) {
-                $inputs_string .= '<br>' . zen_image(DIR_WS_CATALOG_LANGUAGES . $current_language['directory'] . '/images/' . $current_language['image'], $current_language['name']) . '&nbsp;' . get_pos_oos_name($nInfo->pos_name_id, $current_language['id']);
+                $inputs_string .=
+                    '<br>' .
+                    zen_image(DIR_WS_CATALOG_LANGUAGES . $current_language['directory'] . '/images/' . $current_language['image'], $current_language['name']) .
+                    '&nbsp;' .
+                    zen_output_string_protected(get_pos_oos_name($nInfo->pos_name_id, $current_language['id']));
           }
           $contents[] = ['text' => $inputs_string];
         }

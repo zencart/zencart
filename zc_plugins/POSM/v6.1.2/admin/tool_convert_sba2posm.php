@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2026 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 6.1.0
+// Last updated: POSM 6.1.2
 //
 require 'includes/application_top.php';
 
@@ -86,7 +86,7 @@ if ($convert === true) {
                     "INSERT INTO " . TABLE_PRODUCTS_OPTIONS_STOCK . "
                         (products_id, products_quantity, pos_hash, pos_model, last_modified)
                      VALUES
-                        ($products_id, " . $stock_details['qty'] . ", '" . generate_pos_option_hash ($products_id, $stock_details['options']) . "', '" . $stock_details['model'] . "', now() )"
+                        ($products_id, " . $stock_details['qty'] . ", '" . generate_pos_option_hash($products_id, $stock_details['options']) . "', '" . zen_db_input($stock_details['model']) . "', now() )"
                 );
                 $pos_id = $db->insert_ID();
                 foreach ($stock_details['options'] as $options_id => $options_values_id) {

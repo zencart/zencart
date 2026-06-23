@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Products' Options' Stock Manager" plugin by Cindy Merkin (lat9)
-// Copyright (c) 2014-2024, Vinos de Frutas Tropicales
+// Copyright (c) 2014-2026, Vinos de Frutas Tropicales
 //
-// Last updated: POSM v5.0.0
+// Last updated: POSM v6.1.2
 //
 // Uses the AJAX infrastructure provided initially by Zen Cart v1.5.4 and updated in Zen Cart 1.5.5b
 //
@@ -66,7 +66,9 @@ class zcAjaxOptionsStockDependencies extends base
                 $num_selected++;
                 $sa = "sa$num_selected";
                 $temp = explode(':', $current_value);
-                $join_clause .= (" INNER JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK_ATTRIBUTES . " $sa ON $sa.products_id = $products_id AND $sa.options_id = {$temp[0]} AND $sa.options_values_id = {$temp[1]}");
+                $tmp_options_id = (int)$temp[0];
+                $tmp_options_values_id = (int)$temp[1];
+                $join_clause .= (" INNER JOIN " . TABLE_PRODUCTS_OPTIONS_STOCK_ATTRIBUTES . " $sa ON $sa.products_id = $products_id AND $sa.options_id = $tmp_options_id AND $sa.options_values_id = $tmp_options_values_id");
                 $and_clause .= " AND sa0.pos_id = $sa.pos_id";
             }
             unset($temp, $values_array);

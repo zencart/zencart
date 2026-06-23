@@ -5,9 +5,11 @@
  */
 
 use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 use Tests\Support\zcURLTestObserver;
 
+#[RunTestsInSeparateProcesses]
 class AdminCatalogUrlGenerationTest extends zcUnitTestCase
 {
 

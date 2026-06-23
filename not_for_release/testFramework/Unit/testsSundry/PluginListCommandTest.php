@@ -15,7 +15,6 @@ use Zencart\PluginSupport\PluginStatus;
 
 class PluginListCommandTest extends TestCase
 {
-    protected $preserveGlobalState = false;
 
     public static function setUpBeforeClass(): void
     {
