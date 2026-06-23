@@ -79,7 +79,7 @@ if (!empty($action)) {
             }
 
             // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
-            if (zen_get_configuration_key_value('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_get_configuration_key_value('DOWN_FOR_MAINTENANCE') === 'true') {
+            if (zen_config('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE') === 'true') {
                 $db->Execute(
                     "UPDATE " . TABLE_CONFIGURATION . "
                         SET configuration_value = 'false',
@@ -118,10 +118,10 @@ if ($cfg_group->EOF) {
 
 if ($gID === 7) {
     $shipping_errors = '';
-    if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
+    if (zen_config('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_config('SHIPPING_ORIGIN_ZIP') === '') {
         $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
     }
-    if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
+    if (zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
         $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
     }
     if ($shipping_errors !== '') {
@@ -132,7 +132,7 @@ if ($gID === 7) {
         zen_redirect(zen_href_link(FILENAME_DENIED, '', 'SSL'));
     }
 } elseif ($gID === 5) {
-    if (zen_get_configuration_key_value('CUSTOMERS_ACTIVATION_REQUIRED') === 'true') {
+    if (zen_config('CUSTOMERS_ACTIVATION_REQUIRED') === 'true') {
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '3' WHERE configuration_key = 'CUSTOMERS_APPROVAL_AUTHORIZATION'", 1);
         $db->Execute("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'customers_authorization' WHERE configuration_key = 'CUSTOMERS_AUTHORIZATION_FILENAME'", 1);
     }
