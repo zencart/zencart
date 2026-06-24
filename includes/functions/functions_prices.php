@@ -586,13 +586,12 @@ function zen_get_products_quantity_order_units($product_id)
 /**
  * Lookup a product's maximum quantity
  * @param int $product_id
- * @return string
  * @since ZC v1.1.0
  */
-function zen_get_products_quantity_order_max($product_id)
+function zen_get_products_quantity_order_max($product_id): float
 {
     $result = zen_get_product_details($product_id);
-    return ($result->EOF) ? '' : $result->fields['products_quantity_order_max'];
+    return ($result->EOF) ? 0.0 : (float)$result->fields['products_quantity_order_max'];
 }
 
 /**
