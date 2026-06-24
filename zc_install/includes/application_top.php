@@ -217,11 +217,9 @@ $page_directory = 'includes/modules/pages/' . $current_page;
 
 $languagesInstalled = $languageManager->getLanguagesInstalled();
 $installer_lng = 'en_us';
-if (isset($_POST['lng'])) {
-    $installer_lng = $_POST['lng'];
-}
-if (isset($_GET['lng'])) {
-    $installer_lng = $_GET['lng'];
+$requested_lng = $_GET['lng'] ?? $_POST['lng'] ?? null;
+if (is_string($requested_lng) && isset($languagesInstalled[$requested_lng])) {
+    $installer_lng = $requested_lng;
 }
 
 $languageManager->loadLanguageDefines($installer_lng, $current_page, 'en_us');

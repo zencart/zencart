@@ -14,7 +14,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 
 <form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" class="needs-validation">
     <input type="hidden" name="action" value="process">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zen_output_string_protected((string)$installer_lng) ?>">
     <?php
     foreach ($_POST as $key => $value) {
         if ($key !== 'action') { ?>

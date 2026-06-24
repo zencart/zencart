@@ -25,7 +25,7 @@ if (!empty($errors)) { ?>
 
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" class="needs-validation">
     <input type="hidden" name="action" value="process">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zen_output_string_protected((string)$installer_lng) ?>">
     <?php
     foreach ($_POST as $key => $value) { ?>
     <?php
@@ -118,7 +118,7 @@ if (!empty($errors)) { ?>
                 </label>
             </div>
             <div class="col-6 col-md-5 col-lg-4">
-                <input class="form-control" type="text" name="admin_directory" id="admin_directory" value="<?= $adminNewDir ?>" readonly="readonly" tabindex="5" autocomplete="off">
+                <input class="form-control" type="text" name="admin_directory" id="admin_directory" value="<?= zen_output_string_protected((string)$adminNewDir) ?>" readonly="readonly" tabindex="5" autocomplete="off">
             </div>
         </div>
     </fieldset>
