@@ -127,6 +127,10 @@ class LanguageLoader
      */
     public function hasLanguageFile(string $rootPath, string $language, string $fileName, string $extraPath = ''): bool
     {
+        $extraPath = trim($extraPath, '/');
+        if ($extraPath !== '') {
+            $extraPath = '/' . $extraPath;
+        }
         if (is_file($rootPath . $language . $extraPath . '/' . $fileName)) {
             return true;
         }
