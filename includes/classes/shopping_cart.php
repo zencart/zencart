@@ -1853,7 +1853,7 @@ class shoppingCart extends base
                             $adjust_max = 'true';
                             $new_qty = $add_max;
                             break;
-                        case ($chk_mixed == true && ($add_max - $cart_qty + $new_qty) >= $add_max && $new_qty > $add_max):
+                        case ($chk_mixed === true && ($add_max - $cart_qty + $new_qty) >= $add_max && $new_qty > $add_max):
                             $adjust_max = 'true';
                             $requested_qty = $new_qty;
                             $alter_qty = $add_max - $cart_qty + $current_qty;
