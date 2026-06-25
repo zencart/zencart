@@ -105,6 +105,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 //add state zone_id
                 'zone_id' => $state_zone_id,
                 'format_id' => zen_get_address_format_id((int)$_POST['zone_country_id']),
+                'state' => $selectedState,
             ];
             $_SESSION['cart_country_id'] = $_POST['zone_country_id'];
             //add state zone_id
@@ -126,6 +127,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 'country_id' => $_SESSION['cart_country_id'],
                 'zone_id' => $state_zone_id,
                 'format_id' => zen_get_address_format_id((int)$_SESSION['cart_country_id']),
+                'state' => $selectedState,
             ];
         } else {
             // first timer
@@ -143,6 +145,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
                 'country_id' => zen_config('STORE_COUNTRY'),
                 'zone_id' => $state_zone_id,
                 'format_id' => zen_get_address_format_id((int)zen_config('STORE_COUNTRY')),
+                'state' => $selectedState,
             ];
         }
         // set the cost to be able to calculate free shipping
