@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2026 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 5.0.0
+// Last updated: POSM 6.1.2
 //
 // Loaded by the plugin's observer **only if** the plugin's operation is enabled for the storefront!
 //
@@ -41,9 +41,9 @@ if ($posm_dependent_attrs_enable !== true) {
 }
 
 // -----
-// Need to 'globalize' the $db class, since now loaded in function scope.
+// Need to 'globalize' the $db and $tplSetting classes, since now loaded in function scope.
 //
-global $db;
+global $db, $tplSetting;
 ?>
 <script>
 let oosMessages = {};
@@ -138,10 +138,10 @@ let inStockMessage = '<?= addslashes($in_stock_message) ?>';
 let lastSelection = false;
 let outOfStockClass = '';
 let outOfStockMessage = '';
-let wrapperAttribsOptions = '<?= zen_config('POSM_ATTRIBUTE_SELECTOR') ?>';
-let optionNameSelector = '<?= zen_config('POSM_OPTION_NAME_SELECTOR') ?>';
-let attributeWrapper = '<?= (zen_config('POSM_ATTRIBUTE_WRAPPER_SELECTOR') !== '') ? zen_config('POSM_ATTRIBUTE_WRAPPER_SELECTOR') : zen_config('POSM_ATTRIBUTE_SELECTOR') ?>';
-let attribImgSelector = '<?= zen_config('POSM_ATTRIBUTE_IMAGE_SELECTOR') ?>';
+let wrapperAttribsOptions = '<?= $tplSetting->POSM_ATTRIBUTE_SELECTOR ?>';
+let optionNameSelector = '<?= $tplSetting->POSM_OPTION_NAME_SELECTOR ?>';
+let attributeWrapper = '<?= ($tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR !== '') ? $tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR : $tplSetting->POSM_ATTRIBUTE_SELECTOR ?>';
+let attribImgSelector = '<?= $tplSetting->POSM_ATTRIBUTE_IMAGE_SELECTOR ?>';
 let ignoreOptionsList = [<?= zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') ?>];
 let checkSelect = <?= ($check_select === true) ? 'true' : 'false' ?>;
 let inputTypes = '<?= $input_types ?>';
