@@ -50,6 +50,7 @@ $define = [
     'TEXT_INFO_ATTRIBUTES_FEATURES_DELETE' => 'Delete <strong>ALL</strong> Product Attributes for:<br>',
     'TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_PRODUCT' => 'Copy Attributes to another <strong>product</strong> from:<br>',
     'TEXT_INFO_ATTRIBUTES_FEATURES_COPY_TO_CATEGORY' => 'Copy Attributes to another <strong>category</strong> from:<br>',
+    'TEXT_COPY_ADDITIONAL_IMAGES' => 'Copy Product *additional* images?',
     'TEXT_COPY_ATTRIBUTES' => 'Copy Product Attributes to Duplicate?',
     'TEXT_COPY_SPECIALS' => 'Copy Product Specials Price to Duplicate?',
     'TEXT_COPY_DISCOUNTS_ONLY' => 'Only used for Duplicate Products with Quantity Discounts ...',

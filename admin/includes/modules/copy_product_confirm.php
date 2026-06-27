@@ -173,6 +173,14 @@ if ($_POST['copy_as'] === 'link') {
         }
     }
 
+    // copy product's *additional* images to the duplicate
+    if (($_POST['copy_addl_images'] ?? '') === 'copy_addl_images_yes' && zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') {
+        $sql = "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                SELECT " . (int)$dup_products_id . ", additional_image, sort_order FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                WHERE products_id = " . (int)($products_id ?? 0) . " ORDER BY sort_order";
+        $result = $db->Execute($sql);
+    }
+
 // copy meta tags to Duplicate
     if (!empty($_POST['copy_metatags']) && $_POST['copy_metatags'] === 'copy_metatags_yes') {
         $metatags_status = $db->Execute(
