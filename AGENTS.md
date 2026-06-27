@@ -57,6 +57,7 @@ Use `CONVENTIONS.md` as the review baseline:
 - Favor stability over purity. Do not ask for broad rewrites, unrelated refactors, or legacy cleanup unless the change introduces a real defect.
 - Apply PSR-12, naming, `declare(strict_types=1)`, and no-colon-syntax rules to new code and files already being modified, while respecting documented legacy exceptions.
 - Flag direct edits to bootstrap/path files that are listed as "should never be directly edited"; prefer `extra_configures`, `init_includes`, plugin hooks, or other established extension points.
+- Do not flag template files for outputting a closing form tag via PHP, such as `<?= '</form>' ?>`; this intentionally pairs with forms opened by `zen_draw_form()` and avoids IDE/static-review tag-mismatch confusion.
 
 Review security-sensitive changes closely:
 - Preserve the early request-sanitizing behavior in `includes/application_top.php`.

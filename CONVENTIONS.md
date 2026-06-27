@@ -154,6 +154,21 @@ $db->Execute("SELECT * FROM orders WHERE ...");
 
 ---
 
+## Template HTML conventions
+
+HTML forms should usually be opened by echoing the output of `zen_draw_form()`, which generates
+the proper `<form ...>` tag from its parameters.
+
+When the form is closed in the same template file, output the closing tag through PHP as well:
+```php
+<?= '</form>' ?>
+```
+
+This avoids IDE and static-review confusion from an apparent raw-HTML form tag mismatch.
+Do not flag this pattern as an unnecessary echo or malformed HTML.
+
+---
+
 ## Template settings: choosing `zen_config()` vs `$tplSetting->`
 
 See `AGENTS.md` → "Configuration: `zen_config()` vs `$tplSetting` (TemplateSettings)" for how the
