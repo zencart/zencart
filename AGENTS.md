@@ -1,6 +1,7 @@
 ## Related files
 - `CONVENTIONS.md` — coding standards, PSR-12 rules, naming conventions, legacy exceptions
 - `CLAUDE.md` — Claude-specific behavioral layer (references this file)
+- `dev-REVIEW-CALIBRATION.md` — optional gitignored local/private review-calibration notes. If present, agents doing code review should read it, but must not quote or commit it.
 
 ## Scratch / working files
 
