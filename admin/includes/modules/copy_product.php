@@ -56,6 +56,19 @@ if (zen_has_product_attributes($pInfo->products_id, false)) {
     ];
 }
 
+// offer to copy additional-images if any are associated in the database
+if (zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') {
+    $additional_images = $db->Execute("SELECT count(additional_image) AS count FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . (int)($pInfo->products_id ?? 0));
+    if (($additional_images->fields['count'] ?? 0) > 0) {
+        $contents[] = [
+            'text' => '<h6>' . TEXT_COPY_ADDITIONAL_IMAGES . '</h6>' .
+                '<div class="radio"><label>' . zen_draw_radio_field('copy_addl_images', 'copy_addl_images_yes', true) . TEXT_YES . '</label></div>' .
+                '<div class="radio"><label>' . zen_draw_radio_field('copy_addl_images', 'copy_addl_images_no') . TEXT_NO . '</label></div>',
+            'params' => 'infoBoxContent duplicate-only hiddenField',
+        ];
+    }
+}
+
 // only ask about specials if defined
 if (zen_has_product_specials($pInfo->products_id)) {
     $contents[] = [
