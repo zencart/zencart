@@ -53,6 +53,38 @@ endforeach;
 
 ---
 
+## Comment style for new code
+
+- Single-line comments: `//` is fine.
+- Multi-line comments: use `/** */` docblock style, not a run of `//` lines — even when the
+  comment isn't above a class/method/property declaration (e.g. explaining a block of logic
+  mid-method). PHPStorm renders `/**` as a doc-comment regardless of what follows, and some
+  tooling (minifiers, AI code-stripping passes) targets `//` line comments more aggressively,
+  so doc-style blocks are more reliably preserved across multiple lines.
+
+```php
+// Correct — single line
+$total = $price * $qty; // apply quantity
+
+/**
+ * Correct — multi-line, documents the code immediately below.
+ */
+class Foo
+{
+}
+
+/**
+ * Correct — also fine mid-method, documenting the next statement.
+ */
+$result = doSomethingNonObvious();
+
+// Wrong — multi-line using //
+// Explain the non-obvious reason here.
+// across multiple lines like this.
+```
+
+---
+
 ## Naming conventions for new code
 
 | Construct | Convention | Example |
@@ -119,6 +151,21 @@ $db->Execute("SELECT * FROM orders WHERE ...");
 - Admin input sanitization has its own whitelisting system — see [Admin Sanitization docs](https://docs.zen-cart.com/dev/code/admin_sanitization/) 
   before relaxing sanitization rules for any admin field.
 - Do not modify the early request-sanitizing logic in `application_top.php`.
+
+---
+
+## Template HTML conventions
+
+HTML forms should usually be opened by echoing the output of `zen_draw_form()`, which generates
+the proper `<form ...>` tag from its parameters.
+
+When the form is closed in the same template file, output the closing tag through PHP as well:
+```php
+<?= '</form>' ?>
+```
+
+This avoids IDE and static-review confusion from an apparent raw-HTML form tag mismatch.
+Do not flag this pattern as an unnecessary echo or malformed HTML.
 
 ---
 
