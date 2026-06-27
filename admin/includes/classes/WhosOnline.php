@@ -324,12 +324,7 @@ class WhosOnline extends base
             $session_data = $result->EOF === false ? trim($result->fields['session_data']) : '';
         }
 
-        if (str_starts_with($session_data, 'cart|O')) {
-            $session_data = base64_decode($session_data);
-        }
-        if (str_starts_with($session_data, 'cart|O')) {
-            $session_data = '';
-        }
+        $session_data = $this->normalizeSessionData($session_data);
 
         if (empty($session_data)) {
             return null;
@@ -359,8 +354,8 @@ class WhosOnline extends base
         $adminSession = session_encode();
         $backupSessionArray = $_SESSION;
 
-        if (session_decode($session_data) !== false) {
-            $cart = $_SESSION['cart'];
+        if ($this->decodeSessionData($session_data)) {
+            $cart = $_SESSION['cart'] ?? null;
             $currency = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
 
             if (is_object($cart) && isset($currency)) {
@@ -385,9 +380,58 @@ class WhosOnline extends base
                 unset($_SESSION[$key]);
             }
         }
-        session_decode($adminSession);
+        $this->decodeSessionData($adminSession);
         unset($adminSession, $backupSessionArray);
 
         return $extracted_data;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function normalizeSessionData(string $session_data): string
+    {
+        $session_data = trim($session_data);
+
+        if ($session_data === '') {
+            return '';
+        }
+
+        $base64Decoded = base64_decode($session_data, true);
+        if ($base64Decoded !== false && base64_encode($base64Decoded) === $session_data) {
+            $session_data = $base64Decoded;
+        }
+
+        if (str_starts_with($session_data, 'cart|O')) {
+            $legacyDecoded = base64_decode($session_data, true);
+            if ($legacyDecoded !== false) {
+                $session_data = $legacyDecoded;
+            }
+        }
+
+        if (str_starts_with($session_data, 'cart|O')) {
+            return '';
+        }
+
+        return $session_data;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function decodeSessionData(string $session_data): bool
+    {
+        set_error_handler(
+            static function (int $errno, string $errstr): bool {
+                return $errno === E_WARNING && str_starts_with($errstr, 'session_decode():');
+            },
+            E_WARNING
+        );
+
+        try {
+            return session_decode($session_data) !== false;
+        } finally {
+            restore_error_handler();
+        }
     }
 }
