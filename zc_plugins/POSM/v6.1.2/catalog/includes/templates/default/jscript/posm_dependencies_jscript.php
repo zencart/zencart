@@ -41,7 +41,7 @@ if ($posm_dependent_attrs_enable !== true) {
 }
 
 // -----
-// Need to 'globalize' the $db and $tplSetting classes, since now loaded in function scope.
+// Need to 'globalize' the $db and $tplSetting class variables, since this file is now loaded in function scope.
 //
 global $db, $tplSetting;
 ?>
