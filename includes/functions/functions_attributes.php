@@ -808,7 +808,7 @@ function zen_orders_products_downloads($check_filename)
     $handler = zen_get_download_handler($check_filename);
 
     if ($handler == 'local') {
-        return file_exists(DIR_FS_DOWNLOAD . $check_filename);
+        return zen_download_filename_within_basedir($check_filename);
     }
 
     /**
