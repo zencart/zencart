@@ -2060,8 +2060,27 @@ class shoppingCart extends base
                                     $db->Execute("DELETE FROM " . TABLE_FILES_UPLOADED . " WHERE files_uploaded_id = " . (int)$insert_id . " LIMIT 1");
                                 }
                             } else { // No file uploaded -- use previous value
-                                $real_ids[$text_prefix] = $_POST[$text_upload_prefix] ?? '';
-                                if (!zen_get_attributes_valid($_POST['products_id'], $text_prefix, !empty($_POST[$text_prefix]) ? $_POST[$text_prefix] : '')) {
+                                $posted_reused_upload_value = $_POST[$text_upload_prefix] ?? '';
+                                $reused_upload_value = '';
+                                if ($posted_reused_upload_value !== '') {
+                                    $reused_files_uploaded_id = (int)$posted_reused_upload_value;
+                                    if ($reused_files_uploaded_id > 0) {
+                                        $ownership_sql = "SELECT files_uploaded_id, files_uploaded_name
+                                                          FROM " . TABLE_FILES_UPLOADED . "
+                                                          WHERE files_uploaded_id = " . $reused_files_uploaded_id . "
+                                                          AND (sesskey = '" . zen_session_id() . "'";
+                                        if (zen_is_logged_in()) {
+                                            $ownership_sql .= " OR customers_id = " . (int)$_SESSION['customer_id'];
+                                        }
+                                        $ownership_sql .= ") LIMIT 1";
+                                        $ownership_check = $db->Execute($ownership_sql);
+                                        if (!$ownership_check->EOF) {
+                                            $reused_upload_value = $reused_files_uploaded_id . '. ' . $ownership_check->fields['files_uploaded_name'];
+                                        }
+                                    }
+                                }
+                                $real_ids[$text_prefix] = $reused_upload_value;
+                                if (!zen_get_attributes_valid($_POST['products_id'], $text_prefix, $reused_upload_value)) {
                                     $the_list .=
                                         TEXT_ERROR_OPTION_FOR .
                                         '<span class="alertBlack">' .

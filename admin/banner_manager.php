@@ -128,6 +128,7 @@ if (!empty($action)) {
       $banners_image = new upload('banners_image');
       $banners_image->set_extensions(['jpg', 'jpeg', 'gif', 'png', 'webp', 'flv', 'webm', 'ogg']);
       $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
+      $banners_image->setPermittedDestinationBase(DIR_FS_CATALOG_IMAGES);
       $has_uploaded_image = $banners_image->parse();
 
       // Check if an image has been uploaded successfully
