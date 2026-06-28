@@ -133,15 +133,23 @@ $in_stock_message = '';
 if (zen_config('POSM_SHOW_IN_STOCK_MESSAGE') === 'true' && zen_config('POSM_DEPENDENT_ATTRS_STOCK_STATUS') === 'true') {
     $in_stock_message = (zen_config('POSM_DEPENDENT_ATTRS_STOCK_STATUS_QTY') === 'true') ? PRODUCTS_OPTIONS_STOCK_IN_STOCK_QTY : PRODUCTS_OPTIONS_STOCK_IN_STOCK;
 }
+
+$json_encode_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+$posm_attribute_selector = json_encode((string)$tplSetting->POSM_ATTRIBUTE_SELECTOR, $json_encode_flags);
+if ($tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR !== '') {
+    $attributeWrapper = json_encode((string)$tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR, $json_encode_flags);
+} else {
+    $attributeWrapper = $posm_attribute_selector;
+}
 ?>
 let inStockMessage = '<?= addslashes($in_stock_message) ?>';
 let lastSelection = false;
 let outOfStockClass = '';
 let outOfStockMessage = '';
-let wrapperAttribsOptions = '<?= $tplSetting->POSM_ATTRIBUTE_SELECTOR ?>';
-let optionNameSelector = '<?= $tplSetting->POSM_OPTION_NAME_SELECTOR ?>';
-let attributeWrapper = '<?= ($tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR !== '') ? $tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR : $tplSetting->POSM_ATTRIBUTE_SELECTOR ?>';
-let attribImgSelector = '<?= $tplSetting->POSM_ATTRIBUTE_IMAGE_SELECTOR ?>';
+let wrapperAttribsOptions = <?= $posm_attribute_selector ?>;
+let optionNameSelector = <?= json_encode((string)$tplSetting->POSM_OPTION_NAME_SELECTOR, $json_encode_flags) ?>;
+let attributeWrapper = <?= $attributeWrapper ?>;
+let attribImgSelector = <?= json_encode((string)$tplSetting->POSM_ATTRIBUTE_IMAGE_SELECTOR, $json_encode_flags) ?>;
 let ignoreOptionsList = [<?= zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') ?>];
 let checkSelect = <?= ($check_select === true) ? 'true' : 'false' ?>;
 let inputTypes = '<?= $input_types ?>';
