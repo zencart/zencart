@@ -17,7 +17,7 @@ if (!empty($_GET['action']) && $_GET['action'] === 'set_editor') {
     zen_redirect(zen_href_link(FILENAME_GV_MAIL));
 }
 
-$cleanAmount = preg_replace('/[^0-9.]/', '', (string)$_POST['amount']);
+$cleanAmount = preg_replace('/[^0-9.]/', '', (string)($_POST['amount'] ?? 0));
 $_POST['amount'] = is_numeric($cleanAmount) ? zen_str_to_numeric($cleanAmount) : 0;
 $_POST['amount'] = abs($_POST['amount']);
 $action = isset($_GET['action']) ? zen_db_prepare_input($_GET['action']) : '';
@@ -229,12 +229,12 @@ if (!empty($_GET['mail_sent_to'])) {
             <?php if (zen_config('EMAIL_USE_HTML') === 'true') { ?>
               <tr>
                 <td class="text-right"><b><?= TEXT_HTML_MESSAGE ?></b></td>
-                <td><?= stripslashes($_POST['message_html']) ?></td>
+                <td><?= stripslashes($_POST['message_html'] ?? '') ?></td>
               </tr>
             <?php } ?>
             <tr>
               <td class="text-right"><b><?= TEXT_MESSAGE ?></b></td>
-              <td class="tt"><?= nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), false) ?></td>
+              <td class="tt"><?= nl2br(htmlspecialchars(stripslashes($_POST['message'] ?? ''), ENT_COMPAT, CHARSET, true), false) ?></td>
             </tr>
           </table>
           <div class="form-group">
