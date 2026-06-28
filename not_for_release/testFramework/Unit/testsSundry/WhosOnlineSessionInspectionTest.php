@@ -63,6 +63,7 @@ class WhosOnlineSessionInspectionTest extends zcUnitTestCase
     {
         $encodedSession = $this->buildStoredSessionPayload([
             'cart' => new TestCart(),
+            'currency' => 'USD',
             'cartID' => 'cart-123',
             'comments' => 'Deliver to side door',
         ]);

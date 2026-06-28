@@ -353,36 +353,36 @@ class WhosOnline extends base
 
         $adminSession = session_encode();
         $backupSessionArray = $_SESSION;
+        $_SESSION = [];
 
-        if ($this->decodeSessionData($session_data)) {
-            $cart = $_SESSION['cart'] ?? null;
-            $currency = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
+        try {
+            if ($this->decodeSessionData($session_data)) {
+                $cart = $_SESSION['cart'] ?? null;
+                $currency = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
 
-            if (is_object($cart) && isset($currency)) {
-                $extracted_data['products'] = $cart->get_products();
-                $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
-                $extracted_data['cartObject'] = $cart;
-                $extracted_data['currency_code'] = $currency;
-                $extracted_data['cartID'] = $_SESSION['cartID'];
-            }
+                if (is_object($cart) && isset($currency)) {
+                    $extracted_data['products'] = $cart->get_products();
+                    $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
+                    $extracted_data['cartObject'] = $cart;
+                    $extracted_data['currency_code'] = $currency;
+                    $extracted_data['cartID'] = $_SESSION['cartID'];
+                }
 
-            foreach ($fields_to_extract as $field => $as) {
-                if (isset($_SESSION[$field])) {
-                    $extracted_data[$as] = $_SESSION[$field];
+                foreach ($fields_to_extract as $field => $as) {
+                    if (isset($_SESSION[$field])) {
+                        $extracted_data[$as] = $_SESSION[$field];
+                    }
                 }
             }
-        }
+        } finally {
+            $_SESSION = $backupSessionArray;
 
-        // protect against tampering
-        $_SESSION = $backupSessionArray;
-        foreach ($_SESSION as $key => $value) {
-            if (!isset($backupSessionArray[$key])) {
-                unset($_SESSION[$key]);
+            if (is_string($adminSession)) {
+                $this->decodeSessionData($adminSession);
             }
-        }
-        $this->decodeSessionData($adminSession);
-        unset($adminSession, $backupSessionArray);
 
+            unset($adminSession, $backupSessionArray);
+        }
         return $extracted_data;
     }
 
