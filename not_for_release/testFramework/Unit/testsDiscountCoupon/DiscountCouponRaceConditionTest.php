@@ -30,6 +30,7 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
 
         $_SESSION['currency'] = 'USD';
         $GLOBALS['current_page_base'] = FILENAME_CHECKOUT_PROCESS;
+        $GLOBALS['messageStack'] = new DiscountCouponRaceMessageStack();
 
         defined('MODULE_ORDER_TOTAL_COUPON_HEADER') || define('MODULE_ORDER_TOTAL_COUPON_HEADER', '');
         defined('MODULE_ORDER_TOTAL_COUPON_TITLE') || define('MODULE_ORDER_TOTAL_COUPON_TITLE', '');
@@ -40,6 +41,7 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
         defined('MODULE_ORDER_TOTAL_COUPON_CALC_TAX') || define('MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard');
         defined('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS') || define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '');
         defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('TEXT_INVALID_USES_COUPON') || define('TEXT_INVALID_USES_COUPON', 'Coupon %1$s has reached its %2$s-use limit.');
 
         $GLOBALS['currencies'] = $this->getMockBuilder('currencies')
             ->disableOriginalConstructor()
@@ -122,6 +124,8 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
             $requestTwoOrder->info['total'],
             'A concurrent checkout must not receive the coupon discount while another request holds the finalization lock.'
         );
+        $this->assertTrue($couponTwo->shouldAbortCheckoutProcess());
+        $this->assertContains('checkout_confirmation', $GLOBALS['messageStack']->stacks);
 
         $GLOBALS['insert_id'] = 1001;
         $_SESSION['customer_id'] = 101;
@@ -234,5 +238,17 @@ class DiscountCouponRaceResult
     public function RecordCount(): int
     {
         return $this->recordCount;
+    }
+}
+
+class DiscountCouponRaceMessageStack
+{
+    public array $messages = [];
+    public array $stacks = [];
+
+    public function add_session(string $stack, string $message, string $type): void
+    {
+        $this->stacks[] = $stack;
+        $this->messages[] = compact('stack', 'message', 'type');
     }
 }

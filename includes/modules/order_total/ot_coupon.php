@@ -99,6 +99,11 @@ class ot_coupon extends base
      */
     protected $validation_errors = [];
     /**
+     * Indicates that checkout_process must not continue after this module dropped the coupon.
+     * @var bool
+     */
+    protected bool $abortCheckoutProcess = false;
+    /**
      * Advisory lock currently held across checkout_process finalization, if any.
      * @var string|null
      */
@@ -140,6 +145,8 @@ class ot_coupon extends base
     function process()
     {
         global $order, $currencies;
+
+        $this->abortCheckoutProcess = false;
 
         if (empty($_SESSION['cc_id'])) {
             $this->releaseHeldRedemptionLockIfAny();
@@ -492,8 +499,12 @@ class ot_coupon extends base
 
         if (is_object($messageStack)) {
             foreach ($messages as $message) {
-                $messageStack->add_session('checkout', $message, 'caution');
+                $messageStack->add_session($this->getCheckoutCouponMessageStack(), $message, 'caution');
             }
+        }
+
+        if ($this->shouldHoldRedemptionLockDuringCheckoutProcess()) {
+            $this->abortCheckoutProcess = true;
         }
 
         return false;
@@ -626,7 +637,9 @@ class ot_coupon extends base
 
             if (!$this->getNamedLock($lockName)) {
                 $this->notify('NOTIFY_OT_COUPON_FINALIZATION_LOCK_UNAVAILABLE', ['coupon_id' => (int)$coupon_details['coupon_id']]);
+                $this->queueCheckoutProcessAbortMessage(sprintf(TEXT_INVALID_USES_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_coupon']));
                 $this->remove_coupon_from_current_session();
+                $this->abortCheckoutProcess = true;
                 return false;
             }
 
@@ -662,6 +675,42 @@ class ot_coupon extends base
 
         $this->releaseNamedLock($this->heldRedemptionLockName);
         $this->heldRedemptionLockName = null;
+    }
+
+    /**
+     * True when checkout_process must redirect the customer back instead of finalizing an order at
+     * a different total than the one they confirmed.
+     *
+     * @since ZC v2.2.3
+     */
+    public function shouldAbortCheckoutProcess(): bool
+    {
+        return $this->abortCheckoutProcess;
+    }
+
+    /**
+     * Message-stack target used when a coupon is dropped during checkout.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function getCheckoutCouponMessageStack(): string
+    {
+        return $this->shouldHoldRedemptionLockDuringCheckoutProcess() ? 'checkout_confirmation' : 'checkout_payment';
+    }
+
+    /**
+     * Queue a caution message on the page the customer will be returned to when checkout cannot
+     * proceed with the coupon they previously confirmed.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function queueCheckoutProcessAbortMessage(string $message): void
+    {
+        global $messageStack;
+
+        if (is_object($messageStack)) {
+            $messageStack->add_session($this->getCheckoutCouponMessageStack(), $message, 'caution');
+        }
     }
 
     /**
