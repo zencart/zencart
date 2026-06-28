@@ -1,9 +1,9 @@
 <?php
 // -----
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin (cindy@vinosdefrutastropicales.com)
-// Copyright (c) 2014-2024 Vinos de Frutas Tropicales
+// Copyright (c) 2014-2026 Vinos de Frutas Tropicales
 //
-// Last updated: POSM 5.0.0
+// Last updated: POSM 6.1.2
 //
 // Loaded by the plugin's observer **only if** the plugin's operation is enabled for the storefront!
 //
@@ -41,9 +41,9 @@ if ($posm_dependent_attrs_enable !== true) {
 }
 
 // -----
-// Need to 'globalize' the $db class, since now loaded in function scope.
+// Need to 'globalize' the $db and $tplSetting class variables, since this file is now loaded in function scope.
 //
-global $db;
+global $db, $tplSetting;
 ?>
 <script>
 let oosMessages = {};
@@ -133,15 +133,23 @@ $in_stock_message = '';
 if (zen_config('POSM_SHOW_IN_STOCK_MESSAGE') === 'true' && zen_config('POSM_DEPENDENT_ATTRS_STOCK_STATUS') === 'true') {
     $in_stock_message = (zen_config('POSM_DEPENDENT_ATTRS_STOCK_STATUS_QTY') === 'true') ? PRODUCTS_OPTIONS_STOCK_IN_STOCK_QTY : PRODUCTS_OPTIONS_STOCK_IN_STOCK;
 }
+
+$json_encode_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+$posm_attribute_selector = json_encode((string)$tplSetting->POSM_ATTRIBUTE_SELECTOR, $json_encode_flags);
+if ($tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR !== '') {
+    $attributeWrapper = json_encode((string)$tplSetting->POSM_ATTRIBUTE_WRAPPER_SELECTOR, $json_encode_flags);
+} else {
+    $attributeWrapper = $posm_attribute_selector;
+}
 ?>
 let inStockMessage = '<?= addslashes($in_stock_message) ?>';
 let lastSelection = false;
 let outOfStockClass = '';
 let outOfStockMessage = '';
-let wrapperAttribsOptions = '<?= zen_config('POSM_ATTRIBUTE_SELECTOR') ?>';
-let optionNameSelector = '<?= zen_config('POSM_OPTION_NAME_SELECTOR') ?>';
-let attributeWrapper = '<?= (zen_config('POSM_ATTRIBUTE_WRAPPER_SELECTOR') !== '') ? zen_config('POSM_ATTRIBUTE_WRAPPER_SELECTOR') : zen_config('POSM_ATTRIBUTE_SELECTOR') ?>';
-let attribImgSelector = '<?= zen_config('POSM_ATTRIBUTE_IMAGE_SELECTOR') ?>';
+let wrapperAttribsOptions = <?= $posm_attribute_selector ?>;
+let optionNameSelector = <?= json_encode((string)$tplSetting->POSM_OPTION_NAME_SELECTOR, $json_encode_flags) ?>;
+let attributeWrapper = <?= $attributeWrapper ?>;
+let attribImgSelector = <?= json_encode((string)$tplSetting->POSM_ATTRIBUTE_IMAGE_SELECTOR, $json_encode_flags) ?>;
 let ignoreOptionsList = [<?= zen_config('POSM_OPTIONAL_OPTION_NAMES_LIST') ?>];
 let checkSelect = <?= ($check_select === true) ? 'true' : 'false' ?>;
 let inputTypes = '<?= $input_types ?>';
