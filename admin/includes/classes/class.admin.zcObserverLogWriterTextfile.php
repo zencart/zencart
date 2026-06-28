@@ -38,6 +38,10 @@ class zcObserverLogWriterTextfile extends base {
   public function updateNotifyAdminFireLogWriters(&$class, $eventID, $log_data)
   {
     $this->initLogFile();
+    $log_data['postdata'] = zcObserverLogEventListener::filterJsonPostdata($log_data['postdata'] ?? '');
+    if (isset($log_data['specific_message'])) {
+      $log_data['specific_message'] = zcObserverLogEventListener::filterLogMessage($log_data['specific_message']);
+    }
     /**
      * The observer's $paramsArray contains the data passed to the notifier hook.
      * That data is json-encoded here, and then stored to

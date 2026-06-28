@@ -189,6 +189,8 @@ if ($action != '') {
           if ($postoutput === false) {
               $postoutput = '';
           }
+          $result['logmessage'] = zcObserverLogEventListener::filterLogMessage($result['logmessage']);
+          $postoutput = zcObserverLogEventListener::filterJsonPostdata($postoutput);
           if ($format === "XML") {
             $postoutput = nl2br(print_r(json_decode($postoutput), true));
             $exporter_output .= "<admin_activity_log>\n";
