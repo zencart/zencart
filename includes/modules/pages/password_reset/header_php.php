@@ -51,6 +51,8 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !empty($custo
         $customer = new Customer($customer_id);
         $customer->setPassword($password_new);
 
+        zen_session_recreate();
+
         $messageStack->add_session('login', PASSWORD_RESET_SUCCESS_PASSWORD_UPDATED, 'success');
 
         // handle 3rd-party integrations

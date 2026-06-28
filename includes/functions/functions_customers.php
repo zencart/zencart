@@ -115,7 +115,7 @@ function zen_check_email_address_not_already_used(string $email, int $customer_i
 
     $sql = "SELECT customers_id
             FROM " . TABLE_CUSTOMERS . "
-            WHERE customers_email_address = '" . zen_db_input($email) . "'
+            WHERE LOWER(customers_email_address) = LOWER('" . zen_db_input($email) . "')
             AND customers_id != " . (int)$customer_id_to_exclude;
     $result = $db->Execute($sql);
 
