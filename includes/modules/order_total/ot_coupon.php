@@ -444,6 +444,55 @@ class ot_coupon extends base
     }
 
     /**
+     * Re-validate the time- and usage-based coupon restrictions at order-finalization time.
+     *
+     * Called from calculate_deductions() so the limits are re-checked immediately before the deduction is
+     * applied -- and before order::create() persists it.
+     *
+     * On failure the now-invalid coupon is dropped from the session (neither applied to the order 
+     * nor recorded as redeemed by apply_credit()); the order then proceeds at the correct, un-discounted total.
+     *
+     * @param array $coupon_details coupon row as fetched from TABLE_COUPONS
+     * @return bool true when the coupon is still valid; false when it was dropped
+     * @since ZC v2.2.3
+     */
+    protected function revalidateCouponAtFinalization(array $coupon_details): bool
+    {
+        global $messageStack;
+
+        $messages = [];
+
+        if (!empty($coupon_details['coupon_start_date']) && !$this->validateCouponStartDate($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_STARTDATE_COUPON, $coupon_details['coupon_code'], zen_date_short($coupon_details['coupon_start_date']));
+        }
+        if (!empty($coupon_details['coupon_expire_date']) && !$this->validateCouponEndDate($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_FINISHDATE_COUPON, $coupon_details['coupon_code'], zen_date_short($coupon_details['coupon_expire_date']));
+        }
+        if (!$this->validateCouponMaximumUses($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_USES_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_coupon']);
+        }
+        if (!$this->validateCouponUsesPerCustomer($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_USES_USER_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_user']);
+        }
+
+        if (empty($messages)) {
+            return true;
+        }
+
+        // coupon is no longer valid: drop it so it is neither applied to the order nor redeemed
+        $this->notify('NOTIFY_OT_COUPON_FINALIZATION_REVALIDATION_FAILED', ['coupon' => $coupon_details], $messages);
+        $this->remove_coupon_from_current_session();
+
+        if (is_object($messageStack)) {
+            foreach ($messages as $message) {
+                $messageStack->add_session('checkout', $message, 'caution');
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * This function is not used by this module
      *
      * @return bool
@@ -473,13 +522,85 @@ class ot_coupon extends base
     function apply_credit()
     {
         global $db, $insert_id;
+
         $cc_id = empty($_SESSION['cc_id']) ? 0 : (int)$_SESSION['cc_id'];
-        if (!empty($this->deduction)) {
+        if (empty($this->deduction) || $cc_id === 0) {
+            $_SESSION['cc_id'] = '';
+            return;
+        }
+
+        /**
+         * Atomically claim this coupon redemption.
+         *
+         * The coupons / coupon_redeem_track / orders tables are MyISAM, which supports neither
+         * transactions nor SELECT...FOR UPDATE row locking, so a DB transaction is not available here. 
+         * Instead a MySQL named advisory lock (GET_LOCK) -- engine-agnostic, serialized per connection
+         * makes the use-count check and the redeem-track INSERT a single atomic critical section: 
+         * the checks are re-run *inside* the lock immediately before the INSERT, so the second
+         * concurrent checkout to acquire the lock sees the first's freshly-inserted row.
+         */
+        $lockName = 'zc_coupon_redeem_' . $cc_id;
+        $haveLock = $this->getNamedLock($lockName);
+
+        $coupon = $db->Execute("SELECT coupon_code, uses_per_coupon, uses_per_user FROM " . TABLE_COUPONS . " WHERE coupon_id = " . $cc_id, 1);
+        $coupon_details = ['coupon_id' => $cc_id] + ($coupon->EOF ? ['uses_per_coupon' => 0, 'uses_per_user' => 0] : $coupon->fields);
+
+        $withinLimits = $this->validateCouponMaximumUses($coupon_details) && $this->validateCouponUsesPerCustomer($coupon_details);
+
+        if ($withinLimits) {
             $db->Execute("INSERT INTO " . TABLE_COUPON_REDEEM_TRACK . "
                     (coupon_id, redeem_date, redeem_ip, customer_id, order_id)
-                    VALUES ('" . (int)$cc_id . "', now(), '" . $_SERVER['REMOTE_ADDR'] . "', '" . (int)$_SESSION['customer_id'] . "', '" . (int)$insert_id . "')");
+                    VALUES ('" . (int)$cc_id . "', now(), '" . zen_db_input($_SERVER['REMOTE_ADDR'] ?? '') . "', '" . (int)$_SESSION['customer_id'] . "', '" . (int)$insert_id . "')");
+        } else {
+            /**
+             * Race lost: a concurrent checkout claimed this coupon's final redemption slot after
+             * the discount on this order had already been calculated. The redeem-track row is not
+             * inserted, keeping the coupon's recorded use-count within its configured cap, and the
+             * event is surfaced (notifier + log) so the store owner can reconcile this order rather
+             * than the coupon being silently double-redeemed.
+             */
+            $this->notify('NOTIFY_OT_COUPON_REDEEM_LIMIT_RACE_LOST', ['coupon_id' => $cc_id, 'order_id' => (int)$insert_id, 'customer_id' => (int)$_SESSION['customer_id']]);
+            error_log('ot_coupon: coupon redemption cap reached for coupon_id ' . $cc_id . ' during finalization of order ' . (int)$insert_id . '; redeem-track row not written.');
         }
+
+        if ($haveLock) {
+            $this->releaseNamedLock($lockName);
+        }
+
         $_SESSION['cc_id'] = '';
+    }
+
+    /**
+     * Acquire a MySQL named advisory lock (GET_LOCK).
+     *
+     * Used to serialize the coupon-redemption critical section in apply_credit() across concurrent
+     * requests on a MyISAM schema that has no transaction or row-locking support. Returns true when
+     * the lock was granted. A bounded timeout is used so a stuck peer cannot hang a checkout
+     * indefinitely; if the lock cannot be obtained the caller proceeds best-effort:
+     * the order has already been placed, so recording the redemption is preferable to dropping it.
+     *
+     * @return bool true when the lock was granted
+     * @since ZC v2.2.3
+     */
+    protected function getNamedLock(string $lockName, int $timeoutSeconds = 10): bool
+    {
+        global $db;
+
+        $result = $db->Execute("SELECT GET_LOCK('" . zen_db_input($lockName) . "', " . (int)$timeoutSeconds . ") AS got_lock");
+
+        return (!$result->EOF && (int)$result->fields['got_lock'] === 1);
+    }
+
+    /**
+     * Release a MySQL named advisory lock previously obtained via getNamedLock().
+     *
+     * @since ZC v2.2.3
+     */
+    protected function releaseNamedLock(string $lockName): void
+    {
+        global $db;
+
+        $db->Execute("SELECT RELEASE_LOCK('" . zen_db_input($lockName) . "')");
     }
 
     /**
@@ -509,6 +630,19 @@ class ot_coupon extends base
         $coupon_details = $result->fields;
 
         $this->coupon_code = $coupon_details['coupon_code'];
+
+        /**
+         * Re-validate the coupon's restrictions at finalization.
+         *
+         * Complimentary to performValidations() which only runs at apply-time
+         * This method is re-run by process() immediately before order::create() persists the discount, 
+         * re-checking here closes the gap. 
+         * If the coupon is no longer valid it is dropped (see revalidateCouponAtFinalization)
+         * and a zero deduction is returned so the now-invalid coupon is not honored.
+         */
+        if (!$this->revalidateCouponAtFinalization($coupon_details)) {
+            return $od_amount;
+        }
 
         $orderTotalDetails = $this->get_order_total($coupon_details['coupon_id']);
 
