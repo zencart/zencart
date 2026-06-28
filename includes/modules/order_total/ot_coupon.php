@@ -98,6 +98,11 @@ class ot_coupon extends base
      * @var array
      */
     protected $validation_errors = [];
+    /**
+     * Advisory lock currently held across checkout_process finalization, if any.
+     * @var string|null
+     */
+    protected ?string $heldRedemptionLockName = null;
 
     function __construct()
     {
@@ -137,6 +142,7 @@ class ot_coupon extends base
         global $order, $currencies;
 
         if (empty($_SESSION['cc_id'])) {
+            $this->releaseHeldRedemptionLockIfAny();
             return;
         }
 
@@ -188,6 +194,7 @@ class ot_coupon extends base
      */
     function clear_posts()
     {
+        $this->releaseHeldRedemptionLockIfAny();
         unset($_POST['dc_redeem_code']);
         unset($_SESSION['cc_id']);
     }
@@ -525,22 +532,16 @@ class ot_coupon extends base
 
         $cc_id = empty($_SESSION['cc_id']) ? 0 : (int)$_SESSION['cc_id'];
         if (empty($this->deduction) || $cc_id === 0) {
+            $this->releaseHeldRedemptionLockIfAny();
             $_SESSION['cc_id'] = '';
             return;
         }
 
-        /**
-         * Atomically claim this coupon redemption.
-         *
-         * The coupons / coupon_redeem_track / orders tables are MyISAM, which supports neither
-         * transactions nor SELECT...FOR UPDATE row locking, so a DB transaction is not available here. 
-         * Instead a MySQL named advisory lock (GET_LOCK) -- engine-agnostic, serialized per connection
-         * makes the use-count check and the redeem-track INSERT a single atomic critical section: 
-         * the checks are re-run *inside* the lock immediately before the INSERT, so the second
-         * concurrent checkout to acquire the lock sees the first's freshly-inserted row.
-         */
         $lockName = 'zc_coupon_redeem_' . $cc_id;
-        $haveLock = $this->getNamedLock($lockName);
+        $haveLock = ($this->heldRedemptionLockName === $lockName);
+        if (!$haveLock) {
+            $haveLock = $this->getNamedLock($lockName);
+        }
 
         $coupon = $db->Execute("SELECT coupon_code, uses_per_coupon, uses_per_user FROM " . TABLE_COUPONS . " WHERE coupon_id = " . $cc_id, 1);
         $coupon_details = ['coupon_id' => $cc_id] + ($coupon->EOF ? ['uses_per_coupon' => 0, 'uses_per_user' => 0] : $coupon->fields);
@@ -560,10 +561,11 @@ class ot_coupon extends base
              * than the coupon being silently double-redeemed.
              */
             $this->notify('NOTIFY_OT_COUPON_REDEEM_LIMIT_RACE_LOST', ['coupon_id' => $cc_id, 'order_id' => (int)$insert_id, 'customer_id' => (int)$_SESSION['customer_id']]);
-            error_log('ot_coupon: coupon redemption cap reached for coupon_id ' . $cc_id . ' during finalization of order ' . (int)$insert_id . '; redeem-track row not written.');
         }
 
-        if ($haveLock) {
+        if ($this->heldRedemptionLockName === $lockName) {
+            $this->releaseHeldRedemptionLockIfAny();
+        } elseif ($haveLock) {
             $this->releaseNamedLock($lockName);
         }
 
@@ -573,11 +575,9 @@ class ot_coupon extends base
     /**
      * Acquire a MySQL named advisory lock (GET_LOCK).
      *
-     * Used to serialize the coupon-redemption critical section in apply_credit() across concurrent
-     * requests on a MyISAM schema that has no transaction or row-locking support. Returns true when
-     * the lock was granted. A bounded timeout is used so a stuck peer cannot hang a checkout
-     * indefinitely; if the lock cannot be obtained the caller proceeds best-effort:
-     * the order has already been placed, so recording the redemption is preferable to dropping it.
+     * Used to serialize coupon finalization across concurrent requests on a MyISAM schema that has
+     * no transaction or row-locking support. Returns true when the lock was granted. A bounded
+     * timeout is used so a stuck peer cannot hang checkout indefinitely.
      *
      * @return bool true when the lock was granted
      * @since ZC v2.2.3
@@ -601,6 +601,67 @@ class ot_coupon extends base
         global $db;
 
         $db->Execute("SELECT RELEASE_LOCK('" . zen_db_input($lockName) . "')");
+    }
+
+    /**
+     * Re-validate the coupon's restrictions at finalization and, during checkout_process,
+     * hold the coupon's advisory lock until apply_credit() records the redemption.
+     *
+     * Holding the lock across order-total calculation and order persistence prevents a
+     * second concurrent checkout from receiving the same discount before the first request
+     * records its redeem-track row.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function prepareCouponForFinalization(array $coupon_details): bool
+    {
+        if (!$this->shouldHoldRedemptionLockDuringCheckoutProcess()) {
+            return $this->revalidateCouponAtFinalization($coupon_details);
+        }
+
+        $lockName = 'zc_coupon_redeem_' . (int)$coupon_details['coupon_id'];
+
+        if ($this->heldRedemptionLockName !== $lockName) {
+            $this->releaseHeldRedemptionLockIfAny();
+
+            if (!$this->getNamedLock($lockName)) {
+                $this->notify('NOTIFY_OT_COUPON_FINALIZATION_LOCK_UNAVAILABLE', ['coupon_id' => (int)$coupon_details['coupon_id']]);
+                $this->remove_coupon_from_current_session();
+                return false;
+            }
+
+            $this->heldRedemptionLockName = $lockName;
+        }
+
+        return $this->revalidateCouponAtFinalization($coupon_details);
+    }
+
+    /**
+     * Hold coupon finalization locks only during checkout_process, where the discounted totals
+     * are about to be persisted.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function shouldHoldRedemptionLockDuringCheckoutProcess(): bool
+    {
+        global $current_page_base;
+
+        return (isset($current_page_base) && $current_page_base === FILENAME_CHECKOUT_PROCESS);
+    }
+
+    /**
+     * Release any checkout_process coupon finalization lock currently held by this instance.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function releaseHeldRedemptionLockIfAny(): void
+    {
+        if ($this->heldRedemptionLockName === null) {
+            return;
+        }
+
+        $this->releaseNamedLock($this->heldRedemptionLockName);
+        $this->heldRedemptionLockName = null;
     }
 
     /**
@@ -631,16 +692,7 @@ class ot_coupon extends base
 
         $this->coupon_code = $coupon_details['coupon_code'];
 
-        /**
-         * Re-validate the coupon's restrictions at finalization.
-         *
-         * Complimentary to performValidations() which only runs at apply-time
-         * This method is re-run by process() immediately before order::create() persists the discount, 
-         * re-checking here closes the gap. 
-         * If the coupon is no longer valid it is dropped (see revalidateCouponAtFinalization)
-         * and a zero deduction is returned so the now-invalid coupon is not honored.
-         */
-        if (!$this->revalidateCouponAtFinalization($coupon_details)) {
+        if (!$this->prepareCouponForFinalization($coupon_details)) {
             return $od_amount;
         }
 
