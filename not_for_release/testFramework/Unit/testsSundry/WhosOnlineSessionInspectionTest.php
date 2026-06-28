@@ -3,6 +3,7 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  */
+declare(strict_types=1);
 
 namespace Tests\Unit\testsSundry;
 
@@ -30,6 +31,7 @@ class WhosOnlineSessionInspectionTest extends zcUnitTestCase
         session_id(bin2hex(random_bytes(8)));
         session_start();
         $_SESSION = ['admin_id' => 1, 'currency' => 'USD'];
+        $GLOBALS['currencies'] = new TestCurrencies();
 
         $this->subject = new TestableWhosOnline(false, true);
     }
@@ -54,6 +56,21 @@ class WhosOnlineSessionInspectionTest extends zcUnitTestCase
 
         $this->assertSame(7, $result['language_id']);
         $this->assertSame('Front door code', $result['checkout_comments']);
+        $this->assertSame(['admin_id' => 1, 'currency' => 'USD'], $_SESSION);
+    }
+
+    public function testInspectSessionCartPreservesDecodedSessionsBeginningWithCartObject(): void
+    {
+        $encodedSession = $this->buildStoredSessionPayload([
+            'cart' => new TestCart(),
+            'cartID' => 'cart-123',
+            'comments' => 'Deliver to side door',
+        ]);
+
+        $result = $this->subject->inspectSessionCartForTest('', $encodedSession);
+
+        $this->assertSame('Deliver to side door', $result['checkout_comments']);
+        $this->assertSame('cart-123', $result['cartID']);
         $this->assertSame(['admin_id' => 1, 'currency' => 'USD'], $_SESSION);
     }
 
@@ -97,5 +114,26 @@ class TestableWhosOnline extends \WhosOnline
     public function inspectSessionCartForTest(string $sessionId = '', string $sessionData = ''): ?array
     {
         return $this->inspectSessionCart($sessionId, $sessionData);
+    }
+}
+
+class TestCart
+{
+    public function get_products(): array
+    {
+        return [];
+    }
+
+    public function show_total(): float
+    {
+        return 0.0;
+    }
+}
+
+class TestCurrencies
+{
+    public function format(float $amount, bool $calculateCurrencyValue, string $currency): string
+    {
+        return $currency . ':' . number_format($amount, 2, '.', '');
     }
 }

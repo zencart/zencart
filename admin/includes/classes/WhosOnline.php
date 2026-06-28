@@ -402,17 +402,6 @@ class WhosOnline extends base
             $session_data = $base64Decoded;
         }
 
-        if (str_starts_with($session_data, 'cart|O')) {
-            $legacyDecoded = base64_decode($session_data, true);
-            if ($legacyDecoded !== false) {
-                $session_data = $legacyDecoded;
-            }
-        }
-
-        if (str_starts_with($session_data, 'cart|O')) {
-            return '';
-        }
-
         return $session_data;
     }
 
