@@ -79,7 +79,7 @@ if ($downloadsOnThisOrder) {
     $data['expiry'] = date('Y-m-d H:i:s', $data['expiry_timestamp']);
     $data['downloads_remaining'] = (int)$data['download_count'];
     $data['unlimited_downloads'] = (int)$data['download_maxdays'] == 0;
-    $data['file_exists'] = file_exists(DIR_FS_DOWNLOAD . $data['orders_products_filename']);
+    $data['file_exists'] = zen_download_filename_within_basedir($data['orders_products_filename']);
     $data['counts_not_expired'] = $data['downloads_remaining'] > 0 && $data['expiry_timestamp'] > time();
     $data['is_downloadable'] = $data['file_exists'] && ($data['counts_not_expired'] === true || $data['unlimited_downloads']);
     $data['link_url'] = zen_href_link(FILENAME_DOWNLOAD, 'order=' . $last_order . '&id=' . $data['orders_products_download_id']);

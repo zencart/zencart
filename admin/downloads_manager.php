@@ -20,7 +20,8 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert':
     case 'save':
-      $db_filename = zen_limit_image_filename($_POST['products_attributes_filename'], TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
+      $db_filename = zen_sanitize_download_filename($_POST['products_attributes_filename']);
+      $db_filename = zen_limit_image_filename($db_filename, TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, 'products_attributes_filename');
       $sql = "UPDATE " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
               SET products_attributes_filename=:filename:,
                   products_attributes_maxdays=:maxdays:,

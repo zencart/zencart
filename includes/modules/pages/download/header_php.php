@@ -75,8 +75,8 @@ if (substr($source_directory, -1) != '/') {
     $source_directory .= '/';
 }
 
-$file_exists = file_exists($source_directory . $origin_filename);
-$downloadFilesize = (int)@filesize($source_directory . $origin_filename);
+$file_exists = zen_download_filename_within_basedir($origin_filename, $source_directory);
+$downloadFilesize = $file_exists ? (int)@filesize($source_directory . $origin_filename) : 0;
 
 // calculate days
 list($dt_year, $dt_month, $dt_day) = explode('-', $downloads->fields['date_purchased_day']);
