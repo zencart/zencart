@@ -33,6 +33,7 @@ class upload extends base
     protected $message_location;
     protected $permissions;
     protected $tmp_filename;
+    protected $permitted_destination_base;
     
     function __construct($file = '', $destination = '', $permissions = '644', $extensions = array())
     {
@@ -221,15 +222,96 @@ class upload extends base
     }
 
     /**
+     * @since ZC v2.2.3
+     */
+    function setPermittedDestinationBase($base)
+    {
+        $this->permitted_destination_base = empty($base) ? null : $base;
+    }
+
+    /**
+     * @since ZC v2.2.3
+     */
+    function getPermittedDestinationBases()
+    {
+        if (!empty($this->permitted_destination_base)) {
+            return [$this->permitted_destination_base];
+        }
+
+        $bases = [];
+        foreach (['DIR_FS_CATALOG_IMAGES', 'DIR_FS_CATALOG_MEDIA', 'DIR_FS_UPLOADS', 'DIR_WS_ADMIN_ATTACHMENTS'] as $const) {
+            if (defined($const) && constant($const) !== '') {
+                $bases[] = constant($const);
+            }
+        }
+
+        return $bases;
+    }
+
+    /**
+     * @since ZC v2.2.3
+     */
+    function destinationIsContained()
+    {
+        $bases = $this->getPermittedDestinationBases();
+        if (empty($bases)) {
+            return true;
+        }
+
+        $destination = (string)$this->destination;
+        if (strpos($destination, "\0") !== false) {
+            return false;
+        }
+
+        $destination_real = realpath($destination);
+        if ($destination_real === false) {
+            return false;
+        }
+        $destination_real = rtrim($destination_real, '/\\') . DIRECTORY_SEPARATOR;
+
+        foreach ($bases as $base) {
+            $base = (string)$base;
+            if ($base === '' || strpos($base, "\0") !== false) {
+                continue;
+            }
+            $base_real = realpath($base);
+            if ($base_real === false) {
+                continue;
+            }
+            $base_real = rtrim($base_real, '/\\') . DIRECTORY_SEPARATOR;
+            if (str_starts_with($destination_real, $base_real)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @since ZC v1.0.3
      */
     function check_destination()
     {
+        if (strpos((string)$this->destination, "\0") !== false) {
+            $this->message_stack(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+
+            return false;
+        }
+
         if (!is_writeable($this->destination)) {
             if (is_dir($this->destination)) {
                 $this->message_stack(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
             } else {
                 $this->message_stack(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
+            }
+
+            return false;
+        }
+
+        if (!$this->destinationIsContained()) {
+            $this->message_stack(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+            if (function_exists('zen_record_admin_activity')) {
+                zen_record_admin_activity('Upload destination rejected: invalid target directory (' . $this->destination . ')', 'warning');
             }
 
             return false;
