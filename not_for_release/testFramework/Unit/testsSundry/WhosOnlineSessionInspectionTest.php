@@ -99,6 +99,31 @@ class WhosOnlineSessionInspectionTest extends zcUnitTestCase
         $this->assertSame(['admin_id' => 1, 'currency' => 'USD'], $_SESSION);
     }
 
+    public function testInspectSessionCartPurgesMalformedStoredSessionWhenSessionIdIsKnown(): void
+    {
+        $warnings = [];
+        set_error_handler(
+            static function (int $errno, string $errstr) use (&$warnings): bool {
+                if ($errno === E_WARNING) {
+                    $warnings[] = $errstr;
+                }
+
+                return true;
+            }
+        );
+
+        try {
+            $result = $this->subject->inspectSessionCartForTest('corrupt-session', base64_encode('not-a-valid-session-payload'));
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $result);
+        $this->assertSame(['corrupt-session'], $this->subject->purgedSessionIds);
+        $this->assertSame([], array_filter($warnings, static fn($warning) => str_starts_with($warning, 'session_decode():')));
+        $this->assertSame(['admin_id' => 1, 'currency' => 'USD'], $_SESSION);
+    }
+
     private function buildStoredSessionPayload(array $sessionData): string
     {
         $originalSession = $_SESSION;
@@ -112,9 +137,16 @@ class WhosOnlineSessionInspectionTest extends zcUnitTestCase
 
 class TestableWhosOnline extends \WhosOnline
 {
+    public array $purgedSessionIds = [];
+
     public function inspectSessionCartForTest(string $sessionId = '', string $sessionData = ''): ?array
     {
         return $this->inspectSessionCart($sessionId, $sessionData);
+    }
+
+    protected function purgeCorruptSessionRecord(string $session_id): void
+    {
+        $this->purgedSessionIds[] = $session_id;
     }
 }
 

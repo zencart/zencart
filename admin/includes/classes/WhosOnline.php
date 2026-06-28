@@ -248,7 +248,7 @@ class WhosOnline extends base
             return 2;
         }
 
-        $session = $this->inspectSessionCart('', $data['session_data']);
+        $session = $this->inspectSessionCart($data['session_id'] ?? '', $data['session_data']);
 
         // lookup how many rows are in the shopping cart contents array
         if (!empty($session['products'])) {
@@ -373,6 +373,8 @@ class WhosOnline extends base
                         $extracted_data[$as] = $_SESSION[$field];
                     }
                 }
+            } elseif ($session_id !== '') {
+                $this->purgeCorruptSessionRecord($session_id);
             }
         } finally {
             $_SESSION = $backupSessionArray;
@@ -384,6 +386,17 @@ class WhosOnline extends base
             unset($adminSession, $backupSessionArray);
         }
         return $extracted_data;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function purgeCorruptSessionRecord(string $session_id): void
+    {
+        global $db;
+
+        $db->Execute("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . zen_db_input($session_id) . "'");
+        $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . zen_db_input($session_id) . "'");
     }
 
     /**
