@@ -552,6 +552,7 @@ class paypaldp extends base {
     $this->cc_expiry_month = $cc_validation->cc_expiry_month;
     $this->cc_expiry_year = $cc_validation->cc_expiry_year;
     $this->cc_checkcode = $_POST['paypalwpp_cc_checkcode'];
+    $_SESSION['paypaldp_cc_checkcode'] = $_POST['paypalwpp_cc_checkcode'];
 
 
     // In the case of UK cards, hook 3D-Secure if appropriate
@@ -686,9 +687,9 @@ class paypaldp extends base {
     global $zcDate;
     $confirmation = array('title' => '',
                           'fields' => array(array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_FIRSTNAME,
-                                                  'field' => $_POST['paypalwpp_cc_firstname']),
+                                                  'field' => zen_output_string_protected($_POST['paypalwpp_cc_firstname'])),
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_LASTNAME,
-                                                  'field' => $_POST['paypalwpp_cc_lastname']),
+                                                  'field' => zen_output_string_protected($_POST['paypalwpp_cc_lastname'])),
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_TYPE,
                                                   'field' => $this->cc_card_type),
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_NUMBER,
@@ -696,7 +697,7 @@ class paypaldp extends base {
                                             array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_CREDIT_CARD_EXPIRES,
                                                   'field' => $zcDate->output('%B, %Y', mktime(0,0,0,$_POST['paypalwpp_cc_expires_month'], 1, '20' . $_POST['paypalwpp_cc_expires_year'])),
                                             (isset($_POST['paypalwpp_cc_issuenumber']) ? array('title' => MODULE_PAYMENT_PAYPALDP_TEXT_ISSUE_NUMBER,
-                                                  'field' => $_POST['paypalwpp_cc_issuenumber']) : '')
+                                                  'field' => zen_output_string_protected($_POST['paypalwpp_cc_issuenumber'])) : ''),
                                             )));
     // 3D-Secure
     if ($this->merchant_country == 'UK' && $this->requiresLookup($_POST['paypalwpp_cc_number']) == true) {
@@ -719,16 +720,17 @@ class paypaldp extends base {
     global $order;
     $_SESSION['paypal_ec_markflow'] = 1;
     $process_button_string = '';
-    $process_button_string .= "\n" . zen_draw_hidden_field('wpp_cc_type', $_POST['paypalwpp_cc_type'] ?? '') . "\n" .
-        zen_draw_hidden_field('wpp_cc_expdate_month', $_POST['paypalwpp_cc_expires_month'] ?? '') . "\n" .
-        zen_draw_hidden_field('wpp_cc_expdate_year', $_POST['paypalwpp_cc_expires_year'] ?? '') . "\n" .
-        zen_draw_hidden_field('wpp_cc_issuedate_month', $_POST['paypalwpp_cc_issue_month'] ?? '') . "\n" .
-        zen_draw_hidden_field('wpp_cc_issuedate_year', $_POST['paypalwpp_cc_issue_year'] ?? '') . "\n" .
-        zen_draw_hidden_field('wpp_cc_issuenumber', $_POST['paypalwpp_cc_issuenumber'] ?? '') . "\n" .
-        zen_draw_hidden_field('wpp_cc_number', $_POST['paypalwpp_cc_number']) . "\n" .
-        zen_draw_hidden_field('wpp_cc_checkcode', $_POST['paypalwpp_cc_checkcode']) . "\n" .
-        zen_draw_hidden_field('wpp_payer_firstname', $_POST['paypalwpp_cc_firstname']) . "\n" .
-        zen_draw_hidden_field('wpp_payer_lastname', $_POST['paypalwpp_cc_lastname']) . "\n";
+    if (empty($this->collectsCardDataOnsite)) {
+      $process_button_string .= "\n" . zen_draw_hidden_field('wpp_cc_type', $_POST['paypalwpp_cc_type'] ?? '') . "\n" .
+          zen_draw_hidden_field('wpp_cc_expdate_month', $_POST['paypalwpp_cc_expires_month'] ?? '') . "\n" .
+          zen_draw_hidden_field('wpp_cc_expdate_year', $_POST['paypalwpp_cc_expires_year'] ?? '') . "\n" .
+          zen_draw_hidden_field('wpp_cc_issuedate_month', $_POST['paypalwpp_cc_issue_month'] ?? '') . "\n" .
+          zen_draw_hidden_field('wpp_cc_issuedate_year', $_POST['paypalwpp_cc_issue_year'] ?? '') . "\n" .
+          zen_draw_hidden_field('wpp_cc_issuenumber', $_POST['paypalwpp_cc_issuenumber'] ?? '') . "\n" .
+          zen_draw_hidden_field('wpp_cc_number', $_POST['paypalwpp_cc_number']) . "\n" .
+          zen_draw_hidden_field('wpp_payer_firstname', $_POST['paypalwpp_cc_firstname']) . "\n" .
+          zen_draw_hidden_field('wpp_payer_lastname', $_POST['paypalwpp_cc_lastname']) . "\n";
+    }
     $process_button_string .= zen_draw_hidden_field(zen_session_name(), zen_session_id());
     return $process_button_string;
   }
@@ -736,6 +738,7 @@ class paypaldp extends base {
    * @since ZC v1.5.4
    */
   function process_button_ajax() {
+    $_SESSION['paypaldp_ajax_relay'] = true;
     $processButton = array('ccFields'=>array('wpp_cc_type'=>'paypalwpp_cc_type',
         'wpp_cc_expdate_month'=>'paypalwpp_cc_expires_month',
         'wpp_cc_expdate_year'=>'paypalwpp_cc_expires_year',
@@ -743,7 +746,7 @@ class paypaldp extends base {
         'wpp_cc_issuedate_year'=>'paypalwpp_cc_issue_year',
         'wpp_cc_issuenumber'=>'paypalwpp_cc_issuenumber',
         'wpp_cc_number'=>'paypalwpp_cc_number',
-        'wpp_cc_checkcode'=>'paypalwpp_cc_checkcode',
+        // wpp_cc_checkcode is deliberately excluded here
         'wpp_payer_firstname'=>'paypalwpp_cc_firstname',
         'wpp_payer_lastname'=>'paypalwpp_cc_lastname',
     ), 'extraFields'=>array(zen_session_name()=>zen_session_id()));
@@ -755,6 +758,14 @@ class paypaldp extends base {
    */
   function before_process() {
     global $order, $doPayPal, $messageStack;
+    $cameFromAjaxRelay = !empty($_SESSION['paypaldp_ajax_relay']);
+    unset($_SESSION['paypaldp_ajax_relay']);
+    if (!empty($this->collectsCardDataOnsite) && $cameFromAjaxRelay === false) {
+      unset($_SESSION['paypaldp_cc_checkcode']);
+      $messageStack->add_session('checkout_payment', MODULE_PAYMENT_PAYPALDP_CANNOT_BE_COMPLETED . '<!-- [' . $this->code . '] onsite-relay-required -->', 'error');
+      zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL', true, false));
+    }
+
     $options = array();
     $optionsShip = array();
     $optionsNVP = array();
@@ -813,7 +824,7 @@ class paypaldp extends base {
       $cc_number = $cc_validation->cc_number;
       $cc_first_name = ($_POST['wpp_payer_firstname'] != '' ? $_POST['wpp_payer_firstname'] : $_SESSION['customer_first_name']);
       $cc_last_name = ($_POST['wpp_payer_lastname'] != '' ? $_POST['wpp_payer_lastname'] : $_SESSION['customer_last_name']);
-      $cc_checkcode = $_POST['wpp_cc_checkcode'];
+      $cc_checkcode = $_SESSION['paypaldp_cc_checkcode'] ?? '';
       $cc_expdate_month = $cc_validation->cc_expiry_month;
       $cc_expdate_year = $cc_validation->cc_expiry_year;
       $cc_issuedate_month = $_POST['wpp_cc_issuedate_month'];
@@ -977,6 +988,8 @@ class paypaldp extends base {
                                            $cc_type,
                                            $optionsAll, array_merge($optionsNVP, $optionsShip));
 
+      unset($_SESSION['paypaldp_cc_checkcode']);
+
       $this->zcLog('before_process - DP-5', 'resultset:' . "\n" . urldecode(print_r($response, true)));
 
       // CHECK RESPONSE
@@ -1059,7 +1072,7 @@ class paypaldp extends base {
     $paypal_order = array('order_id' => $insert_id,
                           'txn_type' => $this->transactiontype,
                           'module_name' => $this->code,
-                          'module_mode' => $this->merchant_country ?? '',
+                          'module_mode' => (string)$this->merchant_country,
                           'reason_code' => $this->reasoncode,
                           'payment_type' => $this->payment_type,
                           'payment_status' => $this->payment_status,
@@ -2366,7 +2379,8 @@ class paypaldp extends base {
     $responseString = $this->send3DSecureHttp(MODULE_PAYMENT_PAYPALDP_CARDINAL_TXN_URL, $data, $debugData);
 
     if (MODULE_PAYMENT_CARDINAL_CENTINEL_DEBUGGING !== FALSE) {
-      $this->zcLog('Cardinal Lookup 2', '[' . zen_session_id() . '] Cardinal Centinel - cmpi_lookup response - ' . $responseString);
+      $responseDebug = preg_replace('#<(CardNumber|CardCode|Cvv)>.*?</\1>#is', '<$1>********</$1>', (string)$responseString);
+      $this->zcLog('Cardinal Lookup 2', '[' . zen_session_id() . '] Cardinal Centinel - cmpi_lookup response - ' . $responseDebug);
     }
 
     // parse the XML
@@ -2460,7 +2474,8 @@ class paypaldp extends base {
     $responseString = $this->send3DSecureHttp(MODULE_PAYMENT_PAYPALDP_CARDINAL_TXN_URL, $data, $debugData);
 
     if (MODULE_PAYMENT_CARDINAL_CENTINEL_DEBUGGING !== FALSE) {
-      $this->zcLog('Cardinal Auth 2', '[' . zen_session_id() . '] Cardinal Centinel - cmpi_authenticate response - ' . $responseString);
+      $responseDebug = preg_replace('#<(CardNumber|CardCode|Cvv)>.*?</\1>#is', '<$1>********</$1>', (string)$responseString);
+      $this->zcLog('Cardinal Auth 2', '[' . zen_session_id() . '] Cardinal Centinel - cmpi_authenticate response - ' . $responseDebug);
     }
 
     // parse the XML

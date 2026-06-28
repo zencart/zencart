@@ -99,9 +99,7 @@ if (($_GET['action'] ?? '') === 'process') {
             // login and restore cart
             $customer->login($login_attempt['customers_id'], $restore_cart = true);
 
-            if (SESSION_RECREATE == 'True') {
-                zen_session_recreate();
-            }
+            zen_session_recreate();
 
             $zco_notifier->notify('NOTIFY_LOGIN_SUCCESS');
 

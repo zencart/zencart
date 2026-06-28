@@ -292,9 +292,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         $result = $customer->create($data);
         if (!empty($result)) {
             $customer->login($result['customers_id'], $restore_cart = true);
-            if (SESSION_RECREATE === 'True') {
-                zen_session_recreate();
-            }
+            zen_session_recreate();
         }
 
         // do any 3rd-party nick creation

@@ -61,7 +61,8 @@ class paypal_curl extends base {
                             CURLOPT_TIMEOUT => 45,
                             CURLOPT_CONNECTTIMEOUT => 10,
                             CURLOPT_FOLLOWLOCATION => FALSE,
-                          //CURLOPT_SSL_VERIFYPEER => FALSE, // Leave this line commented out! This should never be set to FALSE on a live site!
+                            CURLOPT_SSL_VERIFYPEER => TRUE,
+                            CURLOPT_SSL_VERIFYHOST => 2,
                           //CURLOPT_CAINFO => '/local/path/to/cacert.pem', // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
                             CURLOPT_FORBID_REUSE => TRUE,
                             CURLOPT_FRESH_CONNECT => TRUE,
@@ -473,17 +474,7 @@ class paypal_curl extends base {
     $commError = curl_error($ch);
     $commErrNo = curl_errno($ch);
 
-    if ($commErrNo == 35) {
-      trigger_error('ALERT: Could not process PayPal transaction via normal CURL communications. Your server is encountering connection problems using TLS 1.2 ... because your hosting company cannot autonegotiate a secure protocol with modern security protocols. We will try the transaction again, but this is resulting in a very long delay for your customers, and could result in them attempting duplicate purchases. Get your hosting company to update their TLS capabilities ASAP.', E_USER_NOTICE);
-      curl_setopt($ch, CURLOPT_SSLVERSION, 6); // Using the defined value of 6 instead of CURL_SSLVERSION_TLSv1_2 since these outdated hosts also don't properly implement this constant either.
-      $response = curl_exec($ch);
-      $commError = curl_error($ch);
-      $commErrNo = curl_errno($ch);
-    }
-
     $commInfo = @curl_getinfo($ch);
-
-    $rawdata = "CURL raw data:\n" . $response . "CURL RESULTS: (" . $commErrNo . ') ' . $commError . "\n" . print_r($commInfo, true) . "\nEOF";
 
     $errors = ($commErrNo != 0 ? "\n(" . $commErrNo . ') ' . $commError : '');
     $response .= '&CURL_ERRORS=' . ($commErrNo != 0 ? urlencode('(' . $commErrNo . ') ' . $commError) : '') ;
@@ -663,6 +654,9 @@ class paypal_curl extends base {
         switch (strtolower($key)) {
           case 'pwd':
           case 'cvv2':
+          case 'user':
+          case 'vendor':
+          case 'partner':
             $log[$key] = str_repeat('*', strlen($log[$key]));
             break;
 

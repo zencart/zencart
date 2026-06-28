@@ -355,7 +355,7 @@ class Search extends \base
         }
         $where_str .= ')';
         if (!empty($this->searchOptions->alpha_filter_id)) {
-            $alpha_sort = " AND (pd.products_name LIKE '" . chr($this->searchOptions->alpha_filter_id) . "%') ";
+            $alpha_sort = " AND (pd.products_name LIKE '" . zen_db_input(chr($this->searchOptions->alpha_filter_id)) . "%') ";
             $where_str .= $alpha_sort;
         } else {
             $alpha_sort = '';

@@ -25,6 +25,10 @@ foreach ($ipn->fields as $key => $value) {
     $ipn->fields[$key] = ($value === null ? '' : stripslashes($value));
 }
 
+$esc = static function ($value): string {
+    return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE);
+};
+
 if (!empty($response['RESPMSG'])) {
     // these would be payflow transactions
 
@@ -33,57 +37,57 @@ if (!empty($response['RESPMSG'])) {
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_AUTHCODE."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['AUTHCODE'] ."\n";
+    $outputPFmain .= $esc($response['AUTHCODE']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_STATUS."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['RESPMSG'] ."\n";
+    $outputPFmain .= $esc($response['RESPMSG']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_AVSADDR."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['AVSADDR'] ."\n";
+    $outputPFmain .= $esc($response['AVSADDR']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_AVSZIP."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['AVSZIP'] ."\n";
+    $outputPFmain .= $esc($response['AVSZIP']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_CVV2MATCH."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['CVV2MATCH'] ."\n";
+    $outputPFmain .= $esc($response['CVV2MATCH']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['ORIGPNREF'] ."\n";
+    $outputPFmain .= $esc($response['ORIGPNREF']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_DATE."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $ipn->fields['payment_date'] ."\n";
+    $outputPFmain .= $esc($ipn->fields['payment_date']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     $outputPFmain .= '<tr><td>'."\n";
     $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_TRANSSTATE."\n";
     $outputPFmain .= '</td><td>'."\n";
-    $outputPFmain .= $response['TRANSSTATE'] ."\n";
+    $outputPFmain .= $esc($response['TRANSSTATE']) ."\n";
     $outputPFmain .= '</td></tr>'."\n";
 
     if (!empty($response['DAYS_TO_SETTLE'])) {
         $outputPFmain .= '<tr><td>'."\n";
         $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_DAYSTOSETTLE."\n";
         $outputPFmain .= '</td><td>'."\n";
-        $outputPFmain .= $response['DAYS_TO_SETTLE'] ."\n";
+        $outputPFmain .= $esc($response['DAYS_TO_SETTLE']) ."\n";
         $outputPFmain .= '</td></tr>'."\n";
     }
     $outputPFmain .= '</table></td>'."\n\n";
@@ -94,31 +98,31 @@ if (!empty($response['RESPMSG'])) {
         $outputPFmain .= '<tr><td>'."\n";
         $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
         $outputPFmain .= '</td><td>'."\n";
-        $outputPFmain .= $ipn->fields['mc_currency'] ."\n";
+        $outputPFmain .= $esc($ipn->fields['mc_currency']) ."\n";
         $outputPFmain .= '</td></tr>'."\n";
 
         $outputPFmain .= '<tr><td>'."\n";
         $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_GROSS_AMOUNT."\n";
         $outputPFmain .= '</td><td>'."\n";
-        $outputPFmain .= $ipn->fields['mc_gross']."\n";
+        $outputPFmain .= $esc($ipn->fields['mc_gross'])."\n";
         $outputPFmain .= '</td></tr>'."\n";
 
         $outputPFmain .= '<tr><td>'."\n";
         $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_FEE."\n";
         $outputPFmain .= '</td><td>'."\n";
-        $outputPFmain .= $ipn->fields['mc_fee']."\n";
+        $outputPFmain .= $esc($ipn->fields['mc_fee'])."\n";
         $outputPFmain .= '</td></tr>'."\n";
 
         $outputPFmain .= '<tr><td>'."\n";
         $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_EXCHANGE_RATE."\n";
         $outputPFmain .= '</td><td>'."\n";
-        $outputPFmain .= $ipn->fields['exchange_rate']."\n";
+        $outputPFmain .= $esc($ipn->fields['exchange_rate'])."\n";
         $outputPFmain .= '</td></tr>'."\n";
 
         $outputPFmain .= '<tr><td>'."\n";
         $outputPFmain .= MODULE_PAYMENT_PAYPAL_ENTRY_CART_ITEMS."\n";
         $outputPFmain .= '</td><td>'."\n";
-        $outputPFmain .= $ipn->fields['num_cart_items']."\n";
+        $outputPFmain .= $esc($ipn->fields['num_cart_items'])."\n";
         $outputPFmain .= '</td></tr>'."\n";
 
         $outputPFmain .= '</table></td>'."\n\n";
@@ -132,20 +136,20 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_FIRST_NAME."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['FIRSTNAME'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['FIRSTNAME'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_LAST_NAME."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['LASTNAME'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['LASTNAME'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     if (!empty($response['BUSINESS'])) {
         $outputPayPal .= '<tr><td>'."\n";
         $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_BUSINESS_NAME."\n";
         $outputPayPal .= '</td><td>'."\n";
-        $outputPayPal .= urldecode($response['BUSINESS']) ."\n";
+        $outputPayPal .= $esc(urldecode($response['BUSINESS'])) ."\n";
         $outputPayPal .= '</td></tr>'."\n";
     }
 
@@ -166,31 +170,31 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_NAME."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['SHIPTONAME']) ."\n";
+    $outputPayPal .= $esc(urldecode($response['SHIPTONAME'])) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_STREET."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['SHIPTOSTREET']) . ' ' . (!empty($response['SHIPTOSTREET2']) ? urldecode($response['SHIPTOSTREET2']) : '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['SHIPTOSTREET'])) . ' ' . (!empty($response['SHIPTOSTREET2']) ? $esc(urldecode($response['SHIPTOSTREET2'])) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_CITY."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['SHIPTOCITY']) ."\n";
+    $outputPayPal .= $esc(urldecode($response['SHIPTOCITY'])) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_STATE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['SHIPTOSTATE']) . ' ' . urldecode($response['SHIPTOZIP']) ."\n";
+    $outputPayPal .= $esc(urldecode($response['SHIPTOSTATE'])) . ' ' . $esc(urldecode($response['SHIPTOZIP'])) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_COUNTRY."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['SHIPTOCOUNTRYNAME']) ."\n";
+    $outputPayPal .= $esc(urldecode($response['SHIPTOCOUNTRYNAME'])) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '</table></td>'."\n\n";
@@ -200,38 +204,38 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_EMAIL_ADDRESS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['EMAIL'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['EMAIL'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_EBAY_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= (!empty($response['BUYERID']) ? urldecode($response['BUYERID']) : '') ."\n";
+    $outputPayPal .= (!empty($response['BUYERID']) ? $esc(urldecode($response['BUYERID'])) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYER_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYERID'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['PAYERID'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYER_STATUS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYERSTATUS'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['PAYERSTATUS'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_ADDRESS_STATUS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['ADDRESSSTATUS'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['ADDRESSSTATUS'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
     if (isset($response['TRANSACTIONID'])) {
-       $outputPayPal .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&amp;id=' . urldecode($response['TRANSACTIONID']) . '" rel="noopener" target="_blank">' . urldecode($response['TRANSACTIONID']) . '</a>' ."\n";
+       $outputPayPal .= '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_view-a-trans&amp;id=' . $esc(urldecode($response['TRANSACTIONID'])) . '" rel="noopener" target="_blank">' . $esc(urldecode($response['TRANSACTIONID'])) . '</a>' ."\n";
     } else {
        $outputPayPal .= 'n/a';
     }
@@ -240,21 +244,21 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PARENT_TXN_ID."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= (!empty($response['PARENTTRANSACTIONID']) ? urldecode($response['PARENTTRANSACTIONID']) : '') ."\n";
+    $outputPayPal .= (!empty($response['PARENTTRANSACTIONID']) ? $esc(urldecode($response['PARENTTRANSACTIONID'])) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     if (defined('MODULE_PAYMENT_PAYPALWPP_ENTRY_PROTECTIONELIG') && !empty($response['PROTECTIONELIGIBILITY'])) {
         $outputPayPal .= '<tr><td>'."\n";
         $outputPayPal .= MODULE_PAYMENT_PAYPALWPP_ENTRY_PROTECTIONELIG."\n";
         $outputPayPal .= '</td><td>'."\n";
-        $outputPayPal .= $response['PROTECTIONELIGIBILITY']."\n";
+        $outputPayPal .= $esc($response['PROTECTIONELIGIBILITY'])."\n";
         $outputPayPal .= '</td></tr>'."\n";
     }
     if (defined('MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS') && !empty($ipn->fields['memo'])) {
         $outputPayPal .= '<tr><td>'."\n";
         $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_COMMENTS."\n";
         $outputPayPal .= '</td><td>'."\n";
-        $outputPayPal .= $ipn->fields['memo']."\n";
+        $outputPayPal .= $esc($ipn->fields['memo'])."\n";
         $outputPayPal .= '</td></tr>'."\n";
     }
 
@@ -265,26 +269,26 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_TXN_TYPE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['TRANSACTIONTYPE'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['TRANSACTIONTYPE'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_TYPE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYMENTTYPE'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['PAYMENTTYPE'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_STATUS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['PAYMENTSTATUS'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['PAYMENTSTATUS'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PENDING_REASON."\n";
     $outputPayPal .= '</td><td>'."\n";
     if (isset($response['PENDINGREASON'])) {
-       $outputPayPal .= urldecode($response['PENDINGREASON']) . (empty($response['REASONCODE']) || $response['REASONCODE'] == 'None' ? '' : urldecode($response['PENDINGREASON'])) ."\n";
+       $outputPayPal .= $esc(urldecode($response['PENDINGREASON'])) . (empty($response['REASONCODE']) || $response['REASONCODE'] == 'None' ? '' : $esc(urldecode($response['PENDINGREASON']))) ."\n";
     } else {
        $outputPayPal .= 'n/a';
     }
@@ -294,7 +298,7 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_INVOICE."\n";
     $outputPayPal .= '</td><td>'."\n";
     if (!empty($ipn->fields['invoice'])) {
-       $outputPayPal .= urldecode($ipn->fields['invoice']) . (urldecode($ipn->fields['invoice']) != urldecode($response['INVNUM'] ?? '') ? '<br>' . urldecode($response['INVNUM'] ?? '') : '') ."\n";
+       $outputPayPal .= $esc(urldecode($ipn->fields['invoice'])) . (urldecode($ipn->fields['invoice']) != urldecode($response['INVNUM'] ?? '') ? '<br>' . $esc(urldecode($response['INVNUM'] ?? '')) : '') ."\n";
     } else {
        $outputPayPal .= 'n/a';
     }
@@ -303,7 +307,7 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_DATE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['ORDERTIME'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['ORDERTIME'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '</table></td>'."\n\n";
@@ -314,9 +318,9 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CURRENCY."\n";
     $outputPayPal .= '</td><td>'."\n";
     if (!empty($ipn->fields['mc_currency']) && !empty($response['CURRENCYCODE'])) {
-       $outputPayPal .= $ipn->fields['mc_currency'] ."\n";
+       $outputPayPal .= $esc($ipn->fields['mc_currency']) ."\n";
        if ($ipn->fields['mc_currency'] !== urldecode($response['CURRENCYCODE'])) {
-           $outputPayPal .= ' ' . urldecode($response['CURRENCYCODE']);
+           $outputPayPal .= ' ' . $esc(urldecode($response['CURRENCYCODE']));
        }
     } else {
            $outputPayPal .= 'n/a';
@@ -327,25 +331,25 @@ if (!empty($response['RESPMSG'])) {
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_GROSS_AMOUNT."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['AMT'] ?? '') ."\n";
+    $outputPayPal .= $esc(urldecode($response['AMT'] ?? '')) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYMENT_FEE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= urldecode($response['FEEAMT']) ."\n";
+    $outputPayPal .= $esc(urldecode($response['FEEAMT'])) ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_EXCHANGE_RATE."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= (!empty($response['EXCHANGERATE']) ? urldecode($response['EXCHANGERATE']) : '') ."\n";
+    $outputPayPal .= (!empty($response['EXCHANGERATE']) ? $esc(urldecode($response['EXCHANGERATE'])) : '') ."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '<tr><td>'."\n";
     $outputPayPal .= MODULE_PAYMENT_PAYPAL_ENTRY_CART_ITEMS."\n";
     $outputPayPal .= '</td><td>'."\n";
-    $outputPayPal .= ($ipn->fields['num_cart_items'] ?? '')."\n";
+    $outputPayPal .= $esc($ipn->fields['num_cart_items'] ?? '')."\n";
     $outputPayPal .= '</td></tr>'."\n";
 
     $outputPayPal .= '</table></td>'."\n\n";
