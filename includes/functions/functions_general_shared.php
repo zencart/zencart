@@ -124,10 +124,10 @@ function issetorArray(array $array, $key, $default = null)
 /**
  * Returns the CSRF token supplied for the current request, preferring the request header.
  *
- * If both the request header and POST field are present but don't match, `null` is returned
- * so callers fail closed rather than silently choosing one source.
+ * If both the request header and POST field are present but don't match,
+ * `null` is returned so callers fail closed rather than silently choosing one source.
  *
- * @since ZC v3.0.0
+ * @since ZC v2.2.3
  */
 function zen_get_csrf_token_from_request(): ?string
 {
@@ -151,7 +151,7 @@ function zen_get_csrf_token_from_request(): ?string
 /**
  * Validates the current request's CSRF token against the session token.
  *
- * @since ZC v3.0.0
+ * @since ZC v2.2.3
  */
 function zen_request_has_valid_csrf_token(): bool
 {
@@ -166,7 +166,6 @@ function zen_request_has_valid_csrf_token(): bool
 
     return hash_equals($_SESSION['securityToken'], $requestToken);
 }
-
 
 /**
  * Get a shortened filename to fit within the db field constraints
