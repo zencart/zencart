@@ -82,7 +82,7 @@ trait ScriptedInstallHelpers
         $insert_id = $this->dbConn->insert_ID();
 
         $sql_data_array[] = ['fieldName' => 'configuration_key_id', 'value' => $insert_id, 'type' => 'integer'];
-        zen_record_admin_activity('Added configuration record: ' . print_r($sql_data_array, true), 'warning');
+        zen_record_admin_activity('Added configuration record: ' . print_r($this->redactSensitiveConfigValue($sql_data_array, $key_name), true), 'warning');
 
         return $insert_id;
     }
@@ -121,9 +121,28 @@ trait ScriptedInstallHelpers
         $rows = $this->dbConn->affectedRows();
 
         $sql_data_array[] = ['fieldName' => 'configuration_key', 'value' => $key_name, 'type' => 'string'];
-        zen_record_admin_activity('Updated configuration record: ' . print_r($sql_data_array, true), 'warning');
+        zen_record_admin_activity('Updated configuration record: ' . print_r($this->redactSensitiveConfigValue($sql_data_array, $key_name), true), 'warning');
 
         return $rows;
+    }
+
+    /**
+     * @since ZC v2.2.3
+     */
+    protected function redactSensitiveConfigValue(array $sql_data_array, string $key_name): array
+    {
+        if (!\zcObserverLogEventListener::isSensitiveFieldName($key_name)) {
+            return $sql_data_array;
+        }
+
+        foreach ($sql_data_array as &$entry) {
+            if ($entry['fieldName'] === 'configuration_value') {
+                $entry['value'] = '[redacted]';
+            }
+        }
+        unset($entry);
+
+        return $sql_data_array;
     }
 
     /**

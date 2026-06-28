@@ -37,7 +37,7 @@ class zcObserverLogWriterDatabase
         /**
          * gzip the passed postdata so that it takes less storage space in the database
          */
-        $gzpostdata = gzdeflate($log_data['postdata'], 7);
+        $gzpostdata = gzdeflate(zcObserverLogEventListener::filterJsonPostdata($log_data['postdata'] ?? ''), 7);
 
         /**
          * map incoming log data to db schema
@@ -53,7 +53,7 @@ class zcObserverLogWriterDatabase
             'flagged' => (int)$log_data['flagged'],
             'attention' => $db->prepare_input($log_data['attention']),
             'severity' => $db->prepare_input($log_data['severity']),
-            'logmessage' => $this->preserveSpecialCharacters($db->prepare_input($log_data['specific_message'])),
+            'logmessage' => $this->preserveSpecialCharacters($db->prepare_input(zcObserverLogEventListener::filterLogMessage($log_data['specific_message'] ?? ''))),
         ];
         zen_db_perform(TABLE_ADMIN_ACTIVITY_LOG, $sql_data_array);
     }

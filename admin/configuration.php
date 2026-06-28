@@ -21,7 +21,31 @@ if (!empty($action)) {
 
             require 'includes/functions/configuration_checks.php';
 
-            foreach ($_POST['configuration'] as $key => $value) {
+            // Prepare values for confirmation reporting and activity logging.
+            $posted_configuration = $_POST['configuration'];
+            $posted_original = $_POST['original'];
+
+            $cfg_ids = [];
+            foreach ($posted_configuration as $key => $value) {
+                if (str_starts_with($key, 'cfg_')) {
+                    $cfg_ids[] = (int)substr($key, 4);
+                }
+            }
+            if ($cfg_ids !== []) {
+                $sensitive_keys_check = $db->Execute(
+                    "SELECT configuration_id, configuration_key FROM " . TABLE_CONFIGURATION . "
+                      WHERE configuration_id IN (" . implode(',', $cfg_ids) . ")"
+                );
+                foreach ($sensitive_keys_check as $row) {
+                    if (zcObserverLogEventListener::isSensitiveFieldName($row['configuration_key'])) {
+                        $cfg_key = 'cfg_' . $row['configuration_id'];
+                        $_POST['configuration'][$cfg_key] = '[redacted]';
+                        $_POST['original'][$cfg_key] = '[redacted]';
+                    }
+                }
+            }
+
+            foreach ($posted_configuration as $key => $value) {
                 if (!str_starts_with($key, 'cfg_')) {
                     continue;
                 }
@@ -30,7 +54,7 @@ if (!empty($action)) {
                     $value = implode(', ', $value);
                     $value = preg_replace('/, --none--/', '', $value);
                 }
-                if ($_POST['original'][$key] === $value) {
+                if ($posted_original[$key] === $value) {
                     continue; // No change, skip update
                 }
 
@@ -60,7 +84,7 @@ if (!empty($action)) {
                 $messageStack->add_session(
                     sprintf(TEXT_VALUE_SAVED,
                         zen_output_string_protected($checks->fields['configuration_title']),
-                        '<code>' . zen_output_string_protected($_POST['original'][$key]) . '</code>',
+                        '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
                         '<code>' . zen_output_string_protected($configuration_value) . '</code>'
                     ),
                     'success'
@@ -72,9 +96,9 @@ if (!empty($action)) {
                       WHERE configuration_id = " . $config_id . "
                       LIMIT 1"
                 );
-                zen_record_admin_activity('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value, 'warning');
+                zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value), 'warning');
 
-                // Send a notifier that a configuration change has been made
+                // Notify that a configuration change has been made
                 $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
             }
 
