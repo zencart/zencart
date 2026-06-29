@@ -181,7 +181,9 @@ if (!empty($action) && $order_exists === true) {
                                 $messageStack->add_session(sprintf(TEXT_EXTENSION_NOT_UNDERSTOOD, $file_extension), 'error');
                                 zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['download', 'action']) . 'action=edit', 'NONSSL'));
                 }
-            $fs_path = DIR_FS_CATALOG_IMAGES . 'uploads/' . $fileName;
+            // this define was added to admin in v3.0 for consistency with catalog; added here just as a safeguard: remove in v4 or later, since it's in defined_paths already.
+            zen_define_default('DIR_FS_UPLOADS', DIR_FS_CATALOG_IMAGES . 'uploads/');
+            $fs_path = DIR_FS_UPLOADS . $fileName;
             if (!file_exists($fs_path)) {
                 $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
                 zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['download', 'action']) . 'action=edit'));
