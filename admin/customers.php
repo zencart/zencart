@@ -780,7 +780,7 @@ if ($action === 'edit' || $action === 'update') {
                 <div class="col-sm-9 col-md-6">
 <?php
         if ($processed === true) {
-            echo $cInfo->customers_fax . zen_draw_hidden_field('customers_fax');
+            echo htmlspecialchars((string)$cInfo->customers_fax, ENT_COMPAT, CHARSET, true) . zen_draw_hidden_field('customers_fax');
         } else {
             echo zen_draw_input_field(
                 'customers_fax',
@@ -1384,8 +1384,8 @@ if ($action === 'edit' || $action === 'update') {
                                         $zc_address_book_count
                                     ) ?>
                                 </td>
-                                <td class="dataTableContent"><?= $customer['customers_lastname'] ?></td>
-                                <td class="dataTableContent"><?= $customer['customers_firstname'] ?></td>
+                                <td class="dataTableContent"><?= zen_output_string_protected($customer['customers_lastname']) ?></td>
+                                <td class="dataTableContent"><?= zen_output_string_protected($customer['customers_firstname']) ?></td>
 <?php
         if (ACCOUNT_COMPANY === 'true') {
 ?>
@@ -1645,10 +1645,10 @@ if ($action === 'edit' || $action === 'update') {
                     'text' =>
                         '<h4>' .
                             TABLE_HEADING_ID . ' ' . $cInfo->customers_id . ' ' .
-                            $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname .
+                            zen_output_string_protected($cInfo->customers_firstname) . ' ' . zen_output_string_protected($cInfo->customers_lastname) .
                         '</h4>' .
                         '<br>' .
-                        $cInfo->customers_email_address
+                        zen_output_string_protected($cInfo->customers_email_address)
                 ];
 
                 $contents[] = [
