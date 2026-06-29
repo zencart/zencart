@@ -146,8 +146,6 @@ class ot_coupon extends base
     {
         global $order, $currencies;
 
-        $this->abortCheckoutProcess = false;
-
         if (empty($_SESSION['cc_id'])) {
             $this->releaseHeldRedemptionLockIfAny();
             return;
@@ -686,6 +684,16 @@ class ot_coupon extends base
     public function shouldAbortCheckoutProcess(): bool
     {
         return $this->abortCheckoutProcess;
+    }
+
+    /**
+     * Clear the checkout-process abort flag after the caller has handled it.
+     *
+     * @since ZC v2.2.3
+     */
+    public function clearCheckoutProcessAbort(): void
+    {
+        $this->abortCheckoutProcess = false;
     }
 
     /**
