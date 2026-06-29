@@ -46,10 +46,10 @@ function zen_href_link($page = '', $parameters = '', $connection = 'SSL', $add_s
         $separator = '?';
     }
     else if (!empty($parameters)) {
-        $link .= 'index.php?cmd='. $page . '&' . zen_output_string($parameters);
+        $link .= 'index.php?cmd=' . zen_output_string($page) . '&' . zen_output_string($parameters);
     }
     else {
-        $link .= 'index.php?cmd=' . $page;
+        $link .= 'index.php?cmd=' . zen_output_string($page);
     }
 
     // Replace duplicates of '&' and instances of '&amp;'  with a single '&'
