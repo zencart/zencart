@@ -182,7 +182,7 @@ if (!empty($action) && $order_exists === true) {
                                 zen_redirect(zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(['download', 'action']) . 'action=edit', 'NONSSL'));
                 }
             // this define was added to admin in v3.0 for consistency with catalog; added here just as a safeguard: remove in v4 or later, since it's in defined_paths already.
-            defined('DIR_FS_UPLOADS') || define('DIR_FS_UPLOADS', DIR_FS_CATALOG_IMAGES . 'uploads/');
+            zen_define_default('DIR_FS_UPLOADS', DIR_FS_CATALOG_IMAGES . 'uploads/');
             $fs_path = DIR_FS_UPLOADS . $fileName;
             if (!file_exists($fs_path)) {
                 $messageStack->add_session(TEXT_FILE_NOT_FOUND, 'error');
