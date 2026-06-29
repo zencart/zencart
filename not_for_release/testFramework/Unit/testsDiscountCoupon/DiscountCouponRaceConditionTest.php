@@ -22,7 +22,7 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
             eval('function zen_is_logged_in(): bool { return !empty($_SESSION["customer_id"]); }');
         }
         if (!function_exists('zen_in_guest_checkout')) {
-            eval('function zen_in_guest_checkout(): bool { return false; }');
+            eval('function zen_in_guest_checkout(): bool { return !empty($_SESSION["guest_checkout"]); }');
         }
         if (!function_exists('zen_db_input')) {
             eval('function zen_db_input($string) { return addslashes((string)$string); }');
@@ -42,6 +42,7 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
         defined('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS') || define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '');
         defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         defined('TEXT_INVALID_USES_COUPON') || define('TEXT_INVALID_USES_COUPON', 'Coupon %1$s has reached its %2$s-use limit.');
+        defined('TEXT_INVALID_USES_USER_COUPON') || define('TEXT_INVALID_USES_USER_COUPON', 'Coupon %1$s has reached your %2$s-use limit.');
 
         $GLOBALS['currencies'] = $this->getMockBuilder('currencies')
             ->disableOriginalConstructor()
@@ -142,6 +143,57 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
         $this->assertCount(1, $GLOBALS['db']->redemptions);
     }
 
+    public function testConcurrentCheckoutAbortSurvivesSecondProcessPass(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'two-pass-race-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 1,
+            'uses_per_user' => 0,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+
+        $couponOne = new ot_coupon();
+        $couponOne->include_shipping = 'false';
+        $couponOne->process();
+
+        $requestTwoOrder = (object)['info' => $this->getBaseOrderInfo()];
+        $GLOBALS['order'] = $requestTwoOrder;
+        $_SESSION['customer_id'] = 202;
+        $_SESSION['cc_id'] = '1';
+
+        $couponTwo = new ot_coupon();
+        $couponTwo->include_shipping = 'false';
+        $couponTwo->process();
+
+        $this->assertTrue($couponTwo->shouldAbortCheckoutProcess());
+        $this->assertArrayNotHasKey('cc_id', $_SESSION);
+        $this->assertEquals(502.49, $requestTwoOrder->info['total']);
+
+        $requestTwoSecondPassOrder = (object)['info' => $this->getBaseOrderInfo()];
+        $GLOBALS['order'] = $requestTwoSecondPassOrder;
+        $couponTwo->process();
+
+        $this->assertTrue($couponTwo->shouldAbortCheckoutProcess());
+        $this->assertEquals(
+            502.49,
+            $requestTwoSecondPassOrder->info['total'],
+            'The abort flag must survive the second checkout_process totals pass so checkout redirects before charging a different total.'
+        );
+    }
+
     public function testUnlimitedUseCouponDoesNotTakeAdvisoryLockDuringCheckoutProcess(): void
     {
         $couponDetails = [
@@ -177,6 +229,306 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
         $this->assertSame(0, $GLOBALS['db']->getLockCalls);
     }
 
+    public function testPerUserOnlyCouponDoesNotSerializeDifferentCustomers(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'per-user-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 0,
+            'uses_per_user' => 1,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+
+        $requestOneOrder = (object)['info' => $this->getBaseOrderInfo()];
+        $GLOBALS['order'] = $requestOneOrder;
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+
+        $couponOne = new ot_coupon();
+        $couponOne->include_shipping = 'false';
+        $couponOne->process();
+
+        $requestTwoOrder = (object)['info' => $this->getBaseOrderInfo()];
+        $GLOBALS['order'] = $requestTwoOrder;
+        $_SESSION['customer_id'] = 202;
+        $_SESSION['cc_id'] = '1';
+
+        $couponTwo = new ot_coupon();
+        $couponTwo->include_shipping = 'false';
+        $couponTwo->process();
+
+        $this->assertEquals(452.49, $requestOneOrder->info['total']);
+        $this->assertEquals(452.49, $requestTwoOrder->info['total']);
+        $this->assertFalse($couponTwo->shouldAbortCheckoutProcess());
+        $this->assertContains('zc_coupon_redeem_1_customer_101', $GLOBALS['db']->getLockNames);
+        $this->assertContains('zc_coupon_redeem_1_customer_202', $GLOBALS['db']->getLockNames);
+
+        $GLOBALS['insert_id'] = 1001;
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+        $couponOne->apply_credit();
+
+        $GLOBALS['insert_id'] = 1002;
+        $_SESSION['customer_id'] = 202;
+        $_SESSION['cc_id'] = '1';
+        $couponTwo->apply_credit();
+
+        $this->assertCount(2, $GLOBALS['db']->redemptions);
+    }
+
+    public function testGuestCheckoutWithUsesPerUserSetUsesSharedGuestIdentityLock(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'guest-user-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 0,
+            'uses_per_user' => 1,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+
+        unset($_SESSION['customer_id']);
+        $_SESSION['guest_checkout'] = true;
+
+        $requestOneOrder = (object)['info' => $this->getBaseOrderInfo()];
+        $GLOBALS['order'] = $requestOneOrder;
+        $_SESSION['cc_id'] = '1';
+
+        $couponOne = new ot_coupon();
+        $couponOne->include_shipping = 'false';
+        $couponOne->process();
+
+        $requestTwoOrder = (object)['info' => $this->getBaseOrderInfo()];
+        $GLOBALS['order'] = $requestTwoOrder;
+        $_SESSION['cc_id'] = '1';
+
+        $couponTwo = new ot_coupon();
+        $couponTwo->include_shipping = 'false';
+        $couponTwo->process();
+
+        $this->assertEquals(452.49, $requestOneOrder->info['total']);
+        $this->assertEquals(502.49, $requestTwoOrder->info['total']);
+        $this->assertTrue($couponTwo->shouldAbortCheckoutProcess());
+        $this->assertContains('zc_coupon_redeem_1_customer_0', $GLOBALS['db']->getLockNames);
+    }
+
+    public function testGuestCheckoutCanOverridePerUserLockIdentity(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'guest-lock-override-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 0,
+            'uses_per_user' => 1,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+
+        unset($_SESSION['customer_id']);
+        $_SESSION['guest_checkout'] = true;
+        $_SESSION['cc_id'] = '1';
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+
+        $coupon = new DiscountCouponRaceGuestAwareCoupon(98765);
+        $coupon->include_shipping = 'false';
+        $coupon->process();
+
+        $this->assertContains('zc_coupon_redeem_1_customer_98765', $GLOBALS['db']->getLockNames);
+    }
+
+    public function testPerUserOnlyLockTimeoutQueuesPerUserMessage(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'per-user-timeout',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 0,
+            'uses_per_user' => 1,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+
+        $couponOne = new ot_coupon();
+        $couponOne->include_shipping = 'false';
+        $couponOne->process();
+
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+
+        $couponTwo = new ot_coupon();
+        $couponTwo->include_shipping = 'false';
+        $couponTwo->process();
+
+        $this->assertTrue($couponTwo->shouldAbortCheckoutProcess());
+        $messages = array_column($GLOBALS['messageStack']->messages, 'message');
+        $this->assertContains('Coupon per-user-timeout has reached your 1-use limit.', $messages);
+    }
+
+    public function testApplyCreditDoesNotRedeemWhenFinalizationLockCannotBeReacquired(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'apply-credit-lock-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 1,
+            'uses_per_user' => 0,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+
+        $coupon = new ot_coupon();
+        $coupon->include_shipping = 'false';
+        $coupon->process();
+
+        $this->setProtectedProperty($coupon, 'heldRedemptionLockName', null);
+
+        $GLOBALS['insert_id'] = 1001;
+        $coupon->apply_credit();
+
+        $this->assertCount(0, $GLOBALS['db']->redemptions);
+        $this->assertSame('', $_SESSION['cc_id']);
+    }
+
+    public function testGuestCheckoutApplyCreditTracksRedemptionAsCustomerZero(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'guest-apply-credit-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 0,
+            'uses_per_user' => 1,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+        unset($_SESSION['customer_id']);
+        $_SESSION['guest_checkout'] = true;
+        $_SESSION['cc_id'] = '1';
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+
+        $coupon = new ot_coupon();
+        $coupon->include_shipping = 'false';
+        $coupon->process();
+
+        $GLOBALS['insert_id'] = 1001;
+        $coupon->apply_credit();
+
+        $this->assertCount(1, $GLOBALS['db']->redemptions);
+        $this->assertSame(0, $GLOBALS['db']->redemptions[0]['customer_id']);
+    }
+
+    public function testCheckoutProcessRedirectsBackToConfirmationWhenCouponAbortFlagIsSet(): void
+    {
+        defined('IS_ADMIN_FLAG') || define('IS_ADMIN_FLAG', false);
+        defined('FILENAME_TIME_OUT') || define('FILENAME_TIME_OUT', 'timeout');
+        defined('FILENAME_DEFAULT') || define('FILENAME_DEFAULT', 'index');
+        defined('FILENAME_LOGIN') || define('FILENAME_LOGIN', 'login');
+        defined('FILENAME_CHECKOUT_SHIPPING') || define('FILENAME_CHECKOUT_SHIPPING', 'checkout_shipping');
+        defined('FILENAME_CHECKOUT_CONFIRMATION') || define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
+
+        if (!function_exists('zen_get_module_directory')) {
+            eval('function zen_get_module_directory($filename) { return $filename; }');
+        }
+        if (!function_exists('zen_get_customer_validate_session')) {
+            eval('function zen_get_customer_validate_session($customerId) { return true; }');
+        }
+        if (!function_exists('zen_request_has_valid_csrf_token')) {
+            eval('function zen_request_has_valid_csrf_token() { return true; }');
+        }
+        if (!function_exists('zen_session_destroy')) {
+            eval('function zen_session_destroy() { }');
+        }
+        if (!function_exists('zen_href_link')) {
+            eval('function zen_href_link($page, $params = "", $connection = "NONSSL") { return $page; }');
+        }
+        if (!function_exists('zen_redirect')) {
+            eval('function zen_redirect($url) { throw new DiscountCouponRaceRedirectException($url); }');
+        }
+
+        $stubRoot = $this->makeCheckoutProcessStubRoot();
+        $this->writeCheckoutProcessStubFiles($stubRoot);
+
+        $checkoutProcessScript = $this->writeCheckoutProcessHarness($stubRoot);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SESSION['customer_id'] = 202;
+        $_SESSION['payment'] = 'cod';
+        $_SESSION['shipping'] = 'flat_flat';
+        $_SESSION['cartID'] = 'cart-1';
+        $_SESSION['cart'] = new DiscountCouponRaceCheckoutCart();
+        $_SESSION['cart']->cartID = 'cart-1';
+
+        $GLOBALS['zco_notifier'] = new DiscountCouponRaceNotifier();
+        $GLOBALS['messageStack'] = new DiscountCouponRaceMessageStack();
+        $GLOBALS['order'] = null;
+        $GLOBALS['ot_coupon'] = new DiscountCouponRaceAbortCoupon();
+        $GLOBALS['cod'] = (object)['code' => 'cod'];
+        $zco_notifier = $GLOBALS['zco_notifier'];
+        $ot_coupon = $GLOBALS['ot_coupon'];
+        $credit_covers = false;
+
+        try {
+            require $checkoutProcessScript;
+            $this->fail('checkout_process.php should have redirected back to checkout confirmation.');
+        } catch (DiscountCouponRaceRedirectException $exception) {
+            $this->assertSame(FILENAME_CHECKOUT_CONFIRMATION, $exception->url);
+            $this->assertFalse($GLOBALS['ot_coupon']->shouldAbortCheckoutProcess());
+        } finally {
+            unset(
+                $GLOBALS['zco_notifier'],
+                $GLOBALS['order'],
+                $GLOBALS['ot_coupon'],
+                $GLOBALS['cod']
+            );
+        }
+    }
+
     protected function getBaseOrderInfo(): array
     {
         return [
@@ -187,6 +539,125 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
             'shipping_tax' => 0,
         ];
     }
+
+    protected function setProtectedProperty(object $object, string $propertyName, mixed $value): void
+    {
+        $reflection = new ReflectionProperty($object, $propertyName);
+        $reflection->setAccessible(true);
+        $reflection->setValue($object, $value);
+    }
+
+    protected function makeCheckoutProcessStubRoot(): string
+    {
+        $root = sys_get_temp_dir() . '/zc-checkout-process-stubs-' . uniqid('', true);
+        mkdir($root, 0777, true);
+        mkdir($root . '/classes', 0777, true);
+        mkdir($root . '/modules', 0777, true);
+
+        return $root;
+    }
+
+    protected function writeCheckoutProcessStubFiles(string $root): void
+    {
+        file_put_contents($root . '/modules/require_languages.php', "<?php\n");
+        file_put_contents($root . '/classes/payment.php', <<<'PHP'
+<?php
+class payment
+{
+    public function __construct($code)
+    {
+    }
+
+    public function checkCreditCovered(): void
+    {
+    }
+
+    public function before_process(): void
+    {
+    }
+
+    public function clear_payment(): void
+    {
+    }
+}
+PHP);
+        file_put_contents($root . '/classes/order.php', <<<'PHP'
+<?php
+class order
+{
+    public array $billing = ['firstname' => 'Test'];
+    public array $products = [['id' => 1, 'model' => 'TEST']];
+    public array $info = [
+        'payment_method' => 'cod',
+        'payment_module_code' => 'cod',
+        'coupon_code' => '',
+        'currency' => 'USD',
+        'currency_value' => 1,
+        'shipping_method' => 'Flat Rate',
+        'order_status' => 1,
+    ];
+
+    public function create($orderTotals): int
+    {
+        return 1001;
+    }
+
+    public function create_add_products($insertId): void
+    {
+    }
+
+    public function send_order_email($insertId): void
+    {
+    }
+}
+PHP);
+        file_put_contents($root . '/classes/shipping.php', <<<'PHP'
+<?php
+class shipping
+{
+    public function __construct($shippingCode)
+    {
+    }
+}
+PHP);
+        file_put_contents($root . '/classes/order_total.php', <<<'PHP'
+<?php
+class order_total
+{
+    public function pre_confirmation_check(): array
+    {
+        return [];
+    }
+
+    public function process(): array
+    {
+        global $ot_coupon;
+        $ot_coupon->process();
+        return [];
+    }
+
+    public function clear_posts(): void
+    {
+    }
+}
+PHP);
+    }
+
+    protected function writeCheckoutProcessHarness(string $root): string
+    {
+        $source = file_get_contents(DIR_FS_CATALOG . 'includes/modules/checkout_process.php');
+        $moduleRequire = "require '" . addslashes($root . "/modules/") . "' . zen_get_module_directory('require_languages.php');";
+        $source = str_replace("require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');", $moduleRequire, $source);
+        $source = str_replace("require DIR_WS_CLASSES . 'payment.php';", "require '" . addslashes($root . "/classes/payment.php") . "';", $source);
+        $source = str_replace("require DIR_WS_CLASSES . 'order.php';", "require '" . addslashes($root . "/classes/order.php") . "';", $source);
+        $source = str_replace("require DIR_WS_CLASSES . 'shipping.php';", "require '" . addslashes($root . "/classes/shipping.php") . "';", $source);
+        $source = str_replace("require DIR_WS_CLASSES . 'order_total.php';", "require '" . addslashes($root . "/classes/order_total.php") . "';", $source);
+
+        $harnessPath = $root . '/checkout_process_harness.php';
+        file_put_contents($harnessPath, $source);
+
+        return $harnessPath;
+    }
 }
 
 class DiscountCouponRaceDb
@@ -194,7 +665,8 @@ class DiscountCouponRaceDb
     public array $couponDetails;
     public array $redemptions = [];
     public int $getLockCalls = 0;
-    private ?string $heldLockName = null;
+    public array $getLockNames = [];
+    private array $heldLockNames = [];
 
     public function __construct(array $couponDetails)
     {
@@ -207,17 +679,20 @@ class DiscountCouponRaceDb
             $this->getLockCalls++;
             preg_match("/SELECT GET_LOCK\\('(.*)', \\d+\\)/", $sql, $matches);
             $requestedLock = stripslashes($matches[1] ?? '');
-            if ($this->heldLockName !== null && $this->heldLockName === $requestedLock) {
+            $this->getLockNames[] = $requestedLock;
+            if (isset($this->heldLockNames[$requestedLock])) {
                 return new DiscountCouponRaceResult(['got_lock' => 0], 1);
             }
 
-            $this->heldLockName = $requestedLock;
+            $this->heldLockNames[$requestedLock] = true;
 
             return new DiscountCouponRaceResult(['got_lock' => 1], 1);
         }
 
         if (str_contains($sql, 'SELECT RELEASE_LOCK(')) {
-            $this->heldLockName = null;
+            preg_match("/SELECT RELEASE_LOCK\\('(.*)'\\)/", $sql, $matches);
+            $releasedLock = stripslashes($matches[1] ?? '');
+            unset($this->heldLockNames[$releasedLock]);
             return new DiscountCouponRaceResult(['released' => 1], 1);
         }
 
@@ -287,5 +762,61 @@ class DiscountCouponRaceMessageStack
     {
         $this->stacks[] = $stack;
         $this->messages[] = compact('stack', 'message', 'type');
+    }
+}
+
+class DiscountCouponRaceGuestAwareCoupon extends ot_coupon
+{
+    public function __construct(private int $guestLockCustomerId)
+    {
+        parent::__construct();
+    }
+
+    protected function resolveGuestCouponRedemptionLockCustomerId(array $coupon_details): int
+    {
+        return $this->guestLockCustomerId;
+    }
+}
+
+class DiscountCouponRaceAbortCoupon
+{
+    private bool $abortCheckoutProcess = true;
+
+    public function process(): void
+    {
+    }
+
+    public function shouldAbortCheckoutProcess(): bool
+    {
+        return $this->abortCheckoutProcess;
+    }
+
+    public function clearCheckoutProcessAbort(): void
+    {
+        $this->abortCheckoutProcess = false;
+    }
+}
+
+class DiscountCouponRaceCheckoutCart
+{
+    public string $cartID = '';
+
+    public function reset(bool $resetDatabase): void
+    {
+    }
+}
+
+class DiscountCouponRaceNotifier
+{
+    public function notify(string $eventId, ...$params): void
+    {
+    }
+}
+
+class DiscountCouponRaceRedirectException extends RuntimeException
+{
+    public function __construct(public string $url)
+    {
+        parent::__construct($url);
     }
 }
