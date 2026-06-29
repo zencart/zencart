@@ -247,6 +247,19 @@ class AdminUrlGenerationTest extends zcUnitTestCase
     }
 
     #[Depends('testAdminPage')]
+    public function testPageParameterIsEscaped()
+    {
+        $this->assertURLGenerated(
+            zen_href_link('page"xss'),
+            HTTP_SERVER . DIR_WS_ADMIN . 'index.php?cmd=page&amp;quot;xss'
+        );
+        $this->assertURLGenerated(
+            zen_href_link('page"xss', 'param=value'),
+            HTTP_SERVER . DIR_WS_ADMIN . 'index.php?cmd=page&amp;quot;xss&amp;param=value'
+        );
+    }
+
+    #[Depends('testAdminPage')]
     public function testConfigurationURLs()
     {
         $this->assertURLGenerated(
