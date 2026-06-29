@@ -248,7 +248,7 @@ class WhosOnline extends base
             return 2;
         }
 
-        $session = $this->inspectSessionCart('', $data['session_data']);
+        $session = $this->inspectSessionCart($data['session_id'] ?? '', $data['session_data']);
 
         // lookup how many rows are in the shopping cart contents array
         if (!empty($session['products'])) {
@@ -324,12 +324,7 @@ class WhosOnline extends base
             $session_data = $result->EOF === false ? trim($result->fields['session_data']) : '';
         }
 
-        if (str_starts_with($session_data, 'cart|O')) {
-            $session_data = base64_decode($session_data);
-        }
-        if (str_starts_with($session_data, 'cart|O')) {
-            $session_data = '';
-        }
+        $session_data = $this->normalizeSessionData($session_data);
 
         if (empty($session_data)) {
             return null;
@@ -358,36 +353,87 @@ class WhosOnline extends base
 
         $adminSession = session_encode();
         $backupSessionArray = $_SESSION;
+        $_SESSION = [];
 
-        if (session_decode($session_data) !== false) {
-            $cart = $_SESSION['cart'];
-            $currency = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
+        try {
+            if ($this->decodeSessionData($session_data)) {
+                $cart = $_SESSION['cart'] ?? null;
+                $currency = $_SESSION['currency'] ?? zen_config('DEFAULT_CURRENCY');
 
-            if (is_object($cart) && isset($currency)) {
-                $extracted_data['products'] = $cart->get_products();
-                $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
-                $extracted_data['cartObject'] = $cart;
-                $extracted_data['currency_code'] = $currency;
-                $extracted_data['cartID'] = $_SESSION['cartID'];
-            }
-
-            foreach ($fields_to_extract as $field => $as) {
-                if (isset($_SESSION[$field])) {
-                    $extracted_data[$as] = $_SESSION[$field];
+                if (is_object($cart) && isset($currency)) {
+                    $extracted_data['products'] = $cart->get_products();
+                    $extracted_data['total'] = $GLOBALS['currencies']->format($cart->show_total(), true, $currency);
+                    $extracted_data['cartObject'] = $cart;
+                    $extracted_data['currency_code'] = $currency;
+                    $extracted_data['cartID'] = $_SESSION['cartID'];
                 }
-            }
-        }
 
-        // protect against tampering
-        $_SESSION = $backupSessionArray;
-        foreach ($_SESSION as $key => $value) {
-            if (!isset($backupSessionArray[$key])) {
-                unset($_SESSION[$key]);
+                foreach ($fields_to_extract as $field => $as) {
+                    if (isset($_SESSION[$field])) {
+                        $extracted_data[$as] = $_SESSION[$field];
+                    }
+                }
+            } elseif ($session_id !== '') {
+                $this->purgeCorruptSessionRecord($session_id);
             }
-        }
-        session_decode($adminSession);
-        unset($adminSession, $backupSessionArray);
+        } finally {
+            $_SESSION = $backupSessionArray;
 
+            if (is_string($adminSession)) {
+                $this->decodeSessionData($adminSession);
+            }
+
+            unset($adminSession, $backupSessionArray);
+        }
         return $extracted_data;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function purgeCorruptSessionRecord(string $session_id): void
+    {
+        global $db;
+
+        $db->Execute("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . zen_db_input($session_id) . "'");
+        $db->Execute("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE session_id = '" . zen_db_input($session_id) . "'");
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function normalizeSessionData(string $session_data): string
+    {
+        $session_data = trim($session_data);
+
+        if ($session_data === '') {
+            return '';
+        }
+
+        $base64Decoded = base64_decode($session_data, true);
+        if ($base64Decoded !== false && base64_encode($base64Decoded) === $session_data) {
+            $session_data = $base64Decoded;
+        }
+
+        return $session_data;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function decodeSessionData(string $session_data): bool
+    {
+        set_error_handler(
+            static function (int $errno, string $errstr): bool {
+                return $errno === E_WARNING && str_starts_with($errstr, 'session_decode():');
+            },
+            E_WARNING
+        );
+
+        try {
+            return session_decode($session_data) !== false;
+        } finally {
+            restore_error_handler();
+        }
     }
 }
