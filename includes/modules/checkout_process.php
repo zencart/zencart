@@ -107,6 +107,13 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PROCESS');
 $order_totals = $order_total_modules->process();
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_TOTALS_PROCESS');
 
+if (isset($ot_coupon) && method_exists($ot_coupon, 'shouldAbortCheckoutProcess') && $ot_coupon->shouldAbortCheckoutProcess()) {
+    if (method_exists($ot_coupon, 'clearCheckoutProcessAbort')) {
+        $ot_coupon->clearCheckoutProcessAbort();
+    }
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+}
+
 if (!isset($_SESSION['payment']) && $credit_covers === false) {
     zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }

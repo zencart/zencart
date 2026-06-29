@@ -5,10 +5,12 @@
  */
 
 use Tests\Support\zcDiscountCouponTest;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 /**
  * Unit Tests for discount coupons
  */
+#[RunTestsInSeparateProcesses]
 class DiscountCouponsTest extends zcDiscountCouponTest
 {
     public ot_coupon $coupon;
@@ -24,14 +26,14 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         require_once DIR_FS_CATALOG . 'includes/classes/db/mysql/query_factory.php';
         $_SESSION['currency'] = 'USD';
         $_SESSION['cc_id'] = '1';
-        define('MODULE_ORDER_TOTAL_COUPON_HEADER', '');
-        define('MODULE_ORDER_TOTAL_COUPON_TITLE', '');
-        define('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION', '');
-        define('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '');
-        define('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', '');
-        define('MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'false');
-        define('MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard');
-        define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '');
+        defined('MODULE_ORDER_TOTAL_COUPON_HEADER') || define('MODULE_ORDER_TOTAL_COUPON_HEADER', '');
+        defined('MODULE_ORDER_TOTAL_COUPON_TITLE') || define('MODULE_ORDER_TOTAL_COUPON_TITLE', '');
+        defined('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION') || define('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION', '');
+        defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER') || define('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '');
+        defined('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING') || define('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', '');
+        defined('MODULE_ORDER_TOTAL_COUPON_INC_TAX') || define('MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'false');
+        defined('MODULE_ORDER_TOTAL_COUPON_CALC_TAX') || define('MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard');
+        defined('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS') || define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '');
 
         $GLOBALS['currencies'] = $this->getMockBuilder('currencies')
             ->disableOriginalConstructor()
@@ -85,7 +87,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -117,7 +119,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -149,7 +151,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -181,7 +183,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -213,7 +215,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -245,7 +247,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -277,7 +279,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -309,7 +311,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -341,7 +343,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 2.50,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
@@ -373,7 +375,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
             'shipping_cost' => 5.75,
             'shipping_tax' => 0,
         ];
-        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        defined('DISPLAY_PRICE_WITH_TAX') || define('DISPLAY_PRICE_WITH_TAX', 'false');
         $this->instantiateQfr([
             'coupon_id' => '1',
             'coupon_code' => 'test',
