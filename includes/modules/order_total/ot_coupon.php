@@ -98,6 +98,16 @@ class ot_coupon extends base
      * @var array
      */
     protected $validation_errors = [];
+    /**
+     * Indicates that checkout_process must not continue after this module dropped the coupon.
+     * @var bool
+     */
+    protected bool $abortCheckoutProcess = false;
+    /**
+     * Advisory lock currently held across checkout_process finalization, if any.
+     * @var string|null
+     */
+    protected ?string $heldRedemptionLockName = null;
 
     function __construct()
     {
@@ -137,6 +147,7 @@ class ot_coupon extends base
         global $order, $currencies;
 
         if (empty($_SESSION['cc_id'])) {
+            $this->releaseHeldRedemptionLockIfAny();
             return;
         }
 
@@ -188,6 +199,7 @@ class ot_coupon extends base
      */
     function clear_posts()
     {
+        $this->releaseHeldRedemptionLockIfAny();
         unset($_POST['dc_redeem_code']);
         unset($_SESSION['cc_id']);
     }
@@ -444,6 +456,59 @@ class ot_coupon extends base
     }
 
     /**
+     * Re-validate the time- and usage-based coupon restrictions at order-finalization time.
+     *
+     * Called from calculate_deductions() so the limits are re-checked immediately before the deduction is
+     * applied -- and before order::create() persists it.
+     *
+     * On failure the now-invalid coupon is dropped from the session (neither applied to the order 
+     * nor recorded as redeemed by apply_credit()); the order then proceeds at the correct, un-discounted total.
+     *
+     * @param array $coupon_details coupon row as fetched from TABLE_COUPONS
+     * @return bool true when the coupon is still valid; false when it was dropped
+     * @since ZC v2.2.3
+     */
+    protected function revalidateCouponAtFinalization(array $coupon_details): bool
+    {
+        global $messageStack;
+
+        $messages = [];
+
+        if (!empty($coupon_details['coupon_start_date']) && !$this->validateCouponStartDate($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_STARTDATE_COUPON, $coupon_details['coupon_code'], zen_date_short($coupon_details['coupon_start_date']));
+        }
+        if (!empty($coupon_details['coupon_expire_date']) && !$this->validateCouponEndDate($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_FINISHDATE_COUPON, $coupon_details['coupon_code'], zen_date_short($coupon_details['coupon_expire_date']));
+        }
+        if (!$this->validateCouponMaximumUses($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_USES_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_coupon']);
+        }
+        if (!$this->validateCouponUsesPerCustomer($coupon_details)) {
+            $messages[] = sprintf(TEXT_INVALID_USES_USER_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_user']);
+        }
+
+        if (empty($messages)) {
+            return true;
+        }
+
+        // coupon is no longer valid: drop it so it is neither applied to the order nor redeemed
+        $this->notify('NOTIFY_OT_COUPON_FINALIZATION_REVALIDATION_FAILED', ['coupon' => $coupon_details], $messages);
+        $this->remove_coupon_from_current_session();
+
+        if (is_object($messageStack)) {
+            foreach ($messages as $message) {
+                $messageStack->add_session($this->getCheckoutCouponMessageStack(), $message, 'caution');
+            }
+        }
+
+        if ($this->shouldHoldRedemptionLockDuringCheckoutProcess()) {
+            $this->abortCheckoutProcess = true;
+        }
+
+        return false;
+    }
+
+    /**
      * This function is not used by this module
      *
      * @return bool
@@ -473,13 +538,295 @@ class ot_coupon extends base
     function apply_credit()
     {
         global $db, $insert_id;
+
         $cc_id = empty($_SESSION['cc_id']) ? 0 : (int)$_SESSION['cc_id'];
-        if (!empty($this->deduction)) {
+        if (empty($this->deduction) || $cc_id === 0) {
+            $this->releaseHeldRedemptionLockIfAny();
+            $_SESSION['cc_id'] = '';
+            return;
+        }
+
+        $coupon = $db->Execute("SELECT coupon_code, uses_per_coupon, uses_per_user FROM " . TABLE_COUPONS . " WHERE coupon_id = " . $cc_id, 1);
+        $coupon_details = ['coupon_id' => $cc_id] + ($coupon->EOF ? ['uses_per_coupon' => 0, 'uses_per_user' => 0] : $coupon->fields);
+        $lockName = $this->getCouponRedemptionLockName($coupon_details);
+        $redemptionCustomerId = $this->getCouponRedemptionTrackingCustomerId();
+        $haveLock = false;
+
+        if ($lockName !== null) {
+            $haveLock = ($this->heldRedemptionLockName === $lockName);
+            if (!$haveLock) {
+                $haveLock = $this->getNamedLock($lockName);
+            }
+        }
+
+        $withinLimits = false;
+        if ($lockName === null || $haveLock) {
+            $withinLimits = $this->validateCouponMaximumUses($coupon_details) && $this->validateCouponUsesPerCustomer($coupon_details);
+        } else {
+            $this->notify('NOTIFY_OT_COUPON_FINALIZATION_LOCK_UNAVAILABLE', ['coupon_id' => $cc_id, 'order_id' => (int)$insert_id, 'customer_id' => $redemptionCustomerId]);
+        }
+
+        if ($withinLimits) {
             $db->Execute("INSERT INTO " . TABLE_COUPON_REDEEM_TRACK . "
                     (coupon_id, redeem_date, redeem_ip, customer_id, order_id)
-                    VALUES ('" . (int)$cc_id . "', now(), '" . $_SERVER['REMOTE_ADDR'] . "', '" . (int)$_SESSION['customer_id'] . "', '" . (int)$insert_id . "')");
+                    VALUES ('" . (int)$cc_id . "', now(), '" . zen_db_input($_SERVER['REMOTE_ADDR'] ?? '') . "', '" . $redemptionCustomerId . "', '" . (int)$insert_id . "')");
+        } else {
+            /**
+             * Race lost: a concurrent checkout claimed this coupon's final redemption slot after
+             * the discount on this order had already been calculated. The redeem-track row is not
+             * inserted, keeping the coupon's recorded use-count within its configured cap, and the
+             * event is surfaced via notifier so the store owner can reconcile this order rather
+             * than the coupon being silently double-redeemed.
+             */
+            $this->notify('NOTIFY_OT_COUPON_REDEEM_LIMIT_RACE_LOST', ['coupon_id' => $cc_id, 'order_id' => (int)$insert_id, 'customer_id' => $redemptionCustomerId]);
         }
+
+        if ($this->heldRedemptionLockName === $lockName) {
+            $this->releaseHeldRedemptionLockIfAny();
+        } elseif ($haveLock) {
+            $this->releaseNamedLock($lockName);
+        }
+
         $_SESSION['cc_id'] = '';
+    }
+
+    /**
+     * Acquire a MySQL named advisory lock (GET_LOCK).
+     *
+     * Used to serialize coupon finalization across concurrent requests on a MyISAM schema that has
+     * no transaction or row-locking support. Returns true when the lock was granted. A bounded
+     * timeout is used so a stuck peer cannot hang checkout indefinitely.
+     *
+     * @return bool true when the lock was granted
+     * @since ZC v2.2.3
+     */
+    protected function getNamedLock(string $lockName, int $timeoutSeconds = 10): bool
+    {
+        global $db;
+
+        $result = $db->Execute("SELECT GET_LOCK('" . zen_db_input($lockName) . "', " . (int)$timeoutSeconds . ") AS got_lock");
+
+        return (!$result->EOF && (int)$result->fields['got_lock'] === 1);
+    }
+
+    /**
+     * Release a MySQL named advisory lock previously obtained via getNamedLock().
+     *
+     * @since ZC v2.2.3
+     */
+    protected function releaseNamedLock(string $lockName): void
+    {
+        global $db;
+
+        $db->Execute("SELECT RELEASE_LOCK('" . zen_db_input($lockName) . "')");
+    }
+
+    /**
+     * Re-validate the coupon's restrictions at finalization and, during checkout_process,
+     * hold the coupon's advisory lock until apply_credit() records the redemption.
+     *
+     * Holding the lock across order-total calculation and order persistence prevents a
+     * second concurrent checkout from receiving the same discount before the first request
+     * records its redeem-track row.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function prepareCouponForFinalization(array $coupon_details): bool
+    {
+        if (!$this->shouldHoldRedemptionLockDuringCheckoutProcess() || !$this->couponHasUsageCaps($coupon_details)) {
+            return $this->revalidateCouponAtFinalization($coupon_details);
+        }
+
+        $lockName = $this->getCouponRedemptionLockName($coupon_details);
+
+        if ($lockName === null) {
+            return $this->revalidateCouponAtFinalization($coupon_details);
+        }
+
+        if ($this->heldRedemptionLockName !== $lockName) {
+            $this->releaseHeldRedemptionLockIfAny();
+
+            if (!$this->getNamedLock($lockName)) {
+                $this->notify('NOTIFY_OT_COUPON_FINALIZATION_LOCK_UNAVAILABLE', ['coupon_id' => (int)$coupon_details['coupon_id']]);
+                $this->queueCheckoutProcessAbortMessage($this->buildLockUnavailableMessage($coupon_details));
+                $this->remove_coupon_from_current_session();
+                $this->abortCheckoutProcess = true;
+                return false;
+            }
+
+            $this->heldRedemptionLockName = $lockName;
+        }
+
+        return $this->revalidateCouponAtFinalization($coupon_details);
+    }
+
+    /**
+     * Hold coupon finalization locks only during checkout_process, where the discounted totals
+     * are about to be persisted.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function shouldHoldRedemptionLockDuringCheckoutProcess(): bool
+    {
+        global $current_page_base;
+
+        return (isset($current_page_base) && $current_page_base === FILENAME_CHECKOUT_PROCESS);
+    }
+
+    /**
+     * True when the coupon has a finite usage cap that needs concurrency control.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function couponHasUsageCaps(array $coupon_details): bool
+    {
+        return (!empty($coupon_details['uses_per_coupon']) || !empty($coupon_details['uses_per_user']));
+    }
+
+    /**
+     * Build the advisory-lock scope for this coupon.
+     *
+     * Global caps must serialize all users of the coupon. Per-user-only caps should serialize only
+     * requests for the same customer, so independent customers can still check out concurrently.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function getCouponRedemptionLockName(array $coupon_details): ?string
+    {
+        if (!$this->couponHasUsageCaps($coupon_details)) {
+            return null;
+        }
+
+        $couponId = (int)$coupon_details['coupon_id'];
+
+        if (!empty($coupon_details['uses_per_coupon'])) {
+            return 'zc_coupon_redeem_' . $couponId;
+        }
+
+        return 'zc_coupon_redeem_' . $couponId . '_customer_' . $this->getCouponRedemptionLockCustomerId($coupon_details);
+    }
+
+    /**
+     * Resolve the customer identifier used for per-user redemption locking.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function getCouponRedemptionLockCustomerId(array $coupon_details): int
+    {
+        if (!empty($_SESSION['customer_id'])) {
+            return (int)$_SESSION['customer_id'];
+        }
+
+        if (zen_in_guest_checkout()) {
+            return $this->resolveGuestCouponRedemptionLockCustomerId($coupon_details);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Resolve the guest identifier used for per-user redemption locking.
+     *
+     * Guest-checkout integrations can supply a more specific lock identity than the default shared
+     * guest bucket by observing the notifier fired here.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function resolveGuestCouponRedemptionLockCustomerId(array $coupon_details): int
+    {
+        $guestLockCustomerId = 0;
+        $this->notify('NOTIFY_OT_COUPON_GUEST_REDEMPTION_LOCK_CUSTOMER_ID', $coupon_details, $guestLockCustomerId);
+
+        return (int)$guestLockCustomerId;
+    }
+
+    /**
+     * Resolve the customer_id persisted into coupon_redeem_track.
+     *
+     * Guests remain tracked as customer_id 0 in core; guest-checkout integrations that maintain
+     * their own identity ledger can use notifiers around validation/finalization for stricter rules.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function getCouponRedemptionTrackingCustomerId(): int
+    {
+        return (int)($_SESSION['customer_id'] ?? 0);
+    }
+
+    /**
+     * Release any checkout_process coupon finalization lock currently held by this instance.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function releaseHeldRedemptionLockIfAny(): void
+    {
+        if ($this->heldRedemptionLockName === null) {
+            return;
+        }
+
+        $this->releaseNamedLock($this->heldRedemptionLockName);
+        $this->heldRedemptionLockName = null;
+    }
+
+    /**
+     * True when checkout_process must redirect the customer back instead of finalizing an order at
+     * a different total than the one they confirmed.
+     *
+     * @since ZC v2.2.3
+     */
+    public function shouldAbortCheckoutProcess(): bool
+    {
+        return $this->abortCheckoutProcess;
+    }
+
+    /**
+     * Clear the checkout-process abort flag after the caller has handled it.
+     *
+     * @since ZC v2.2.3
+     */
+    public function clearCheckoutProcessAbort(): void
+    {
+        $this->abortCheckoutProcess = false;
+    }
+
+    /**
+     * Message-stack target used when a coupon is dropped during checkout.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function getCheckoutCouponMessageStack(): string
+    {
+        return $this->shouldHoldRedemptionLockDuringCheckoutProcess() ? 'checkout_confirmation' : 'checkout_payment';
+    }
+
+    /**
+     * Queue a caution message on the page the customer will be returned to when checkout cannot
+     * proceed with the coupon they previously confirmed.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function queueCheckoutProcessAbortMessage(string $message): void
+    {
+        global $messageStack;
+
+        if (is_object($messageStack)) {
+            $messageStack->add_session($this->getCheckoutCouponMessageStack(), $message, 'caution');
+        }
+    }
+
+    /**
+     * Build the customer-facing message used when checkout cannot obtain the finalization lock for
+     * this coupon.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function buildLockUnavailableMessage(array $coupon_details): string
+    {
+        if (empty($coupon_details['uses_per_coupon']) && !empty($coupon_details['uses_per_user'])) {
+            return sprintf(TEXT_INVALID_USES_USER_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_user']);
+        }
+
+        return sprintf(TEXT_INVALID_USES_COUPON, $coupon_details['coupon_code'], $coupon_details['uses_per_coupon']);
     }
 
     /**
@@ -509,6 +856,10 @@ class ot_coupon extends base
         $coupon_details = $result->fields;
 
         $this->coupon_code = $coupon_details['coupon_code'];
+
+        if (!$this->prepareCouponForFinalization($coupon_details)) {
+            return $od_amount;
+        }
 
         $orderTotalDetails = $this->get_order_total($coupon_details['coupon_id']);
 
