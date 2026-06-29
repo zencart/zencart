@@ -823,7 +823,7 @@ if (!empty($action)) {
         }
         if (!empty($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
-            $messageStack->add('ERROR: ' . $value, 'error');
+            $messageStack->add('ERROR: ' . zen_output_string_protected($value), 'error');
           }
         }
         if ($query_results['ignored'] != 0) {
@@ -855,7 +855,7 @@ if (!empty($action)) {
         }
         if (!empty($query_results['errors'])) {
           foreach ($query_results['errors'] as $value) {
-            $messageStack->add(ICON_ERROR . ': ' . $value, 'error');
+            $messageStack->add(ICON_ERROR . ': ' . zen_output_string_protected($value), 'error');
           }
         }
         if ($query_results['ignored'] != 0) {
@@ -864,7 +864,7 @@ if (!empty($action)) {
         if (!empty($query_results['output'])) {
           foreach ($query_results['output'] as $value) {
             if (!empty($value)) {
-              $messageStack->add('ERROR: ' . $value, 'error');
+              $messageStack->add('ERROR: ' . zen_output_string_protected($value), 'error');
             }
           }
         }
