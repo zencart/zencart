@@ -546,14 +546,17 @@ class ot_coupon extends base
             return;
         }
 
-        $lockName = 'zc_coupon_redeem_' . $cc_id;
-        $haveLock = ($this->heldRedemptionLockName === $lockName);
-        if (!$haveLock) {
-            $haveLock = $this->getNamedLock($lockName);
-        }
-
         $coupon = $db->Execute("SELECT coupon_code, uses_per_coupon, uses_per_user FROM " . TABLE_COUPONS . " WHERE coupon_id = " . $cc_id, 1);
         $coupon_details = ['coupon_id' => $cc_id] + ($coupon->EOF ? ['uses_per_coupon' => 0, 'uses_per_user' => 0] : $coupon->fields);
+        $lockName = 'zc_coupon_redeem_' . $cc_id;
+        $haveLock = false;
+
+        if ($this->couponHasUsageCaps($coupon_details)) {
+            $haveLock = ($this->heldRedemptionLockName === $lockName);
+            if (!$haveLock) {
+                $haveLock = $this->getNamedLock($lockName);
+            }
+        }
 
         $withinLimits = $this->validateCouponMaximumUses($coupon_details) && $this->validateCouponUsesPerCustomer($coupon_details);
 
@@ -624,7 +627,7 @@ class ot_coupon extends base
      */
     protected function prepareCouponForFinalization(array $coupon_details): bool
     {
-        if (!$this->shouldHoldRedemptionLockDuringCheckoutProcess()) {
+        if (!$this->shouldHoldRedemptionLockDuringCheckoutProcess() || !$this->couponHasUsageCaps($coupon_details)) {
             return $this->revalidateCouponAtFinalization($coupon_details);
         }
 
@@ -658,6 +661,16 @@ class ot_coupon extends base
         global $current_page_base;
 
         return (isset($current_page_base) && $current_page_base === FILENAME_CHECKOUT_PROCESS);
+    }
+
+    /**
+     * True when the coupon has a finite usage cap that needs concurrency control.
+     *
+     * @since ZC v2.2.3
+     */
+    protected function couponHasUsageCaps(array $coupon_details): bool
+    {
+        return (!empty($coupon_details['uses_per_coupon']) || !empty($coupon_details['uses_per_user']));
     }
 
     /**

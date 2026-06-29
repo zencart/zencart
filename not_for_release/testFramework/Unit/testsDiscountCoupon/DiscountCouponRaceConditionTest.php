@@ -142,6 +142,41 @@ class DiscountCouponRaceConditionTest extends zcDiscountCouponTest
         $this->assertCount(1, $GLOBALS['db']->redemptions);
     }
 
+    public function testUnlimitedUseCouponDoesNotTakeAdvisoryLockDuringCheckoutProcess(): void
+    {
+        $couponDetails = [
+            'coupon_id' => 1,
+            'coupon_code' => 'unlimited-test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 10,
+            'coupon_type' => 'P',
+            'coupon_product_count' => 0,
+            'coupon_calc_base' => 0,
+            'uses_per_coupon' => 0,
+            'uses_per_user' => 0,
+            'coupon_start_date' => date('Y-m-d H:i:s', strtotime('-1 day')),
+            'coupon_expire_date' => date('Y-m-d H:i:s', strtotime('+1 day')),
+        ];
+        $GLOBALS['db'] = new DiscountCouponRaceDb($couponDetails);
+        $GLOBALS['order'] = (object)['info' => $this->getBaseOrderInfo()];
+        $_SESSION['customer_id'] = 101;
+        $_SESSION['cc_id'] = '1';
+
+        $coupon = new ot_coupon();
+        $coupon->include_shipping = 'false';
+        $coupon->process();
+
+        $this->assertEquals(452.49, $GLOBALS['order']->info['total']);
+        $this->assertSame(0, $GLOBALS['db']->getLockCalls);
+
+        $GLOBALS['insert_id'] = 1001;
+        $coupon->apply_credit();
+
+        $this->assertCount(1, $GLOBALS['db']->redemptions);
+        $this->assertSame(0, $GLOBALS['db']->getLockCalls);
+    }
+
     protected function getBaseOrderInfo(): array
     {
         return [
@@ -158,6 +193,7 @@ class DiscountCouponRaceDb
 {
     public array $couponDetails;
     public array $redemptions = [];
+    public int $getLockCalls = 0;
     private ?string $heldLockName = null;
 
     public function __construct(array $couponDetails)
@@ -168,6 +204,7 @@ class DiscountCouponRaceDb
     public function Execute(string $sql, $limit = null): DiscountCouponRaceResult
     {
         if (str_contains($sql, 'SELECT GET_LOCK(')) {
+            $this->getLockCalls++;
             preg_match("/SELECT GET_LOCK\\('(.*)', \\d+\\)/", $sql, $matches);
             $requestedLock = stripslashes($matches[1] ?? '');
             if ($this->heldLockName !== null && $this->heldLockName === $requestedLock) {
