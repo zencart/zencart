@@ -9,7 +9,7 @@ require 'includes/application_top.php';
 
 $currencies = new currencies();
 
-if (!empty($_GET['action']) && $_GET['action'] == 'set_editor') {
+if (!empty($_GET['action']) && $_GET['action'] === 'set_editor') {
   // Reset will be done by init_html_editor.php. Now we simply redirect to refresh page properly.
   $action = '';
   zen_redirect(zen_href_link(FILENAME_GV_MAIL));
@@ -19,7 +19,7 @@ $cleanAmount = preg_replace('/[^0-9.]/', '', (string)($_POST['amount'] ?? 0));
 $_POST['amount'] = is_numeric($cleanAmount) ? zen_str_to_numeric($cleanAmount) : 0;
 $_POST['amount'] = abs($_POST['amount']);
 $action = isset($_GET['action']) ? zen_db_prepare_input($_GET['action']) : '';
-if ($action != '') {
+if ($action !== '') {
   switch ($action) {
     case ('preview'):
       $error = 0;
@@ -176,7 +176,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
       }
     </script>
     <?php
-    if ($editor_handler != '') {
+    if ($editor_handler !== '') {
       include $editor_handler;
     }
     ?>
@@ -228,7 +228,7 @@ if (!empty($_GET['mail_sent_to']) && $_GET['mail_sent_to']) {
             <?php } ?>
             <tr>
               <td class="text-right"><b><?php echo TEXT_MESSAGE; ?></b></td>
-              <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']), ENT_COMPAT, CHARSET, true), false); ?></td>
+              <td class="tt"><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message'] ?? ''), ENT_COMPAT, CHARSET, true), false); ?></td>
             </tr>
           </table>
           <div class="form-group">
