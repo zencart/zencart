@@ -3,7 +3,7 @@
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin
 // Copyright (c) 2022 Vinos de Frutas Tropicales
 //
-// Last updated: POSM v4.4.0
+// Last updated: POSM v6.1.2
 //
 class zcAjaxProductsOptionsStockAdmin extends base
 {
