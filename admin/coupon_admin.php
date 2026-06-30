@@ -284,14 +284,17 @@ switch ($_GET['action']) {
       $coupon_type = 'E'; // percentage off and free shipping
     }
     $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
+    if ($coupon_type === 'P' || $coupon_type === 'E') {
+      $_POST['coupon_amount'] = (string)min(100, (float)$_POST['coupon_amount']);
+    }
     $sql_data_array = [
       'coupon_code' => zen_db_prepare_input($_POST['coupon_code']),
       'coupon_amount' => zen_db_prepare_input($_POST['coupon_amount']),
       'coupon_product_count' => (int)$_POST['coupon_product_count'],
       'coupon_type' => zen_db_prepare_input($coupon_type),
-      'uses_per_coupon' => (int)$_POST['coupon_uses_coupon'],
+      'uses_per_coupon' => max(0, (int)$_POST['coupon_uses_coupon']),
       'uses_per_user' => (int)$_POST['coupon_uses_user'],
-      'coupon_minimum_order' => (float)$_POST['coupon_min_order'],
+      'coupon_minimum_order' => max(0, (float)$_POST['coupon_min_order']),
       'restrict_to_products' => zen_db_prepare_input($_POST['coupon_products']),
       'restrict_to_categories' => zen_db_prepare_input($_POST['coupon_categories']),
       'coupon_start_date' => $_POST['coupon_startdate'],
