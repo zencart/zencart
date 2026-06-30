@@ -14,6 +14,8 @@ $_GET['end_date'] = (!isset($_GET['end_date']) ? date("m-d-Y", (time())) : $_GET
 $_GET['referral_code'] = (!isset($_GET['referral_code']) ? '0' : $_GET['referral_code']);
 
 include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
+
+$canViewOrders = check_page(FILENAME_ORDERS, $_GET);
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -130,7 +132,7 @@ include DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php';
             <td class="main"><?php echo zen_date_long($customers_order['date_purchased']); ?></td>
             <td class="main"><?php echo TEXT_ORDER_NUMBER; ?> <?php echo $customers_order['orders_id']; ?></td>
             <td class="main"><?php echo (!empty($customers_order['coupon_code']) ? TEXT_COUPON_ID . ' ' . $customers_order['coupon_code'] : ''); ?></td>
-            <td class="main"><a href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_order['orders_id'] . '&action=edit', 'NONSSL'); ?>" class="btn btn-primary" role="button"><?php echo IMAGE_DETAILS; ?></a></td>
+            <td class="main"><?php echo ($canViewOrders ? '<a href="' . zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action')) . 'oID=' . $customers_order['orders_id'] . '&action=edit', 'NONSSL') . '" class="btn btn-primary" role="button">' . IMAGE_DETAILS . '</a>' : ''); ?></td>
           </tr>
 
           <?php for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) { ?>
