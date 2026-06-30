@@ -116,7 +116,7 @@ if (!empty($action)) {
       if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
         zen_redirect(zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $products_id . '&current_category_id=' . $_GET['current_category_id']));
       } else {
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] . '&' : '') . (isset($new_special) ? 'sID=' . $new_special->fields['specials_id'] : '')));
+        zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) . '&' : '') . (isset($new_special) ? 'sID=' . $new_special->fields['specials_id'] : '')));
       }
       break;
     case 'update':
@@ -194,7 +194,7 @@ if (!empty($action)) {
                                     WHERE specials_id = " . (int)$specials_id);
       zen_update_products_price_sorter($update_price->fields['products_id']);
 
-      zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'sID=' . (int)$specials_id));
+      zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'sID=' . (int)$specials_id));
       break;
     case 'deleteconfirm':
       $specials_id = (int)$_POST['sID'];
@@ -210,7 +210,7 @@ if (!empty($action)) {
 
       zen_update_products_price_sorter($update_price_id);
 
-      zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '')));
+      zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '')));
       break;
     case 'pre_add_confirmation':
       $skip_special = false;
@@ -243,7 +243,7 @@ if (!empty($action)) {
         }
       }
       if ($skip_special === true) {
-        zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (!empty($check_special->fields['specials_id']) ? 'sID=' . (int)$check_special->fields['specials_id'] . '&action=edit' : '' . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))));
+        zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (!empty($check_special->fields['specials_id']) ? 'sID=' . (int)$check_special->fields['specials_id'] . '&action=edit' : '' . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : ''))));
       } else { // product id is valid
         zen_redirect(zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=new' . '&preID=' . (int)$_POST['pre_add_products_id']));
       }
@@ -444,7 +444,7 @@ if (!empty($action)) {
           if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') { // 'go_back' set in Products Price Manager
             $cancel_link = zen_href_link(FILENAME_PRODUCTS_PRICE_MANAGER, 'products_filter=' . $_GET['add_products_id'] . '&current_category_id=' . $_GET['current_category_id']);
           } else {
-            $cancel_link = zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (!empty($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . (!empty($_GET['sID']) ? 'sID=' . $_GET['sID'] : ''));
+            $cancel_link = zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (!empty($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . (!empty($_GET['sID']) ? 'sID=' . $_GET['sID'] : ''));
           }
           ?>
           <div class="col-sm-12 text-right">
@@ -465,7 +465,7 @@ if (!empty($action)) {
         <div class="row">
           <div class="col-sm-6">
             <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . 'action=new'); ?>" class="btn btn-primary" role="button"><?php echo TEXT_ADD_SPECIAL_SELECT; ?></a>
-            <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_SPECIAL_PID; ?></a>
+            <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'action=pre_add'); ?>" class="btn btn-primary" role="button" title="<?php echo TEXT_INFO_PRE_ADD_INTRO; ?>"><?php echo TEXT_ADD_SPECIAL_PID; ?></a>
           </div>
           <div class="col-sm-offset-2 col-sm-4">
           <?php require DIR_WS_MODULES . 'search_box.php'; ?>
@@ -550,9 +550,9 @@ if (!empty($action)) {
 
                   if (isset($sInfo) && is_object($sInfo) && ((int)$special['specials_id'] === (int)$sInfo->specials_id)) {
                     ?>
-                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'sID=' . $sInfo->specials_id . '&action=edit'); ?>'">
+                    <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'sID=' . $sInfo->specials_id . '&action=edit'); ?>'">
                     <?php } else { ?>
-                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'sID=' . $special['specials_id']); ?>'">
+                    <tr class="dataTableRow" onclick="document.location.href = '<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'sID=' . $special['specials_id']); ?>'">
                       <?php
                     }
 
@@ -582,7 +582,7 @@ if (!empty($action)) {
                           <?php } ?>
                         </button>
                       <?php } else { ?>
-                        <?php echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=setflag'); ?>
+                        <?php echo zen_draw_form('setflag_products_' . $special['products_id'], FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'action=setflag'); ?>
                         <?php if ($special['status'] === '1') { ?>
                           <button type="submit" class="btn btn-status">
                             <?php echo zen_icon('enabled', TEXT_SPECIAL_ACTIVE, 'lg'); ?>
@@ -600,10 +600,10 @@ if (!empty($action)) {
                     </td>
                     <td class="dataTableContent text-right actions">
                       <div class="btn-group">
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=edit' . '&sID=' . $special['specials_id']); ?>" data-toggle="tooltip" title="<?php echo ICON_EDIT ?>" class="btn btn-sm btn-default btn-edit" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'action=edit' . '&sID=' . $special['specials_id']); ?>" data-toggle="tooltip" title="<?php echo ICON_EDIT ?>" class="btn btn-sm btn-default btn-edit" role="button">
                         <?php echo zen_icon('pencil', hidden: true) ?>
                       </a>
-                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . 'action=delete' . '&sID=' . $special['specials_id']); ?>" data-toggle="tooltip" title="<?php echo ICON_DELETE ?>" class="btn btn-sm btn-default btn-delete" role="button">
+                      <a href="<?php echo zen_href_link(FILENAME_SPECIALS, ($currentPage != 0 ? 'page=' . $currentPage . '&' : '') . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . 'action=delete' . '&sID=' . $special['specials_id']); ?>" data-toggle="tooltip" title="<?php echo ICON_DELETE ?>" class="btn btn-sm btn-default btn-delete" role="button">
                         <?php echo zen_icon('trash', hidden: true) ?>
                       </a>
                       </div>
@@ -632,20 +632,20 @@ if (!empty($action)) {
                 switch ($action) {
                     case 'delete':
                         $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</h4>'];
-                        $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=deleteconfirm' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . zen_draw_hidden_field('sID', $sInfo->specials_id)];
+                        $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=deleteconfirm' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '')) . zen_draw_hidden_field('sID', $sInfo->specials_id)];
                         $contents[] = ['text' => TEXT_INFO_DELETE_INTRO];
                         $contents[] = ['text' => '<b>' . $sInfo->products_model . ' - "' . zen_clean_html($sInfo->products_name) . '"</b>'];
-                        $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['align' => 'text-center', 'text' => '<br><button type="submit" class="btn btn-danger">' . IMAGE_DELETE . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
 
                     case 'pre_add':
                         $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_PRE_ADD_SPECIALS . '</h4>'];
-                        $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''), 'post', 'class="form-horizontal"')];
+                        $contents = ['form' => zen_draw_form('specials', FILENAME_SPECIALS, 'action=pre_add_confirmation' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : ''), 'post', 'class="form-horizontal"')];
                         $contents[] = ['text' => TEXT_INFO_PRE_ADD_INTRO];
                         $result = $db->Execute("SELECT MAX(products_id) AS lastproductid FROM " . TABLE_PRODUCTS);
                         $max_product_id = $result->fields['lastproductid'];
                         $contents[] = ['text' => zen_draw_label(TEXT_PRE_ADD_PRODUCTS_ID, 'pre_add_products_id', 'class="control-label"') . zen_draw_input_field('pre_add_products_id', '', zen_set_field_length(TABLE_SPECIALS, 'products_id') . ' class="form-control" id="pre_add_products_id" required max="' . $max_product_id . '"', '', 'number')];
-                        $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, (!empty($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
+                        $contents[] = ['align' => 'text-center', 'text' => '<button type="submit" class="btn btn-primary">' . IMAGE_CONFIRM . '</button> <a href="' . zen_href_link(FILENAME_SPECIALS, (!empty($sInfo->specials_id) ? '&sID=' . $sInfo->specials_id : '') . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '')) . '" class="btn btn-default" role="button">' . IMAGE_CANCEL . '</a>'];
                         break;
 
                     default:
@@ -659,8 +659,8 @@ if (!empty($action)) {
                             $contents[] = [
                                 'align' => 'text-center',
                                 'text' => '
-                                <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . '&action=edit' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
-                                <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . '&action=delete' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '')) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</a>'
+                                <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . '&action=edit' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '')) . '" class="btn btn-primary" role="button">' . IMAGE_EDIT . '</a>
+                                <a href="' . zen_href_link(FILENAME_SPECIALS, 'sID=' . $sInfo->specials_id . '&action=delete' . ($currentPage != 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '')) . '" class="btn btn-warning" role="button">' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</a>'
                             ];
                             $contents[] = [
                                 'align' => 'text-center',
