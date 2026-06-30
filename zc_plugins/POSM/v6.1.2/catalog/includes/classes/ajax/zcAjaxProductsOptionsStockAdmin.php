@@ -3,10 +3,12 @@
 // Part of the "Product Options Stock Manager" plugin by Cindy Merkin
 // Copyright (c) 2022 Vinos de Frutas Tropicales
 //
-// Last updated: POSM v4.4.0
+// Last updated: POSM v6.1.2
 //
 class zcAjaxProductsOptionsStockAdmin extends base
 {
+    public const array ALLOWED_METHODS = ['isModelDuplicate'];
+
     // -----
     // Check to see if a submitted model number is a duplicate.
     //
@@ -19,6 +21,15 @@ class zcAjaxProductsOptionsStockAdmin extends base
     public function isModelDuplicate()
     {
         global $db;
+
+        // -----
+        // Deny access unless running under the admin.
+        //
+        if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
+            return [
+                'isOk' => false,
+            ];
+        }
 
         $model_is_ok = false;
         if (isset($_POST['model_num']) && isset($_POST['pos_id']) && strlen($_POST['model_num']) <= zen_field_length (TABLE_PRODUCTS, 'products_model')) {
