@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 class zcAjaxAdminSessionChange extends base
 {
-    public static array $allowedMethods = [
+    public const array ALLOWED_METHODS = [
         'change',
     ];
 

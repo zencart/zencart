@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 class zcAjaxAdminNotifications extends base
 {
-    public static array $allowedMethods = [
+    public const array ALLOWED_METHODS = [
         'forget',
     ];
 

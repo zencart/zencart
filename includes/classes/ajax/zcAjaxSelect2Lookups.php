@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 class zcAjaxSelect2Lookups extends base
 {
-    public static array $allowedMethods = [
+    public const array ALLOWED_METHODS = [
         'getProductsForSpecials',
     ];
 
