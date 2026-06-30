@@ -18,6 +18,7 @@ $zco_notifier->notify('NOTIFY_HTML_HEAD_START', $current_page_base, $template_di
 
 // Prevent clickjacking risks by setting X-Frame-Options:SAMEORIGIN
 header('X-Frame-Options:SAMEORIGIN');
+header('X-Content-Type-Options: nosniff');
 
 /**
  * load the module for generating page meta-tags
