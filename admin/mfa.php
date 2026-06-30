@@ -53,7 +53,7 @@ if (!empty($_POST['action'])) {
         }
         // validate manual-generated token such as one sent via email
         if (isset($_SESSION['mfa']['expires']) && !empty($_SESSION['mfa']['token'])) {
-            if (trim($_POST['mfa_code']) === $_SESSION['mfa']['token']) {
+            if (hash_equals($_SESSION['mfa']['token'], trim($_POST['mfa_code']))) {
                 // check for re-used code
                 if (zen_check_if_mfa_token_is_reused($_POST['mfa_code'], $_SESSION['mfa']['admin_name'] ?? zen_get_admin_name($_SESSION['admin_id']))) {
                     // re-use of already-used token is a security violation, so log the user out
@@ -89,6 +89,26 @@ if (!empty($_POST['action'])) {
         }
 
         // bad code was entered; let them try again
+
+        // BEGIN MFA LOGIN SLAM PREVENTION
+        $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = failed_logins + 1 WHERE admin_id = :adminID: ";
+        $sql = $db->bindVars($sql, ':adminID:', $_SESSION['admin_id'], 'integer');
+        $db->Execute($sql);
+
+        $sql = "SELECT failed_logins FROM " . TABLE_ADMIN . " WHERE admin_id = :adminID: ";
+        $sql = $db->bindVars($sql, ':adminID:', $_SESSION['admin_id'], 'integer');
+        $result = $db->Execute($sql, 1);
+
+        if ((int)$result->fields['failed_logins'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT) {
+            $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + ADMIN_LOGIN_LOCKOUT_TIMER) . " WHERE admin_id = :adminID: ";
+            $sql = $db->bindVars($sql, ':adminID:', $_SESSION['admin_id'], 'integer');
+            $db->Execute($sql);
+            zen_record_admin_activity('Too many login failures. Account locked for ' . ADMIN_LOGIN_LOCKOUT_TIMER / 60 . ' minutes', 'warning');
+            zen_session_destroy();
+            zen_redirect(zen_href_link(FILENAME_DEFAULT, '', 'SSL'));
+        }
+        // END MFA LOGIN SLAM PREVENTION
+
         sleep(2);
         $error = true;
         $message = ERROR_WRONG_CODE;

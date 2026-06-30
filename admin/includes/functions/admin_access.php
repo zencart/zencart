@@ -622,6 +622,7 @@ function zen_reset_password($id, $password, $compare): array
         $db->Execute($sql);
         if (isset($_SESSION['admin_id']) && (int)$_SESSION['admin_id'] === $id) {
             zen_set_admin_session_password_hash($encryptedPassword);
+            zen_session_recreate();
         }
         zen_record_admin_activity('Account password change saved.', 'warning');
     }
