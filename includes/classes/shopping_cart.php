@@ -69,6 +69,12 @@ class shoppingCart extends base
     protected array $flag_duplicate_quantity_msgs_set = [];
 
     /**
+     * Hard ceiling on the number of file-upload attributes processed per add-to-cart
+     * request, independent of the client-supplied number_of_uploads value.
+     */
+    protected const MAX_UPLOAD_COUNT = 50;
+
+    /**
      * Instantiate a new shopping cart object
      */
     public function __construct()
@@ -926,6 +932,7 @@ class shoppingCart extends base
                 } // eof foreach
             } // attributes price
             $productTotal = $savedProductTotal + $attributesTotal;
+            $productTotal = max(0, $productTotal);
 
             // attributes weight
             if (isset($this->contents[$uprid]['attributes'])) {
@@ -2035,7 +2042,7 @@ class shoppingCart extends base
                         /**
                          * Need the upload class for attribute type that allows user uploads. Now psr4Autoloaded!
                          */
-                        for ($i = 1, $n = $_GET['number_of_uploads']; $i <= $n; $i++) {
+                        for ($i = 1, $n = min((int)$_GET['number_of_uploads'], self::MAX_UPLOAD_COUNT); $i <= $n; $i++) {
                             $upload_prefix = zen_config('UPLOAD_PREFIX') . $i;    //- e.g. upload_2, contains the associated options_id, e.g. 8
                             $text_prefix = zen_config('TEXT_PREFIX') . ($_POST[$upload_prefix] ?? '');    //- e.g. txt_8, the array index for the $_FILES array
                             $text_upload_prefix = zen_config('TEXT_PREFIX') . $upload_prefix; //- e.g. txt_upload_2, is either an empty string or contains a previously uploaded file-name

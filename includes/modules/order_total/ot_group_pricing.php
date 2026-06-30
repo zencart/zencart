@@ -167,6 +167,7 @@ class ot_group_pricing {
       $discount = ($orderTotal['total'] - $gift_vouchers) * $group_discount->fields['group_percentage'] / 100;
 //      echo "discout = $discount<br>";
       $od_amount['total'] = round($discount, 2);
+      $od_amount['total'] = min($od_amount['total'], $order_total);
       $ratio = $od_amount['total']/$order_total;
       /**
        * when calculating the ratio add some insignificant values to stop divide by zero errors
