@@ -198,7 +198,7 @@ function zen_display_files($include_root = false, $filetypesincluded = 1) {
     if (file_exists($file)) {
       $show_file .= "\n" . '<table class="table results"><tr><td class="main">' . "\n";
       $show_file .= '<tr class="infoBoxContent"><td class="dataTableHeadingContent">';
-      $show_file .= '<strong>' . $file . '</strong>';
+      $show_file .= '<strong>' . htmlspecialchars($file) . '</strong>';
       $show_file .= '</td></tr>';
       $show_file .= '<tr><td class="main">';
 
@@ -774,15 +774,15 @@ if ($found == false) {
           </tr>
           <tr>
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_KEY; ?></td>
-            <td class="dataTableHeadingContentWhois"><?php echo $check_configure->fields['configuration_key']; ?></td>
+            <td class="dataTableHeadingContentWhois"><?php echo htmlspecialchars($check_configure->fields['configuration_key']); ?></td>
           </tr>
           <tr>
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_TITLE; ?></td>
-            <td class="dataTableHeadingContentWhois"><?php echo $check_configure->fields['configuration_title']; ?></td>
+            <td class="dataTableHeadingContentWhois"><?php echo htmlspecialchars($check_configure->fields['configuration_title']); ?></td>
           </tr>
           <tr>
             <td class="infoBoxHeading"><?php echo TABLE_TITLE_DESCRIPTION; ?></td>
-            <td class="dataTableHeadingContentWhois"><?php echo $check_configure->fields['configuration_description']; ?></td>
+            <td class="dataTableHeadingContentWhois"><?php echo htmlspecialchars($check_configure->fields['configuration_description']); ?></td>
           </tr>
           <?php
           if ($show_products_type_layout == true) {
@@ -802,7 +802,7 @@ if ($found == false) {
           <?php } else { ?>
             <tr>
               <td class="infoBoxHeading"><?php echo TABLE_TITLE_VALUE; ?></td>
-              <td class="dataTableHeadingContentWhois"><?php echo $check_configure->fields['configuration_value']; ?></td>
+              <td class="dataTableHeadingContentWhois"><?php echo htmlspecialchars($check_configure->fields['configuration_value']); ?></td>
             </tr>
             <tr>
               <td class="infoBoxHeading"><?php echo TABLE_TITLE_GROUP; ?></td>
@@ -812,7 +812,7 @@ if ($found == false) {
                   if (isset($check_configure_group->fields['visible']) && $check_configure_group->fields['visible'] == '0') {
                     $id_note = TEXT_INFO_CONFIGURATION_HIDDEN;
                   }
-                  echo 'ID#' . $check_configure_group->fields['configuration_group_id'] . ' ' . $check_configure_group->fields['configuration_group_title'] . $id_note;
+                  echo 'ID#' . $check_configure_group->fields['configuration_group_id'] . ' ' . htmlspecialchars($check_configure_group->fields['configuration_group_title']) . $id_note;
                   ?>
               </td>
             </tr>
@@ -964,11 +964,11 @@ if ($found == false) {
                     ?>
                   <tr class="dataTableRow">
                     <td class="<?php echo $tdClass; ?>"><?php echo $section; ?></td>
-                    <td class="<?php echo $tdClass; ?> text-center"><?php echo $keySearchResult['configuration_group_title']; ?></td>
-                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_title']; ?></td>
+                    <td class="<?php echo $tdClass; ?> text-center"><?php echo htmlspecialchars($keySearchResult['configuration_group_title']); ?></td>
+                    <td class="<?php echo $tdClass; ?>"><?php echo htmlspecialchars($keySearchResult['configuration_title']); ?></td>
 
-                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_description']; ?> &nbsp;</td>
-                    <td class="<?php echo $tdClass; ?>"><?php echo $keySearchResult['configuration_key']; ?></td>
+                    <td class="<?php echo $tdClass; ?>"><?php echo htmlspecialchars($keySearchResult['configuration_description']); ?> &nbsp;</td>
+                    <td class="<?php echo $tdClass; ?>"><?php echo htmlspecialchars($keySearchResult['configuration_key']); ?></td>
                     <td class="<?php echo $tdClass; ?>"><?php echo htmlspecialchars($keySearchResult['configuration_value']); /* implode("<br>\n", preg_split("/[\s,.]+/", $configuration->fields['configuration_value'])) */ ?></td>
                     <td class="<?php echo $tdClass; ?> text-center" onclick="document.location.href = '<?php echo $viewlink; ?>'"><a href="<?php echo $editlink; ?>" class="btn btn-primary" role="button"><?php echo IMAGE_EDIT; ?></a></td>
                   </tr>
