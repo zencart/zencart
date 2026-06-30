@@ -124,7 +124,7 @@ function zen_session_recreate(): void
     if ($http_domain === $https_domain) {
         $saveSession = $_SESSION;
         $oldSessID   = session_id();
-        session_regenerate_id();
+        session_regenerate_id(true);
         $newSessID = session_id();
         $_SESSION = $saveSession;
         if (IS_ADMIN_FLAG !== true) {
