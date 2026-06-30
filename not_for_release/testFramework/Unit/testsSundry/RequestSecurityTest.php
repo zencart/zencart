@@ -35,40 +35,40 @@ class RequestSecurityTest extends zcUnitTestCase
         $this->assertTrue(Request::isSecure());
     }
 
-    public function testForwardedHttpsRequestIsSecure(): void
+    public function testForwardedHttpsRequestIsNotSecureWithoutTrustedProxy(): void
     {
         $_SERVER['HTTPS'] = 'off';
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
 
-        $this->assertTrue(Request::isSecure());
+        $this->assertFalse(Request::isSecure());
     }
 
-    public function testForwardedSslHeaderRequestIsSecure(): void
+    public function testForwardedSslHeaderRequestIsNotSecureWithoutTrustedProxy(): void
     {
         $_SERVER['HTTPS'] = 'off';
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['HTTP_X_FORWARDED_SSL'] = 'on';
 
-        $this->assertTrue(Request::isSecure());
+        $this->assertFalse(Request::isSecure());
     }
 
-    public function testForwardedPortRequestIsSecure(): void
+    public function testForwardedPortRequestIsNotSecureWithoutTrustedProxy(): void
     {
         $_SERVER['HTTPS'] = 'off';
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['HTTP_X_FORWARDED_PORT'] = '443';
 
-        $this->assertTrue(Request::isSecure());
+        $this->assertFalse(Request::isSecure());
     }
 
-    public function testForwardedHostContainingSslIsSecure(): void
+    public function testForwardedHostContainingSslIsNotSecureWithoutTrustedProxy(): void
     {
         $_SERVER['HTTPS'] = 'off';
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['HTTP_X_FORWARDED_HOST'] = 'ssl-proxy.example.test';
 
-        $this->assertTrue(Request::isSecure());
+        $this->assertFalse(Request::isSecure());
     }
 
     public function testForwardedServerDoesNotMatchHttpServerByAccident(): void
@@ -78,5 +78,19 @@ class RequestSecurityTest extends zcUnitTestCase
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'different-host.local';
 
         $this->assertFalse(Request::isSecure());
+    }
+
+    public function testForwardedHttpsRequestIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', '10.0.0.1');
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+
+        $this->assertTrue(Request::isSecure());
     }
 }

@@ -46,6 +46,17 @@ define('DB_DATABASE', '');
 define('SQL_CACHE_METHOD', 'none');
 
 /**
+ * Optional: List of trusted proxy IP addresses.
+ * Leave it as an empty string/array if you are not using a proxy.
+ *
+ * But if you are hosting behind a proxy such as Cloudflare, you must add the official IP addresses of the proxy here.
+ * For example, for Cloudflare, you can find the list of IP addresses here: https://www.cloudflare.com/ips/
+ *
+ * Supports listing IPs as an array or a comma-delimited string.
+ */
+define('TRUSTED_PROXIES', []);
+
+/**
  * Reserved for future use
  */
 define('SESSION_STORAGE', 'set by zc_install');
