@@ -14,16 +14,25 @@
 function zen_get_ip_address() {
     $ip = '';
     /**
-     * resolve any proxies
+     * Resolve any proxies, but only honor the client-suppliable forwarded headers when the genuine
+     * TCP peer is a configured trusted reverse proxy. The trust decision is made against the
+     * captured original peer address (Request::getOriginalRemoteAddr()), so it is correct and
+     * consistent no matter how many times this function is called in a request or whether
+     * init_sessions.php has already overwritten $_SERVER['REMOTE_ADDR']. When the peer is not a
+     * trusted proxy, the original peer address is returned directly.
      */
     if (isset($_SERVER)) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ??
-            $_SERVER['HTTP_CLIENT_IP'] ??
-                $_SERVER['HTTP_X_FORWARDED'] ??
-                    $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] ??
-                        $_SERVER['HTTP_FORWARDED_FOR'] ??
-                            $_SERVER['HTTP_FORWARDED'] ??
-                                $_SERVER['REMOTE_ADDR'] ?? '';
+        if (\Zencart\Request\Request::isFromTrustedProxy()) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ??
+                $_SERVER['HTTP_CLIENT_IP'] ??
+                    $_SERVER['HTTP_X_FORWARDED'] ??
+                        $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] ??
+                            $_SERVER['HTTP_FORWARDED_FOR'] ??
+                                $_SERVER['HTTP_FORWARDED'] ??
+                                    \Zencart\Request\Request::getOriginalRemoteAddr();
+        } else {
+            $ip = \Zencart\Request\Request::getOriginalRemoteAddr();
+        }
     }
     if (trim($ip) === '') {
         if (getenv('HTTP_X_FORWARDED_FOR')) {

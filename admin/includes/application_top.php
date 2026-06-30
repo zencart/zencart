@@ -11,6 +11,21 @@ if (PHP_VERSION_ID < 80300) {
 }
 
 /**
+ * Capture the genuine TCP peer address before any other code runs.
+ *
+ * This must happen before application_bootstrap.php (which calls Request::isSecure() via
+ * init_file_db_names.php) and before init_sessions.php later overwrites $_SERVER['REMOTE_ADDR'],
+ * so that trust decisions about forwarded headers always see the real proxy/peer address. Request
+ * is not autoloadable this early (the psr-4 autoloader is set up inside the bootstrap below), so
+ * the class and its trait are required explicitly here via __DIR__-relative paths into the
+ * storefront classes directory. Only the PHP-version guard above runs before this point, and it
+ * does not read $_SERVER['REMOTE_ADDR'].
+ */
+require_once __DIR__ . '/../../includes/classes/traits/Singleton.php';
+require_once __DIR__ . '/../../includes/classes/Request.php';
+\Zencart\Request\Request::captureOriginalRemoteAddr();
+
+/**
  * Bootstrap file contains former application_top code
  *
  * Initializes common classes & methods. Controlled by an array which describes

@@ -17,6 +17,19 @@ use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
 
+/**
+ * Capture the genuine TCP peer address before any other code runs.
+ *
+ * This must happen before init_sessions.php overwrites $_SERVER['REMOTE_ADDR'] with the resolved
+ * client IP, so that trust decisions about forwarded headers (Request::isSecure(),
+ * zen_get_ip_address()) always see the real proxy/peer address. Request is not autoloadable this
+ * early (the psr-4 autoloader is registered further down), so the class and its trait are required
+ * explicitly here via __DIR__-relative paths. Nothing above this point reads $_SERVER['REMOTE_ADDR'].
+ */
+require_once __DIR__ . '/classes/traits/Singleton.php';
+require_once __DIR__ . '/classes/Request.php';
+\Zencart\Request\Request::captureOriginalRemoteAddr();
+
 // Set session ID
 $zenSessionId = 'zenid';
 /**
