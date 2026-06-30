@@ -67,8 +67,10 @@ if (!function_exists('convertToLocalTimeZone')) {
     }
     $sql = "SELECT *
             FROM " . TABLE_PAYPAL_SESSION . "
-            WHERE session_id = :sessionID";
+            WHERE session_id = :sessionID
+            AND expiry > :now";
     $sql = $db->bindVars($sql, ':sessionID', $session_stuff[1], 'string');
+    $sql = $db->bindVars($sql, ':now', time(), 'integer');
     $stored_session = $db->Execute($sql);
     if ($stored_session->RecordCount() < 1) {
       global $isECtransaction, $isDPtransaction;
@@ -181,7 +183,7 @@ if (!function_exists('convertToLocalTimeZone')) {
  * @since ZC v1.3.0
  */
   function ipn_validate_transaction($info, $postArray, $mode='IPN') {
-    if ($mode == 'IPN' && !preg_match("/VERIFIED/i", $info) && !preg_match("/SUCCESS/i", $info)) {
+    if ($mode == 'IPN' && trim($info) !== 'VERIFIED' && trim($info) !== 'SUCCESS') {
       ipn_debug_email('IPN WARNING :: Transaction was NOT marked as VERIFIED. Keep this report for potential use in fraud investigations.' . "\n" . 'IPN Info: ' . "\n" . $info);
       return false;
     } elseif ($mode == 'PDT' && (!preg_match("/SUCCESS/i", $info) || preg_match("/FAIL/i", $info))) {
@@ -564,26 +566,8 @@ function ipn_create_order_history_array($insert_id)
       $web['port'] = '443';
       $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
     }
-    if(!$fp && $ssl == 'https://') {
-      ipn_debug_email('IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again directly over 443 ...");
-      $ssl = '';
-      $web['port'] = '443';
-      $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
-    }
     if(!$fp) {
-      ipn_debug_email('IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again with HTTP over port 80 ...");
-      $ssl = 'http://';
-      $web['port'] = '80';
-      $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
-    }
-    if(!$fp) {
-      ipn_debug_email('IPN ERROR :: Could not establish fsockopen: ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\n Trying again without any specified protocol, using port 80 ...");
-      $ssl = '';
-      $web['port'] = '80';
-      $fp=@fsockopen($ssl . $web['host'], $web['port'], $errnum, $errstr, 30);
-    }
-    if(!$fp) {
-      ipn_debug_email('IPN FATAL ERROR :: Could not establish fsockopen. ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\nABORTED.");
+      ipn_debug_email('IPN FATAL ERROR :: Could not establish fsockopen over TLS. ' . "\n" . 'Host Details = ' . $ssl . $web['host'] . ':' . $web['port'] . ' (' . $errnum . ') ' . $errstr . "\nABORTED.");
       die();
     }
     $info = array();
@@ -672,26 +656,6 @@ function ipn_create_order_history_array($insert_id)
     //echo 'ERROR: ' . $errors . '<br>';
     //print_r($response) ;
 
-    if (($response == '' || $errors != '') && ($url['scheme'] != 'http')) {
-      $url['scheme'] = 'http';
-      $url['port'] = '80';
-      ipn_debug_email('CURL ERROR: ' . $errors . "\n" . 'Trying direct HTTP on port 80 instead ... ' . $url['scheme'] . '://' . $url['host'] . $url['path'] . "\n");
-      $ch = curl_init();
-      $curlOpts[CURLOPT_URL] = $url['scheme'] . '://' . $url['host'] . $url['path'];
-      $curlOpts[CURLOPT_FOLLOWLOCATION] = TRUE; // allow to follow redirects since PP usually redirects all non-SSL to SSL etc, do a redirect is almost certain to occur
-      curl_setopt_array($ch, $curlOpts);
-      curl_setopt($ch, CURLOPT_PORT, $url['port']);
-      $response = curl_exec($ch);
-      $commError = curl_error($ch);
-      $commErrNo = curl_errno($ch);
-      $commInfo = @curl_getinfo($ch);
-      ipn_debug_email('CURL OPTS: ' . print_r($curlOpts, true));
-      ipn_debug_email('CURL response: ' . $response);
-      $errors = ($commErrNo != 0 ? "\n(" . $commErrNo . ') ' . $commError : '');
-      if ($errors != '') {
-        ipn_debug_email (nl2br('CURL ERROR: ' . $errors . "\n" . 'ABORTING CURL METHOD ...' . "\n\n"));
-      }
-    }
     $firstline = trim(substr($response, 0, 20));
     $status = '';
     if ($status == '' && substr($firstline, 0, 8) == 'VERIFIED') $status = 'VERIFIED';
@@ -718,7 +682,7 @@ function ipn_create_order_history_array($insert_id)
 
     ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' to status: ' . (int)$new_status . ' (txn_type: ' . $txn_type . ')');
 
-    $comments = 'PayPal status: ' . $_POST['payment_status'] . ' ' . ' @ ' . $_POST['payment_date'] . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . $_POST['parent_txn_id'] : '') . "\n" . ' Trans ID:' . $_POST['txn_id'] . "\n" . ' Amount: ' . $_POST['mc_gross'] . ' ' . $_POST['mc_currency'];
+    $comments = 'PayPal status: ' . htmlspecialchars($_POST['payment_status'], ENT_QUOTES) . ' ' . ' @ ' . htmlspecialchars($_POST['payment_date'], ENT_QUOTES) . (($_POST['parent_txn_id'] !='') ? "\n" . ' Parent Trans ID:' . htmlspecialchars($_POST['parent_txn_id'], ENT_QUOTES) : '') . "\n" . ' Trans ID:' . htmlspecialchars($_POST['txn_id'], ENT_QUOTES) . "\n" . ' Amount: ' . htmlspecialchars($_POST['mc_gross'], ENT_QUOTES) . ' ' . htmlspecialchars($_POST['mc_currency'], ENT_QUOTES);
     zen_update_orders_history($ordersID, $comments, null, $new_status, 0);
 
     ipn_debug_email('IPN NOTICE :: Update complete.');
