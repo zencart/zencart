@@ -10,7 +10,7 @@
  */
 class zcAjaxAdminNotifications extends base
 {
-    protected static array $allowedMethods = [
+    public static array $allowedMethods = [
         'forget',
     ];
 

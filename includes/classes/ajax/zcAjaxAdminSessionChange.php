@@ -8,7 +8,7 @@
 
 class zcAjaxAdminSessionChange extends base
 {
-    protected static array $allowedMethods = [
+    public static array $allowedMethods = [
         'change',
     ];
 
