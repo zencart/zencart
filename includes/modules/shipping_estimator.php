@@ -55,11 +55,6 @@ if ($_SESSION['cart']->count_contents() > 0) {
     // shopping cart quotes
     // shipping cost
 
-    // deprecated; to be removed
-    if (file_exists(DIR_WS_CLASSES . 'http_client.php')) {
-        require_once DIR_WS_CLASSES . 'http_client.php'; // shipping in basket
-    }
-
     $sendto = 0;
 
     if (zen_is_logged_in() && !zen_in_guest_checkout()) {
