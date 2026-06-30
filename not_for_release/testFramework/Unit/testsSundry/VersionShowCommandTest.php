@@ -14,7 +14,6 @@ use Zencart\Console\ConsoleOutput;
 
 class VersionShowCommandTest extends TestCase
 {
-    protected $preserveGlobalState = false;
 
     public static function setUpBeforeClass(): void
     {

@@ -45,7 +45,7 @@ class AdminRequestSanitizer extends base
         global $PHP_SELF;
         $this->currentPage = basename($PHP_SELF, '.php');
         $this->debugMessages[] = 'Incoming GET Request ' . print_r($_GET, true);
-        $this->debugMessages[] = 'Incoming POST Request ' . print_r($_POST, true);
+        $this->debugMessages[] = 'Incoming POST Request ' . print_r($this->maskPasswordFields($_POST), true);
         $this->charset = (defined('CHARSET') ? CHARSET : 'utf-8');
     }
 
@@ -160,7 +160,7 @@ class AdminRequestSanitizer extends base
             $this->filterStrictSanitizeValues();
         }
         $this->debugMessages[] = 'Outgoing GET Request ' . print_r($_GET, true);
-        $this->debugMessages[] = 'Outgoing POST Request ' . print_r($_POST, true);
+        $this->debugMessages[] = 'Outgoing POST Request ' . print_r($this->maskPasswordFields($_POST), true);
         if ($this->debug) {
             self::errorLog($this->debugMessages);
         }
@@ -865,6 +865,21 @@ class AdminRequestSanitizer extends base
         if ($type === 'get' && !in_array($key, $this->getKeysAlreadySanitized, true)) {
             $this->getKeysAlreadySanitized[] = $key;
         }
+    }
+
+    /**
+     * Returns a copy of the given array with password-field values masked, for safe debug logging.
+     * @since ZC v3.0.0
+     */
+    private function maskPasswordFields(array $post): array
+    {
+        $passwordFields = ['password', 'confirm', 'admin_pass', 'newpassword', 'newpasswordConfirm'];
+        foreach ($passwordFields as $passwordField) {
+            if (isset($post[$passwordField])) {
+                $post[$passwordField] = '[redacted]';
+            }
+        }
+        return $post;
     }
 
     /**

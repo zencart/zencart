@@ -14,9 +14,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 /**
- * The following switch simply checks to see if the setting is already defined, and if not, sets it to true
- * If you desire to have the older behaviour of having all product and category items in the breadcrumb be shown as links
- * then you should add a define() for this item in the extra_datafiles folder and set it to 'false' instead of 'true':
+ * To override this default to legacy behaviour, add a define() for this in the extra_datafiles folder and set it to 'false' instead of 'true':
+ * Legacy behavior was to have all product and category items in the breadcrumb be shown as links.
  */
 if (!defined('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM')) {
     define('DISABLE_BREADCRUMB_LINKS_ON_LAST_ITEM', 'true');

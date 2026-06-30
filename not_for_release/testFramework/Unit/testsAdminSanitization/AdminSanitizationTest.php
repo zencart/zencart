@@ -381,6 +381,23 @@ class AdminSanitizationTest extends zcUnitTestCase
         $this->assertTrue($_GET['products_name_not_safe_get'] === '100xyz_pt>();');
     }
 
+    public function testWordsAndSymbolsRegexDoesNotBlockUncoveredEventHandlers()
+    {
+        $arq = new AdminRequestSanitizer;
+        $group = array('coupon_name_not_safe');
+        $adminSanitizerTypes = array('WORDS_AND_SYMBOLS_REGEX' => array('type' => 'builtin'));
+        $arq->addSanitizerTypes($adminSanitizerTypes);
+        $arq->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
+
+        $payload = '<input autofocus onfocus=alert(document.cookie)>';
+        $_POST = array('coupon_name_not_safe' => $payload);
+        $arq->runSanitizers();
+
+        $postAlreadySanitized = $arq->getPostKeysAlreadySanitized();
+        $this->assertTrue(count($postAlreadySanitized) == 1);
+        $this->assertSame($payload, $_POST['coupon_name_not_safe'], 'onfocus= is not in this filter\'s blacklist; it must survive unchanged for this test to document the real gap.');
+    }
+
     public function testStrictSanitizeKeys()
     {
         $arq = new AdminRequestSanitizer;

@@ -2459,7 +2459,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
         // send Welcome Email if appropriate
         if ($this->new_acct_notify == 'Yes') {
           // require the language file
-          zen_include_language_file('create_account.php', '/', 'inline');
+          zen_include_language_file('create_account_send_email.php', '/modules/', 'inline');
           // set the mail text
           $email_text = sprintf(EMAIL_GREET_NONE, $paypal_ec_payer_info['payer_firstname']) . EMAIL_WELCOME . "\n\n" . EMAIL_TEXT;
           $email_text .= "\n\n" . EMAIL_EC_ACCOUNT_INFORMATION . "\nUsername: " . $paypal_ec_payer_info['payer_email'] . "\nPassword: " . $password . "\n\n";

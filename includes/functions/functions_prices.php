@@ -529,7 +529,7 @@ function zen_get_products_retail_price($product_id)
  * @return bool
  * @since ZC v1.1.0
  */
-function zen_get_products_price_is_free($product_id)
+function zen_get_products_price_is_free($product_id): bool
 {
     $result = zen_get_product_details($product_id);
     return (!$result->EOF && $result->fields['product_is_free'] === '1');
@@ -541,7 +541,7 @@ function zen_get_products_price_is_free($product_id)
  * @return bool
  * @since ZC v1.1.0
  */
-function zen_get_products_price_is_call($product_id)
+function zen_get_products_price_is_call($product_id): bool
 {
     $result = zen_get_product_details($product_id);
     return (!$result->EOF && $result->fields['product_is_call'] === '1');
@@ -553,7 +553,7 @@ function zen_get_products_price_is_call($product_id)
  * @return bool
  * @since ZC v1.1.0
  */
-function zen_get_products_price_is_priced_by_attributes($product_id)
+function zen_get_products_price_is_priced_by_attributes($product_id): bool
 {
     $result = zen_get_product_details($product_id);
     return (!$result->EOF && $result->fields['products_priced_by_attribute'] === '1');
@@ -562,46 +562,43 @@ function zen_get_products_price_is_priced_by_attributes($product_id)
 /**
  * Lookup a product's minimum quantity
  * @param int $product_id
- * @return string
  * @since ZC v1.1.0
  */
-function zen_get_products_quantity_order_min($product_id)
+function zen_get_products_quantity_order_min($product_id): float
 {
     $result = zen_get_product_details($product_id);
-    return ($result->EOF) ? '' : $result->fields['products_quantity_order_min'];
+    return ($result->EOF) ? 0.0 : (float)$result->fields['products_quantity_order_min'];
 }
 
 /**
  * Lookup a product's minimum unit order
  * @param int $product_id
- * @return string
  * @since ZC v1.1.0
  */
-function zen_get_products_quantity_order_units($product_id)
+function zen_get_products_quantity_order_units($product_id): float
 {
     $result = zen_get_product_details($product_id);
-    return ($result->EOF) ? '' : $result->fields['products_quantity_order_units'];
+    return ($result->EOF) ? 0.0 : (float)$result->fields['products_quantity_order_units'];
 }
 
 /**
  * Lookup a product's maximum quantity
  * @param int $product_id
- * @return string
  * @since ZC v1.1.0
  */
-function zen_get_products_quantity_order_max($product_id)
+function zen_get_products_quantity_order_max($product_id): float
 {
     $result = zen_get_product_details($product_id);
-    return ($result->EOF) ? '' : $result->fields['products_quantity_order_max'];
+    return ($result->EOF) ? 0.0 : (float)$result->fields['products_quantity_order_max'];
 }
 
 /**
- * Lookup a product's quantity box status
+ * Look up a product's quantity box status
  * @param int $product_id
  * @return bool
  * @since ZC v1.1.0
  */
-function zen_get_products_qty_box_status($product_id)
+function zen_get_products_qty_box_status($product_id): bool
 {
     $result = zen_get_product_details($product_id);
     return (!$result->EOF && $result->fields['products_qty_box_status'] === '1');
@@ -613,7 +610,7 @@ function zen_get_products_qty_box_status($product_id)
  * @return bool
  * @since ZC v1.1.0
  */
-function zen_get_products_quantity_mixed($product_id)
+function zen_get_products_quantity_mixed($product_id): bool
 {
     $result = zen_get_product_details($product_id);
     return (!$result->EOF && $result->fields['products_quantity_mixed'] === '1');
@@ -627,7 +624,7 @@ function zen_get_products_quantity_mixed($product_id)
  * @return string
  * @since ZC v1.1.0
  */
-function zen_get_products_quantity_min_units_display($product_id, $include_break = true, $message_is_for_shopping_cart = false)
+function zen_get_products_quantity_min_units_display($product_id, bool $include_break = true, bool $message_is_for_shopping_cart = false): string
 {
     $result = zen_get_product_details($product_id);
 

@@ -11,9 +11,9 @@ require 'includes/application_top.php';
 
 $action = $_GET['action'] ?? '';
 $currentPage = (int)($_GET['page'] ?? 0);
-$page_search_parameters = ($currentPage !== 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . $_GET['search'] : '');
+$page_search_parameters = ($currentPage !== 0 ? '&page=' . $currentPage : '') . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '');
 $current_page = ($currentPage !== 0 ? 'page=' . $currentPage . '&' : '');
-$search_parameters = (isset($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '');
+$search_parameters = (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '');
 
 
 if ($action !== '') {
@@ -91,7 +91,7 @@ if ($action !== '') {
                 );
             } // nothing selected
             if (isset($_GET['go_back']) && $_GET['go_back'] === 'ON') {
-                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? '&search=' . $_GET['search'] . '&' : '') . (isset($new_featured) ? 'fID=' . $new_featured->fields['featured_categories_id'] : '')));
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) . '&' : '') . (isset($new_featured) ? 'fID=' . $new_featured->fields['featured_categories_id'] : '')));
             }
             break;
 
@@ -158,7 +158,7 @@ if ($action !== '') {
                 "DELETE FROM " . TABLE_FEATURED_CATEGORIES . "
                 WHERE featured_categories_id = " . $featured_categories_id
             );
-            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? 'search=' . $_GET['search'] : '')));
+            zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (isset($_GET['search']) ? 'search=' . urlencode($_GET['search']) : '')));
             break;
 
         case 'pre_add_confirmation':
@@ -189,7 +189,7 @@ if ($action !== '') {
                 }
             }
             if ($skip_featured === true) {
-                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (!empty($check_featured->fields['featured_categories_id']) ? 'fID=' . (int)$check_featured->fields['featured_categories_id'] : (isset($_GET['search']) ? '&search=' . $_GET['search'] : ''))));
+                zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (!empty($check_featured->fields['featured_categories_id']) ? 'fID=' . (int)$check_featured->fields['featured_categories_id'] : (isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : ''))));
             } else { // category id is valid
                 zen_redirect(zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . 'action=new' . '&preID=' . (int)$_POST['pre_add_categories_id']));
             }
@@ -334,7 +334,7 @@ if ($action !== '') {
                     </div>
                 </div>
                 <?php
-                $cancel_link = zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (!empty($_GET['search']) ? 'search=' . $_GET['search'] . '&' : '') . (!empty($_GET['fID']) ? 'fID=' . $_GET['fID'] : ''));
+                $cancel_link = zen_href_link(FILENAME_FEATURED_CATEGORIES, $current_page . (!empty($_GET['search']) ? 'search=' . urlencode($_GET['search']) . '&' : '') . (!empty($_GET['fID']) ? 'fID=' . $_GET['fID'] : ''));
 
                 require DIR_WS_INCLUDES . 'javascript/dateChecker.php'; ?>
                     <div class="col-sm-12 text-right">

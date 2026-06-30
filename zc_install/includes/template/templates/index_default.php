@@ -9,7 +9,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 $adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?= $formAction ?>">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zen_output_string_protected((string)$installer_lng) ?>">
     <?php
     if ($hasMultipleAdmins) {
         $adjustWarnIssues = true;

@@ -25,10 +25,10 @@ switch ($set) {
         $module_key = 'MODULE_SHIPPING_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
         $shipping_errors = '';
-        if (zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === 'NONE' || zen_get_configuration_key_value('SHIPPING_ORIGIN_ZIP') === '') {
+        if (zen_config('SHIPPING_ORIGIN_ZIP') === 'NONE' || empty(zen_config('SHIPPING_ORIGIN_ZIP'))) {
             $shipping_errors .= '<br>' . ERROR_SHIPPING_ORIGIN_ZIP;
         }
-        if (zen_get_configuration_key_value('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
+        if (zen_config('ORDER_WEIGHT_ZERO_STATUS') === '1' && (zen_config('MODULE_SHIPPING_FREESHIPPER_STATUS') !== 'True')) {
             $shipping_errors .= '<br>' . ERROR_ORDER_WEIGHT_ZERO_STATUS;
         }
         if ($shipping_errors !== '') {

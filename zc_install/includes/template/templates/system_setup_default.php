@@ -9,7 +9,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 ?>
 <form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" class="needs-validation">
     <input type="hidden" name="action" value="process">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zen_output_string_protected((string)$installer_lng) ?>">
     <input type="hidden" name="dir_ws_http_catalog" value="<?= $dir_ws_http_catalog ?>">
     <input type="hidden" name="detected_detected_http_server_catalog" value="<?= $catalogHttpServer ?>">
     <input type="hidden" name="adminDir" value="<?= $adminDir ?>">

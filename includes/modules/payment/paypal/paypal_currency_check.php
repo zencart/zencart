@@ -1,7 +1,8 @@
 <?php
 /* 
  * function to check if below 10000 usd limit
- * Returns true $amount if below the limit or the exchange rate cannot be found
+ * Returns true if the amount is below the limit; returns false if it is at/above the limit
+ * or the USD exchange rate cannot be determined
  * 
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -36,6 +37,11 @@ function paypalUSDCheck ($amount) : bool
             }
         }
         
+        // in case the USD exchange rate could not be determined
+        if (empty($rate)) {
+            return false;
+        }
+
         // Use the system CURRENCY_UPLIFT_RATIO to adjust the rate
         $multiplier = !empty(zen_config('CURRENCY_UPLIFT_RATIO', 0)) ? zen_config('CURRENCY_UPLIFT_RATIO') : 1;
         

@@ -124,10 +124,10 @@ function issetorArray(array $array, $key, $default = null)
 /**
  * Returns the CSRF token supplied for the current request, preferring the request header.
  *
- * If both the request header and POST field are present but don't match, `null` is returned
- * so callers fail closed rather than silently choosing one source.
+ * If both the request header and POST field are present but don't match,
+ * `null` is returned so callers fail closed rather than silently choosing one source.
  *
- * @since ZC v3.0.0
+ * @since ZC v2.2.3
  */
 function zen_get_csrf_token_from_request(): ?string
 {
@@ -151,7 +151,7 @@ function zen_get_csrf_token_from_request(): ?string
 /**
  * Validates the current request's CSRF token against the session token.
  *
- * @since ZC v3.0.0
+ * @since ZC v2.2.3
  */
 function zen_request_has_valid_csrf_token(): bool
 {
@@ -166,7 +166,6 @@ function zen_request_has_valid_csrf_token(): bool
 
     return hash_equals($_SESSION['securityToken'], $requestToken);
 }
-
 
 /**
  * Get a shortened filename to fit within the db field constraints
@@ -195,6 +194,69 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
     $shorter_base = substr($base, 0, $shorter_length);
 
     return $shorter_base . $original_suffix;
+}
+
+/**
+ * Normalize a local download filename for storage.
+ *
+ * @since ZC v2.2.3
+ */
+function zen_sanitize_download_filename($filename): string
+{
+    $filename = (string)$filename;
+
+    if (strpos($filename, ':') !== false) {
+        return $filename;
+    }
+
+    $filename = str_replace('\\', '/', $filename);
+    $safe_segments = [];
+    foreach (explode('/', $filename) as $segment) {
+        if ($segment === '' || $segment === '.' || $segment === '..') {
+            continue;
+        }
+        $safe_segments[] = $segment;
+    }
+
+    return implode('/', $safe_segments);
+}
+
+/**
+ * Check whether a local download filename resolves to a file inside the download directory.
+ *
+ * @since ZC v2.2.3
+ */
+function zen_download_filename_within_basedir($filename, ?string $base_dir = null): bool
+{
+    if ($filename === null || $filename === '') {
+        return false;
+    }
+    $filename = (string)$filename;
+
+    if (strpos($filename, "\0") !== false) {
+        return false;
+    }
+
+    if ($base_dir === null || $base_dir === '') {
+        $base_dir = defined('DIR_FS_DOWNLOAD') ? DIR_FS_DOWNLOAD : (DIR_FS_CATALOG . 'download/');
+    }
+    if (strpos($base_dir, "\0") !== false) {
+        return false;
+    }
+
+    $base_realpath = realpath($base_dir);
+    if ($base_realpath === false) {
+        return false;
+    }
+
+    $candidate_path = rtrim($base_dir, '/\\') . DIRECTORY_SEPARATOR . ltrim($filename, '/\\');
+    $candidate_realpath = realpath($candidate_path);
+    if ($candidate_realpath === false || !is_file($candidate_realpath)) {
+        return false;
+    }
+
+    $base_realpath = rtrim($base_realpath, '/\\') . DIRECTORY_SEPARATOR;
+    return str_starts_with($candidate_realpath . DIRECTORY_SEPARATOR, $base_realpath);
 }
 
 

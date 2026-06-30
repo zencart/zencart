@@ -163,12 +163,65 @@ class zcObserverLogEventListener extends base
      */
     public static function filterArrayElements(array $data): array
     {
-        foreach ($data as $key => $nul) {
-            if (in_array($key, ['x','y','secur' . 'ityTo' . 'ken','admi' . 'n_p' . 'ass','pass' . 'word','confirm', 'newpwd-' . $_SESSION['securityToken'],'oldpwd-' . $_SESSION['securityToken'],'confpwd-' . $_SESSION['securityToken']], true)) {
+        foreach ($data as $key => $value) {
+            if (self::isSensitiveFieldName((string)$key)) {
                 unset($data[$key]);
+                continue;
+            }
+            if (is_array($value)) {
+                $data[$key] = self::filterArrayElements($value);
             }
         }
         return $data;
+    }
+
+    /**
+     * Decide whether a POST field name should be redacted from the activity log.
+     *
+     * @since ZC v2.2.3
+     */
+    public static function isSensitiveFieldName(string $key): bool
+    {
+        if (preg_match('~pass|pwd|token|secret|key|card|cc[_-]?num|cvv|cvc|ssn~i', $key) === 1) {
+            return true;
+        }
+
+        return in_array($key, ['x', 'y', 'confirm'], true);
+    }
+
+    /**
+     * Backstop redaction for an already-json-encoded postdata blob.
+     *
+     * @since ZC v2.2.3
+     */
+    public static function filterJsonPostdata(string $json): string
+    {
+        if ($json === '') {
+            return $json;
+        }
+        $decoded = json_decode($json, true);
+        if (!is_array($decoded)) {
+            return $json;
+        }
+        return (string)json_encode(self::filterArrayElements($decoded));
+    }
+
+    /**
+     * admin/configuration.php consumes this function to redact sensitive data from being logged
+     *
+     * @since ZC v2.2.3
+     */
+    public static function filterLogMessage(string $message): string
+    {
+        return (string)preg_replace_callback(
+            '~^(.+ for )([^:]+)(: )(.*)$~s',
+            static function (array $matches): string {
+                return self::isSensitiveFieldName(trim($matches[2]))
+                    ? $matches[1] . $matches[2] . $matches[3] . '[redacted]'
+                    : $matches[0];
+            },
+            $message
+        );
     }
 
     /**

@@ -34,7 +34,7 @@ if (!$customer->isSameAsLoggedIn($order->info['customer_id'])) {
 require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2, zen_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
-$breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']));
+$breadcrumb->add(sprintf(NAVBAR_TITLE_3, (string)(int)$_GET['order_id']));
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_ACCOUNT_HISTORY_INFO');

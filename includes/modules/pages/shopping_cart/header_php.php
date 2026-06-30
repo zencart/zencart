@@ -111,8 +111,8 @@ for ($i = 0, $n = count($products); $i < $n; $i++) {
     $linkProductsImage = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
     $linkProductsName = zen_href_link(zen_get_info_page($products[$i]['id']), 'products_id=' . $products[$i]['id']);
     $productsImage = ((int)$tplSetting->IMAGE_SHOPPING_CART_STATUS === 1 ? zen_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], $prodImgWidth, $prodImgHeight) : '');
-    $show_products_quantity_max = zen_get_products_quantity_order_max($products[$i]['id']);
-    $showFixedQuantity = (($show_products_quantity_max == 1 or zen_get_products_qty_box_status($products[$i]['id']) == 0) ? true : false);
+    // zen_get_products_quantity_order_max returns a float value (supports fractional quantities), so using loose == intentionally below
+    $showFixedQuantity = (zen_get_products_quantity_order_max($products[$i]['id']) == 1 || zen_get_products_qty_box_status($products[$i]['id']) === false);
     $showFixedQuantityAmount = $products[$i]['quantity'] . zen_draw_hidden_field('cart_quantity[]', $products[$i]['quantity']);
     $showMinUnits = zen_get_products_quantity_min_units_display($products[$i]['id']);
     $quantityField = zen_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4" class="cart_input_' . $products[$i]['id'] . '" aria-label="' . ARIA_EDIT_QTY_IN_CART . '"');

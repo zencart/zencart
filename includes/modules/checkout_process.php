@@ -25,6 +25,11 @@ if (!zen_is_logged_in()) {
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !zen_request_has_valid_csrf_token()) {
+    $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_CSRF_TOKEN_INVALID');
+    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
+}
+
 // BEGIN CC SLAM PREVENTION
 $slamming_threshold = 3;
 $_SESSION['payment_attempt'] ??= 0;

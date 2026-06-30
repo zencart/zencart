@@ -1,6 +1,7 @@
 ## Related files
 - `CONVENTIONS.md` — coding standards, PSR-12 rules, naming conventions, legacy exceptions
 - `CLAUDE.md` — Claude-specific behavioral layer (references this file)
+- `dev-REVIEW-CALIBRATION.md` — optional gitignored local/private review-calibration notes. If present, agents doing code review should read it, but must not quote or commit it.
 
 ## Scratch / working files
 
@@ -57,6 +58,7 @@ Use `CONVENTIONS.md` as the review baseline:
 - Favor stability over purity. Do not ask for broad rewrites, unrelated refactors, or legacy cleanup unless the change introduces a real defect.
 - Apply PSR-12, naming, `declare(strict_types=1)`, and no-colon-syntax rules to new code and files already being modified, while respecting documented legacy exceptions.
 - Flag direct edits to bootstrap/path files that are listed as "should never be directly edited"; prefer `extra_configures`, `init_includes`, plugin hooks, or other established extension points.
+- Do not flag template files for outputting a closing form tag via PHP, such as `<?= '</form>' ?>`; this intentionally pairs with forms opened by `zen_draw_form()` and avoids IDE/static-review tag-mismatch confusion.
 
 Review security-sensitive changes closely:
 - Preserve the early request-sanitizing behavior in `includes/application_top.php`.
@@ -88,19 +90,28 @@ Review output should be concise and actionable:
 - Prefer minimal, deterministic fixes that fit the existing procedural, bootstrap, template, and plugin patterns.
 - If no issues are found, say so clearly and note any remaining test gaps or assumptions.
 
+Security Review Guidance
+------------------------
+- Input Sanitization: Admin input handling uses more than one sanitization stage. Do not assume a field is unprotected based solely on the behavior of a single helper function. Review the complete request-processing pipeline before reporting a finding.
+- Certain administrator-managed content areas intentionally support richer markup for legitimate use cases. Treat these as design decisions rather than vulnerabilities unless untrusted users can influence the content.
+- Authorization: Authorization checks are typically performed centrally during application bootstrap rather than inside each page. Absence of an explicit permission check within a page does not necessarily indicate a security issue. When introducing new admin pages or reports, consider whether existing permissions are sufficient or whether additional access restrictions are appropriate.
+- CSRF Protection: CSRF validation may be enforced globally. Verify request initialization logic before reporting missing CSRF protection on individual pages.
+- Data Exports: Some directories are shared by multiple export features. When reviewing export functionality, consider the security of generated files, storage locations, and cleanup behavior.
+- Installation and Setup: Administrative lockout mechanisms and installation safeguards may be implemented separately. Review both initialization and installation code paths before drawing conclusions about deployment protections.
+
 Project-specific conventions and patterns
 ---------------------------------------
 - Entrypoints are procedural files that require `application_top.php` and later `application_bottom.php` (see `index.php` flow comments).
-- File/constant mapping: many filenames are registered via `includes/init_includes/init_file_db_names.php` (calling `/filenames.php`) and plugin `filenames.php` — search for `FILENAME_` constants.
+- File/constant mapping: many filenames are registered via `includes/init_includes/init_file_db_names.php` (calling `/filenames.php`) and plugin `filenames.php` — search for `FILENAME_` constants convention.
 - Autoloading: PSR-4 for core application and plugins. During runtime, `Aura\\Autoload` plus `includes/psr4Autoload.php` register autoload prefixes (see `application_top.php`). (For test suite, `composer.json` uses classmap for `includes/classes` and `includes/modules`). 
-- Plugin registration: PluginManager + PluginControlRepository provide installed plugin list; FileSystem helper loads plugin-supplied files. Plugins have `unique_key` and `version` used in paths: `zc_plugins/<unique_key>/<version>/...`, and a `manifest.php` file which provides descriptions that get registered in the database.
-- Security & input sanitation: `application_top.php` includes early request-sanitizing logic (rejects suspicious query strings, parameter pollution, and crawler `buy_now` attempts). Automated changes to routing/inputs should preserve these checks. Call `zen_output_string_protected()` on any output that includes user input, for XSS protection. The admin-side applies aggressive input-sanitization rules, but new fields that require relaxed sanitization will need proper whitelisting: see https://docs.zen-cart.com/dev/code/admin_sanitization/.
-- These same patterns apply to the admin side. 
+- Plugin registration: `PluginManager + PluginControlRepository` provide installed plugin list; `FileSystem` helper loads plugin-supplied files. Plugins have `unique_key` and `version` used in paths: `zc_plugins/<unique_key>/<version>/...`, and a `manifest.php` file which provides descriptions that get registered in the database.
+- Security & input sanitation: `application_top.php` includes early request-sanitizing logic (rejects suspicious query strings, parameter pollution, and crawler `buy_now` attempts). Automated changes to routing/inputs should preserve these checks. Call `zen_output_string_protected()` on any output that includes user input, for XSS protection.
+- These patterns above apply to both the catalog and admin sides.
 - Template overrides: The non-admin side supports template-specific overrides for modules and classes. For example, if the active template is `my_template`, the system will look for files in `includes/templates/my_template/` before falling back to the `template_default` paths. This allows for customization without modifying core files.
-- `index.php` flow: includes application_top.php, loops over `header_php` files from PageLoader->listModulePagesFiles('header_php', '.php'), then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
+- `index.php` flow: includes `application_top.php`, loops over `header_php` files from `PageLoader->listModulePagesFiles('header_php', '.php')`, then loads `html_header.php`, `main_template_vars.php`, `tpl_main_page.php`.
 - Language files: `lang.foo.php` files return an array of `'CONSTANT_NAME' => 'value'` pairs. These get merged across load layers (core → plugin, English → active language) and converted to real constants via `define()`. Values may reference other keys in the same array via `%%OTHER_KEY%%` placeholders.
 - Ajax classes (`includes/classes/ajax/*`, dispatched via `ajax.php`) are physically located under catalog-side directories even when they are only ever invoked from Admin — the ajax handler checks `IS_ADMIN_FLAG` to determine actual execution context, not file location. Trace actual callers (and `IS_ADMIN_FLAG` handling) before assuming an ajax class can use `$tplSetting`.
-- Some functions/classes are reachable from both Admin and catalog (for example several functions in `includes/functions/functions_products.php`). Trace actual callers before converting a shared function — converting one only safe for catalog-side callers will produce a fatal/undefined-property error when reached from Admin.
+- Some functions/classes are reachable from both Admin and catalog (for example several functions in `includes/functions/functions_products.php`). Trace actual callers before calling/adapting a shared function to avoid fatal/undefined-property errors when reached from the other context.
 
 
 Configuration: `zen_config()` vs `$tplSetting` (TemplateSettings)

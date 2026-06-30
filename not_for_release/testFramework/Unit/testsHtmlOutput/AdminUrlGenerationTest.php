@@ -5,11 +5,13 @@
  */
 
 use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
 /**
  * Testing Library
  */
+#[RunTestsInSeparateProcesses]
 class AdminUrlGenerationTest extends zcUnitTestCase
 {
     public function setUp(): void
@@ -241,6 +243,19 @@ class AdminUrlGenerationTest extends zcUnitTestCase
         $this->assertURLGenerated(
             zen_href_link(FILENAME_DEFAULT, 'test=test&&amp;&zen-cart=the-art-of-e-commerce'),
             HTTP_SERVER . DIR_WS_ADMIN . 'index.php?cmd=' . FILENAME_DEFAULT . '&amp;test=test&amp;zen-cart=the-art-of-e-commerce'
+        );
+    }
+
+    #[Depends('testAdminPage')]
+    public function testPageParameterIsEscaped()
+    {
+        $this->assertURLGenerated(
+            zen_href_link('page"xss'),
+            HTTP_SERVER . DIR_WS_ADMIN . 'index.php?cmd=page&amp;quot;xss'
+        );
+        $this->assertURLGenerated(
+            zen_href_link('page"xss', 'param=value'),
+            HTTP_SERVER . DIR_WS_ADMIN . 'index.php?cmd=page&amp;quot;xss&amp;param=value'
         );
     }
 

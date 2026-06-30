@@ -1590,7 +1590,7 @@ class shoppingCart extends base
     public function in_cart_mixed(int|string $uprid_to_check): float|int
     {
         // if nothing is in cart return 0
-        if (!is_array($this->contents)) {
+        if (empty($this->contents)) {
             return 0;
         }
 
@@ -1659,13 +1659,13 @@ class shoppingCart extends base
      *
      * @param string $check_what product field to check
      * @param mixed $check_value value to check for
-     * @return int number of items matching constraint
+     * @return int|float number of items matching the constraint
      * @since ZC v1.1.0
      */
-    public function in_cart_check(string $check_what, mixed $check_value = '1'): int
+    public function in_cart_check(string $check_what, mixed $check_value = '1'): float|int
     {
         // if nothing is in cart return 0
-        if (!is_array($this->contents)) {
+        if (empty($this->contents)) {
             return 0;
         }
 
@@ -1781,7 +1781,7 @@ class shoppingCart extends base
             if (in_array($products_id, $cart_delete, false) || empty($_POST['cart_quantity'][$i])) {
                 $this->remove($products_id);
             } else {
-                $add_max = zen_get_products_quantity_order_max($products_id); // maximum allowed
+                $add_max = (float)zen_get_products_quantity_order_max($products_id); // maximum allowed
                 $chk_mixed = zen_get_products_quantity_mixed($products_id); // use mixed
                 $prid = zen_get_prid($products_id);
 
@@ -1838,6 +1838,7 @@ class shoppingCart extends base
                     $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($products_id), 'caution');
                 }
 
+                // These are float values, so using loose == intentionally below:
                 if ($add_max == 1 && $cart_qty == 1 && $new_qty != $cart_qty) {
                     // do not add
                     $adjust_max = 'true';
@@ -1852,7 +1853,7 @@ class shoppingCart extends base
                             $adjust_max = 'true';
                             $new_qty = $add_max;
                             break;
-                        case ($chk_mixed == true && ($add_max - $cart_qty + $new_qty) >= $add_max && $new_qty > $add_max):
+                        case ($chk_mixed === true && ($add_max - $cart_qty + $new_qty) >= $add_max && $new_qty > $add_max):
                             $adjust_max = 'true';
                             $requested_qty = $new_qty;
                             $alter_qty = $add_max - $cart_qty + $current_qty;
@@ -1977,7 +1978,7 @@ class shoppingCart extends base
             }
 
             // verify qty to add
-            $add_max = zen_get_products_quantity_order_max($_POST['products_id']);
+            $add_max = (float)zen_get_products_quantity_order_max($_POST['products_id']);
             $cart_qty = $this->in_cart_mixed($_POST['products_id']);
             if ($this->display_debug_messages) {
                 $messageStack->add_session('header', 'B: FUNCTION ' . __FUNCTION__ . ' Products_id: ' . $_POST['products_id'] . ' cart_qty: ' . $cart_qty . ' $_POST[cart_quantity]: ' . $_POST['cart_quantity'] . ' <br>', 'caution');
@@ -1995,6 +1996,7 @@ class shoppingCart extends base
                 $this->flag_duplicate_msgs_set = true;
             }
 
+            // These are float values, so using loose == intentionally below:
             if ($add_max == 1 && $cart_qty == 1) {
                 // do not add
                 $new_qty = 0;
@@ -2017,6 +2019,7 @@ class shoppingCart extends base
                 }
             }
 
+            // These are float values, so using loose == intentionally below:
             if (zen_get_products_quantity_order_max($_POST['products_id']) == 1 && $this->in_cart_mixed($_POST['products_id']) == 1) {
                 // do not add
             } else {
@@ -2057,8 +2060,27 @@ class shoppingCart extends base
                                     $db->Execute("DELETE FROM " . TABLE_FILES_UPLOADED . " WHERE files_uploaded_id = " . (int)$insert_id . " LIMIT 1");
                                 }
                             } else { // No file uploaded -- use previous value
-                                $real_ids[$text_prefix] = $_POST[$text_upload_prefix] ?? '';
-                                if (!zen_get_attributes_valid($_POST['products_id'], $text_prefix, !empty($_POST[$text_prefix]) ? $_POST[$text_prefix] : '')) {
+                                $posted_reused_upload_value = $_POST[$text_upload_prefix] ?? '';
+                                $reused_upload_value = '';
+                                if ($posted_reused_upload_value !== '') {
+                                    $reused_files_uploaded_id = (int)$posted_reused_upload_value;
+                                    if ($reused_files_uploaded_id > 0) {
+                                        $ownership_sql = "SELECT files_uploaded_id, files_uploaded_name
+                                                          FROM " . TABLE_FILES_UPLOADED . "
+                                                          WHERE files_uploaded_id = " . $reused_files_uploaded_id . "
+                                                          AND (sesskey = '" . zen_session_id() . "'";
+                                        if (zen_is_logged_in()) {
+                                            $ownership_sql .= " OR customers_id = " . (int)$_SESSION['customer_id'];
+                                        }
+                                        $ownership_sql .= ") LIMIT 1";
+                                        $ownership_check = $db->Execute($ownership_sql);
+                                        if (!$ownership_check->EOF) {
+                                            $reused_upload_value = $reused_files_uploaded_id . '. ' . $ownership_check->fields['files_uploaded_name'];
+                                        }
+                                    }
+                                }
+                                $real_ids[$text_prefix] = $reused_upload_value;
+                                if (!zen_get_attributes_valid($_POST['products_id'], $text_prefix, $reused_upload_value)) {
                                     $the_list .=
                                         TEXT_ERROR_OPTION_FOR .
                                         '<span class="alertBlack">' .
@@ -2135,7 +2157,7 @@ class shoppingCart extends base
             }
             $allow_into_cart = zen_get_products_allow_add_to_cart((int)$_GET['products_id']);
             if ($allow_into_cart === 'Y') {
-                $add_max = zen_get_products_quantity_order_max($_GET['products_id']);
+                $add_max = (float)zen_get_products_quantity_order_max($_GET['products_id']);
                 $cart_qty = $this->in_cart_mixed($_GET['products_id']);
                 $new_qty = zen_get_buy_now_qty($_GET['products_id']);
                 if (!is_numeric($new_qty) || $new_qty < 0) {
@@ -2147,6 +2169,7 @@ class shoppingCart extends base
                     $messageStack->add_session('header', ERROR_CORRECTIONS_HEADING . ERROR_PRODUCT_QUANTITY_UNITS_SHOPPING_CART . $chk_link . ' ' . PRODUCTS_ORDER_QTY_TEXT . zen_output_string_protected($new_qty), 'caution');
                     $new_qty = 0;
                 }
+                // These are float values, so using loose == intentionally below:
                 if ($add_max == 1 && $cart_qty == 1) {
                     // do not add
                     $new_qty = 0;
@@ -2154,7 +2177,8 @@ class shoppingCart extends base
                     $new_qty = $add_max - $cart_qty;
                 }
 
-                if ((zen_get_products_quantity_order_max($_GET['products_id']) == 1 && $this->in_cart_mixed($_GET['products_id']) == 1)) {
+                // These are float values, so using loose == intentionally below:
+                if (zen_get_products_quantity_order_max($_GET['products_id']) == 1 && $this->in_cart_mixed($_GET['products_id']) == 1) {
                     // do not add
                 } else {
                     // check for min/max and add that value or 1
@@ -2204,7 +2228,7 @@ class shoppingCart extends base
                 if (is_numeric($val) && $val > 0) {
                     $adjust_max = false;
                     $qty = $val;
-                    $add_max = zen_get_products_quantity_order_max($prodId);
+                    $add_max = (float)zen_get_products_quantity_order_max($prodId);
                     $cart_qty = $this->in_cart_mixed($prodId);
                     $new_qty = $this->adjust_quantity($qty, $prodId, 'shopping_cart');
 
@@ -2215,6 +2239,7 @@ class shoppingCart extends base
                         $messageStack->add_session('shopping_cart', ($this->display_debug_messages ? 'FUNCTION ' . __FUNCTION__ . ': ' : '') . WARNING_PRODUCT_QUANTITY_ADJUSTED . zen_get_products_name($prodId), 'caution');
                     }
 
+                    // These are float values, so using loose == intentionally below:
                     if ($add_max == 1 && $cart_qty == 1) {
                         // do not add
                         $adjust_max = 'true';

@@ -14,7 +14,6 @@ use Zencart\DbRepositories\ProductTypeLayoutRepository;
 
 class CliConfigurationLoaderTest extends TestCase
 {
-    protected $preserveGlobalState = false;
 
     public static function setUpBeforeClass(): void
     {

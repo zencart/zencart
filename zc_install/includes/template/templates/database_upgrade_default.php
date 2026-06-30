@@ -19,7 +19,7 @@ if (count($newArray)) { ?>
 <div id="upgradeResponsesHolder"></div>
 
 <form id="db_upgrade<?= (count($newArray)) ? '' : '_done' ?>" name="db_upgrade" method="post" action="index.php?main_page=completion" class="needs-validation">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zen_output_string_protected((string)$installer_lng) ?>">
     <input type="hidden" name="action" value="process">
     <?php
     if (count($newArray)) { ?>

@@ -33,15 +33,15 @@
 
     if (!$static) {
       if (!empty($parameters)) {
-        $link .= 'index.php?main_page='. $page . "&" . zen_output_string($parameters);
+        $link .= 'index.php?main_page='. zen_output_string($page) . "&" . zen_output_string($parameters);
       } else {
-        $link .= 'index.php?main_page=' . $page;
+        $link .= 'index.php?main_page=' . zen_output_string($page);
       }
     } else {
       if (!empty($parameters)) {
-        $link .= $page . "?" . zen_output_string($parameters);
+        $link .= zen_output_string($page) . "?" . zen_output_string($parameters);
       } else {
-        $link .= $page;
+        $link .= zen_output_string($page);
       }
     }
 

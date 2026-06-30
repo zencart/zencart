@@ -36,6 +36,15 @@ class zcObserverDownloadsViaStreaming extends base {
   {
     global $messageStack;
 
+    if (!zen_download_filename_within_basedir($origin_filename, $source_directory)) {
+      $msg = 'Please contact store owner.  ERROR: Cannot read file: ' . $origin_filename;
+      if (isset($messageStack) && is_object($messageStack)) {
+        $messageStack->add_session('default', $msg, 'error');
+      }
+      error_log('Download blocked: invalid filename path: ' . $origin_filename);
+      zen_exit();
+    }
+
     if ((int)$downloadFilesize > 0) header("Content-Length: " . (string) $downloadFilesize);
 
     $disabled_funcs = @ini_get("disable_functions");

@@ -170,10 +170,8 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
      * validate transaction -- email address, matching txn record, etc
      */
     if (!ipn_validate_transaction($info, $_POST, 'IPN') === true) {
-        if (!$isECtransaction && $posted_txn_type !== '') {
-            ipn_debug_email('IPN FATAL ERROR :: Transaction did not validate. ABORTED.');
-            die();
-        }
+        ipn_debug_email('IPN FATAL ERROR :: Transaction did not validate. ABORTED.');
+        die();
     }
 
     if ($isDPtransaction) {
@@ -491,7 +489,8 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
                 $paypalipnID = $db->insert_ID();
             } else {
                 $sql_data_array = ipn_create_order_update_array($txn_type);
-                zen_db_perform(TABLE_PAYPAL, $sql_data_array, 'update', "txn_id='" . ($txn_type === 'cleared-authorization' ? $_POST['parent_txn_id'] : $_POST['txn_id']) . "'");
+                $txnWhereValue = ($txn_type === 'cleared-authorization' ? $_POST['parent_txn_id'] : $_POST['txn_id']);
+                zen_db_perform(TABLE_PAYPAL, $sql_data_array, 'update', $db->bindVars('txn_id=:txn_id:', ':txn_id:', $txnWhereValue, 'string'));
                 $sql = "SELECT paypal_ipn_id FROM " . TABLE_PAYPAL . " WHERE txn_id=:txn:";
                 $sql = $db->bindVars($sql, ':txn:', $_POST['txn_id'], 'string');
                 $result = $db->Execute($sql, 1);
