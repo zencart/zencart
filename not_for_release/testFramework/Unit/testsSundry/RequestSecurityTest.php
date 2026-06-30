@@ -11,6 +11,18 @@ use Zencart\Request\Request;
 
 class RequestSecurityTest extends zcUnitTestCase
 {
+    /**
+     * TRUSTED_PROXIES is a PHP constant and can't be redefined between test methods running in
+     * the same process, so every test in this class that needs a trusted-proxy configuration
+     * defines it (guarded by !defined()) with this same combined value: an exact IP, an IPv4 and
+     * an IPv6 CIDR range (mirroring how a real deployment lists a provider's published ranges,
+     * e.g. Cloudflare's, alongside an exact address), plus three deliberately malformed entries
+     * (non-numeric mask, out-of-range mask, invalid subnet) used by
+     * testMalformedCidrEntriesInTrustedProxiesListAreIgnoredSafely() to confirm a typo in one
+     * entry neither matches everything nor breaks parsing of the rest of the list.
+     */
+    private const TEST_TRUSTED_PROXIES = '10.0.0.1,173.245.48.0/20,2400:cb00::/32,10.0.0.0/abc,10.0.0.0/40,not-an-ip/20';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -91,7 +103,7 @@ class RequestSecurityTest extends zcUnitTestCase
     public function testForwardedHttpsRequestIsSecureWhenFromTrustedProxy(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
-            define('TRUSTED_PROXIES', '10.0.0.1');
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
         }
 
         $_SERVER['HTTPS'] = 'off';
@@ -125,7 +137,7 @@ class RequestSecurityTest extends zcUnitTestCase
     public function testTrustDecisionIsConsistentAcrossRemoteAddrOverwrite(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
-            define('TRUSTED_PROXIES', '10.0.0.1');
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
         }
 
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
@@ -168,7 +180,7 @@ class RequestSecurityTest extends zcUnitTestCase
     public function testForwardedForIgnoredWhenPeerNotTrusted(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
-            define('TRUSTED_PROXIES', '10.0.0.1');
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
         }
 
         $_SERVER['REMOTE_ADDR'] = '198.51.100.9';
@@ -183,5 +195,85 @@ class RequestSecurityTest extends zcUnitTestCase
 
         $this->assertFalse(Request::isFromTrustedProxy());
         $this->assertSame('198.51.100.9', zen_get_ip_address());
+    }
+
+    /**
+     * TRUSTED_PROXIES entries are commonly published as CIDR ranges rather than individual IPs
+     * (e.g. Cloudflare's documented edge ranges — see includes/dist-configure.php).
+     * An exact-string-match-only check could never match a real peer against such a range,
+     * so the trusted-proxy check must support CIDR membership.
+     * 173.245.48.0/20 covers 173.245.48.0–173.245.63.255.
+     */
+    public function testCidrTrustedProxyMatchesPeerInsideIpv4Range(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '173.245.50.10';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.5';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isFromTrustedProxy());
+        $this->assertSame('203.0.113.5', zen_get_ip_address());
+    }
+
+    /**
+     * A peer just outside the configured CIDR range (173.245.64.1 is one address past the
+     * 173.245.48.0/20 boundary at 173.245.63.255) must not be trusted.
+     */
+    public function testCidrTrustedProxyDoesNotMatchPeerOutsideIpv4Range(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '173.245.64.1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.5';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertFalse(Request::isFromTrustedProxy());
+        $this->assertSame('173.245.64.1', zen_get_ip_address());
+    }
+
+    /**
+     * IPv6 CIDR ranges must also be supported (e.g. Cloudflare also publishes IPv6 ranges).
+     * 2400:cb00::/32 covers any address whose first 32 bits are 2400:cb00.
+     */
+    public function testCidrTrustedProxyMatchesPeerInsideIpv6Range(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '2400:cb00:1234:5678::1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.5';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isFromTrustedProxy());
+        $this->assertSame('203.0.113.5', zen_get_ip_address());
+    }
+
+    /**
+     * The malformed entries baked into TEST_TRUSTED_PROXIES (non-numeric mask, out-of-range mask,
+     * invalid subnet) must be ignored safely: a peer that doesn't match any of the *valid* entries
+     * stays untrusted (a parsing bug that defaulted a bad mask to 0 would wrongly match everyone),
+     * and parsing them must not throw or otherwise prevent the valid entries later in the same
+     * list from still matching correctly.
+     */
+    public function testMalformedCidrEntriesInTrustedProxiesListAreIgnoredSafely(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '198.51.100.50';
+        Request::captureOriginalRemoteAddr();
+        $this->assertFalse(Request::isFromTrustedProxy());
+
+        Request::resetOriginalRemoteAddrForTesting();
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+        $this->assertTrue(Request::isFromTrustedProxy());
     }
 }

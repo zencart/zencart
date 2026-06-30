@@ -52,7 +52,9 @@ define('SQL_CACHE_METHOD', 'none');
  * But if you are hosting behind a proxy such as Cloudflare, you must add the official IP addresses of the proxy here.
  * For example, for Cloudflare, you can find the list of IP addresses here: https://www.cloudflare.com/ips/
  *
- * Supports listing IPs as an array or a comma-delimited string.
+ * Entries may be individual IPs or CIDR ranges (e.g. '173.245.48.0/20'),
+ * both IPv4 and IPv6 are supported.
+ * Supports listing entries as an array or a comma-delimited string.
  */
 define('TRUSTED_PROXIES', []);
 

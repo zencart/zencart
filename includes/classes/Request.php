@@ -114,6 +114,11 @@ class Request
      * The check is made against the captured original peer address, so it returns the same answer
      * regardless of where in the request it is called and regardless of whether init_sessions.php
      * has already overwritten $_SERVER['REMOTE_ADDR'].
+     *
+     * Each TRUSTED_PROXIES entry may be a single IP (exact match) or a CIDR range
+     * (e.g. 173.245.48.0/20) — providers such as Cloudflare publish their edge ranges as CIDR blocks
+     * (see the TRUSTED_PROXIES doc comment in includes/dist-configure.php), so an exact-match-only
+     * check could never match a real peer against the documented configuration.
      */
     public static function isFromTrustedProxy(): bool
     {
@@ -121,7 +126,66 @@ class Request
         if ($trustedProxies === []) {
             return false;
         }
-        return in_array(self::getOriginalRemoteAddr(), $trustedProxies, true);
+        $peer = self::getOriginalRemoteAddr();
+        if ($peer === '') {
+            return false;
+        }
+        foreach ($trustedProxies as $proxyEntry) {
+            if (self::proxyEntryMatchesPeer($peer, $proxyEntry)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Match a single TRUSTED_PROXIES entry (exact IP or CIDR range) against the peer address.
+     */
+    private static function proxyEntryMatchesPeer(string $peer, string $proxyEntry): bool
+    {
+        if (!str_contains($proxyEntry, '/')) {
+            return $proxyEntry === $peer;
+        }
+        return self::ipInCidrRange($peer, $proxyEntry);
+    }
+
+    /**
+     * Determine whether $ip falls within the given CIDR range. Supports both IPv4 and IPv6;
+     * returns false on any malformed input or family mismatch (e.g. an IPv4 peer against an IPv6
+     * CIDR entry) rather than throwing, since TRUSTED_PROXIES is operator-supplied configuration.
+     */
+    private static function ipInCidrRange(string $ip, string $cidr): bool
+    {
+        $parts = explode('/', $cidr, 2);
+        if (count($parts) !== 2 || !ctype_digit($parts[1])) {
+            return false;
+        }
+        [$subnet, $maskBits] = $parts;
+        $maskBits = (int) $maskBits;
+
+        $ipBin = @inet_pton($ip);
+        $subnetBin = @inet_pton($subnet);
+        if ($ipBin === false || $subnetBin === false || strlen($ipBin) !== strlen($subnetBin)) {
+            return false;
+        }
+
+        $totalBits = strlen($ipBin) * 8;
+        if ($maskBits < 0 || $maskBits > $totalBits) {
+            return false;
+        }
+
+        $fullBytes = intdiv($maskBits, 8);
+        if ($fullBytes > 0 && substr($ipBin, 0, $fullBytes) !== substr($subnetBin, 0, $fullBytes)) {
+            return false;
+        }
+
+        $remainderBits = $maskBits % 8;
+        if ($remainderBits === 0) {
+            return true;
+        }
+
+        $mask = chr((0xFF << (8 - $remainderBits)) & 0xFF);
+        return (ord($ipBin[$fullBytes]) & ord($mask)) === (ord($subnetBin[$fullBytes]) & ord($mask));
     }
 
     public static function isSecure(): bool
