@@ -11,6 +11,7 @@ $define = [
     'EMAIL_PRODUCT_REVIEW_CONTENT_DETAILS' => 'Review Details: %s',
     'TEXT_REVIEW_SUBMITTED_FOR_REVIEW' => 'Thank you, your post has been submitted for review.',
     'TEXT_REVIEW_SUBMITTED' => 'Thank you for submitting your review!',
+    'ERROR_REVIEW_SUBMIT_TOO_SOON' => 'Please wait a little while before submitting another review.',
 ];
 
 return $define;
