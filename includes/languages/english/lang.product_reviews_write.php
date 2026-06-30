@@ -12,6 +12,7 @@ $define = [
     'TEXT_REVIEW_SUBMITTED_FOR_REVIEW' => 'Thank you, your post has been submitted for review.',
     'TEXT_REVIEW_SUBMITTED' => 'Thank you for submitting your review!',
     'TEXT_REVIEW_TITLE' => 'Review Title:',
+    'ERROR_REVIEW_SUBMIT_TOO_SOON' => 'Please wait a little while before submitting another review.',
 ];
 
 return $define;

@@ -84,4 +84,24 @@ if (!$error) {
   $_SESSION['gv_id'] = '';
 }
 
+if ($error == true) {
+  /**
+   * Enable a site to control the number of failed gift-voucher redemption attempts.
+   */
+  $max_gv_redeem_attempts = (int)($max_gv_redeem_attempts ?? 9);
+  if ($max_gv_redeem_attempts < 2 || $max_gv_redeem_attempts > 20) {
+      $max_gv_redeem_attempts = 9;
+  }
+
+  /**
+   * Slamming prevention ...
+   */
+  $_SESSION['gv_redeem_attempt'] ??= 0;
+  if ($_SESSION['gv_redeem_attempt'] > $max_gv_redeem_attempts) {
+      header('HTTP/1.1 406 Not Acceptable');
+      exit(0);
+  }
+  $_SESSION['gv_redeem_attempt']++;
+}
+
 $breadcrumb->add(NAVBAR_TITLE);

@@ -45,6 +45,8 @@ $customer_query = "SELECT customers_firstname, CONCAT(LEFT(customers_lastname,1)
 $customer_query = $db->bindVars($customer_query, ':customersID', $_SESSION['customer_id'], 'integer');
 $reviewer = $db->Execute($customer_query);
 
+zen_define_default('REVIEW_SUBMIT_COOLDOWN_SECONDS', 60);
+
 $error = false;
 if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   $rating = (int)$_POST['rating'];
@@ -61,6 +63,21 @@ if (isset($_GET['action']) && ($_GET['action'] == 'process')) {
   if (($rating < 1) || ($rating > 5)) {
     $error = true;
     $messageStack->add('review_text', JS_REVIEW_RATING);
+  }
+
+  if ($error == false) {
+    $last_review_query = "SELECT date_added
+                          FROM " . TABLE_REVIEWS . "
+                          WHERE customers_id = :customersID
+                          ORDER BY date_added DESC
+                          LIMIT 1";
+    $last_review_query = $db->bindVars($last_review_query, ':customersID', $_SESSION['customer_id'], 'integer');
+    $last_review = $db->Execute($last_review_query);
+
+    if (!$last_review->EOF && (time() - strtotime($last_review->fields['date_added'])) < REVIEW_SUBMIT_COOLDOWN_SECONDS) {
+      $error = true;
+      $messageStack->add('review_text', ERROR_REVIEW_SUBMIT_TOO_SOON);
+    }
   }
 
   if ($error == false) {
