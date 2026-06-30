@@ -6,20 +6,30 @@
 
 namespace Tests\Unit\testsSundry;
 
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Tests\Support\zcUnitTestCase;
 use Zencart\Request\Request;
 
+/**
+ * Several tests in this class call define() on the global TRUSTED_PROXIES constant, which PHP
+ * cannot undefine or redefine within a process. Per AGENTS.md's test-suite guidance, each such
+ * test carries the method-level #[RunInSeparateProcess] attribute rather than isolating the whole
+ * class with #[RunTestsInSeparateProcesses] — only those specific methods get their own process,
+ * so a TRUSTED_PROXIES value defined in one can never leak into another, while the majority of
+ * tests in this file (which never touch TRUSTED_PROXIES) keep running fast, in-process.
+ */
 class RequestSecurityTest extends zcUnitTestCase
 {
     /**
-     * TRUSTED_PROXIES is a PHP constant and can't be redefined between test methods running in
-     * the same process, so every test in this class that needs a trusted-proxy configuration
-     * defines it (guarded by !defined()) with this same combined value: an exact IP, an IPv4 and
-     * an IPv6 CIDR range (mirroring how a real deployment lists a provider's published ranges,
-     * e.g. Cloudflare's, alongside an exact address), plus three deliberately malformed entries
-     * (non-numeric mask, out-of-range mask, invalid subnet) used by
-     * testMalformedCidrEntriesInTrustedProxiesListAreIgnoredSafely() to confirm a typo in one
-     * entry neither matches everything nor breaks parsing of the rest of the list.
+     * Shared combined TRUSTED_PROXIES value used by every test that needs a trusted-proxy
+     * configuration: an exact IP, an IPv4 and an IPv6 CIDR range (mirroring how a real deployment
+     * lists a provider's published ranges, e.g. Cloudflare's, alongside an exact address), plus
+     * three deliberately malformed entries (non-numeric mask, out-of-range mask, invalid subnet)
+     * used by testMalformedCidrEntriesInTrustedProxiesListAreIgnoredSafely() to confirm a typo in
+     * one entry neither matches everything nor breaks parsing of the rest of the list. Now that
+     * each test runs in its own process, this constant no longer needs to be identical across
+     * tests for correctness — it's kept as one shared value purely to avoid repeating the same
+     * six-entry string in every test method.
      */
     private const TEST_TRUSTED_PROXIES = '10.0.0.1,173.245.48.0/20,2400:cb00::/32,10.0.0.0/abc,10.0.0.0/40,not-an-ip/20';
 
@@ -50,6 +60,37 @@ class RequestSecurityTest extends zcUnitTestCase
     public function testNativeHttpsRequestIsSecure(): void
     {
         $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_PORT'] = '443';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * isSecure()'s native-signal check is a 3-way OR (HTTPS / SCRIPT_URI / SERVER_PORT); the test
+     * above only exercises it with HTTPS and SERVER_PORT set together. The following three tests
+     * isolate each native signal individually, with the other two absent, so a regression that
+     * broke one specific branch wouldn't hide behind the other two still passing.
+     */
+    public function testScriptUriHttpsAloneIsSecure(): void
+    {
+        $_SERVER['SCRIPT_URI'] = 'https://example.test/page';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * HTTPS is checked with a loose comparison against '1' as an alternative to the 'on'/'off'
+     * string convention tested elsewhere in this file; this isolates that numeric form.
+     */
+    public function testHttpsNumericOneAloneIsSecure(): void
+    {
+        $_SERVER['HTTPS'] = '1';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    public function testServerPortAloneIsSecure(): void
+    {
         $_SERVER['SERVER_PORT'] = '443';
 
         $this->assertTrue(Request::isSecure());
@@ -100,6 +141,7 @@ class RequestSecurityTest extends zcUnitTestCase
         $this->assertFalse(Request::isSecure());
     }
 
+    #[RunInSeparateProcess]
     public function testForwardedHttpsRequestIsSecureWhenFromTrustedProxy(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -134,6 +176,7 @@ class RequestSecurityTest extends zcUnitTestCase
      * overwritten with the client IP, which is not a trusted proxy). Because the decision is based
      * on the captured original peer address, it stays consistent across the overwrite.
      */
+    #[RunInSeparateProcess]
     public function testTrustDecisionIsConsistentAcrossRemoteAddrOverwrite(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -177,6 +220,7 @@ class RequestSecurityTest extends zcUnitTestCase
      * must be ignored and the real peer address returned — and that must also remain consistent
      * even after $_SERVER['REMOTE_ADDR'] is overwritten.
      */
+    #[RunInSeparateProcess]
     public function testForwardedForIgnoredWhenPeerNotTrusted(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -204,6 +248,7 @@ class RequestSecurityTest extends zcUnitTestCase
      * so the trusted-proxy check must support CIDR membership.
      * 173.245.48.0/20 covers 173.245.48.0–173.245.63.255.
      */
+    #[RunInSeparateProcess]
     public function testCidrTrustedProxyMatchesPeerInsideIpv4Range(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -222,6 +267,7 @@ class RequestSecurityTest extends zcUnitTestCase
      * A peer just outside the configured CIDR range (173.245.64.1 is one address past the
      * 173.245.48.0/20 boundary at 173.245.63.255) must not be trusted.
      */
+    #[RunInSeparateProcess]
     public function testCidrTrustedProxyDoesNotMatchPeerOutsideIpv4Range(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -240,6 +286,7 @@ class RequestSecurityTest extends zcUnitTestCase
      * IPv6 CIDR ranges must also be supported (e.g. Cloudflare also publishes IPv6 ranges).
      * 2400:cb00::/32 covers any address whose first 32 bits are 2400:cb00.
      */
+    #[RunInSeparateProcess]
     public function testCidrTrustedProxyMatchesPeerInsideIpv6Range(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -261,6 +308,7 @@ class RequestSecurityTest extends zcUnitTestCase
      * and parsing them must not throw or otherwise prevent the valid entries later in the same
      * list from still matching correctly.
      */
+    #[RunInSeparateProcess]
     public function testMalformedCidrEntriesInTrustedProxiesListAreIgnoredSafely(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
@@ -275,5 +323,227 @@ class RequestSecurityTest extends zcUnitTestCase
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
         Request::captureOriginalRemoteAddr();
         $this->assertTrue(Request::isFromTrustedProxy());
+    }
+
+    /**
+     * isSecure()'s trusted-proxy OR-chain has six forwarded-header branches; only
+     * HTTP_X_FORWARDED_PROTO had a "true when trusted" test above. The other five were only ever
+     * exercised in the "false without a trusted proxy" direction, so a regression that broke one
+     * of them specifically (e.g. an inverted condition) would not have been caught. The following
+     * tests fill that gap, one per remaining branch.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedByHeaderIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_BY'] = 'ssl-terminator';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedHostContainingSslIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'ssl-proxy.example.test';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * Counterpart to testForwardedServerDoesNotMatchHttpServerByAccident(): when the forwarded
+     * server header actually matches the configured HTTP_SERVER host, isSecure() must trust it.
+     * The expected value is derived from the live HTTP_SERVER constant (the same way isSecure()
+     * itself derives it) rather than hardcoded, since its value is environment-dependent.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedServerMatchingHttpServerIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_SERVER'] = str_replace('https://', '', HTTP_SERVER);
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedSslHeaderIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_SSL'] = 'on';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedPortIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = '443';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * HTTP_SSLSESSIONID had zero coverage in either direction before this test and the one below
+     * it — unlike the other five forwarded-header branches, it was never even tested "false
+     * without a trusted proxy". This test fills that gap; it doesn't call define(), so (like the
+     * other "WithoutTrustedProxy" tests) it doesn't need #[RunInSeparateProcess].
+     */
+    public function testSslSessionIdHeaderIsNotSecureWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_SSLSESSIONID'] = 'abc123';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testSslSessionIdHeaderIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_SSLSESSIONID'] = 'abc123';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * Request::getTrustedProxies() explicitly supports TRUSTED_PROXIES as a PHP array (not just a
+     * comma-delimited string) — every other test in this file uses the string form, so the array
+     * form has never actually been exercised. This intentionally defines TRUSTED_PROXIES with a
+     * different shape than TEST_TRUSTED_PROXIES, so it must run in its own process.
+     */
+    #[RunInSeparateProcess]
+    public function testTrustedProxiesConfiguredAsArrayIsHonored(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', ['10.0.0.1', '173.245.48.0/20']);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '173.245.50.5';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.9';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isFromTrustedProxy());
+        $this->assertSame('203.0.113.9', zen_get_ip_address());
+    }
+
+    /**
+     * A multi-hop proxy chain reports X-Forwarded-For as a comma-separated list, client first
+     * (e.g. "client, proxy1, proxy2"). zen_get_ip_address() must take the first entry, not the
+     * whole string or a later hop.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedForListTakesFirstEntryWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.7, 10.0.0.2, 10.0.0.3';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('203.0.113.7', zen_get_ip_address());
+    }
+
+    /**
+     * A trusted proxy that simply doesn't send any forwarded header at all must still resolve
+     * cleanly to the genuine peer address — the null-coalescing fallback chain in
+     * zen_get_ip_address() must not be skipped or produce an empty/invalid result.
+     */
+    #[RunInSeparateProcess]
+    public function testTrustedProxyWithNoForwardedHeaderFallsBackToPeerAddress(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isFromTrustedProxy());
+        $this->assertSame('10.0.0.1', zen_get_ip_address());
+    }
+
+    /**
+     * A CIDR entry for one address family must never match a peer from the other family.
+     * TEST_TRUSTED_PROXIES' IPv4 CIDR entry (173.245.48.0/20) must not match an IPv6 peer, and the
+     * IPv6 CIDR entry (2400:cb00::/32) is for a different range entirely, so this peer matches
+     * nothing in the list and the spoofed X-Forwarded-For must be ignored.
+     */
+    #[RunInSeparateProcess]
+    public function testCidrTrustedProxyDoesNotMatchAcrossAddressFamilies(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = 'fe80::1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.5';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertFalse(Request::isFromTrustedProxy());
+        $this->assertSame('fe80::1', zen_get_ip_address());
+    }
+
+    /**
+     * When the resolved address fails IP validation (filter_var(..., FILTER_VALIDATE_IP)),
+     * zen_get_ip_address() must return the '.' sentinel rather than the raw invalid value or an
+     * empty string — callers throughout the codebase (last-login-IP storage, coupon-redemption
+     * logging, etc.) rely on always getting a non-empty, filterable result. This peer is untrusted
+     * (TRUSTED_PROXIES is undefined in this shared, non-isolated process), so it resolves straight
+     * to the captured original peer address, which here is deliberately not a valid IP. The
+     * invalid-IP branch also calls $GLOBALS['zco_notifier']->notify(), which the unit test
+     * bootstrap already wires up to a real (observerless, so side-effect-free) notifier instance.
+     */
+    public function testInvalidIpReturnsDotPlaceholder(): void
+    {
+        $_SERVER['REMOTE_ADDR'] = 'not-a-valid-ip-address';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('.', zen_get_ip_address());
     }
 }
