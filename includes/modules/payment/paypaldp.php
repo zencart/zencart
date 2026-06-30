@@ -2095,8 +2095,8 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_REFUND_ERROR;
-          if ($response['L_ERRORCODE0'] == 10009) $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_REFUNDFULL_ERROR;
-          if ((!empty($response['RESULT']) && $response['RESULT'] == 105) || isset($response['RESPMSG'])) $response['L_SHORTMESSAGE0'] = ($response['RESULT'] ?? '') . ' ' . $response['RESPMSG'];
+          if ((string)$response['L_ERRORCODE0'] === '10009') $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_REFUNDFULL_ERROR;
+          if ((!empty($response['RESULT']) && (string)$response['RESULT'] === '105') || isset($response['RESPMSG'])) $response['L_SHORTMESSAGE0'] = ($response['RESULT'] ?? '') . ' ' . $response['RESPMSG'];
           if (urldecode($response['L_LONGMESSAGE0']) == 'This transaction has already been fully refunded') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
           if (urldecode($response['L_LONGMESSAGE0']) == 'Can not do a full refund after a partial refund') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
           if (urldecode($response['L_LONGMESSAGE0']) == 'The partial refund amount must be less than or equal to the remaining amount') $response['L_SHORTMESSAGE0'] = urldecode($response['L_LONGMESSAGE0']);
@@ -2126,7 +2126,7 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_CAPT_ERROR;
-          if (!empty($response['RESULT']) && $response['RESULT'] == 111) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if (!empty($response['RESULT']) && (string)$response['RESULT'] === '111') $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
           $errorText .= ' (' . urldecode($response['L_SHORTMESSAGE0']) . ') ' . $response['L_ERRORCODE0'];
           $messageStack->add_session($errorText, 'error');
           return true;
@@ -2139,8 +2139,8 @@ class paypaldp extends base {
             $this->_doDebug('PayPal Error Log - ' . $operation, "Value List:\r\n" . str_replace('&',"\r\n", $doPayPal->_sanitizeLog($doPayPal->_parseNameValueList($doPayPal->lastParamList))) . "\r\n\r\nResponse:\r\n" . print_r($response, true));
           }
           $errorText = MODULE_PAYMENT_PAYPALDP_TEXT_VOID_ERROR;
-          if (!empty($response['RESULT']) && $response['RESULT'] == 12) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
-          if (!empty($response['RESULT']) && $response['RESULT'] == 108) $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if (!empty($response['RESULT']) && (string)$response['RESULT'] === '12') $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
+          if (!empty($response['RESULT']) && (string)$response['RESULT'] === '108') $response['L_SHORTMESSAGE0'] = $response['RESULT'] . ' ' . $response['RESPMSG'];
           $errorText .= ' (' . urldecode($response['L_SHORTMESSAGE0']) . ') ' . $response['L_ERRORCODE0'];
           $messageStack->add_session($errorText, 'error');
           return true;
@@ -2560,7 +2560,8 @@ class paypaldp extends base {
       curl_setopt($ch, CURLOPT_POST,1);
       curl_setopt($ch, CURLOPT_POSTFIELDS, "cmpi_msg=".urlencode($data));
       curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-//   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // NOTE: Leave commented-out! or set to TRUE!  This should NEVER be set to FALSE in production!!!!
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 //   curl_setopt($ch, CURLOPT_CAINFO, '/local/path/to/cacert.pem'); // for offline testing, this file can be obtained from http://curl.haxx.se/docs/caextract.html ... should never be used in production!
       curl_setopt($ch, CURLOPT_TIMEOUT, 8);
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 8);
