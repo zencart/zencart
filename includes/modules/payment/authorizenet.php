@@ -472,8 +472,7 @@ class authorizenet extends base {
     global $insert_id, $order, $currencies, $db;
 
     // Idempotency guard
-    $sql = "SELECT orders_status_history_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " WHERE orders_id = :ordersID AND comments LIKE :comment_given LIMIT 1";
-    $sql = $db->bindVars($sql, ':ordersID', $insert_id, 'integer');
+    $sql = "SELECT orders_status_history_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " WHERE comments LIKE :comment_given LIMIT 1";
     $sql = $db->bindVars($sql, ':comment_given', '%TransID: ' . $this->transaction_id . '%', 'string');
     $duplicate_check = $db->Execute($sql);
     if (!$duplicate_check->EOF) {
