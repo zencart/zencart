@@ -76,7 +76,7 @@ function executeSql($lines, $database, $table_prefix = '') {
 
   foreach ($lines as $line) {
     if ($_GET['debug'] == 'ON') {
-      echo $line . '<br>';
+      echo htmlspecialchars($line) . '<br>';
     }
 
     $line = trim($line);
