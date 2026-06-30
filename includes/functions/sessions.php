@@ -125,7 +125,7 @@ function zen_session_recreate(): void
 {
     $saveSession = $_SESSION;
     $oldSessID = session_id();
-    session_regenerate_id();
+    session_regenerate_id(true);
     $newSessID = session_id();
     $_SESSION = $saveSession;
     if (IS_ADMIN_FLAG !== true) {
