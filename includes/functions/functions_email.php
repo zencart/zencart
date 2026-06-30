@@ -73,7 +73,7 @@
         }
 
         // check for injection attempts. If new-line characters found in header fields, simply fail to send the message
-        foreach ([$from_email_address, $to_address, $from_email_name, $to_name, $email_subject] as $key => $value) {
+        foreach ([$from_email_address, $to_address, $from_email_name, $to_name, $email_subject, $email_reply_to_address, $email_reply_to_name] as $key => $value) {
             if (strpos($value, "\r") !== false || strpos($value, "\n") !== false) {
                 return false;
             }
