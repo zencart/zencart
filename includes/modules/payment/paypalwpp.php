@@ -352,7 +352,7 @@ class paypalwpp extends base {
     // send the PayPal-provided javascript to trigger the incontext checkout experience
     return "      <script>
         window.paypalCheckoutReady = function () {
-        paypal.checkout.setup('" . MODULE_PAYMENT_PAYPALWPP_MERCHANTID . "', {
+        paypal.checkout.setup('" . json_encode(MODULE_PAYMENT_PAYPALWPP_MERCHANTID) . "', {
           //locale: '" . $this->getLanguageCode('incontext') . "',"
           . (MODULE_PAYMENT_PAYPALWPP_SERVER == 'live' ? '' : "\n          environment: 'sandbox',") . "
           container: 'checkout_confirmation',
