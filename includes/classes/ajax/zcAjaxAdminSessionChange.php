@@ -8,26 +8,30 @@
 
 class zcAjaxAdminSessionChange extends base
 {
-    protected $supportedNames = [
+    protected static array $allowedMethods = [
+        'change',
+    ];
+
+    protected array $supportedNames = [
         'imageView',
     ];
 
     /**
      * @since ZC v2.0.0
      */
-    public function change()
+    public function change(): string
     {
-        // -----
-        // Deny access unless running under the admin.
-        //
+        /**
+         * Deny access unless running under the admin.
+         */
         if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
             return '';
         }
 
-        // -----
-        // Give an observer the opportunity to add other supported names.  Each
-        // name can contain *only* alphanumeric characters.
-        //
+        /**
+         * Give an observer the opportunity to add other supported names.
+         * Each name can contain *only* alphanumeric characters.
+         */
         $other_names = [];
         $this->notify('NOTIFY_AJAX_ADMIN_NOTIFICATIONS', '', $other_names);
         foreach ($other_names as $name) {
@@ -36,16 +40,15 @@ class zcAjaxAdminSessionChange extends base
             }
         }
 
-        // -----
-        // No action if the 'name' isn't recognized.
-        //
-        if (!in_array($_POST['name'], $this->supportedNames)) {
+        /**
+         * No action if the 'name' isn't recognized.
+         */
+        if (!in_array($_POST['name'], $this->supportedNames, true)) {
             return '';
         }
 
         if (!isset($_SESSION[$_POST['name']])) {
             $_SESSION[$_POST['name']] = true;
-
         } elseif ($_SESSION[$_POST['name']] === true) {
             $_SESSION[$_POST['name']] = false;
             return $_POST['name'] . ' set to false!';

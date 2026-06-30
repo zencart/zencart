@@ -8,6 +8,10 @@
 
 class zcAjaxSelect2Lookups extends base
 {
+    protected static array $allowedMethods = [
+        'getProductsForSpecials',
+    ];
+
     protected bool $stripTags = false;
 
     /**
@@ -15,6 +19,13 @@ class zcAjaxSelect2Lookups extends base
      */
     public function getProductsForSpecials(): bool|array
     {
+        /**
+         * Deny access unless running under the admin.
+         */
+        if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
+            return false;
+        }
+
         if (!isset($_POST['q'])) {
             return false;
         }

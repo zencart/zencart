@@ -100,6 +100,13 @@ if (!method_exists($class, $_GET['method'])) {
     ajaxAbort(inDeveloperMode() ? 422 : 400, 'class method error');
 }
 
+/**
+ * If the target class declares its own $allowedMethods allowlist, enforce it
+ */
+if (property_exists($class, 'allowedMethods') && !in_array($_GET['method'], $class::$allowedMethods, true)) {
+    ajaxAbort(inDeveloperMode() ? 422 : 400, 'class method error');
+}
+
 // Accepted request, so execute and return appropriate response:
 $result = $class->{$_GET['method']}();
 echo json_encode($result);
