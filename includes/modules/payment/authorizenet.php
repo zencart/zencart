@@ -438,16 +438,13 @@ class authorizenet extends base {
 
     // if in 'echo' mode, dump the returned data to the browser and stop execution
     if ((defined('AUTHORIZENET_DEVELOPER_MODE') && AUTHORIZENET_DEVELOPER_MODE == 'echo') || MODULE_PAYMENT_AUTHORIZENET_DEBUGGING == 'echo') {
-      echo 'Returned Response Codes:<br><pre>' . print_r($_POST, true) . '</pre><br>';
+      echo 'Returned Response Codes:<br><pre>' . htmlspecialchars(print_r($_POST, true), ENT_QUOTES, CHARSET) . '</pre><br>';
       die('Press the BACK button in your browser to return to the previous page.');
     }
 
+    // NOTE: secondary field-match checks (x_type, x_method, x_amount, x_invoice_num, x_description)
+    // are intentionally not enforced here. getHashForResponseData() and HashmatchStatus already covers.
     if ($this->authorize['x_response_code'] == '1'
-//       && $this->authorize['x_type'] == $this->submit_data['x_type']
-//       && $this->authorize['x_method'] == $this->submit_data['x_method']
-//       && $this->authorize['x_amount'] == $this->submit_data['x_amount']
-//       && $this->authorize['x_invoice_num'] == $this->submit_data['x_invoice_num']
-//       && $this->authorize['x_description'] == $this->submit_data['x_description']
        && $this->authorize['HashMatchStatus'] == 'PASS'
      ){
       $order->info['cc_type'] = $this->authorize['x_card_type'];
@@ -472,7 +469,17 @@ class authorizenet extends base {
    * @since ZC v1.0.3
    */
   function after_process() {
-    global $insert_id, $order, $currencies;
+    global $insert_id, $order, $currencies, $db;
+
+    // Idempotency guard
+    $sql = "SELECT orders_status_history_id FROM " . TABLE_ORDERS_STATUS_HISTORY . " WHERE orders_id = :ordersID AND comments LIKE :comment_given LIMIT 1";
+    $sql = $db->bindVars($sql, ':ordersID', $insert_id, 'integer');
+    $sql = $db->bindVars($sql, ':comment_given', '%TransID: ' . $this->transaction_id . '%', 'string');
+    $duplicate_check = $db->Execute($sql);
+    if (!$duplicate_check->EOF) {
+      return false;
+    }
+
     $this->notify('NOTIFY_PAYMENT_AUTHNETSIM_POSTPROCESS_HOOK');
 
     $comments = 'Credit Card payment.  AUTH: ' . $this->auth_code . ' TransID: ' . $this->transaction_id;
@@ -662,7 +669,7 @@ class authorizenet extends base {
     }
     // send email alerts only if in alert mode or if email specifically requested as logging mode
     if ((isset($response['x_response_code']) && $response['x_response_code'] != '1' && stristr(MODULE_PAYMENT_AUTHORIZENET_DEBUGGING, 'Alerts')) || stristr(MODULE_PAYMENT_AUTHORIZENET_DEBUGGING, 'Email')) {
-      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Authorizenet-SIM Alert ' . $response['x_invoice_num'] . ' ' . date('M-d-Y h:i:s') . ' ' . $response['x_trans_id'], $errorMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br($errorMessage)), 'debug');
+      zen_mail(STORE_NAME, STORE_OWNER_EMAIL_ADDRESS, 'Authorizenet-SIM Alert ' . $response['x_invoice_num'] . ' ' . date('M-d-Y h:i:s') . ' ' . $response['x_trans_id'], $errorMessage, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, array('EMAIL_MESSAGE_HTML'=>nl2br(htmlspecialchars($errorMessage, ENT_QUOTES, CHARSET))), 'debug');
     }
 
     // DATABASE SECTION
