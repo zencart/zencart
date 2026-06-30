@@ -470,8 +470,9 @@ class TestFrameworkRunnersTest extends TestCase
     {
         $script = $this->rootPath . '/not_for_release/testFramework/run-parallel-storefront-feature-tests.sh';
         $command = sprintf(
-            'USER=%s IS_DDEV_PROJECT= ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
+            'USER=%s IS_DDEV_PROJECT= ZC_TEST_ENV_FILE=%s ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
             escapeshellarg('runner'),
+            escapeshellarg('/dev/null'),
             escapeshellarg('StoreEndpoints'),
             escapeshellarg('2'),
             escapeshellarg($script),
@@ -484,10 +485,10 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertContains('Dry run for 1 storefront parallel-candidate feature test file(s) with 2 worker(s).', $output);
         $this->assertContains('CLI filter narrowed file selection using substring: SearchInProcessTest', $output);
         $this->assertContains('Env filter narrowed file selection using substring: StoreEndpoints', $output);
-        $this->assertContains('Worker DB base: db', $output);
         $this->assertContains('Worker database preparation: disabled', $output);
         $this->assertContains('DRY   [worker 1] not_for_release/testFramework/FeatureStore/StoreEndpoints/SearchInProcessTest.php', $output);
         $this->assertStringNotContainsString('AdvancedSearchInProcessTest.php', implode(PHP_EOL, $output));
+        $this->assertContains('Worker DB base: db', $output);
     }
 
     public function testParallelStorefrontFeatureRunnerDryRunCyclesWorkers(): void
@@ -565,7 +566,8 @@ class TestFrameworkRunnersTest extends TestCase
     {
         $script = $this->rootPath . '/not_for_release/testFramework/run-parallel-storefront-feature-tests.sh';
         $command = sprintf(
-            'bash %s --dry-run --filter %s',
+            'ZC_TEST_ENV_FILE=%s bash %s --dry-run --filter %s',
+            escapeshellarg('/dev/null'),
             escapeshellarg($script),
             escapeshellarg('SearchInProcess')
         );
@@ -611,8 +613,9 @@ class TestFrameworkRunnersTest extends TestCase
     {
         $script = $this->rootPath . '/not_for_release/testFramework/run-parallel-admin-feature-tests.sh';
         $command = sprintf(
-            'USER=%s IS_DDEV_PROJECT= ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
+            'USER=%s IS_DDEV_PROJECT= ZC_TEST_ENV_FILE=%s ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
             escapeshellarg('runner'),
+            escapeshellarg('/dev/null'),
             escapeshellarg('AdminEndpointsTest'),
             escapeshellarg('2'),
             escapeshellarg($script),
@@ -625,9 +628,9 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertContains('Running 1 admin parallel-candidate feature test file(s) in parallel with 2 worker(s).', $output);
         $this->assertContains('CLI filter narrowed file selection using substring: AdminEndpointsTest', $output);
         $this->assertContains('Env filter narrowed file selection using substring: AdminEndpointsTest', $output);
-        $this->assertContains('Worker DB base: db', $output);
         $this->assertContains('Worker database preparation: disabled', $output);
         $this->assertContains('DRY   [worker 1] not_for_release/testFramework/FeatureAdmin/AdminEndpoints/AdminEndpointsTest.php', $output);
+        $this->assertContains('Worker DB base: db', $output);
     }
 
     public function testParallelAdminFeatureRunnerDryRunCanAutoPrepareWorkerDatabases(): void
@@ -1203,6 +1206,10 @@ BASH
 
     public function testZcCliListFailsClosedWhenPhpRunsWithoutMySqlExtension(): void
     {
+        if ($this->phpBinaryHasMySqlExtensionWithoutIniFiles()) {
+            $this->markTestSkipped('This PHP binary has the MySQL connector compiled in statically, so -n cannot disable it.');
+        }
+
         $script = $this->rootPath . '/zc_cli.php';
         $command = sprintf('%s -n %s list', escapeshellarg(PHP_BINARY), escapeshellarg($script));
 
@@ -1496,6 +1503,24 @@ PHP
         }
 
         return $root;
+    }
+
+    /**
+     * Some PHP builds (e.g. Laravel Herd) compile the MySQL connector in statically, so
+     * `-n` (no php.ini) cannot disable it. Detect that directly rather than inferring it
+     * from the binary's path.
+     */
+    private function phpBinaryHasMySqlExtensionWithoutIniFiles(): bool
+    {
+        $command = sprintf(
+            '%s -n -r %s 2>/dev/null',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg('echo extension_loaded("mysqli") || extension_loaded("mysql") ? "1" : "0";')
+        );
+
+        exec($command, $output);
+
+        return ($output[0] ?? '0') === '1';
     }
 
     private function removeDirectory(string $path): void
