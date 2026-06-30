@@ -470,8 +470,9 @@ class TestFrameworkRunnersTest extends TestCase
     {
         $script = $this->rootPath . '/not_for_release/testFramework/run-parallel-storefront-feature-tests.sh';
         $command = sprintf(
-            'USER=%s IS_DDEV_PROJECT= ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
+            'USER=%s IS_DDEV_PROJECT= ZC_TEST_ENV_FILE=%s ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
             escapeshellarg('runner'),
+            escapeshellarg('/dev/null'),
             escapeshellarg('StoreEndpoints'),
             escapeshellarg('2'),
             escapeshellarg($script),
@@ -487,12 +488,7 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertContains('Worker database preparation: disabled', $output);
         $this->assertContains('DRY   [worker 1] not_for_release/testFramework/FeatureStore/StoreEndpoints/SearchInProcessTest.php', $output);
         $this->assertStringNotContainsString('AdvancedSearchInProcessTest.php', implode(PHP_EOL, $output));
-        if (!$this->isLocalHerdPhpEnvironment()) {
-            $this->assertContains('Worker DB base: db', $output);
-        } else {
-            // $this->markTestSkipped('Local Herd dev environments load a personal test-runner.local.env that overrides the default worker DB base name.');
-        }
-
+        $this->assertContains('Worker DB base: db', $output);
     }
 
     public function testParallelStorefrontFeatureRunnerDryRunCyclesWorkers(): void
@@ -568,13 +564,10 @@ class TestFrameworkRunnersTest extends TestCase
 
     public function testParallelStorefrontFeatureRunnerDryRunFallsBackToSubstringMatchingWhenNoExactFileExists(): void
     {
-        if ($this->isLocalHerdPhpEnvironment()) {
-            $this->markTestSkipped('Local Herd dev environments load a personal test-runner.local.env that overrides the default worker DB base name.');
-        }
-
         $script = $this->rootPath . '/not_for_release/testFramework/run-parallel-storefront-feature-tests.sh';
         $command = sprintf(
-            'bash %s --dry-run --filter %s',
+            'ZC_TEST_ENV_FILE=%s bash %s --dry-run --filter %s',
+            escapeshellarg('/dev/null'),
             escapeshellarg($script),
             escapeshellarg('SearchInProcess')
         );
@@ -620,8 +613,9 @@ class TestFrameworkRunnersTest extends TestCase
     {
         $script = $this->rootPath . '/not_for_release/testFramework/run-parallel-admin-feature-tests.sh';
         $command = sprintf(
-            'USER=%s IS_DDEV_PROJECT= ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
+            'USER=%s IS_DDEV_PROJECT= ZC_TEST_ENV_FILE=%s ZC_FEATURE_TEST_FILTER=%s ZC_FEATURE_PARALLEL_PROCESSES=%s bash %s --dry-run --filter %s',
             escapeshellarg('runner'),
+            escapeshellarg('/dev/null'),
             escapeshellarg('AdminEndpointsTest'),
             escapeshellarg('2'),
             escapeshellarg($script),
@@ -636,12 +630,7 @@ class TestFrameworkRunnersTest extends TestCase
         $this->assertContains('Env filter narrowed file selection using substring: AdminEndpointsTest', $output);
         $this->assertContains('Worker database preparation: disabled', $output);
         $this->assertContains('DRY   [worker 1] not_for_release/testFramework/FeatureAdmin/AdminEndpoints/AdminEndpointsTest.php', $output);
-        if (!$this->isLocalHerdPhpEnvironment()) {
-            $this->assertContains('Worker DB base: db', $output);
-        } else {
-            // $this->markTestSkipped('Local Herd dev environments load a personal test-runner.local.env that overrides the default worker DB base name.');
-        }
-
+        $this->assertContains('Worker DB base: db', $output);
     }
 
     public function testParallelAdminFeatureRunnerDryRunCanAutoPrepareWorkerDatabases(): void
@@ -1217,8 +1206,8 @@ BASH
 
     public function testZcCliListFailsClosedWhenPhpRunsWithoutMySqlExtension(): void
     {
-        if ($this->isLocalHerdPhpEnvironment()) {
-            $this->markTestSkipped('Herd PHP builds compile the MySQL connector in statically, so -n cannot disable it.');
+        if ($this->phpBinaryHasMySqlExtensionWithoutIniFiles()) {
+            $this->markTestSkipped('This PHP binary has the MySQL connector compiled in statically, so -n cannot disable it.');
         }
 
         $script = $this->rootPath . '/zc_cli.php';
@@ -1517,13 +1506,21 @@ PHP
     }
 
     /**
-     * The Laravel Herd binary isn't part of CI, and therefore is running a local dev environment.
-     * This environment also contains the MySQL connector for PHP, so we also use this as a flag
-     * to bypass the test that looks for missing mysql extension.
+     * Some PHP builds (e.g. Laravel Herd) compile the MySQL connector in statically, so
+     * `-n` (no php.ini) cannot disable it. Detect that directly rather than inferring it
+     * from the binary's path.
      */
-    private function isLocalHerdPhpEnvironment(): bool
+    private function phpBinaryHasMySqlExtensionWithoutIniFiles(): bool
     {
-        return str_contains(PHP_BINARY, 'Herd') || str_contains(PHP_BINARY, 'Application Support');
+        $command = sprintf(
+            '%s -n -r %s 2>/dev/null',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg('echo extension_loaded("mysqli") || extension_loaded("mysql") ? "1" : "0";')
+        );
+
+        exec($command, $output);
+
+        return ($output[0] ?? '0') === '1';
     }
 
     private function removeDirectory(string $path): void
