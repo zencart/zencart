@@ -15,7 +15,7 @@ use Zencart\LanguageLoader\LanguageLoaderFactory;
 
 class zcAjaxPayment extends base
 {
-    protected static array $allowedMethods = [
+    public static array $allowedMethods = [
         'doesCollectsCardDataOnsite',
         'prepareConfirmation',
     ];
