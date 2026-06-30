@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * zcAjaxAdminDashboardWidgetArrange
  *
@@ -11,6 +12,10 @@ declare(strict_types=1);
  */
 class zcAjaxAdminDashboardWidgetArrange extends base
 {
+    protected static array $allowedMethods = [
+        'save',
+    ];
+
     /**
      * Save the new dashboard widget arrangement.
      * Reads the posted layout data, validates and sanitizes it, and updates the admin's dashboard_layout in the database.
@@ -21,16 +26,29 @@ class zcAjaxAdminDashboardWidgetArrange extends base
     public function save(): array|string
     {
         global $db;
-        // -----
-        // Deny access unless running under the admin.
-        //
+        /**
+         * Deny access unless running under the admin.
+         */
         if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
             return 'false';
         }
 
         $raw = file_get_contents('php://input');
-        $raw = preg_replace('/&securityToken=[0-9A-Fa-f]+/', '', $raw);
         parse_str($raw, $parsed);
+
+        /**
+         * Validate the CSRF token against the session instead of discarding it:
+         * a mismatched or missing token aborts the request before any layout data is used.
+         */
+        $submittedToken = $parsed['securityToken'] ?? null;
+        if (
+            !is_string($submittedToken) || $submittedToken === ''
+            || !isset($_SESSION['securityToken']) || !is_string($_SESSION['securityToken']) || $_SESSION['securityToken'] === ''
+            || !hash_equals($_SESSION['securityToken'], $submittedToken)
+        ) {
+            return $this->response('error', 'Invalid security token.', true);
+        }
+
         $data = $parsed['layout'] ?? '';
         $layout = json_decode($data, true);
         $jserr = json_last_error();
@@ -73,9 +91,11 @@ class zcAjaxAdminDashboardWidgetArrange extends base
             return $this->response('problem', 'layout not parsed.', true);
         }
 
-        $db->Execute("UPDATE " . TABLE_ADMIN . "
+        $db->Execute(
+            "UPDATE " . TABLE_ADMIN . "
               SET dashboard_layout = '" . $db->prepare_input($json_data) . "'
-              WHERE admin_id = " . (int)$_SESSION['admin_id']);
+              WHERE admin_id = " . (int)$_SESSION['admin_id']
+        );
 
         return $this->response('success', 'Layout saved');
     }

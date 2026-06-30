@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * zcAjaxAdminNotifications
  *
@@ -11,6 +12,10 @@ declare(strict_types=1);
  */
 class zcAjaxAdminNotifications extends base
 {
+    protected static array $allowedMethods = [
+        'forget',
+    ];
+
     /**
      * @since ZC v1.5.6
      */
@@ -18,16 +23,25 @@ class zcAjaxAdminNotifications extends base
     {
         global $db;
 
+        /**
+         * Deny access unless running under the admin.
+         */
+        if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
+            return ([
+                'data' => false
+            ]);
+        }
+
         if (!isset($_POST['key'])) {
             return ([
-                'data' => false,
+                'data' => false
             ]);
         }
 
         $sql = "INSERT INTO " . TABLE_ADMIN_NOTIFICATIONS . "(notification_key, admin_id, dismissed) VALUE (:nKey:,:adminId:, 1)
-               ON DUPLICATE KEY UPDATE notification_key = :nKey:, admin_id = :adminId:, dismissed = 1";
+                ON DUPLICATE KEY UPDATE notification_key = :nKey:, admin_id = :adminId:, dismissed = 1";
 
-        $sql = $db->bindVars($sql, ':adminId:', $_POST['admin_id'], 'integer');
+        $sql = $db->bindVars($sql, ':adminId:', $_SESSION['admin_id'], 'integer');
         $sql = $db->bindVars($sql, ':nKey:', $_POST['key'], 'string');
         $result = $db->Execute($sql);
 
@@ -35,5 +49,4 @@ class zcAjaxAdminNotifications extends base
             'data' => $result,
         ]);
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * zcAjaxPayment
  *
@@ -14,12 +15,23 @@ use Zencart\LanguageLoader\LanguageLoaderFactory;
 
 class zcAjaxPayment extends base
 {
+    protected static array $allowedMethods = [
+        'doesCollectsCardDataOnsite',
+        'prepareConfirmation',
+    ];
+
     /**
      * Test whether the selected payment module "does" the "CollectsCardDataOnsite" method
      * @since ZC v1.5.4
      */
     public function doesCollectsCardDataOnsite(): array
     {
+        if (!isset($_SESSION['cart']) || $_SESSION['cart']->count_contents() <= 0) {
+            return ([
+                'data' => false
+            ]);
+        }
+
         require_once DIR_WS_CLASSES . 'payment.php';
         $retVal = false;
         $payment = new payment($_POST['paymentValue']);
