@@ -70,6 +70,7 @@ $psr4Autoloader->setClassFile('notifier', DIR_FS_CATALOG . DIR_WS_CLASSES . 'cla
 $psr4Autoloader->setClassFile('Product', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Product.php');
 $psr4Autoloader->setClassFile('Settings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Settings.php');
 $psr4Autoloader->setClassFile('shoppingCart', DIR_FS_CATALOG . DIR_WS_CLASSES . 'shopping_cart.php');
+$psr4Autoloader->setClassFile('httpClient', DIR_FS_CATALOG . DIR_WS_CLASSES . 'http_client.php');
 $psr4Autoloader->setClassFile('sniffer', DIR_FS_CATALOG . DIR_WS_CLASSES . 'sniffer.php');
 $psr4Autoloader->setClassFile('TemplateSettings', DIR_FS_CATALOG . DIR_WS_CLASSES . 'TemplateSettings.php');
 $psr4Autoloader->setClassFile('upload', DIR_FS_CATALOG . DIR_WS_CLASSES . 'upload.php');
