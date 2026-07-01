@@ -47,6 +47,14 @@ class RequestSecurityTest extends zcUnitTestCase
          * and can independently exercise the trusted-proxy and not-trusted scenarios.
          */
         Request::resetOriginalRemoteAddrForTesting();
+
+        /**
+         * Request::getTrustedProxies() now caches its parsed result per request. Clear it too, so
+         * a test that doesn't define TRUSTED_PROXIES isn't affected by a parse cached from an
+         * earlier test in the same (non-isolated) process, and so tests remain independent of
+         * execution order.
+         */
+        Request::resetTrustedProxiesCacheForTesting();
     }
 
     public function testPlainHttpRequestIsNotSecure(): void
@@ -471,12 +479,35 @@ class RequestSecurityTest extends zcUnitTestCase
     }
 
     /**
-     * A multi-hop proxy chain reports X-Forwarded-For as a comma-separated list, client first
-     * (e.g. "client, proxy1, proxy2"). zen_get_ip_address() must take the first entry, not the
-     * whole string or a later hop.
+     * A trusted proxy conventionally APPENDS its own observed source address to an existing
+     * X-Forwarded-For value rather than replacing it — a client talking directly to the proxy can
+     * freely set an arbitrary leftmost value before the proxy appends its own (authoritative)
+     * observation. Naively taking the first (leftmost) entry would trust that attacker-controlled
+     * value even though the connection genuinely came through a trusted proxy. This is the core
+     * regression test for that spoofing vector: the forged leftmost entry must be ignored, and the
+     * rightmost entry (what the trusted proxy actually appended) must be used instead.
      */
     #[RunInSeparateProcess]
-    public function testForwardedForListTakesFirstEntryWhenFromTrustedProxy(): void
+    public function testAttackerSpoofedLeadingForwardedForEntryIsIgnored(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '6.6.6.6, 203.0.113.9';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('203.0.113.9', zen_get_ip_address());
+    }
+
+    /**
+     * With no trusted proxies in the chain besides REMOTE_ADDR itself, a multi-entry
+     * X-Forwarded-For value should resolve to its rightmost entry — the one appended by the
+     * nearest (trusted) hop — not the leftmost, client-suppliable one.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedForChainTakesRightmostEntryWhenFromTrustedProxy(): void
     {
         if (!defined('TRUSTED_PROXIES')) {
             define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
@@ -486,7 +517,46 @@ class RequestSecurityTest extends zcUnitTestCase
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.7, 10.0.0.2, 10.0.0.3';
         Request::captureOriginalRemoteAddr();
 
-        $this->assertSame('203.0.113.7', zen_get_ip_address());
+        $this->assertSame('10.0.0.3', zen_get_ip_address());
+    }
+
+    /**
+     * A chain can pass through more than one trusted hop (e.g. a CDN edge behind a second internal
+     * proxy, both listed in TRUSTED_PROXIES). Each trusted hop's own append must be skipped in
+     * turn, walking right-to-left, until the first non-trusted entry — the real client — is found.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedForChainSkipsMultipleTrustedHopsToFindRealClient(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.9, 173.245.50.5, 10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('203.0.113.9', zen_get_ip_address());
+    }
+
+    /**
+     * If every entry in the forwarded chain is itself a trusted proxy (a malformed or unusual
+     * chain with no genuine client entry), resolution must fall back to the captured original
+     * peer address rather than returning a trusted-proxy's own address as if it were the client,
+     * or an empty/invalid value.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedForChainFallsBackToPeerWhenEveryHopIsTrusted(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '10.0.0.1, 173.245.50.5';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('10.0.0.1', zen_get_ip_address());
     }
 
     /**
@@ -545,5 +615,50 @@ class RequestSecurityTest extends zcUnitTestCase
         Request::captureOriginalRemoteAddr();
 
         $this->assertSame('.', zen_get_ip_address());
+    }
+
+    /**
+     * An exact-IP TRUSTED_PROXIES entry must match on IP-address equivalence, not raw text.
+     * IPv6 has multiple valid textual representations of the same address — "2001:db8:0:0::1" and
+     * "2001:db8::1" both expand to the same 16-byte address (confirmed: inet_pton() on both
+     * produces identical binary). A naive string comparison would treat them as different entries
+     * and silently refuse to trust a genuinely configured proxy whenever REMOTE_ADDR happens to be
+     * reported in a different (but equivalent) form than what was typed into TRUSTED_PROXIES. This
+     * uses its own TRUSTED_PROXIES value (not the shared TEST_TRUSTED_PROXIES) since it needs a
+     * specific IPv6 exact-match entry not present in the shared config.
+     */
+    #[RunInSeparateProcess]
+    public function testExactMatchTrustedProxyEntryMatchesEquivalentIpv6Representation(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', '2001:db8:0:0::1');
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '2001:db8::1';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.9';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isFromTrustedProxy());
+        $this->assertSame('203.0.113.9', zen_get_ip_address());
+    }
+
+    /**
+     * A malformed exact-match entry (not a valid IP at all) must be ignored safely rather than
+     * matching via a stray string comparison — TRUSTED_PROXIES is operator-supplied configuration
+     * that may contain a typo. The peer here is a genuinely valid IP (so the check reaches the
+     * per-entry comparison rather than short-circuiting on an invalid peer), it simply doesn't
+     * match the malformed entry.
+     */
+    #[RunInSeparateProcess]
+    public function testMalformedExactMatchEntryIsIgnoredSafely(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', 'not-an-ip-at-all');
+        }
+
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertFalse(Request::isFromTrustedProxy());
     }
 }
