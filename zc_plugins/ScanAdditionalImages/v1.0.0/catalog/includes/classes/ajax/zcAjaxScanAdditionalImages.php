@@ -5,6 +5,9 @@ zen_define_default('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
 
 class zcAjaxScanAdditionalImages
 {
+    /** @var list<string> */
+    public const ALLOWED_METHODS = ['doBatch'];
+
     public function doBatch(): array
     {
         global $db;

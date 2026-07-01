@@ -12,10 +12,11 @@ use Zencart\LanguageLoader\LanguageLoaderFactory;
 
 class zcAjaxPayment extends base
 {
-  public static array $allowedMethods = [
-      'doesCollectsCardDataOnsite',
-      'prepareConfirmation',
-  ];
+    /** @var list<string> */
+    public const ALLOWED_METHODS = [
+        'doesCollectsCardDataOnsite',
+        'prepareConfirmation',
+    ];
 
   /**
    * Test whether the selected payment module "does" the "CollectsCardDataOnsite" method

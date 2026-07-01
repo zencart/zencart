@@ -11,7 +11,8 @@
  */
 class zcAjaxAdminDatePickerDateCheck extends base
 {
-    public static array $allowedMethods = [
+    /** @var list<string> */
+    public const ALLOWED_METHODS = [
         'check',
     ];
 

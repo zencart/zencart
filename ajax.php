@@ -101,9 +101,9 @@ if (!method_exists($class, $_GET['method'])) {
 }
 
 /**
- * If the target class declares its own $allowedMethods allowlist, enforce it
+ * If the target class declares its own ALLOWED_METHODS allowlist, enforce it
  */
-if (property_exists($class, 'allowedMethods') && !in_array($_GET['method'], $class::$allowedMethods, true)) {
+if (defined($className . '::ALLOWED_METHODS') && !in_array($_GET['method'], $className::ALLOWED_METHODS, true)) {
     ajaxAbort(inDeveloperMode() ? 422 : 400, 'class method error');
 }
 
