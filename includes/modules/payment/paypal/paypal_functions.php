@@ -692,10 +692,12 @@ function ipn_create_order_history_array($insert_id)
  */
     if ($txn_type=='echeck-cleared' || $txn_type == 'express-checkout-cleared' || substr($txn_type,0,8) == 'cleared-') {
       $check_status = $db->Execute("SELECT date_purchased FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$ordersID . "'");
-      $zc_max_days = zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + (int)DOWNLOAD_MAX_DAYS;
-      ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' downloads (if any).  New max days: ' . (int)$zc_max_days . ', New count: ' . (int)DOWNLOAD_MAX_COUNT);
-      $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " SET download_maxdays='" . (int)$zc_max_days . "', download_count='" . (int)DOWNLOAD_MAX_COUNT . "' WHERE orders_id='" . (int)$ordersID . "'";
-      $db->Execute($update_downloads_query);
+      if (!$check_status->EOF) {
+        $zc_max_days = zen_date_diff($check_status->fields['date_purchased'], date('Y-m-d H:i:s', time())) + (int)DOWNLOAD_MAX_DAYS;
+        ipn_debug_email('IPN NOTICE :: Updating order #' . (int)$ordersID . ' downloads (if any).  New max days: ' . (int)$zc_max_days . ', New count: ' . (int)DOWNLOAD_MAX_COUNT);
+        $update_downloads_query = "UPDATE " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " SET download_maxdays='" . (int)$zc_max_days . "', download_count='" . (int)DOWNLOAD_MAX_COUNT . "' WHERE orders_id='" . (int)$ordersID . "'";
+        $db->Execute($update_downloads_query);
+      }
     }
   }
 
