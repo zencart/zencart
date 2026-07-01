@@ -7,7 +7,8 @@
 //
 class zcAjaxProductsOptionsStockAdmin extends base
 {
-    public const array ALLOWED_METHODS = ['isModelDuplicate'];
+    /** @var string[] */
+    public const ALLOWED_METHODS = ['isModelDuplicate'];
 
     // -----
     // Check to see if a submitted model number is a duplicate.
