@@ -66,13 +66,13 @@ require 'includes/application_top.php';
                         ?>
                         <tr>
                             <td class="dataTableContent">
-                                <?= (defined($page['language_key'])) ? constant($page['language_key']) : "(" . $page['language_key'] . ")" ?>
+                                <?= (defined($page['language_key'])) ? constant($page['language_key']) : "(" . htmlspecialchars($page['language_key']) . ")" ?>
                             </td>
                             <td class="dataTableContent">
-                                <?= $page['menu_key'] ?>
+                                <?= htmlspecialchars($page['menu_key']) ?>
                             </td>
                             <td class="dataTableContent">
-                                <?= $page['display_on_menu'] ?>
+                                <?= htmlspecialchars($page['display_on_menu']) ?>
                             </td>
                             <td class="dataTableContent">
                                 <?= (defined($page['language_key']) && defined($page['main_page']))
@@ -110,9 +110,11 @@ require 'includes/application_top.php';
                 echo '<li>' . NO_PLUGINS_ENABLED . '</li>';
             }
             foreach ($installedPlugins as $plugin) {
-                $url = 'https://www.zen-cart.com/downloads.php?do=file&id=' . $plugin['zc_contrib_id'];
-                $link = !empty($plugin['zc_contrib_id']) ? '<a href="' . $url . '" target="_blank" rel="noopener">' . $plugin['name'] . '</a>' : $plugin['name'];
-                echo '<li>' . sprintf(PLUGIN_FOUND, $link, $plugin['unique_key'], $plugin['version'], $plugin['author']) . '</li>';
+                $url = 'https://www.zen-cart.com/downloads.php?do=file&id=' . (int)$plugin['zc_contrib_id'];
+                $name = htmlspecialchars($plugin['name']);
+                $author = htmlspecialchars($plugin['author']);
+                $link = !empty($plugin['zc_contrib_id']) ? '<a href="' . $url . '" target="_blank" rel="noopener">' . $name . '</a>' : $name;
+                echo '<li>' . sprintf(PLUGIN_FOUND, $link, $plugin['unique_key'], $plugin['version'], $author) . '</li>';
             }
             ?>
             </ul>
@@ -186,14 +188,15 @@ require 'includes/application_top.php';
                 $i = 0;
                 foreach ($list as $item) {
                     $message = '';
+                    $safe_item = htmlspecialchars($item);
                     if (!in_array($item, BUILT_IN_PAYMENTS)) {
                         $i++;
-                        $message = sprintf(NEW_MODULE_FOUND, $item);
+                        $message = sprintf(NEW_MODULE_FOUND, $safe_item);
                     }
                     if (array_key_exists($item, REPLACEMENTS)) {
-                        $message = sprintf(REPLACE_MODULE_WITH, $item, REPLACEMENTS[$item]);
+                        $message = sprintf(REPLACE_MODULE_WITH, $safe_item, REPLACEMENTS[$item]);
                     } elseif (in_array($item, OBSOLETE_PAYMENTS, true)) {
-                        $message = sprintf(OBSOLETE_MODULE, $item);
+                        $message = sprintf(OBSOLETE_MODULE, $safe_item);
                     }
                     if ($message !== '') {
                         echo '<li class="danger text-danger">' . $message . '</li> ';
@@ -211,14 +214,15 @@ require 'includes/application_top.php';
                 $i = 0;
                 foreach ($list as $item) {
                     $message = '';
+                    $safe_item = htmlspecialchars($item);
                     if (!in_array($item, BUILT_IN_SHIPPINGS)) {
                         $i++;
-                        $message = sprintf(NEW_MODULE_FOUND, $item);
+                        $message = sprintf(NEW_MODULE_FOUND, $safe_item);
                     }
                     if (array_key_exists($item, REPLACEMENTS)) {
-                        $message = sprintf(REPLACE_MODULE_WITH, $item, REPLACEMENTS[$item]);
+                        $message = sprintf(REPLACE_MODULE_WITH, $safe_item, REPLACEMENTS[$item]);
                     } elseif (in_array($item, OBSOLETE_SHIPPING, true)) {
-                        $message = sprintf(OBSOLETE_MODULE, $item);
+                        $message = sprintf(OBSOLETE_MODULE, $safe_item);
                     }
                     if ($message !== '') {
                         echo '<li class="danger text-danger">' . $message . '</li> ';
@@ -236,14 +240,15 @@ require 'includes/application_top.php';
                 $i = 0;
                 foreach ($list as $item) {
                     $message = '';
+                    $safe_item = htmlspecialchars($item);
                     if (!in_array($item, BUILT_IN_ORDER_TOTALS)) {
                         $i++;
-                        $message = sprintf(NEW_MODULE_FOUND, $item);
+                        $message = sprintf(NEW_MODULE_FOUND, $safe_item);
                     }
                     if (array_key_exists($item, REPLACEMENTS)) {
-                        $message = sprintf(REPLACE_MODULE_WITH, $item, REPLACEMENTS[$item]);
+                        $message = sprintf(REPLACE_MODULE_WITH, $safe_item, REPLACEMENTS[$item]);
                     } elseif (in_array($item, OBSOLETE_ORDER_TOTALS, true)) {
-                        $message = sprintf(OBSOLETE_MODULE, $item);
+                        $message = sprintf(OBSOLETE_MODULE, $safe_item);
                     }
                     if ($message !== '') {
                         echo '<li class="danger text-danger">' . $message . '</li> ';
@@ -281,7 +286,7 @@ require 'includes/application_top.php';
                     <?php
                     foreach ($missing_pages as $missing_page) {
                         ?>
-                        <li><?= '<a href="' . zen_href_link(FILENAME_CONFIGURATION, "gID=" . (int)$missing_page['gid']) . '">' . $missing_page['name'] . '</a>' ?></li>
+                        <li><?= '<a href="' . zen_href_link(FILENAME_CONFIGURATION, "gID=" . (int)$missing_page['gid']) . '">' . htmlspecialchars($missing_page['name']) . '</a>' ?></li>
                         <?php
                     }
                     ?>

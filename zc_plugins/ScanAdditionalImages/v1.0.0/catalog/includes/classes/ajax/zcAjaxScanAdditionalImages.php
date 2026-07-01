@@ -12,6 +12,24 @@ class zcAjaxScanAdditionalImages
     {
         global $db;
 
+        /**
+         * Deny access unless running under the admin.
+         */
+        if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
+            return [
+                'batchRecordsFound' => 0,
+                'errorMessage' => SYNC_TEXT_NOTHING_TO_PROCESS,
+                'imagesInserted' => 0,
+                'next_batch' => 0,
+                'next_start' => 0,
+                'recordsProcessed' => 0,
+                'remaining' => 0,
+                'this_batch_size' => 0,
+                'this_start_at' => 0,
+                'terminate' => true,
+            ];
+        }
+
         $start_at = 0;
         $batch_size = 10;
 
@@ -112,6 +130,11 @@ class zcAjaxScanAdditionalImages
 
             // The query should have filtered these out already.
             if (empty($products_image) || $products_image === PRODUCTS_IMAGE_NO_IMAGE) {
+                continue;
+            }
+
+            // Defense in depth: reject any directory-traversal sequence before it's used to build a filesystem path.
+            if (strpos($products_image, '..') !== false) {
                 continue;
             }
 
