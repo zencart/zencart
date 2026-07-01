@@ -7,7 +7,7 @@
  * see  {@link  https://docs.zen-cart.com/dev/code/init_system/} for more details.
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2026 Feb 26 Modified in v2.2.1 $
  */
 
@@ -16,6 +16,34 @@ use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\InitSystem\InitSystem;
+
+/**
+ * Ensure minimum PHP version.
+ * This is intended to run before any dependencies are required
+ * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
+ *
+ * This guard must run before anything below is require'd — including the Request capture
+ * immediately following it, since Request.php uses PHP 8.0+-only syntax.
+ * On an older PHP runtime, requiring it before this check would produce an uncontrolled parse fatal
+ * instead of the intended upgrade page.
+ */
+if (PHP_VERSION_ID < 80300) {
+    require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
+    exit(0);
+}
+
+/**
+ * Capture the genuine TCP peer address before any other code runs.
+ *
+ * This must happen before init_sessions.php overwrites $_SERVER['REMOTE_ADDR'] with the resolved
+ * client IP, so that trust decisions about forwarded headers (Request::isSecure(),
+ * zen_get_ip_address()) always see the real proxy/peer address. Request is not autoloadable this
+ * early (the psr-4 autoloader is registered further down), so the class and its trait are required
+ * explicitly here via __DIR__-relative paths. Nothing above this point reads $_SERVER['REMOTE_ADDR'].
+ */
+require_once __DIR__ . '/classes/traits/Singleton.php';
+require_once __DIR__ . '/classes/Request.php';
+\Zencart\Request\Request::captureOriginalRemoteAddr();
 
 // Set session ID
 $zenSessionId = 'zenid';
@@ -239,16 +267,6 @@ define('IS_ADMIN_FLAG', false);
 define('PAGE_PARSE_START_TIME', microtime());
 @ini_set('arg_separator.output', '&');
 @ini_set('html_errors', '0');
-
-/**
- * Ensure minimum PHP version.
- * This is intended to run before any dependencies are required
- * See https://www.zen-cart.com/requirements or run zc_install to see actual requirements!
- */
-if (PHP_VERSION_ID < 80300) {
-    require 'includes/templates/template_default/templates/tpl_zc_phpupgrade_default.php';
-    exit(0);
-}
 
 date_default_timezone_set(date_default_timezone_get());
 
