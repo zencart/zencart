@@ -84,15 +84,18 @@ $paypal_ipn_sort_order_array = [
    </div>
        <div class="row">
            <div class="col-sm-12 col-md-9 configurationColumnLeft">
-              <table class="table">
+              <table class="table table-striped table-hover">
+              <thead>
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDER_NUMBER; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYPAL_ID; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TXN_TYPE; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_STATUS; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PAYMENT_AMOUNT; ?></td>
-                <td class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDER_NUMBER; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYPAL_ID; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_TXN_TYPE; ?></th>
+                <th class="dataTableHeadingContent"><?php echo TABLE_HEADING_PAYMENT_STATUS; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_PAYMENT_AMOUNT; ?></th>
+                <th class="dataTableHeadingContent text-right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</th>
               </tr>
+              </thead>
+              <tbody>
 <?php
   if (zen_not_null($selected_status)) {
     $ipn_search = "AND p.payment_status = :selectedStatus: ";
@@ -115,14 +118,14 @@ $paypal_ipn_sort_order_array = [
     }
 
     if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected active" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     } else {
       echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $ipn_tran['order_id']; ?></td>
                 <td class="dataTableContent"><?php echo $ipn_tran['paypal_ipn_id']; ?></td>
-                <td class="dataTableContent"><?php echo $ipn_tran['txn_type'] . '<br>' . $ipn_tran['first_name'] . ' ' . $ipn_tran['last_name'] . ($ipn_tran['payer_business_name'] != '' ? '<br>' . $ipn_tran['payer_business_name'] : ''); ?>
+                <td class="dataTableContent"><?php echo $ipn_tran['txn_type'] . '<br>' . $ipn_tran['first_name'] . ' ' . $ipn_tran['last_name'] . ($ipn_tran['payer_business_name'] != '' ? '<br>' . $ipn_tran['payer_business_name'] : ''); ?></td>
                 <td class="dataTableContent"><?php echo $ipn_tran['payment_status'] . '<br>Parent Trans ID:' . $ipn_tran['parent_txn_id'] . '<br>Trans ID:' . $ipn_tran['txn_id']; ?></td>
                 <td class="dataTableContent text-right"><?php echo $ipn_tran['mc_currency'] . ' '.number_format($ipn_tran['mc_gross'], 2); ?></td>
                 <td class="dataTableContent text-right">
@@ -130,10 +133,13 @@ $paypal_ipn_sort_order_array = [
               <?php echo '</tr>';
   }
 ?>
+            </tbody>
+            <tfoot>
               <tr>
                     <td colspan="3" class="smallText"><?php echo $ipn_split->display_count($ipn_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), $_GET['page'], TEXT_DISPLAY_PAYPAL_IPN_NUMBER_OF_TX); ?></td>
                     <td colspan="3" class="smallText text-right"><?php echo $ipn_split->display_links($ipn_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN'), zen_config('MAX_DISPLAY_PAGE_LINKS'), isset($_GET['page']) ? (int)$_GET['page'] : 1, zen_get_all_get_params(['page'])); ?></td>
               </tr>
+              </tfoot>
             </table>
            </div>
 <?php
