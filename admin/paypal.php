@@ -112,15 +112,20 @@ $paypal_ipn_sort_order_array = [
   }
   $ipn_split = new splitPageResults($_GET['page'], (int)MAX_DISPLAY_SEARCH_RESULTS_PAYPAL_IPN, $ipn_query_raw, $ipn_query_numrows);
   $ipn_trans = $db->Execute($ipn_query_raw);
+  $paypal_ipn_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $selected_status_parameter = !empty($selected_status) ? '&payment_status=' . rawurlencode($selected_status) : '';
+  $paypal_sort_order_parameter = !empty($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '';
   foreach ($ipn_trans as $ipn_tran) {
     if ((!isset($_GET['ipnID']) || (isset($_GET['ipnID']) && ($_GET['ipnID'] == $ipn_tran['paypal_ipn_id']))) && !isset($ipnInfo)) {
       $ipnInfo = new objectInfo($ipn_tran);
     }
 
     if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected active" onclick="document.location.href=\'' . zen_href_link(FILENAME_ORDERS, 'page=' . $_GET['page'] . '&ipnID=' . $ipnInfo->paypal_ipn_id . '&oID=' . $ipnInfo->order_id . '&action=edit' . '&referer=ipn' . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      $ipn_row_link = zen_href_link(FILENAME_ORDERS, 'page=' . $paypal_ipn_page . '&ipnID=' . (int)$ipnInfo->paypal_ipn_id . '&oID=' . (int)$ipnInfo->order_id . '&action=edit' . '&referer=ipn' . $selected_status_parameter . $paypal_sort_order_parameter);
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected active" onclick="document.location.href=' . htmlspecialchars(json_encode($ipn_row_link), ENT_QUOTES, CHARSET, false) . '">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onclick="document.location.href=\'' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id'] . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (!empty($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') ) . '\'">' . "\n";
+      $ipn_row_link = zen_href_link(FILENAME_PAYPAL, 'page=' . $paypal_ipn_page . '&ipnID=' . (int)$ipn_tran['paypal_ipn_id'] . $selected_status_parameter . $paypal_sort_order_parameter);
+      echo '              <tr class="dataTableRow" onclick="document.location.href=' . htmlspecialchars(json_encode($ipn_row_link), ENT_QUOTES, CHARSET, false) . '">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $ipn_tran['order_id']; ?></td>
@@ -129,7 +134,7 @@ $paypal_ipn_sort_order_array = [
                 <td class="dataTableContent"><?php echo $ipn_tran['payment_status'] . '<br>Parent Trans ID:' . $ipn_tran['parent_txn_id'] . '<br>Trans ID:' . $ipn_tran['txn_id']; ?></td>
                 <td class="dataTableContent text-right"><?php echo $ipn_tran['mc_currency'] . ' '.number_format($ipn_tran['mc_gross'], 2); ?></td>
                 <td class="dataTableContent text-right">
-                    <?php if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) { echo zen_icon('caret-right', '', '2x', true); } else { echo '<a href="' . zen_href_link(FILENAME_PAYPAL, 'page=' . $_GET['page'] . '&ipnID=' . $ipn_tran['paypal_ipn_id']) . (zen_not_null($selected_status) ? '&payment_status=' . $selected_status : '') . (zen_not_null($paypal_ipn_sort_order) ? '&paypal_ipn_sort_order=' . $paypal_ipn_sort_order : '') . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>'; } ?></td>
+                    <?php if (isset($ipnInfo) && is_object($ipnInfo) && ($ipn_tran['paypal_ipn_id'] == $ipnInfo->paypal_ipn_id) ) { echo zen_icon('caret-right', '', '2x', true); } else { echo '<a href="' . htmlspecialchars(zen_href_link(FILENAME_PAYPAL, 'page=' . $paypal_ipn_page . '&ipnID=' . (int)$ipn_tran['paypal_ipn_id'] . $selected_status_parameter . $paypal_sort_order_parameter), ENT_QUOTES, CHARSET, false) . '" data-toggle="tooltip" title="' . IMAGE_ICON_INFO . '" role="button">' . zen_icon('circle-info', '', '2x', true, false) . '</a>'; } ?></td>
               <?php echo '</tr>';
   }
 ?>
