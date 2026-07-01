@@ -54,12 +54,14 @@ if (!function_exists('zen_date_raw')) {
  * Validate a date in the selected locale date format
  *
  * @param string $date
- * @param string $format (optional) needs to be a valid short date format for DateTimeImmutableObject using / or - or nothing as separators
+ * @param ?string $format (optional) needs to be a valid short date format for DateTimeImmutableObject using / or - or nothing as separators
  * @return bool
  * @since ZC v2.0.0
  */
-function zen_valid_date(string $date, string $format = DATE_FORMAT): bool
+function zen_valid_date(string $date, ?string $format = null): bool
 {
+    $format ??= defined('DATE_FORMAT') ? (string)DATE_FORMAT : 'm/d/Y';
+
     // Build 3 formats from 1 with 3 possible separators
     $format0 = str_replace('-', '/', $format);
     $format1 = str_replace('/', '-', $format);
