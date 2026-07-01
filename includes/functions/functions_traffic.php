@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @version $Id:  Modified in v3.0.0-alpha $
  */
 
 /**
@@ -83,23 +83,25 @@ function zen_get_ip_address(): string
 
 
 /**
- * Stop execution completely
+ * Stop execution completely, but close the session beforehand to preserve data-integrity.
+ *
  * @since ZC v1.0.3
  */
-function zen_exit() {
+function zen_exit(): void
+{
     session_write_close();
     exit();
 }
 
 
 /**
- * Return whether the browser client is of a certain type
- * by checking whether the user-agent contains a particular pattern
- * @param string $lookup_pattern string to search for
- * @return false|string
+ * Lookup whether the browser client's user-agent (HTTP_USER_AGENT) contains a particular pattern.
+ * Returns the matched string if found, or false if not found or if the user-agent is not set.
+ *
  * @since ZC v1.0.3
  */
-function zen_browser_detect($lookup_pattern) {
+function zen_browser_detect(string $lookup_pattern): string|false
+{
     if (!isset($_SERVER['HTTP_USER_AGENT'])) return false;
     return stristr($_SERVER['HTTP_USER_AGENT'], $lookup_pattern);
 }
