@@ -23,10 +23,11 @@ if (!function_exists('zen_date_raw')) {
     {
         // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
         if (empty($date) || strpos($date, '0001') !== false || strpos($date, '0000') !== false) {
-            $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
+            $emptyDate = DateTime::createFromFormat('!m/d/Y', '01/01/0001');
+            $date = $emptyDate === false ? '01/01/0001' : $emptyDate->format(DATE_FORMAT);
         }
 
-        $date = preg_replace('/\D+/', '', $date);
+        $date = preg_replace('/\D+/', '', $date) ?? '';
         $date_format = str_replace(['/', '-'], '', DATE_FORMAT);
 
         if ($date_format === 'dmY') {
@@ -95,7 +96,11 @@ function zen_date_long(?string $raw_date): string|false
 
     /** @var zcDate $zcDate */
     global $zcDate;
-    return $zcDate->output(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
+    $timestamp = mktime($hour, $minute, $second, $month, $day, $year);
+    if ($timestamp === false) {
+        return false;
+    }
+    return $zcDate->output(DATE_FORMAT_LONG, $timestamp);
 }
 
 
@@ -119,7 +124,11 @@ function zen_date_short(?string $raw_date): string|false
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
+    $timestamp = mktime($hour, $minute, $second, $month, $day, $year);
+    if ($timestamp === false) {
+        return false;
+    }
+    return date(DATE_FORMAT, $timestamp);
 }
 
 
@@ -140,7 +149,11 @@ function zen_datetime_short(?string $raw_datetime): string|false
     $second = (int)substr($raw_datetime, 17, 2);
 
     global $zcDate;
-    return $zcDate->output(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
+    $timestamp = mktime($hour, $minute, $second, $month, $day, $year);
+    if ($timestamp === false) {
+        return false;
+    }
+    return $zcDate->output(DATE_TIME_FORMAT, $timestamp);
 }
 
 /**
@@ -162,7 +175,11 @@ function zen_datetime_without_seconds(string $raw_datetime): string|false
     zen_define_default('DATE_TIME_FORMAT_WITHOUT_SECONDS', '%m/%d/%Y %H:%M');
 
     global $zcDate;
-    return $zcDate->output(DATE_TIME_FORMAT_WITHOUT_SECONDS, mktime($hour, $minute, 0, $month, $day, $year));
+    $timestamp = mktime($hour, $minute, 0, $month, $day, $year);
+    if ($timestamp === false) {
+        return false;
+    }
+    return $zcDate->output(DATE_TIME_FORMAT_WITHOUT_SECONDS, $timestamp);
 }
 
 /**
@@ -489,6 +506,9 @@ function zen_count_days(string $start_date, string $end_date, string $lookup = '
         // Returns number of days
         $start_datetime = gmmktime(0, 0, 0, (int)substr($start_date, 5, 2), (int)substr($start_date, 8, 2), (int)substr($start_date, 0, 4));
         $end_datetime = gmmktime(0, 0, 0, (int)substr($end_date, 5, 2), (int)substr($end_date, 8, 2), (int)substr($end_date, 0, 4));
+        if ($start_datetime === false || $end_datetime === false) {
+            return 0;
+        }
         $days = (($end_datetime - $start_datetime) / 86400) + 1;
         $d = $days % 7;
         $w = date("w", $start_datetime);
@@ -499,14 +519,24 @@ function zen_count_days(string $start_date, string $end_date, string $lookup = '
         // Returns whole-month-count between two dates
         // courtesy of websafe<at>partybitchez<dot>org
         $start_date_unixtimestamp = strtotime($start_date);
+        if ($start_date_unixtimestamp === false) {
+            return 0;
+        }
         $start_date_month = date("m", $start_date_unixtimestamp);
         $end_date_unixtimestamp = strtotime($end_date);
+        if ($end_date_unixtimestamp === false) {
+            return 0;
+        }
         $end_date_month = date("m", $end_date_unixtimestamp);
         $calculated_date_unixtimestamp = $start_date_unixtimestamp;
         $counter = 0;
         while ($calculated_date_unixtimestamp < $end_date_unixtimestamp) {
             $counter++;
-            $calculated_date_unixtimestamp = strtotime($start_date . " +{$counter} months");
+            $next_calculated_date_unixtimestamp = strtotime($start_date . " +{$counter} months");
+            if ($next_calculated_date_unixtimestamp === false) {
+                return 0;
+            }
+            $calculated_date_unixtimestamp = $next_calculated_date_unixtimestamp;
         }
         if (($counter == 1) && ($end_date_month == $start_date_month)) {
             --$counter;
@@ -522,6 +552,9 @@ if (!function_exists('datetime_to_sql_format')) {
     function datetime_to_sql_format(string $dateString, string $format = 'H:i:s M d, Y e'): string
     {
         $dateTime = DateTime::createFromFormat($format, $dateString);
+        if ($dateTime === false) {
+            return $dateString;
+        }
         $dateTime->setTimezone((new DateTime())->getTimezone());
         return $dateTime->format('Y-m-d H:i:s');
     }

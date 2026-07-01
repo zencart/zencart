@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
@@ -207,12 +208,15 @@ class functionsDatesTest extends zcUnitTestCase
         $this->assertSame(3.0, zen_count_days('2024-02-01', '2024-02-05', 'd'));
         $this->assertSame(3, zen_count_days('2024-01-15', '2024-03-16', 'm'));
         $this->assertSame(0, zen_count_days('2024-01-01', '2024-01-15', 'm'));
+        $this->assertSame(0, zen_count_days('not-a-date', '2024-01-15', 'm'));
+        $this->assertSame(0, zen_count_days('2024-01-01', 'not-a-date', 'm'));
         $this->assertSame(0, zen_count_days('2024-01-01', '2024-01-15', 'unknown'));
     }
 
     public function testDatetimeToSqlFormat(): void
     {
         $this->assertSame('2024-02-29 13:45:06', datetime_to_sql_format('13:45:06 Feb 29, 2024 UTC'));
+        $this->assertSame('not a paypal date', datetime_to_sql_format('not a paypal date'));
     }
 
     public function testConvertToLocalTimeZone(): void
