@@ -62,7 +62,7 @@ class CouponAdminBoundaryValidationTest extends zcInProcessFeatureTestCaseAdmin
         $this->assertGreaterThan(0, $couponId);
 
         return TestDb::selectOne(
-            'SELECT coupon_type, coupon_amount, coupon_minimum_order, uses_per_coupon
+            'SELECT coupon_type, coupon_amount, coupon_minimum_order, uses_per_coupon, uses_per_user
                FROM coupons
               WHERE coupon_id = :coupon_id
               LIMIT 1',
@@ -131,6 +131,22 @@ class CouponAdminBoundaryValidationTest extends zcInProcessFeatureTestCaseAdmin
         $coupon = $this->fetchCoupon($couponCode);
 
         $this->assertSame('0', (string) $coupon['uses_per_coupon']);
+    }
+
+    // uses_per_user must be clamped to a minimum of 0; a negative value causes
+    // validateCouponUsesPerCustomer() to always fail (RecordCount() can't be < negative).
+    public function testNegativeUsesPerUserIsClampedToZero(): void
+    {
+        $this->completeInitialAdminSetup();
+
+        $couponCode = 'B2BFU-' . uniqid();
+        $this->postCouponUpdateConfirm($couponCode, [
+            'coupon_uses_user' => '-3',
+        ]);
+
+        $coupon = $this->fetchCoupon($couponCode);
+
+        $this->assertSame('0', (string) $coupon['uses_per_user']);
     }
 
     // 0 is the documented "unlimited uses" sentinel (see ot_coupon.php's

@@ -294,7 +294,7 @@ switch ($_GET['action']) {
       'coupon_product_count' => (int)$_POST['coupon_product_count'],
       'coupon_type' => zen_db_prepare_input($coupon_type),
       'uses_per_coupon' => max(0, (int)$_POST['coupon_uses_coupon']),
-      'uses_per_user' => (int)$_POST['coupon_uses_user'],
+      'uses_per_user' => max(0, (int)$_POST['coupon_uses_user']),
       'coupon_minimum_order' => max(0, (float)$_POST['coupon_min_order']),
       'restrict_to_products' => zen_db_prepare_input($_POST['coupon_products']),
       'restrict_to_categories' => zen_db_prepare_input($_POST['coupon_categories']),
