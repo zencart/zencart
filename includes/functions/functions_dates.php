@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Oct 03 Modified in v2.2.0 $
+ * @version $Id:   Modified in v3.0.0 $
  */
 
 // Normally this zen_date_raw function will ONLY be defined here.
@@ -19,7 +19,7 @@ if (!function_exists('zen_date_raw')) {
      *
      * @since ZC v1.0.3
      */
-    function zen_date_raw(?string $date, bool $reverse = false): string
+    function zen_date_raw(string|false|null $date, bool $reverse = false): string
     {
         // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
         if (empty($date) || strpos($date, '0001') !== false || strpos($date, '0000') !== false) {
@@ -75,9 +75,26 @@ function zen_valid_date(string $date, ?string $format = null): bool
 
 
 /**
+ * Parse a raw YYYY-MM-DD[ HH:MM:SS] string into a Unix timestamp, for the raw date/datetime formatters below.
+ * @since ZC v3.0.0
+ */
+function zen_raw_datetime_to_timestamp(string $raw_datetime, bool $include_seconds = true): int|false
+{
+    $year = (int)substr($raw_datetime, 0, 4);
+    $month = (int)substr($raw_datetime, 5, 2);
+    $day = (int)substr($raw_datetime, 8, 2);
+    $hour = (int)substr($raw_datetime, 11, 2);
+    $minute = (int)substr($raw_datetime, 14, 2);
+    $second = $include_seconds ? (int)substr($raw_datetime, 17, 2) : 0;
+
+    return mktime($hour, $minute, $second, $month, $day, $year);
+}
+
+
+/**
  * Output a raw date string in the selected locale date format
  *
- * @param ?string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
+ * @param ?string $raw_date accepts YYYY-MM-DD HH:MM:SS, or YYYY-MM-DD (time defaults to 00:00:00)
  * @return false|string
  * @since ZC v1.0.3
  */
@@ -87,19 +104,13 @@ function zen_date_long(?string $raw_date): string|false
         return false;
     }
 
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    /** @var zcDate $zcDate */
-    global $zcDate;
-    $timestamp = mktime($hour, $minute, $second, $month, $day, $year);
+    $timestamp = zen_raw_datetime_to_timestamp($raw_date);
     if ($timestamp === false) {
         return false;
     }
+
+    /** @var zcDate $zcDate */
+    global $zcDate;
     return $zcDate->output(DATE_FORMAT_LONG, $timestamp);
 }
 
@@ -107,7 +118,7 @@ function zen_date_long(?string $raw_date): string|false
 /**
  * Output a raw date string in the selected locale date format
  *
- * @param ?string $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
+ * @param ?string $raw_date accepts YYYY-MM-DD HH:MM:SS, or YYYY-MM-DD (time defaults to 00:00:00)
  * @return string|false
  * @since ZC v1.0.3
  */
@@ -117,14 +128,7 @@ function zen_date_short(?string $raw_date): string|false
         return false;
     }
 
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    $timestamp = mktime($hour, $minute, $second, $month, $day, $year);
+    $timestamp = zen_raw_datetime_to_timestamp($raw_date);
     if ($timestamp === false) {
         return false;
     }
@@ -141,18 +145,12 @@ function zen_datetime_short(?string $raw_datetime): string|false
         return false;
     }
 
-    $year = (int)substr($raw_datetime, 0, 4);
-    $month = (int)substr($raw_datetime, 5, 2);
-    $day = (int)substr($raw_datetime, 8, 2);
-    $hour = (int)substr($raw_datetime, 11, 2);
-    $minute = (int)substr($raw_datetime, 14, 2);
-    $second = (int)substr($raw_datetime, 17, 2);
-
-    global $zcDate;
-    $timestamp = mktime($hour, $minute, $second, $month, $day, $year);
+    $timestamp = zen_raw_datetime_to_timestamp($raw_datetime);
     if ($timestamp === false) {
         return false;
     }
+
+    global $zcDate;
     return $zcDate->output(DATE_TIME_FORMAT, $timestamp);
 }
 
@@ -166,26 +164,21 @@ function zen_datetime_without_seconds(string $raw_datetime): string|false
         return false;
     }
 
-    $year = (int)substr($raw_datetime, 0, 4);
-    $month = (int)substr($raw_datetime, 5, 2);
-    $day = (int)substr($raw_datetime, 8, 2);
-    $hour = (int)substr($raw_datetime, 11, 2);
-    $minute = (int)substr($raw_datetime, 14, 2);
-
     zen_define_default('DATE_TIME_FORMAT_WITHOUT_SECONDS', '%m/%d/%Y %H:%M');
 
-    global $zcDate;
-    $timestamp = mktime($hour, $minute, 0, $month, $day, $year);
+    $timestamp = zen_raw_datetime_to_timestamp($raw_datetime, false);
     if ($timestamp === false) {
         return false;
     }
+
+    global $zcDate;
     return $zcDate->output(DATE_TIME_FORMAT_WITHOUT_SECONDS, $timestamp);
 }
 
 /**
  * $date is a date string, such as 2022-01-15, 20220115, 01/15/2022, etc.
  * $formatIn is the format of the date that is passed in, using lowercase mm/dd/yyyy placeholders to describe the format.
- * $formatOut is the format that the date should be returned in: mysql/raw/raw-reverse
+ * $formatOut is the format that the date should be returned in: mysql/raw/raw-reverse; any other value defaults to mysql format
  * @since ZC v1.5.2
  */
 function zen_format_date_raw(string $date, string $formatOut = 'mysql', ?string $formatIn = null): string
@@ -310,11 +303,11 @@ function zen_checkdate(string $date_to_check, string $format_string, array &$dat
         return false;
     }
 
-    if (zen_is_leap_year((int)$year)) {
+    if (zen_is_leap_year($year)) {
         $no_of_days[1] = 29;
     }
 
-    if ($day > $no_of_days[(int)$month - 1]) {
+    if ($day > $no_of_days[$month - 1]) {
         return false;
     }
 
@@ -501,7 +494,7 @@ function zen_datetime_overlap(array|string|null $start1, array|string|null $star
  */
 function zen_count_days(string $start_date, string $end_date, string $lookup = 'm'): float|int
 {
-    $counter = 0;
+    $counter = 0; // also serves as the fallback return value for an unrecognized $lookup
     if ($lookup === 'd') {
         // Returns number of days
         $start_datetime = gmmktime(0, 0, 0, (int)substr($start_date, 5, 2), (int)substr($start_date, 8, 2), (int)substr($start_date, 0, 4));
@@ -529,7 +522,6 @@ function zen_count_days(string $start_date, string $end_date, string $lookup = '
         }
         $end_date_month = date("m", $end_date_unixtimestamp);
         $calculated_date_unixtimestamp = $start_date_unixtimestamp;
-        $counter = 0;
         while ($calculated_date_unixtimestamp < $end_date_unixtimestamp) {
             $counter++;
             $next_calculated_date_unixtimestamp = strtotime($start_date . " +{$counter} months");
