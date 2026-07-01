@@ -30,7 +30,8 @@ class functionsDatesTest extends zcUnitTestCase
             'reversed date' => ['12/31/2025', true, '31122025'],
             'empty date becomes zero date' => ['', false, '00010101'],
             'null date becomes zero date' => [null, false, '00010101'],
-            'zero date string is parsed literally' => ['0001-01-01', false, '01010001'],
+            'zero date string is normalized to zero date' => ['0001-01-01', false, '00010101'],
+            'mysql zero date is normalized to zero date' => ['0000-00-00', false, '00010101'],
         ];
     }
 
@@ -117,6 +118,7 @@ class functionsDatesTest extends zcUnitTestCase
             'admin date picker to raw' => ['02-29-2024', 'raw', null, '20240229'],
             'admin date picker to raw reverse' => ['02-29-2024', 'raw-reverse', null, '29022024'],
             'custom input format' => ['2024/02/29', 'mysql', 'yyyy/mm/dd', '2024-02-29'],
+            'malformed input format returns original date' => ['2024/02/29', 'mysql', 'yyyy', '2024/02/29'],
             'null string is returned as-is' => ['null', 'mysql', null, 'null'],
             'empty string is returned as-is' => ['', 'mysql', null, ''],
         ];

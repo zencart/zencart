@@ -22,7 +22,7 @@ if (!function_exists('zen_date_raw')) {
     function zen_date_raw(?string $date, bool $reverse = false): string
     {
         // sometimes zen_date_short is called with a zero-date value which returns false, which is then passed to $date here, so this just reformats to avoid confusion.
-        if (empty($date) || strpos($date, '0001') || strpos($date, '0000')) {
+        if (empty($date) || strpos($date, '0001') !== false || strpos($date, '0000') !== false) {
             $date = DateTime::createFromFormat('!m/d/Y', '01/01/0001')->format(DATE_FORMAT);
         }
 
@@ -126,7 +126,7 @@ function zen_date_short(?string $raw_date): string|false
 /**
  * @since ZC v1.0.3
  */
-function zen_datetime_short(?string $raw_datetime): string|bool
+function zen_datetime_short(?string $raw_datetime): string|false
 {
     if (empty($raw_datetime) || $raw_datetime <= '0001-01-01 00:00:00') {
         return false;
@@ -166,12 +166,17 @@ function zen_datetime_without_seconds(string $raw_datetime): string|false
 }
 
 /**
+ * $date is a date string, such as 2022-01-15, 20220115, 01/15/2022, etc.
+ * $formatIn is the format of the date that is passed in, using lowercase mm/dd/yyyy placeholders to describe the format.
+ * $formatOut is the format that the date should be returned in: mysql/raw/raw-reverse
  * @since ZC v1.5.2
  */
 function zen_format_date_raw(string $date, string $formatOut = 'mysql', ?string $formatIn = null): string
 {
-    if ($formatIn === null && defined('DATE_FORMAT_DATE_PICKER')) {
-        $formatIn = DATE_FORMAT_DATE_PICKER;
+    if ($formatIn === null) {
+        $formatIn = defined('DATE_FORMAT_DATE_PICKER')
+            ? DATE_FORMAT_DATE_PICKER
+            : (defined('DOB_FORMAT_STRING') ? DOB_FORMAT_STRING : 'mm/dd/yyyy');
     }
     if ($date === 'null' || $date === '') {
         return $date;
@@ -179,13 +184,17 @@ function zen_format_date_raw(string $date, string $formatOut = 'mysql', ?string 
     $mpos = strpos($formatIn, 'm');
     $dpos = strpos($formatIn, 'd');
     $ypos = strpos($formatIn, 'y');
+    if ($mpos === false || $dpos === false || $ypos === false) {
+        return $date;
+    }
+    // This parses based on 2-digit day, 2-digit month, 4-digit year
     $d = substr($date, $dpos, 2);
     $m = substr($date, $mpos, 2);
     $y = substr($date, $ypos, 4);
     return match ($formatOut) {
         'raw' => $y . $m . $d,
         'raw-reverse' => $d . $m . $y,
-        default => $y . '-' . $m . '-' . $d,
+        default => $y . '-' . $m . '-' . $d, // also 'mysql'
     };
 }
 
