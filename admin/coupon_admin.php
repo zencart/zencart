@@ -284,10 +284,7 @@ switch ($_GET['action']) {
       $coupon_type = 'E'; // percentage off and free shipping
     }
     $_POST['coupon_amount'] = preg_replace('/[^0-9.]/', '', $_POST['coupon_amount']);
-    // Clamp percentages ('P' and 'E' types, see comments above) to under 100.
-    if ($coupon_type === 'P' || $coupon_type === 'E') {
-      $_POST['coupon_amount'] = (string)min(100, (float)$_POST['coupon_amount']);
-    }
+    // Clamp percentages ('P' and 'E' types, see comments above) to at most 100.
     $sql_data_array = [
       'coupon_code' => zen_db_prepare_input($_POST['coupon_code']),
       'coupon_amount' => zen_db_prepare_input($_POST['coupon_amount']),
