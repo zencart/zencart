@@ -140,6 +140,10 @@ class functionsDatesTest extends zcUnitTestCase
             'invalid non-leap day' => ['02/29/2023', 'mm/dd/yyyy', false, []],
             'invalid month' => ['13/01/2024', 'mm/dd/yyyy', false, []],
             'invalid day' => ['02/30/2024', 'mm/dd/yyyy', false, []],
+            'invalid nonnumeric year' => ['02/29/abcd', 'mm/dd/yyyy', false, []],
+            'valid mixed-case abbreviated month' => ['Jan 31 2024', 'mmm dd yyyy', true, [2024, 1, 31]],
+            'valid lowercase abbreviated month' => ['feb 29 2024', 'mmm dd yyyy', true, [2024, 2, 29]],
+            'invalid abbreviated month' => ['foo 29 2024', 'mmm dd yyyy', false, []],
             'compact date is rejected' => ['02292024', 'mmddyyyy', false, []],
         ];
     }

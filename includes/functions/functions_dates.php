@@ -201,12 +201,12 @@ function zen_format_date_raw(string $date, string $formatOut = 'mysql', ?string 
 /**
  * Check date
  *
+ * @param array<int, int> $date_array updated by reference
+ * @param-out array<int, int> $date_array
  * @since ZC v1.0.3
  */
 function zen_checkdate(string $date_to_check, string $format_string, array &$date_array): bool
 {
-    $separator_idx = -1;
-
     $separators = ['-', ' ', '/', '.'];
     $month_abbr = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
     $no_of_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -238,59 +238,52 @@ function zen_checkdate(string $date_to_check, string $format_string, array &$dat
         return false;
     }
 
-    if ($date_separator_idx !== -1) {
-        $format_string_array = explode($separators[$date_separator_idx], $format_string);
-        if (count($format_string_array) !== 3) {
-            return false;
-        }
+    $format_string_array = explode($separators[$date_separator_idx], $format_string);
+    if (count($format_string_array) !== 3) {
+        return false;
+    }
 
-        $date_to_check_array = explode($separators[$date_separator_idx], $date_to_check);
-        if (count($date_to_check_array) !== 3) {
-            return false;
-        }
+    $date_to_check_array = explode($separators[$date_separator_idx], $date_to_check);
+    if (count($date_to_check_array) !== 3) {
+        return false;
+    }
 
-        $size = count($format_string_array);
-        for ($i = 0; $i < $size; $i++) {
-            if ($format_string_array[$i] === 'mm' || $format_string_array[$i] === 'mmm') {
-                $month = $date_to_check_array[$i];
-            }
-            if ($format_string_array[$i] === 'dd') {
-                $day = $date_to_check_array[$i];
-            }
-            if (($format_string_array[$i] === 'yyyy') || ($format_string_array[$i] === 'aaaa')) {
-                $year = $date_to_check_array[$i];
-            }
+    $size = count($format_string_array);
+    for ($i = 0; $i < $size; $i++) {
+        if ($format_string_array[$i] === 'mm' || $format_string_array[$i] === 'mmm') {
+            $month = $date_to_check_array[$i];
         }
-    } else {
-        if (strlen($format_string) === 8 || strlen($format_string) === 9) {
-            $pos_month = strpos($format_string, 'mmm');
-            if ($pos_month !== false) {
-                $month = substr($date_to_check, $pos_month, 3);
-                $size = count($month_abbr);
-                for ($i = 0; $i < $size; $i++) {
-                    if ($month === strtolower($month_abbr[$i])) {
-                        $month = $i;
-                        break;
-                    }
-                }
-            } else {
-                $month = substr($date_to_check, strpos($format_string, 'mm'), 2);
-            }
-        } else {
-            return false;
+        if ($format_string_array[$i] === 'dd') {
+            $day = $date_to_check_array[$i];
         }
+        if (($format_string_array[$i] === 'yyyy') || ($format_string_array[$i] === 'aaaa')) {
+            $year = $date_to_check_array[$i];
+        }
+    }
 
-        $day = substr($date_to_check, strpos($format_string, 'dd'), 2);
-        $year = substr($date_to_check, strpos($format_string, 'yyyy'), 4);
+    if (!isset($year, $month, $day)) {
+        return false;
     }
 
     if (strlen($year) !== 4) {
         return false;
     }
 
-    if (!settype($year, 'int') || !settype($month, 'int') || !settype($day, 'int')) {
+    if (!is_numeric($month)) {
+        $month = array_search(strtolower((string)$month), $month_abbr, true);
+        if ($month === false) {
+            return false;
+        }
+        ++$month;
+    }
+
+    if (!is_numeric($year) || !is_numeric($day)) {
         return false;
     }
+
+    $year = (int)$year;
+    $month = (int)$month;
+    $day = (int)$day;
 
     if ($month > 12 || $month < 1) {
         return false;
@@ -388,8 +381,8 @@ function zen_date_diff(string $date1, string $date2): int
  *        zen_datetime_overlap($startdate1, $startdate2, $enddate1, $enddate2, {default:true, false, 'past'});
  *        Providing $future_only of true (or as default not providing anything), the dates are inspected for overlap
  *
- * @param array{start: string, end: string}|string|null $start1 array with keys 'start' and 'end' or as a raw_datetime or raw_date, or if null then this datetime is considered as in place forever in the past.
- * @param array{start: string, end: string}|string|null $start2 array with keys 'start' and 'end' or as a raw_datetime or raw_date, or if null then this datetime is considered as in place forever in the past.
+ * @param array{start?: string, end?: string}|string|null $start1 array with keys 'start' and 'end' or as a raw_datetime or raw_date, or if null then this datetime is considered as in place forever in the past.
+ * @param array{start?: string, end?: string}|string|null $start2 array with keys 'start' and 'end' or as a raw_datetime or raw_date, or if null then this datetime is considered as in place forever in the past.
  * @param ?string $end1 raw_datetime, raw_date or effectively blank (if $start1 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
  * @param ?string $end2 raw_datetime, raw_date or effectively blank (if $start2 is array, the value here is replaced, otherwise this datetime is considered eternally effective)
  * @param bool|string $future_only values should be true, false, or 'past'
