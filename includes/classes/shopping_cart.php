@@ -136,11 +136,13 @@ class shoppingCart extends base
 
                     if (isset($data['attributes'])) {
                         foreach ($data['attributes'] as $option => $value) {
+                            $option_id = (int)$option;
+                            $value = (int)$value;
 
                             // include attribute value: needed for text attributes
-                            $attr_value = $data['attributes_values'][$option] ?? '';
+                            $attr_value = $data['attributes_values'][$option_id] ?? '';
 
-                            $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid($uprid), $option, $value);
+                            $products_options_sort_order = zen_get_attributes_options_sort_order(zen_get_prid($uprid), $option_id, $value);
                             if ($attr_value) {
                                 $attr_value = zen_db_input($attr_value);
                             }
@@ -148,7 +150,7 @@ class shoppingCart extends base
                                 "INSERT INTO " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
                                     (customers_id, products_id, products_options_id, products_options_value_id, products_options_value_text, products_options_sort_order)
                                  VALUES
-                                    (" . (int)$_SESSION['customer_id'] . ", '$uprid_db', '$option', '$value', '$attr_value', '$products_options_sort_order')";
+                                    (" . (int)$_SESSION['customer_id'] . ", '$uprid_db', '" . zen_db_input((string)$option) . "', $value, '$attr_value', '$products_options_sort_order')";
 
                             $db->Execute($sql);
                         }
@@ -343,17 +345,22 @@ class shoppingCart extends base
                     }
 
                     if ($blank_value === false) {
+                        $option = (int)$option;
                         if (is_array($value)) {
+                            $sanitizedValues = [];
                             foreach ($value as $opt => $val) {
+                                $val = (int)$val;
+                                $sanitizedValues[$opt] = $val;
                                 $this->contents[$uprid]['attributes'][$option . '_chk' . $val] = $val;
                             }
+                            $value = $sanitizedValues;
                         } else {
+                            $value = (int)$value;
                             $this->contents[$uprid]['attributes'][$option] = $value;
                         }
 
                         if (zen_is_logged_in() && !zen_in_guest_checkout()) {
                             $customer_id = (int)$_SESSION['customer_id'];
-                            $option = (int)$option;
                             if (is_array($value)) {
                                 foreach ($value as $opt => $val) {
                                     $products_options_sort_order = zen_get_attributes_options_sort_order($prid, $option, $opt);
