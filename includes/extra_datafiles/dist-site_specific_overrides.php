@@ -125,3 +125,12 @@
 // This value is an integer and defaults to 5.
 //
 //$max_auth_token_emails = 5;
+
+// -----
+// Indicate whether to show the "Sort by" dropdown on the product listing page. 
+//
+// true .... Display the dropdown; this is the default.
+// false ... Do not show the dropdown.
+//
+// $show_sort_by_on_product_listing = true; 
+

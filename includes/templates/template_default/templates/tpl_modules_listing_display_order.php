@@ -7,6 +7,9 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: lat9 2026 Feb 22 Modified in v2.2.1 $
  */
+if (isset($show_sort_by_on_product_listing) && $show_sort_by_on_product_listing === false) { 
+    return; 
+} 
 $disp_order = (int)($disp_order ?? 0);
 $disp_order_default = (int)($disp_order_default ?? 0);
 if ($disp_order === 0) {
