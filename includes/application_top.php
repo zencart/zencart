@@ -196,6 +196,13 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         }
 
         $key = strtolower($parts[0]);
+
+        // If the key denotes an array append (ends with '[]'), it is
+        // expected to be repeated. Skip tracking it.
+        if (substr($key, -2) === '[]') {
+            continue;
+        }
+        
         $keys[] = $key;
     }
 
