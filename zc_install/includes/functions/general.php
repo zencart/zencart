@@ -11,6 +11,8 @@
 const ZC_INSTALL_SESSION_NAME = 'zenInstallerId';
 const ZC_INSTALL_UPGRADE_AUTH_SESSION_KEY = 'zcInstallUpgradeAuth';
 const ZC_INSTALL_UPGRADE_AUTH_TTL = 600;
+const ZC_INSTALL_ADMIN_SETUP_MODE_DIRECTORY = 'directory';
+const ZC_INSTALL_ADMIN_SETUP_MODE_ADMIN_USER = 'admin_user';
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) {
     define('TABLE_UPGRADE_EXCEPTIONS', 'upgrade_exceptions');
@@ -240,4 +242,82 @@ function zc_install_is_upgrade_request_authorized(string $nonce, string $updateV
     return in_array($updateVersion, $auth['allowed_versions'], true);
 }
 
+function zc_install_is_safe_admin_directory(string $adminDir): bool
+{
+    return $adminDir !== ''
+        && $adminDir !== '.'
+        && $adminDir !== '..'
+        && !str_contains($adminDir, '/')
+        && !str_contains($adminDir, '\\')
+        && !str_contains($adminDir, "\0");
+}
+
+function zc_install_admin_setup_request_mode(array $post): string
+{
+    if (isset($post['admin_user']) || isset($post['admin_email']) || isset($post['admin_email2'])) {
+        return ZC_INSTALL_ADMIN_SETUP_MODE_ADMIN_USER;
+    }
+
+    return ZC_INSTALL_ADMIN_SETUP_MODE_DIRECTORY;
+}
+
+function zc_install_error_text_admin_email(): string
+{
+    return defined('TEXT_ADMIN_SETUP_MATCHING_EMAIL')
+        ? TEXT_ADMIN_SETUP_MATCHING_EMAIL
+        : 'A matching valid email address is required.';
+}
+
+/**
+ * @return array<string, string>
+ */
+function zc_install_validate_admin_setup_request(array $post): array
+{
+    $errorList = [];
+    $adminDir = $post['adminDir'] ?? null;
+    if (!is_string($adminDir) || !zc_install_is_safe_admin_directory(trim($adminDir))) {
+        $errorList['adminDir'] = 'Admin directory is required';
+    }
+
+    if (zc_install_admin_setup_request_mode($post) === ZC_INSTALL_ADMIN_SETUP_MODE_ADMIN_USER) {
+        if (empty($post['admin_user']) || !is_string($post['admin_user'])) {
+            $errorList['admin_user'] = 'Username is required';
+        }
+        if (
+            empty($post['admin_email'])
+            || empty($post['admin_email2'])
+            || !is_string($post['admin_email'])
+            || !is_string($post['admin_email2'])
+            || $post['admin_email'] !== $post['admin_email2']
+            || filter_var($post['admin_email'], FILTER_VALIDATE_EMAIL) === false
+        ) {
+            $errorList['admin_email2'] = zc_install_error_text_admin_email();
+        }
+
+        return $errorList;
+    }
+
+    $requiredInstallFields = [
+        'action',
+        'physical_path',
+        'http_server_admin',
+        'http_server_catalog',
+        'db_type',
+        'db_host',
+        'db_user',
+        'db_name',
+        'sql_cache_method',
+    ];
+    foreach ($requiredInstallFields as $field) {
+        if (!isset($post[$field]) || !is_scalar($post[$field]) || trim((string)$post[$field]) === '') {
+            $errorList[$field] = 'Required installer field is missing';
+        }
+    }
+
+    if (($post['action'] ?? '') !== 'process') {
+        $errorList['action'] = 'Invalid installer action';
+    }
+
+    return $errorList;
+}
 

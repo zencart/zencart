@@ -17,25 +17,23 @@ $error = false;
 $errorList = [];
 $response = [];
 
-// validation
-if (empty($_POST['admin_user'])) {
-    $error = true;
-    $errorList['admin_user'] = 'Username is required';
-}
-if (empty($_POST['admin_email']) || empty($_POST['admin_email2']) || $_POST['admin_email'] !== $_POST['admin_email2']) {
-    $error = true;
-    $errorList['admin_email2'] = TEXT_ADMIN_SETUP_MATCHING_EMAIL;
+$requestMode = zc_install_admin_setup_request_mode($_POST);
+$errorList = zc_install_validate_admin_setup_request($_POST);
+if (!empty($errorList)) {
+    echo json_encode([
+        'error' => true,
+        'errorList' => $errorList,
+    ]);
+    die();
 }
 
-if ($error) {
-    $response = [
-        'error' => $error,
-        'errorList' => $errorList,
-    ];
+if ($requestMode === ZC_INSTALL_ADMIN_SETUP_MODE_ADMIN_USER) {
+    echo json_encode(['error' => false]);
+    die();
 }
 
 // prepare directory-related responses
-$adminDir = $_POST['adminDir'] ?? 'admin';
+$adminDir = trim((string)$_POST['adminDir']);
 $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
 $max = count($wordlist) - 1;
 $word1 = trim($wordlist[zen_pwd_rand(0, $max)]);
@@ -56,6 +54,7 @@ if ($adminDir === 'admin' && (!defined('DEVELOPER_MODE') || DEVELOPER_MODE === f
         $adminDir = $adminNewDir;
     }
 }
+$response['error'] = false;
 $response['changedDir'] = (int)$result;
 $response['adminNewDir'] = $adminNewDir;
 $response['adminDir'] = $adminDir;

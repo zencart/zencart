@@ -180,11 +180,20 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
                             },
-                            body: str
-                        }).then((response) => response.json())
-                        .then((data) => {
-                            const i1 = document.createElement("input");
-                            i1.type = 'hidden';
+	                            body: str
+	                        }).then((response) => response.json())
+	                        .then((data) => {
+                                if (data.error === true) {
+                                    let errorString = '';
+                                    for (let i in data.errorList) {
+                                        errorString += '<li>' + data.errorList[i] + '</li>';
+                                    }
+                                    document.getElementById('install-errors-content').innerHTML = '<ul>' + errorString + '</ul>';
+                                    (new bootstrap.Modal('#install-errors')).show();
+                                    return;
+                                }
+	                            const i1 = document.createElement("input");
+	                            i1.type = 'hidden';
                             i1.name = 'adminDir';
                             i1.value = data.adminDir;
                             myform.appendChild(i1);
