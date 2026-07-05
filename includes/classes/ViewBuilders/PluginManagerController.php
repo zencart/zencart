@@ -431,7 +431,8 @@ class PluginManagerController extends BaseController
      */
     protected function processActionConfirmCleanUp(): void
     {
-        if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
+        $versions = $this->selectedCleanupVersions();
+        if (empty($versions)) {
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -448,8 +449,10 @@ class PluginManagerController extends BaseController
             'class="form-horizontal"'
         ));
         $this->setBoxContent('<br>' . TEXT_INFO_CONFIRM_CLEAN . '<br>');
-        foreach ($this->request->input('version') as $version) {
-            $this->setBoxContent('<br>' . $version . zen_draw_hidden_field('version[]', $version));
+        foreach ($versions as $version) {
+            $this->setBoxContent(
+                '<br>' . zen_output_string_protected($version) . zen_draw_hidden_field('version[]', $version)
+            );
         }
         $this->setBoxContent(
             '<br><button type="submit" class="btn btn-danger">'
@@ -465,7 +468,8 @@ class PluginManagerController extends BaseController
      */
     protected function processActionDoCleanup(): void
     {
-        if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
+        $versions = $this->selectedCleanupVersions();
+        if (empty($versions)) {
             zen_redirect(
                 zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
@@ -474,11 +478,11 @@ class PluginManagerController extends BaseController
             );
         }
         $error = "";
-        foreach ($this->request->input('version') as $version) {
-            $path = DIR_FS_CATALOG . 'zc_plugins/' . $this->currentFieldValue('unique_key') . '/' . $version;
-            (new FileSystem())->deleteDirectory($path);
-            if (is_dir($path)) {
-                $error .= " :" . $path;
+        foreach ($versions as $version) {
+            $path = $this->cleanupVersionPath($version);
+            if ($path === null || !(new FileSystem())->deleteDirectory($path) || is_dir($path)) {
+                $error .= " :" . DIR_FS_CATALOG . 'zc_plugins/'
+                    . $this->currentFieldValue('unique_key') . '/' . $version;
             }
         }
         if ($error === "") {
@@ -486,9 +490,73 @@ class PluginManagerController extends BaseController
         } else {
             $this->messageStack->add_session(TEXT_CLEANUP_ERROR . $error, 'error');
         }
-        $this->notify('NOTIFY_PLUGINMANAGER_DO_CLEANUP', ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $this->request->input('version')]);
+        $this->notify(
+            'NOTIFY_PLUGINMANAGER_DO_CLEANUP',
+            ['plugin_key' => $this->currentFieldValue('unique_key'), 'version' => $versions]
+        );
 
         zen_redirect(zen_href_link(FILENAME_PLUGIN_MANAGER, $this->pageLink()));
+    }
+
+    /**
+     * @since ZC v2.3.0
+     *
+     * @return list<string>
+     */
+    protected function selectedCleanupVersions(): array
+    {
+        if (!$this->request->has('version') || !is_array($this->request->input('version'))) {
+            return [];
+        }
+
+        $allowedVersions = array_column(
+            $this->pluginManager->getPluginVersionsToClean(
+                $this->currentFieldValue('unique_key'),
+                $this->currentFieldValue('version')
+            ),
+            'version'
+        );
+        $allowedVersions = array_flip($allowedVersions);
+
+        $versions = [];
+        foreach ($this->request->input('version') as $version) {
+            if (!is_string($version) || !isset($allowedVersions[$version]) || !$this->isSafeCleanupVersion($version)) {
+                continue;
+            }
+            $versions[] = $version;
+        }
+
+        return array_values(array_unique($versions));
+    }
+
+    /**
+     * @since ZC v2.3.0
+     */
+    protected function isSafeCleanupVersion(string $version): bool
+    {
+        return $version !== ''
+            && $version !== '.'
+            && $version !== '..'
+            && !str_contains($version, '/')
+            && !str_contains($version, '\\');
+    }
+
+    /**
+     * @since ZC v2.3.0
+     */
+    protected function cleanupVersionPath(string $version): ?string
+    {
+        $pluginRoot = realpath(DIR_FS_CATALOG . 'zc_plugins/' . $this->currentFieldValue('unique_key'));
+        if ($pluginRoot === false) {
+            return null;
+        }
+
+        $path = realpath($pluginRoot . DIRECTORY_SEPARATOR . $version);
+        if ($path === false || dirname($path) !== $pluginRoot) {
+            return null;
+        }
+
+        return $path;
     }
 
     /**
