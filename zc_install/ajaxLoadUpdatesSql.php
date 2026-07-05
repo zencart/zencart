@@ -19,16 +19,33 @@ $versionArray = require DIR_FS_INSTALL . 'includes/version_upgrades.php';
 $error = false;
 $errorList = [];
 $db_type = 'mysql';
-$systemChecker = new systemChecker();
-$dbVersion = $systemChecker->findCurrentDbVersion();
-$postedVersion = sanitize_version($_POST['version']);
+$postedVersion = sanitize_version($_POST['version'] ?? '');
 $updateVersion = str_replace(['version-', '_'], ['', '.'], $postedVersion);
-$versionInfo = $versionArray[$updateVersion];
+$versionInfo = $versionArray[$updateVersion] ?? null;
 
 $batchSize = $_POST['batchSize'] ?? 0;
 $batchInstance = $_POST['batchInstance'] ?? 0;
+$upgradeAuthNonce = $_POST['upgradeAuthNonce'] ?? '';
 
-if ($versionInfo['required'] !== $dbVersion) {
+if (
+    !is_string($upgradeAuthNonce)
+    || !zc_install_start_installer_session()
+    || !zc_install_is_upgrade_request_authorized($upgradeAuthNonce, $updateVersion)
+    || !is_array($versionInfo)
+) {
+    $error = true;
+    $errorList[] = TEXT_ERROR_UPGRADE_NOT_AUTHORIZED;
+}
+
+if ($error) {
+    echo json_encode(['error' => $error, 'version' => $updateVersion, 'errorList' => $errorList]);
+    die();
+}
+
+$systemChecker = new systemChecker();
+$dbVersion = $systemChecker->findCurrentDbVersion();
+
+if (!$error && $versionInfo['required'] !== $dbVersion) {
     $error = true;
     if (empty($versionInfo['required'])) {
         $versionInfo['required'] = '[ ERROR: NOT READY FOR UPGRADES YET. NOTIFY DEV TEAM!] ';
@@ -99,8 +116,12 @@ if ($sql_files !== false) {
 
 echo json_encode(['error' => $error, 'version' => $updateVersion, 'errorList' => $errorList]);
 
-function sanitize_version($version)
+function sanitize_version($version): string
 {
-    $sanitizedString = preg_replace('/[^a-zA-Z0-9_-]/', '', $version);
+    if (!is_scalar($version)) {
+        return '';
+    }
+
+    $sanitizedString = preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$version);
     return $sanitizedString;
 }

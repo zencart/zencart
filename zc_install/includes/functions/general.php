@@ -5,8 +5,12 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: JSWebSteve 2026 Jan 30 Modified in v2.2.1 $
+ * @version $Id: DrByte   Modified in v2.3.0 $
  */
+
+const ZC_INSTALL_SESSION_NAME = 'zenInstallerId';
+const ZC_INSTALL_UPGRADE_AUTH_SESSION_KEY = 'zcInstallUpgradeAuth';
+const ZC_INSTALL_UPGRADE_AUTH_TTL = 600;
 
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) {
     define('TABLE_UPGRADE_EXCEPTIONS', 'upgrade_exceptions');
@@ -160,6 +164,80 @@ function getDetectedURIs($adminDir = 'admin'): array
     $dir_ws_https_catalog = str_replace($catalogHttpsServer, '', $catalogHttpsUrl) . '/';
 
     return [$adminDir, $documentRoot, $adminServer, $catalogHttpServer, $catalogHttpUrl, $catalogHttpsServer, $catalogHttpsUrl, $dir_ws_http_catalog, $dir_ws_https_catalog];
+}
+
+function zc_install_start_installer_session(): bool
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return true;
+    }
+
+    if (session_status() === PHP_SESSION_DISABLED) {
+        return false;
+    }
+
+    session_name(ZC_INSTALL_SESSION_NAME);
+    return @session_start();
+}
+
+/**
+ * @return list<string>
+ */
+function zc_install_upgrade_versions_for_db_version(?string $dbVersion, array $versionArray): array
+{
+    if ($dbVersion === null || $dbVersion === '') {
+        return [];
+    }
+
+    $upgradeableVersions = array_keys($versionArray);
+    $key = array_search($dbVersion, $upgradeableVersions, true);
+    if ($key === false) {
+        return [];
+    }
+
+    return array_values(array_slice($upgradeableVersions, $key + 1));
+}
+
+function zc_install_create_upgrade_authorization(int $adminId, ?string $dbVersion, array $versionArray): string
+{
+    $allowedVersions = zc_install_upgrade_versions_for_db_version($dbVersion, $versionArray);
+    if (empty($allowedVersions)) {
+        return '';
+    }
+
+    $nonce = bin2hex(random_bytes(32));
+    $_SESSION[ZC_INSTALL_UPGRADE_AUTH_SESSION_KEY] = [
+        'admin_id' => $adminId,
+        'nonce' => $nonce,
+        'db_version' => $dbVersion,
+        'allowed_versions' => $allowedVersions,
+        'expires_at' => time() + ZC_INSTALL_UPGRADE_AUTH_TTL,
+    ];
+
+    return $nonce;
+}
+
+function zc_install_is_upgrade_request_authorized(string $nonce, string $updateVersion): bool
+{
+    $auth = $_SESSION[ZC_INSTALL_UPGRADE_AUTH_SESSION_KEY] ?? null;
+    if (!is_array($auth)) {
+        return false;
+    }
+
+    if (!is_string($auth['nonce'] ?? null) || !hash_equals($auth['nonce'], $nonce)) {
+        return false;
+    }
+
+    if (!is_int($auth['expires_at'] ?? null) || $auth['expires_at'] < time()) {
+        unset($_SESSION[ZC_INSTALL_UPGRADE_AUTH_SESSION_KEY]);
+        return false;
+    }
+
+    if (!is_array($auth['allowed_versions'] ?? null)) {
+        return false;
+    }
+
+    return in_array($updateVersion, $auth['allowed_versions'], true);
 }
 
 

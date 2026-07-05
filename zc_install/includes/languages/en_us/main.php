@@ -108,6 +108,7 @@ return [
 'TEXT_HELP_CONTENT_UPGRADEADMINPWD' => '%%TEXT_HELP_CONTENT_UPGRADEADMINNAME%%',
 'TEXT_VALIDATION_ADMIN_PASSWORD' => 'A valid password is required',
 'TEXT_ERROR_ADMIN_CREDENTIALS' => 'Could not verify the Admin Credentials you provided.<br><br>' . '%%TEXT_HELP_CONTENT_UPGRADEADMINNAME%%',
+'TEXT_ERROR_UPGRADE_NOT_AUTHORIZED' => 'The database upgrade request was not authorized. Please re-enter the admin credentials and try again.',
 'TEXT_UPGRADE_IN_PROGRESS' => 'Upgrade running. Progress of each step is indicated below ...',
 'TEXT_UPGRADE_TO_VER_X_COMPLETED' => 'Upgrade to version %s completed.',
 'TEXT_CANNOT_DETECT_VERSION' => 'FATAL ERROR: Cannot detect existing Zen Cart database version. Either it is too old (before v1.2.6, in which case upgrade to v1.2.6 first) or it is seriously damaged.',

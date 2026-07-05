@@ -12,6 +12,7 @@ define('DIR_FS_ROOT', realpath(__DIR__ . '/../') . '/');
 require DIR_FS_INSTALL . 'includes/application_top.php';
 
 $error = false;
+$upgradeAuthNonce = '';
 $systemChecker = new systemChecker();
 $adminCandidate = $systemChecker->validateAdminCredentials(
     trim(stripslashes($_POST['admin_user'] ?? '')),
@@ -21,6 +22,20 @@ $adminCandidate = $systemChecker->validateAdminCredentials(
 if (!is_int($adminCandidate)) {
     $error = !$adminCandidate;
     $adminCandidate = '';
+} elseif (!zc_install_start_installer_session()) {
+    $error = true;
+    $adminCandidate = '';
+} else {
+    $versionArray = require DIR_FS_INSTALL . 'includes/version_upgrades.php';
+    $upgradeAuthNonce = zc_install_create_upgrade_authorization(
+        $adminCandidate,
+        $systemChecker->findCurrentDbVersion(),
+        $versionArray
+    );
+    if ($upgradeAuthNonce === '') {
+        $error = true;
+        $adminCandidate = '';
+    }
 }
 
-echo json_encode(compact('error', 'adminCandidate'));
+echo json_encode(compact('error', 'adminCandidate', 'upgradeAuthNonce'));

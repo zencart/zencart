@@ -99,6 +99,7 @@ if (count($newArray)) { ?>
         if (form.id === 'db_upgrade_done') {
             form.submit();
         }
+        let upgradeAuthNonce = '';
         $.ajax({
             type: "POST",
             timeout: 10000,
@@ -110,6 +111,7 @@ if (count($newArray)) { ?>
                     $('#admin-validation-errors-content').html('<p><?= TEXT_ERROR_ADMIN_CREDENTIALS ?></p>');
                     (new bootstrap.Modal('#admin-validation-errors')).show();
                 } else {
+                    upgradeAuthNonce = data.upgradeAuthNonce;
                     $('#admin_password').val('');
                     $('#upgradeHeaderMessage').addClass('alert-secondary').text('<?= TEXT_UPGRADE_IN_PROGRESS ?>');
                     $('.upgrade-hide-area').hide();
@@ -191,7 +193,7 @@ if (count($newArray)) { ?>
             return $.ajax({
                 type: "post",
                 url: "ajaxLoadUpdatesSql.php",
-                data: {version: version, batchSize: size, batchInstance: instance},
+                data: {version: version, batchSize: size, batchInstance: instance, upgradeAuthNonce: upgradeAuthNonce},
                 dataType: "JSON"
             });
         }
