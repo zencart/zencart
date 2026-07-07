@@ -9,7 +9,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 $adjustWarnIssues = false;
 ?>
 <form id="systemCheck" name="systemCheck" method="post" action="index.php?main_page=<?= $formAction ?>">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zc_install_escape_html($installer_lng) ?>">
     <?php
     if ($hasMultipleAdmins) {
         $adjustWarnIssues = true;
@@ -35,7 +35,7 @@ $adjustWarnIssues = false;
 
     <?php
     } else { ?>
-        <input type="hidden" name="adminDir" value="<?= $selectedAdminDir ?>">
+        <input type="hidden" name="adminDir" value="<?= zc_install_escape_html($selectedAdminDir) ?>">
     <?php
     }
     ?>
@@ -79,14 +79,14 @@ $adjustWarnIssues = false;
             <?php
             foreach ($listFatalErrors as $error) { ?>
                 <div class="alert bg-danger">
-                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText link-dark fw-bold" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
+                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText link-dark fw-bold" id="' . zc_install_escape_html($error['mainErrorTextHelpId']) . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
                         <?= ($error['mainErrorText']) ?>
                         <?= (isset($error['mainErrorTextHelpId'])) ? '<i class="bi-question-circle"></i>' : '' ?>
                     </a>
                     <?php
                     if (isset($error['extraErrors'])) {
                         foreach ($error['extraErrors'] as $detailError) { ?>
-                            <br><?= $detailError ?>
+                            <br><?= zc_install_escape_html($detailError) ?>
                     <?php
                         }
                     }
@@ -108,14 +108,14 @@ $adjustWarnIssues = false;
             <?php
             foreach ($listLocalAlerts as $error) { ?>
                 <div class="alert alert-warning">
-                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
+                    <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . zc_install_escape_html($error['mainErrorTextHelpId']) . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
                         <?= ($error['mainErrorText']) ?>
                         <?= (isset($error['mainErrorTextHelpId'])) ? '<i class="bi-question-circle"></i>' : '' ?>
                     </a>
                     <?php
                     if (isset($error['extraErrors'])) {
                         foreach ($error['extraErrors'] as $detailError) { ?>
-                            <br><?= $detailError ?>
+                            <br><?= zc_install_escape_html($detailError) ?>
                         <?php
                         }
                     }
@@ -156,7 +156,7 @@ $adjustWarnIssues = false;
             } else {
         ?>
             <div class="alert alert-secondary">
-                <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . $error['mainErrorTextHelpId'] . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
+                <a href="" <?= (isset($error['mainErrorTextHelpId'])) ? 'class="hasHelpText" id="' . zc_install_escape_html($error['mainErrorTextHelpId']) . '"' : 'class="hasNoHelpText link-dark text-decoration-none"' ?>>
                     <?= ($error['mainErrorText']) ?>
                     <?= (isset($error['mainErrorTextHelpId'])) ? '<i class="bi-question-circle"></i>' : '' ?>
                 </a>
@@ -166,7 +166,7 @@ $adjustWarnIssues = false;
                 if (isset($error['extraErrors'])) { ?>
                     <?php
                     foreach ($error['extraErrors'] as $detailError) { ?>
-                        <br><?= $detailError ?>
+                        <br><?= zc_install_escape_html($detailError) ?>
                     <?php
                     }
                 } ?>
@@ -191,17 +191,17 @@ $adjustWarnIssues = false;
         } ?>
         <?php
         if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && !$isCurrentDb && $hasUpdatedConfigFile && $hasTables) { ?>
-            <input type="submit" class="zc-upg btn btn-primary" id="btnsubmit" name="btnsubmit" value="<?= TEXT_UPGRADE ?>" tabindex="2" title="<?= TEXT_UPGRADE_INFO ?>">
+            <input type="submit" class="zc-upg btn btn-primary" id="btnsubmit" name="btnsubmit" value="<?= TEXT_UPGRADE ?>" tabindex="2" title="<?= zc_install_escape_html(TEXT_UPGRADE_INFO) ?>">
         <?php
         } ?>
         <?php
         if (!$hasFatalErrors && $hasSaneConfigFile && !$hasUpgradeErrors && $hasUpdatedConfigFile) { ?>
-            <input type="submit" class="zc-full btn btn-primary" id="btnsubmit1" name="btnsubmit" value="<?= TEXT_CLEAN_INSTALL ?>" tabindex="3" title="<?= TEXT_CLEAN_INSTALL_INFO ?>">
+            <input type="submit" class="zc-full btn btn-primary" id="btnsubmit1" name="btnsubmit" value="<?= TEXT_CLEAN_INSTALL ?>" tabindex="3" title="<?= zc_install_escape_html(TEXT_CLEAN_INSTALL_INFO) ?>">
         <?php
         } ?>
         <?php
         if ($hasUpgradeErrors && $hasSaneConfigFile && $hasUpdatedConfigFile) { ?>
-            <input type="submit" class="zc-full btn btn-primary" id="btnsubmit2" name="btnsubmit" value="<?= TEXT_CLEAN_INSTALL ?>" tabindex="4" title="<?= TEXT_CLEAN_INSTALL_INFO ?>">
+            <input type="submit" class="zc-full btn btn-primary" id="btnsubmit2" name="btnsubmit" value="<?= TEXT_CLEAN_INSTALL ?>" tabindex="4" title="<?= zc_install_escape_html(TEXT_CLEAN_INSTALL_INFO) ?>">
         <?php
         } ?>
         <?php

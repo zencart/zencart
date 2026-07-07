@@ -75,7 +75,10 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 type: "POST",
                 timeout: 10000,
                 dataType: "json",
-                data: 'id=' + textId + '&lng=<?= $installer_lng ?>',
+                data: {
+                    id: textId,
+                    lng: <?= json_encode((string)$installer_lng) ?>
+                },
                 url: 'ajaxGetHelpText.php',
                 success: function (data) {
                     $('#modal-help-title').html(data.title);

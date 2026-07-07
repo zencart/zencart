@@ -22,11 +22,11 @@ function zen_get_select_options(array $optionList, string|int $setDefault): stri
 {
     $optionString = "";
     foreach ($optionList as $option) {
-        $optionString .= '<option value="' . $option['id'] . '"';
+        $optionString .= '<option value="' . zc_install_escape_html($option['id']) . '"';
         if ((string)$setDefault === (string)$option['id']) {
             $optionString .= " selected ";
         }
-        $optionString .= '>' . $option['text'];
+        $optionString .= '>' . zc_install_escape_html($option['text']);
         $optionString .= '</option>';
     }
     return $optionString;
@@ -125,7 +125,63 @@ function zen_sanitize_request(): void
  */
 function zen_output_string_protected(string $string): string
 {
-    return htmlspecialchars($string, ENT_COMPAT, 'utf-8', true);
+    return zc_install_escape_html($string);
+}
+
+function zc_install_escape_html(mixed $value): string
+{
+    return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+/**
+ * @return string[]
+ */
+function zc_install_allowed_hidden_post_fields(): array
+{
+    return [
+        'lng',
+        'adminDir',
+        'changedDir',
+        'adminNewDir',
+        'upgrade_mode',
+        'updateConfigure',
+        'dir_ws_http_catalog',
+        'dir_ws_https_catalog',
+        'detected_http_server_catalog',
+        'detected_https_server_catalog',
+        'detected_detected_http_server_catalog',
+        'detected_detected_https_server_catalog',
+        'db_type',
+        'http_server_admin',
+        'http_server_catalog',
+        'http_url_catalog',
+        'https_server_catalog',
+        'https_url_catalog',
+        'physical_path',
+        'db_host',
+        'db_user',
+        'db_password',
+        'db_name',
+        'demoData',
+        'db_charset',
+        'db_prefix',
+        'sql_cache_method',
+    ];
+}
+
+function zc_install_render_hidden_post_fields(array $post, array $exclude = []): string
+{
+    $fields = '';
+    $excludedFields = array_flip($exclude);
+    foreach (zc_install_allowed_hidden_post_fields() as $fieldName) {
+        if (isset($excludedFields[$fieldName]) || !isset($post[$fieldName]) || !is_scalar($post[$fieldName])) {
+            continue;
+        }
+        $fields .= '<input type="hidden" name="' . zc_install_escape_html($fieldName) . '" value="'
+            . zc_install_escape_html($post[$fieldName]) . '">' . PHP_EOL;
+    }
+
+    return $fields;
 }
 
 function zen_get_install_languages_list(string $lng): string
@@ -133,11 +189,11 @@ function zen_get_install_languages_list(string $lng): string
     global $languagesInstalled;
     $optionString = "";
     foreach ($languagesInstalled as $code => $language) {
-        $optionString .= '<option value="' . $code . '"';
+        $optionString .= '<option value="' . zc_install_escape_html($code) . '"';
         if ((string)$code === $lng) {
             $optionString .= " selected ";
         }
-        $optionString .= '>' . $language['displayName'];
+        $optionString .= '>' . zc_install_escape_html($language['displayName']);
         $optionString .= "</option>";
     }
     return $optionString;
@@ -320,4 +376,3 @@ function zc_install_validate_admin_setup_request(array $post): array
 
     return $errorList;
 }
-
