@@ -122,10 +122,12 @@ unset($spiders);
  * set host_address once per session to reduce load on server
  */
 if (!isset($_SESSION['customers_host_address'])) {
-    if (SESSION_IP_TO_HOST_ADDRESS === 'true' || !defined('OFFICE_IP_TO_HOST_ADDRESS')) {
+    if (SESSION_IP_TO_HOST_ADDRESS === 'true' && !empty(trim($_SERVER['REMOTE_ADDR'], '.'))) {
         $_SESSION['customers_host_address'] = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
-    } else {
+    } elseif (defined('OFFICE_IP_TO_HOST_ADDRESS')) {
         $_SESSION['customers_host_address'] = OFFICE_IP_TO_HOST_ADDRESS;
+    } else {
+        $_SESSION['customers_host_address'] = '';
     }
 }
 
