@@ -9,13 +9,13 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 ?>
 <form id="system_setup" name="system_setup" method="post" action="index.php?main_page=database" class="needs-validation">
     <input type="hidden" name="action" value="process">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
-    <input type="hidden" name="dir_ws_http_catalog" value="<?= $dir_ws_http_catalog ?>">
-    <input type="hidden" name="dir_ws_https_catalog" value="<?= $dir_ws_https_catalog ?>">
-    <input type="hidden" name="detected_detected_http_server_catalog" value="<?= $catalogHttpServer ?>">
-    <input type="hidden" name="detected_detected_https_server_catalog" value="<?= $catalogHttpsServer ?>">
-    <input type="hidden" name="adminDir" value="<?= $adminDir ?>">
-    <input type="hidden" name="db_type" value="<?= $db_type ?>">
+    <input type="hidden" name="lng" value="<?= zc_install_escape_html($installer_lng) ?>">
+    <input type="hidden" name="dir_ws_http_catalog" value="<?= zc_install_escape_html($dir_ws_http_catalog) ?>">
+    <input type="hidden" name="dir_ws_https_catalog" value="<?= zc_install_escape_html($dir_ws_https_catalog) ?>">
+    <input type="hidden" name="detected_detected_http_server_catalog" value="<?= zc_install_escape_html($catalogHttpServer) ?>">
+    <input type="hidden" name="detected_detected_https_server_catalog" value="<?= zc_install_escape_html($catalogHttpsServer) ?>">
+    <input type="hidden" name="adminDir" value="<?= zc_install_escape_html($adminDir) ?>">
+    <input type="hidden" name="db_type" value="<?= zc_install_escape_html($db_type) ?>">
 
     <fieldset class="border rounded p-3 mt-2">
         <legend>License</legend>
@@ -47,7 +47,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_server_admin" class="form-control" type="url" value="<?= $adminServer ?>" name="http_server_admin" tabindex="2" placeholder="ie: https:/www.your_domain.com" required>
+                <input id="http_server_admin" class="form-control" type="url" value="<?= zc_install_escape_html($adminServer) ?>" name="http_server_admin" tabindex="2" placeholder="ie: https:/www.your_domain.com" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_ADMINSERVERDOMAIN ?></div>
             </div>
         </div>
@@ -78,7 +78,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_server_catalog" class="form-control" type="url" value="<?= $catalogHttpServer ?>" name="http_server_catalog" tabindex="4" placeholder="ie: http:/www.your_domain.com" required>
+                <input id="http_server_catalog" class="form-control" type="url" value="<?= zc_install_escape_html($catalogHttpServer) ?>" name="http_server_catalog" tabindex="4" placeholder="ie: http:/www.your_domain.com" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPSERVERCATALOG ?></div>
             </div>
         </div>
@@ -91,7 +91,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="http_url_catalog" class="form-control" type="url" value="<?= $catalogHttpUrl ?>" name="http_url_catalog" tabindex="5" placeholder="ie: http:/www.your_domain.com">
+                <input id="http_url_catalog" class="form-control" type="url" value="<?= zc_install_escape_html($catalogHttpUrl) ?>" name="http_url_catalog" tabindex="5" placeholder="ie: http:/www.your_domain.com">
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPURLCATALOG ?></div>
             </div>
         </div>
@@ -105,7 +105,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="https_server_catalog" class="form-control" type="url" value="<?= $catalogHttpsServer ?>" name="https_server_catalog" tabindex="6" placeholder="ie: https:/www.your_domain.com" required>
+                <input id="https_server_catalog" class="form-control" type="url" value="<?= zc_install_escape_html($catalogHttpsServer) ?>" name="https_server_catalog" tabindex="6" placeholder="ie: https:/www.your_domain.com" required>
                 <div class="invalid-feedback"><?= TEXT_FORM_VALIDATION_CATALOG_HTTPS_URL ?></div>
             </div>
         </div>
@@ -119,7 +119,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-7">
-                <input id="https_url_catalog" class="form-control" type="url" value="<?= $catalogHttpsUrl ?>" name="https_url_catalog" tabindex="7" placeholder="ie: https:/www.your_domain.com">
+                <input id="https_url_catalog" class="form-control" type="url" value="<?= zc_install_escape_html($catalogHttpsUrl) ?>" name="https_url_catalog" tabindex="7" placeholder="ie: https:/www.your_domain.com">
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_HTTPSURLCATALOG ?></div>
             </div>
         </div>
@@ -133,7 +133,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-xs-12 col-md-7">
-                <input id="physical_path" class="form-control" type="text" value="<?= $documentRoot ?>" name="physical_path" tabindex="8" placeholder="ie: /yourserver/users/yourname/public_html/zencart" required>
+                <input id="physical_path" class="form-control" type="text" value="<?= zc_install_escape_html($documentRoot) ?>" name="physical_path" tabindex="8" placeholder="ie: /yourserver/users/yourname/public_html/zencart" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_PHYSICALPATH ?></div>
             </div>
         </div>
@@ -158,18 +158,19 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 form.submit();
                 return true;
             } else {
-                let errorList = data.errorList;
-                let errorString = '';
+                const errorList = document.createElement('ul');
                 let licenseError = false;
-                for (let i in errorList) {
-                    errorString += '<li>' + errorList[i] + '</li>';
+                for (let i in data.errorList) {
+                    const item = document.createElement('li');
+                    item.textContent = data.errorList[i];
+                    errorList.appendChild(item);
                     document.getElementById(i).classList.add("is-invalid", "invalid", "form-control:invalid", "form-control:is-invalid");
                     document.getElementById(i).classList.remove("is-valid", "valid", "form-control:valid", "form-control:is-valid");
                     if (i === 'agreeLicense') {
                         licenseError = true;
                     }
                 }
-                (document.getElementById('system-setup-errors-content')).innerHTML= '<ul>'+errorString+'</ul>';
+                document.getElementById('system-setup-errors-content').replaceChildren(errorList);
 
                 if (licenseError === true) {
                     (document.getElementById('system-setup-errors-submit')).style.display = 'none';

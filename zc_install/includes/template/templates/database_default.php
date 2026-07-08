@@ -14,15 +14,8 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 
 <form id="db_setup" name="db_setup" method="post" action="index.php?main_page=admin_setup" class="needs-validation">
     <input type="hidden" name="action" value="process">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
-    <?php
-    foreach ($_POST as $key => $value) {
-        if ($key !== 'action') { ?>
-            <input type="hidden" name="<?= $key ?>" value="<?= $value ?>">
-        <?php
-        }
-    }
-    ?>
+    <input type="hidden" name="lng" value="<?= zc_install_escape_html($installer_lng) ?>">
+    <?= zc_install_render_hidden_post_fields($_POST, ['action', 'lng']) ?>
     <fieldset class="border rounded p-3 mt-2">
         <legend><?= TEXT_DATABASE_SETUP_SETTINGS ?></legend>
         <div class="row mb-2">
@@ -35,7 +28,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-xs-7 col-md-6">
-                <input class="form-control" type="text" name="db_host" id="db_host" value="<?= $db_host ?>" tabindex="1" autofocus="autofocus" placeholder="<?= htmlentities(TEXT_EXAMPLE_DB_HOST, ENT_QUOTES) ?>" required>
+                <input class="form-control" type="text" name="db_host" id="db_host" value="<?= zc_install_escape_html($db_host) ?>" tabindex="1" autofocus="autofocus" placeholder="<?= zc_install_escape_html(TEXT_EXAMPLE_DB_HOST) ?>" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_DBHOST ?></div>
             </div>
         </div>
@@ -49,7 +42,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-xs-7 col-md-6">
-                <input class="form-control" type="text" name="db_user" id="db_user" value="<?= $db_user ?>" tabindex="2" placeholder="<?= TEXT_EXAMPLE_DB_USER ?>" required>
+                <input class="form-control" type="text" name="db_user" id="db_user" value="<?= zc_install_escape_html($db_user) ?>" tabindex="2" placeholder="<?= zc_install_escape_html(TEXT_EXAMPLE_DB_USER) ?>" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_DBUSER ?></div>
             </div>
         </div>
@@ -63,7 +56,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-xs-7 col-md-6">
-                <input class="form-control" type="password" name="db_password" id="db_password" value="<?= $db_password ?>" tabindex="3" placeholder="<?= TEXT_EXAMPLE_DB_PWD ?>">
+                <input class="form-control" type="password" name="db_password" id="db_password" value="<?= zc_install_escape_html($db_password) ?>" tabindex="3" placeholder="<?= zc_install_escape_html(TEXT_EXAMPLE_DB_PWD) ?>">
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_DBPASSWORD ?></div>
             </div>
         </div>
@@ -77,7 +70,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-xs-7 col-md-6">
-                <input class="form-control" type="text" name="db_name" id="db_name" value="<?= $db_name ?>" tabindex="4" placeholder="<?= TEXT_EXAMPLE_DB_NAME ?>" required>
+                <input class="form-control" type="text" name="db_name" id="db_name" value="<?= zc_install_escape_html($db_name) ?>" tabindex="4" placeholder="<?= zc_install_escape_html(TEXT_EXAMPLE_DB_NAME) ?>" required>
                 <div class="invalid-feedback"><?= TEXT_HELP_CONTENT_DBNAME ?></div>
             </div>
         </div>
@@ -114,7 +107,7 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 </label>
             </div>
             <div class="col-xs-7 col-md-6">
-                <input class="form-control" type="text" name="db_prefix" id="db_prefix" value="<?= $db_prefix ?>" tabindex="7" placeholder="<?= TEXT_EXAMPLE_DB_PREFIX ?>">
+                <input class="form-control" type="text" name="db_prefix" id="db_prefix" value="<?= zc_install_escape_html($db_prefix) ?>" tabindex="7" placeholder="<?= zc_install_escape_html(TEXT_EXAMPLE_DB_PREFIX) ?>">
             </div>
         </div>
         <div class="row mb-2">
@@ -148,13 +141,18 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
         }).then((response) => response.json())
         .then((data) => {
             if (data.error === true) {
-                let dbErrorList = data.errorList['extraErrors'];
-                let errorString = '';
-                for (let i in dbErrorList) {
-                    errorString += '<li>' + dbErrorList[i] + '</li>';
+                const container = document.getElementById("connection-errors-content");
+                container.replaceChildren();
+                const heading = document.createElement('h4');
+                heading.textContent = data.errorList['mainErrorText'];
+                container.appendChild(heading);
+                const errorList = document.createElement('ul');
+                for (let i in data.errorList['extraErrors']) {
+                    const item = document.createElement('li');
+                    item.textContent = data.errorList['extraErrors'][i];
+                    errorList.appendChild(item);
                 }
-                let html = '<h4>' + data.errorList['mainErrorText'] + '</h4>' + '<ul>' + errorString + '</ul>';
-                document.getElementById("connection-errors-content").innerHTML = html;
+                container.appendChild(errorList);
                 (new bootstrap.Modal('#connection-errors')).show();
                 form.classList.remove("was-validated");
             } else {
@@ -170,8 +168,13 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
                 }).then((response) => response.json())
                 .then((data) => {
                     if (data.error === true) {
-                        let html = "<p><?= TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1 ?>" + data.file + "<?= TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2 ?></p>";
-                        document.getElementById('install-errors-content').innerHTML = html;
+                        const container = document.getElementById('install-errors-content');
+                        container.replaceChildren();
+                        const paragraph = document.createElement('p');
+                        paragraph.appendChild(document.createTextNode(<?= json_encode(TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS1) ?> + data.file));
+                        paragraph.appendChild(document.createElement('br'));
+                        paragraph.appendChild(document.createTextNode(<?= json_encode(trim(strip_tags(TEXT_DATABASE_SETUP_JSCRIPT_SQL_ERRORS2))) ?>));
+                        container.appendChild(paragraph);
                         (new bootstrap.Modal('#install-errors')).show();
                     } else {
                         fetch("ajaxAdminSetup.php", {
@@ -184,11 +187,14 @@ require DIR_FS_INSTALL . DIR_WS_INSTALL_TEMPLATE . 'partials/partial_modal_help.
 	                        }).then((response) => response.json())
 	                        .then((data) => {
                                 if (data.error === true) {
-                                    let errorString = '';
+                                    const errorList = document.createElement('ul');
                                     for (let i in data.errorList) {
-                                        errorString += '<li>' + data.errorList[i] + '</li>';
+                                        const item = document.createElement('li');
+                                        item.textContent = data.errorList[i];
+                                        errorList.appendChild(item);
                                     }
-                                    document.getElementById('install-errors-content').innerHTML = '<ul>' + errorString + '</ul>';
+                                    const container = document.getElementById('install-errors-content');
+                                    container.replaceChildren(errorList);
                                     (new bootstrap.Modal('#install-errors')).show();
                                     return;
                                 }

@@ -19,7 +19,7 @@ if (count($newArray)) { ?>
 <div id="upgradeResponsesHolder"></div>
 
 <form id="db_upgrade<?= (count($newArray)) ? '' : '_done' ?>" name="db_upgrade" method="post" action="index.php?main_page=completion" class="needs-validation">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
+    <input type="hidden" name="lng" value="<?= zc_install_escape_html($installer_lng) ?>">
     <input type="hidden" name="action" value="process">
     <?php
     if (count($newArray)) { ?>
@@ -34,10 +34,10 @@ if (count($newArray)) { ?>
                         $from = ($key === 0) ? ($dbVersion ?? $versionArray[$value]['required']): $newArray[($key - 1)]; ?>
                         <?php
                         $to = $value; ?>
-                        <div id="label-version-<?= str_replace('.', '_', $value) ?>" class="checkbox-wrapper">
-                            <label class="form-check-label" for="version-<?= str_replace('.', '_', $value) ?>">
-                                <input class="form-check-input" type="checkbox" name="version-<?= str_replace('.', '_', $value) ?>" id="version-<?= str_replace('.', '_', $value) ?>" checked="CHECKED">
-                                <?= $from . ' to  ' . $to ?></label>
+                        <div id="label-version-<?= zc_install_escape_html(str_replace('.', '_', $value)) ?>" class="checkbox-wrapper">
+                            <label class="form-check-label" for="version-<?= zc_install_escape_html(str_replace('.', '_', $value)) ?>">
+                                <input class="form-check-input" type="checkbox" name="version-<?= zc_install_escape_html(str_replace('.', '_', $value)) ?>" id="version-<?= zc_install_escape_html(str_replace('.', '_', $value)) ?>" checked="CHECKED">
+                                <?= zc_install_escape_html($from . ' to  ' . $to) ?></label>
                         </div>
                     <?php
                     } ?>

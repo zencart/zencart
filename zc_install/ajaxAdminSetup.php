@@ -33,7 +33,7 @@ if ($requestMode === ZC_INSTALL_ADMIN_SETUP_MODE_ADMIN_USER) {
 }
 
 // prepare directory-related responses
-$adminDir = trim((string)$_POST['adminDir']);
+$adminDir = zc_install_normalize_admin_directory($_POST['adminDir']) ?? 'admin';
 $wordlist = file(DIR_FS_INSTALL . 'includes/wordlist.csv');
 $max = count($wordlist) - 1;
 $word1 = trim($wordlist[zen_pwd_rand(0, $max)]);

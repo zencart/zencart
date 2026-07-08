@@ -14,7 +14,7 @@ if (!empty($errors)) { ?>
     <div class="alert alert-danger">
     <?php
     foreach ($errors as $errormessage) {
-        echo $errormessage . '<br>';
+        echo zc_install_escape_html($errormessage) . '<br>';
     }
     echo TEXT_ERROR_PROBLEMS_WRITING_CONFIGUREPHP_FILES;
     ?>
@@ -25,16 +25,8 @@ if (!empty($errors)) { ?>
 
 <form id="admin_setup" name="admin_setup" method="post" action="index.php?main_page=completion" class="needs-validation">
     <input type="hidden" name="action" value="process">
-    <input type="hidden" name="lng" value="<?= $installer_lng ?>">
-    <?php
-    foreach ($_POST as $key => $value) { ?>
-    <?php
-    if ($key !== 'action') { ?>
-        <input type="hidden" name="<?= $key ?>" value="<?= $value ?>">
-    <?php
-    } ?>
-    <?php
-    } ?>
+    <input type="hidden" name="lng" value="<?= zc_install_escape_html($installer_lng) ?>">
+    <?= zc_install_render_hidden_post_fields($_POST, ['action', 'lng']) ?>
     <fieldset class="border rounded p-3 mt-2">
         <legend><?= TEXT_ADMIN_SETUP_USER_SETTINGS ?></legend>
         <div class="row mb-2">
@@ -92,7 +84,7 @@ if (!empty($errors)) { ?>
                 </label>
             </div>
             <div class="col-6 col-md-5 col-lg-4">
-                <input class="form-control" type="text" name="admin_password" id="admin_password" value="<?= $admin_password ?>" readonly="readonly" tabindex="4" autocomplete="off">
+                <input class="form-control" type="text" name="admin_password" id="admin_password" value="<?= zc_install_escape_html($admin_password) ?>" readonly="readonly" tabindex="4" autocomplete="off">
             </div>
         </div>
         <div class="row mb-2">
@@ -118,7 +110,7 @@ if (!empty($errors)) { ?>
                 </label>
             </div>
             <div class="col-6 col-md-5 col-lg-4">
-                <input class="form-control" type="text" name="admin_directory" id="admin_directory" value="<?= $adminNewDir ?>" readonly="readonly" tabindex="5" autocomplete="off">
+                <input class="form-control" type="text" name="admin_directory" id="admin_directory" value="<?= zc_install_escape_html($adminNewDir) ?>" readonly="readonly" tabindex="5" autocomplete="off">
             </div>
         </div>
     </fieldset>
@@ -157,14 +149,15 @@ if (!empty($errors)) { ?>
                     form.submit();
                     return true;
                 } else {
-                    let errorList = data.errorList;
-                    let errorString = '';
-                    for (let i in errorList) {
-                        errorString += '<li>' + errorList[i] + '</li>';
+                    const errorList = document.createElement('ul');
+                    for (let i in data.errorList) {
+                        const item = document.createElement('li');
+                        item.textContent = data.errorList[i];
+                        errorList.appendChild(item);
                         document.getElementById(i).classList.add("form-control:is-invalid", "form-control:invalid", "is-invalid", "invalid");
                         document.getElementById(i).classList.remove("form-control:valid", "form-control:is-valid", "is-valid", "valid");
                     }
-                    $("#admin-validation-errors-content").html('<ul>'+errorString+'</ul>');
+                    document.getElementById('admin-validation-errors-content').replaceChildren(errorList);
 
                     (new bootstrap.Modal('#admin-validation-errors')).show();
                     form.classList.remove("was-validated");
