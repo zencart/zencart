@@ -133,6 +133,20 @@ function zc_install_escape_html(mixed $value): string
     return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function zc_install_normalize_admin_directory(mixed $adminDir): ?string
+{
+    if (!is_string($adminDir)) {
+        return null;
+    }
+
+    $adminDir = trim(stripslashes($adminDir));
+    if (!zc_install_is_safe_admin_directory($adminDir)) {
+        return null;
+    }
+
+    return $adminDir;
+}
+
 /**
  * @return string[]
  */
@@ -207,7 +221,7 @@ function getDetectedURIs($adminDir = 'admin'): array
 {
     global $request_type;
     if (isset($_POST['adminDir'])) {
-        $adminDir = zen_output_string_protected($_POST['adminDir']);
+        $adminDir = zc_install_normalize_admin_directory($_POST['adminDir']) ?? $adminDir;
     }
     $documentRoot = zen_get_document_root();
     $url = ($request_type === 'SSL' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . str_replace('/zc_install/index.php', '', $_SERVER['SCRIPT_NAME']);
@@ -300,12 +314,7 @@ function zc_install_is_upgrade_request_authorized(string $nonce, string $updateV
 
 function zc_install_is_safe_admin_directory(string $adminDir): bool
 {
-    return $adminDir !== ''
-        && $adminDir !== '.'
-        && $adminDir !== '..'
-        && !str_contains($adminDir, '/')
-        && !str_contains($adminDir, '\\')
-        && !str_contains($adminDir, "\0");
+    return preg_match('/\A[A-Za-z0-9_][A-Za-z0-9_-]{0,127}\z/', $adminDir) === 1;
 }
 
 function zc_install_admin_setup_request_mode(array $post): string
@@ -330,8 +339,8 @@ function zc_install_error_text_admin_email(): string
 function zc_install_validate_admin_setup_request(array $post): array
 {
     $errorList = [];
-    $adminDir = $post['adminDir'] ?? null;
-    if (!is_string($adminDir) || !zc_install_is_safe_admin_directory(trim($adminDir))) {
+    $adminDir = zc_install_normalize_admin_directory($post['adminDir'] ?? null);
+    if ($adminDir === null) {
         $errorList['adminDir'] = 'Admin directory is required';
     }
 

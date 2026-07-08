@@ -28,6 +28,21 @@ class InstallerOutputEncodingTest extends zcUnitTestCase
         $this->assertStringNotContainsString("'", $escaped);
     }
 
+    public function testAdminDirectoryNormalizationKeepsOnlySafeApexDirectoryNames(): void
+    {
+        $this->assertSame('admin', zc_install_normalize_admin_directory(' admin '));
+        $this->assertSame('my-admin_123', zc_install_normalize_admin_directory('my-admin_123'));
+        $this->assertSame('my-admin_123', zc_install_normalize_admin_directory('my\-admin_123'));
+
+        $this->assertNull(zc_install_normalize_admin_directory(''));
+        $this->assertNull(zc_install_normalize_admin_directory('.admin'));
+        $this->assertNull(zc_install_normalize_admin_directory('../admin'));
+        $this->assertNull(zc_install_normalize_admin_directory('admin/includes'));
+        $this->assertNull(zc_install_normalize_admin_directory('admin"><script>alert(1)</script>'));
+        $this->assertNull(zc_install_normalize_admin_directory('admin&amp;copy'));
+        $this->assertNull(zc_install_normalize_admin_directory(['admin']));
+    }
+
     public function testHiddenPostRendererAllowlistsFieldsAndEscapesValues(): void
     {
         $hiddenFields = zc_install_render_hidden_post_fields([

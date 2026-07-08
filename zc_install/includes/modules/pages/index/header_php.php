@@ -21,7 +21,10 @@ if (count($adminDirectoryList) > 1) {
     $hasMultipleAdmins = true;
 }
 if (isset($_POST['adminDir'])) {
-    $selectedAdminDir = zen_output_string_protected($_POST['adminDir']);
+    $postedAdminDir = zc_install_normalize_admin_directory($_POST['adminDir']);
+    if ($postedAdminDir !== null && in_array($postedAdminDir, $adminDirectoryList, true)) {
+        $selectedAdminDir = $postedAdminDir;
+    }
 }
 $systemChecker = new systemChecker($selectedAdminDir);
 if (isset($_POST['updateConfigure'])) {
