@@ -57,7 +57,7 @@ if (zen_has_product_attributes($pInfo->products_id, false)) {
 }
 
 // offer to copy additional-images if any are associated in the database
-if (zen_config('ADDITIONAL_IMAGES_HANDLING') === 'Database') {
+if (ADDITIONAL_IMAGES_HANDLING === 'Database') {
     $additional_images = $db->Execute("SELECT count(additional_image) AS count FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . (int)($pInfo->products_id ?? 0));
     if (($additional_images->fields['count'] ?? 0) > 0) {
         $contents[] = [
