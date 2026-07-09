@@ -83,7 +83,7 @@ if (!empty($action)) {
                 );
                 $messageStack->add_session(
                     sprintf(TEXT_VALUE_SAVED,
-                        zen_output_string_protected($checks->fields['configuration_title']),
+                        $checks->fields['configuration_title'],
                         '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
                         '<code>' . zen_output_string_protected($configuration_value) . '</code>'
                     ),
@@ -238,7 +238,7 @@ foreach ($configuration as $item) {
     <div class="row row-hover align-items-center py-2">
         <div class="col-md-3">
             <?php
-            echo '<strong>' . zen_output_string_protected($item['configuration_title']) . '</strong>';
+            echo '<strong>' . $item['configuration_title'] . '</strong>';
             if (ADMIN_CONFIGURATION_KEY_ON == 1) {
                 echo '<br>Key: ' . $item['configuration_key'];
             }
