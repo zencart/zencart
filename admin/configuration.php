@@ -83,7 +83,7 @@ if (!empty($action)) {
                 );
                 $messageStack->add_session(
                     sprintf(TEXT_VALUE_SAVED,
-                        zen_output_string_protected($checks->fields['configuration_title']),
+                        $checks->fields['configuration_title'],
                         '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
                         '<code>' . zen_output_string_protected($configuration_value) . '</code>'
                     ),
