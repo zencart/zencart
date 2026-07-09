@@ -238,7 +238,7 @@ foreach ($configuration as $item) {
     <div class="row row-hover align-items-center py-2">
         <div class="col-md-3">
             <?php
-            echo '<strong>' . zen_output_string_protected($item['configuration_title']) . '</strong>';
+            echo '<strong>' . $item['configuration_title'] . '</strong>';
             if (zen_config('ADMIN_CONFIGURATION_KEY_ON') == 1) {
                 echo '<br>Key: ' . $item['configuration_key'];
             }
