@@ -261,6 +261,28 @@ function zen_get_admin_module_from_directory(int $product_type, string $filename
     $product_type_foldername = zen_get_handler_from_type($product_type);
     if (file_exists(DIR_WS_MODULES . $product_type_foldername . '/' . $filename_to_check)) {
         $dir = DIR_WS_MODULES . $product_type_foldername . '/';
+    } else {
+        // Not shipped in core's own admin/includes/modules/ -- check installed plugins for
+        // an admin/includes/modules/<type_handler>/ directory of their own, so a plugin that
+        // registers a product type doesn't need its admin module files physically copied
+        // into DIR_WS_MODULES. Mirrors Zencart\FileSystem\FileSystem::findPluginAdminPage().
+        global $installedPlugins;
+        foreach ($installedPlugins ?? [] as $plugin) {
+            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
+            $resolvedPluginDir = realpath($pluginDir);
+            if ($resolvedPluginDir === false) {
+                continue;
+            }
+
+            $moduleDir = $pluginDir . '/admin/includes/modules/' . $product_type_foldername . '/';
+            $realModuleFile = realpath($moduleDir . $filename_to_check);
+            if ($realModuleFile === false || strpos($realModuleFile, $resolvedPluginDir) !== 0) {
+                continue;
+            }
+
+            $dir = $moduleDir;
+            break;
+        }
     }
 
     // As of v2.0.0 $dir_only is not currently used by core code, but is here for the convenience of plugins.
