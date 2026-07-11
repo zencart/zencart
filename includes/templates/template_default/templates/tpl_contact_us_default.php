@@ -72,7 +72,7 @@ if (zen_config('CONTACT_US_LIST') !== '') { ?>
 <label for="enquiry"><?= ENTRY_ENQUIRY ?></label>
 <?= zen_draw_textarea_field('enquiry', '30', '7', $enquiry, 'id="enquiry" placeholder="' . ENTRY_REQUIRED_SYMBOL . '" required') ?>
 
-<?= zen_draw_input_field($antiSpamFieldName, '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off"') ?>
+<?= zen_draw_input_field($antiSpamFieldName, '', ' size="40" id="CUAS" style="visibility:hidden; display:none;" autocomplete="off" aria-hidden="true"') ?>
 </fieldset>
 
 <div class="buttonRow forward"><?= zen_image_submit(BUTTON_IMAGE_SEND, BUTTON_SEND_ALT) ?></div>
