@@ -16,39 +16,26 @@ declare(strict_types=1);
 #[AllowDynamicProperties]
 class objectInfo
 {
-    private array $object_array;
-
-    public function __construct($object_array)
+    public function __construct(array $object_array)
     {
         $this->updateObjectInfo($object_array);
     }
 
     /**
-     * @param array $object_array
      * @since ZC v1.0.3
      */
-    public function objectInfo($object_array): void
+    public function objectInfo(array $object_array): void
     {
-        if (!is_array($object_array)) {
-            return;
-        }
-
         foreach ($object_array as $key => $value) {
             $this->$key = zen_db_prepare_input($value);
         }
-        $this->object_array = $object_array;
     }
 
     /**
-     * @param array $object_array
      * @since ZC v1.5.5
      */
-    public function updateObjectInfo($object_array): void
+    public function updateObjectInfo(array $object_array): void
     {
-        if (!is_array($object_array)) {
-            return;
-        }
-
         foreach ($object_array as $key => $value) {
             $this->$key = zen_db_prepare_input($value);
         }
@@ -57,7 +44,7 @@ class objectInfo
     /**
      * @since ZC v1.5.6
      */
-    public function __isset(string $field)
+    public function __isset(string $field): bool
     {
         return isset($this->$field);
     }
@@ -65,13 +52,12 @@ class objectInfo
     /**
      * @since ZC v1.5.6
      */
-    public function __set(string $field, mixed $value)
+    public function __set(string $field, mixed $value): void
     {
         $this->$field = $value;
     }
 
     /**
-     * @return array|string|null
      * @since ZC v1.5.6
      */
     public function __get(string $field): mixed
