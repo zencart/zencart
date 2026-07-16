@@ -286,12 +286,12 @@ Actionable examples for agents
 -----------------------------------------
 - Install deps and run unit tests:
   - composer install
-  - composer run-script unit-tests
-  - composer run-script feature-tests
+  - composer run-script tests-unit
+  - composer run-script tests-feature
 - Run feature tests for only the storefront:
-    - composer run-script feature-tests-store
+    - composer run-script tests-feature-store
 - Run feature tests for only the Admin side:
-    - composer run-script feature-tests-admin
+    - composer run-script tests-feature-admin
 
 NOTE: the app doesn't have any intended CLI entrypoints. 
 
