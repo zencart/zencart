@@ -71,7 +71,7 @@ if (!empty($action)) {
                 }
 
                 // Run any configuration validation checks
-                $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $key . "'");
+                $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . zen_db_input($key) . "'");
                 if (!$checks->EOF && $checks->fields['val_function'] !== null) {
                     require_once 'includes/functions/configuration_checks.php';
                     if (!zen_validate_configuration_entry($value, $checks->fields['val_function'], $checks->fields['configuration_title'])) {
