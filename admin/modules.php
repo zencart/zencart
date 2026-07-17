@@ -410,7 +410,7 @@ switch ($action) {
             }
             $keys .= '<b>' . $displayKey . zen_lookup_admin_menu_language_override('configuration_key_title', $key, $value['title']) . '</b><br>' . zen_lookup_admin_menu_language_override('configuration_key_description', $key, $value['description']) . '<br>';
             if ($value['set_function']) {
-                eval('$keys .= ' . $value['set_function'] . '"' . zen_output_string($value['value'], ['"' => '&quot;', '`' => 'null;return;exit;']) . '", "' . $key . '");');
+                $keys .= zen_render_config_set_function($value['set_function'], htmlspecialchars($value['value'], ENT_COMPAT, CHARSET, true), $key) ?? zen_draw_input_field('configuration[' . $key . ']', htmlspecialchars($value['value'], ENT_COMPAT, CHARSET, true), 'class="form-control"');
             } else {
                 $keys .= zen_draw_input_field('configuration[' . $key . ']', htmlspecialchars($value['value'], ENT_COMPAT, CHARSET, true), 'class="form-control"');
             }
@@ -470,16 +470,21 @@ switch ($action) {
                 if ($value['use_function']) {
                     $use_function = $value['use_function'];
                     if (str_contains($use_function, '->')) {
-                        $class_method = explode('->', $use_function);
-                        if (!class_exists($class_method[0])) {
-                            include_once DIR_WS_CLASSES . $class_method[0] . '.php';
+                        $class_method = explode('->', $use_function, 2);
+                        if (!zen_is_valid_config_use_function_class($class_method[0])) {
+                            zen_record_admin_activity('Blocked unregistered configuration use_function class [' . preg_replace('/[^\w.\-]/', '*', $class_method[0]) . '].', 'warning');
+                            $keys .= $value['value'];
+                        } else {
+                            if (!class_exists($class_method[0])) {
+                                include_once DIR_WS_CLASSES . $class_method[0] . '.php';
+                            }
+                            if (!is_object(${$class_method[0]})) {
+                                ${$class_method[0]} = new $class_method[0]();
+                            }
+                            $keys .= zen_call_config_use_function($class_method[1], $value['value'], ${$class_method[0]});
                         }
-                        if (!is_object(${$class_method[0]})) {
-                            ${$class_method[0]} = new $class_method[0]();
-                        }
-                        $keys .= zen_call_function($class_method[1], $value['value'], ${$class_method[0]});
                     } else {
-                        $keys .= zen_call_function($use_function, $value['value']);
+                        $keys .= zen_call_config_use_function($use_function, $value['value']);
                     }
                 } else {
                     $keys .= $value['value'];

@@ -189,14 +189,19 @@ if ($action === 'layout' || $action === 'layout_edit') {
         if (!empty($item['use_function'])) {
             $use_function = $item['use_function'];
             if (preg_match('/->/', $use_function)) {
-                $class_method = explode('->', $use_function);
-                if (!is_object(${$class_method[0]})) {
-                    include DIR_WS_CLASSES . $class_method[0] . '.php';
-                    ${$class_method[0]} = new $class_method[0]();
+                $class_method = explode('->', $use_function, 2);
+                if (!zen_is_valid_config_use_function_class($class_method[0])) {
+                    zen_record_admin_activity('Blocked unregistered configuration use_function class [' . preg_replace('/[^\w.\-]/', '*', $class_method[0]) . '].', 'warning');
+                    $cfgValue = $item['configuration_value'];
+                } else {
+                    if (!is_object(${$class_method[0]})) {
+                        include DIR_WS_CLASSES . $class_method[0] . '.php';
+                        ${$class_method[0]} = new $class_method[0]();
+                    }
+                    $cfgValue = zen_call_config_use_function($class_method[1], $item['configuration_value'], ${$class_method[0]});
                 }
-                $cfgValue = zen_call_function($class_method[1], $item['configuration_value'], ${$class_method[0]});
             } else {
-                $cfgValue = zen_call_function($use_function, $item['configuration_value']);
+                $cfgValue = zen_call_config_use_function($use_function, $item['configuration_value']);
             }
         } else {
             $cfgValue = $item['configuration_value'];
@@ -256,7 +261,7 @@ if ($action === 'layout' || $action === 'layout_edit') {
         $heading[] = ['text' => '<h4>' . $cInfo->configuration_title . '</h4>'];
 
         if ($cInfo->set_function) {
-            eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, true) . '");');
+            $value_field = zen_render_config_set_function($cInfo->set_function, htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, true)) ?? zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, true), 'size="60"');
         } else {
             $value_field = zen_draw_input_field('configuration_value', htmlspecialchars($cInfo->configuration_value, ENT_COMPAT, CHARSET, true), 'size="60"');
         }
