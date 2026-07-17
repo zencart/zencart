@@ -223,13 +223,13 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
 
     $dupCheckSql = "SELECT txn_id FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . "
                     WHERE txn_id = :txnId: AND payment_status = :paymentStatus: LIMIT 1";
-    $dupCheckSql = $db->bindVars($dupCheckSql, ':txnId:', $_POST['txn_id'], 'string');
+    $dupCheckSql = $db->bindVars($dupCheckSql, ':txnId:', $_POST['txn_id'] ?? ':BLANK:', 'string');
     $dupCheckSql = $db->bindVars($dupCheckSql, ':paymentStatus:', $_POST['payment_status'] ?? '', 'string');
     $priorStatusHistory = $db->Execute($dupCheckSql);
     $isDuplicateIpn = ($priorStatusHistory->RecordCount() > 0);
 
     ipn_debug_email(
-        'Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = ' . $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . (empty($_POST['parent_txn_id']) ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . $_POST['txn_id']
+        'Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = ' . $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . (empty($_POST['parent_txn_id']) ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . ($_POST['txn_id'] ?? '[not provided]')
     );
 
     // ignore auth_status == 'Expired'
@@ -284,10 +284,17 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
         case ($posted_txn_type === 'new_case'):
         case ($posted_txn_type === 'masspay'):
         case ($posted_txn_type === 'paypal_here'):
+        case ($posted_txn_type === 'adjustment'):
+        case ($posted_txn_type === 'merch_pmt'):
+        case ($posted_txn_type === 'mp_cancel'):
+        case ($posted_txn_type === 'payout'):
+        case ($posted_txn_type === 'virtual_terminal'):
+        case 'unknown':
             // these types are irrelevant to ZC transactions
             ipn_debug_email('IPN NOTICE :: Transaction txn_type not relevant to Zen Cart processing. IPN handler aborted.' . $posted_txn_type);
             die();
             break;
+        case (str_starts_with($posted_txn_type, 'recurring_payment')):
         case (str_starts_with($posted_txn_type, 'subscr_')):
             // For now we filter out subscription payments
             ipn_debug_email('IPN NOTICE :: Subscription payment - Not currently supported by Zen Cart. IPN handler aborted.');
