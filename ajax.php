@@ -43,6 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 const IS_AJAX_REQUEST = true;
+
+// -----
+// Buffer all output from this point forward. Nothing should be emitted ahead of the final
+// JSON response, but stray bytes (e.g. a UTF-8 BOM in a language file, an accidental notice)
+// can otherwise corrupt it; discard whatever accumulates before each response is sent.
+//
+ob_start();
 require $zc_ajax_base_dir . 'includes/application_top.php';
 
 // -----
@@ -67,6 +74,9 @@ function ajaxAbort($status = 400, $msg = null)
 {
     global $zc_ajax_base_dir;
     http_response_code($status); // 400 = "Bad Request"
+    if (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     if ($msg) {
         echo $msg;
     }
@@ -109,5 +119,8 @@ if (defined($className . '::ALLOWED_METHODS') && !in_array($_GET['method'], $cla
 
 // Accepted request, so execute and return appropriate response:
 $result = $class->{$_GET['method']}();
+if (ob_get_level() > 0) {
+    ob_end_clean();
+}
 echo json_encode($result);
 require $zc_ajax_base_dir . 'includes/application_bottom.php';
