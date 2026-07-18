@@ -85,6 +85,13 @@ class shoppingCart extends base
     protected const MAX_UPLOAD_COUNT = 50;
 
     /**
+     * Hard ceiling on the number of distinct products a single cart may hold.
+     * Guards against traffic floods that add many distinct products which
+     * balloon the session record and per-item queries.
+     */
+    protected const MAX_CART_DISTINCT_PRODUCTS = 200;
+
+    /**
      * Instantiate a new shopping cart object
      */
     public function __construct()
@@ -299,6 +306,10 @@ class shoppingCart extends base
 
         if ($this->in_cart($uprid)) {
             $this->update_quantity($uprid, $qty, $attributes);
+        } elseif (count($this->contents) >= self::MAX_CART_DISTINCT_PRODUCTS) {
+            $messageStack->add_session('header', WARNING_CART_ITEM_LIMIT_REACHED, 'caution');
+            $this->notify('NOTIFIER_CART_ADD_CART_END', null, $product_id, $qty, $attributes, $notify);
+            return;
         } else {
             $this->contents[] = [$uprid];  // @TODO - why is this line here? Appears to be removed in the call to cleanup(), so doesn't really serve any purpose here.
             $this->contents[$uprid] = ['qty' => (float)$qty];
