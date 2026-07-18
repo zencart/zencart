@@ -221,12 +221,15 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
     $txn_type = $lookupData['txn_type'];
     $parentLookup = $txn_type;
 
-    $dupCheckSql = "SELECT txn_id FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . "
-                    WHERE txn_id = :txnId: AND payment_status = :paymentStatus: LIMIT 1";
-    $dupCheckSql = $db->bindVars($dupCheckSql, ':txnId:', $_POST['txn_id'] ?? ':BLANK:', 'string');
-    $dupCheckSql = $db->bindVars($dupCheckSql, ':paymentStatus:', $_POST['payment_status'] ?? '', 'string');
-    $priorStatusHistory = $db->Execute($dupCheckSql);
-    $isDuplicateIpn = ($priorStatusHistory->RecordCount() > 0);
+    $isDuplicateIpn = false;
+    if (!empty($_POST['txn_id'])) {
+        $dupCheckSql = "SELECT txn_id FROM " . TABLE_PAYPAL_PAYMENT_STATUS_HISTORY . "
+                        WHERE txn_id = :txnId: AND payment_status = :paymentStatus: LIMIT 1";
+        $dupCheckSql = $db->bindVars($dupCheckSql, ':txnId:', $_POST['txn_id'], 'string');
+        $dupCheckSql = $db->bindVars($dupCheckSql, ':paymentStatus:', $_POST['payment_status'] ?? '', 'string');
+        $priorStatusHistory = $db->Execute($dupCheckSql);
+        $isDuplicateIpn = ($priorStatusHistory->RecordCount() > 0);
+    }
 
     ipn_debug_email(
         'Breakpoint: 4 - ' . 'Details:  txn_type=' . $txn_type . '    ordersID = ' . $ordersID . '  IPN_id=' . $paypalipnID . "\n\n" . '   Relevant data from POST:' . "\n     " . 'txn_type = ' . $txn_type . "\n     " . 'parent_txn_id = ' . (empty($_POST['parent_txn_id']) ? 'None' : $_POST['parent_txn_id']) . "\n     " . 'txn_id = ' . ($_POST['txn_id'] ?? '[not provided]')
@@ -275,22 +278,16 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
         die();
     }
 
+    // these types are irrelevant to ZC transactions
+    if (in_array($posted_txn_type, ['send_money', 'merch_payment', 'new_case', 'masspay', 'paypal_here', 'adjustment', 'merch_pmt', 'mp_cancel', 'payout', 'virtual_terminal'])) {
+        $txn_type = 'unknown';
+    }
+
     /**
      * take action based on transaction type and corresponding requirements
      */
     switch ($txn_type) {
-        case ($posted_txn_type === 'send_money'):
-        case ($posted_txn_type === 'merch_payment'):
-        case ($posted_txn_type === 'new_case'):
-        case ($posted_txn_type === 'masspay'):
-        case ($posted_txn_type === 'paypal_here'):
-        case ($posted_txn_type === 'adjustment'):
-        case ($posted_txn_type === 'merch_pmt'):
-        case ($posted_txn_type === 'mp_cancel'):
-        case ($posted_txn_type === 'payout'):
-        case ($posted_txn_type === 'virtual_terminal'):
         case 'unknown':
-            // these types are irrelevant to ZC transactions
             ipn_debug_email('IPN NOTICE :: Transaction txn_type not relevant to Zen Cart processing. IPN handler aborted.' . $posted_txn_type);
             die();
             break;
