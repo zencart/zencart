@@ -259,13 +259,23 @@ function zen_get_admin_module_from_directory(int $product_type, string $filename
 {
     $dir = DIR_WS_MODULES;
     $product_type_foldername = zen_get_handler_from_type($product_type);
-    if (file_exists(DIR_WS_MODULES . $product_type_foldername . '/' . $filename_to_check)) {
-        $dir = DIR_WS_MODULES . $product_type_foldername . '/';
+    $coreTypeDir = DIR_WS_MODULES . $product_type_foldername . '/';
+
+    if (is_dir($coreTypeDir)) {
+        // Core already ships (or reserves, e.g. admin/includes/modules/product/) a
+        // directory for this product type -- it's a known/existing type, so only core's
+        // own override convention applies here, even if this specific file isn't present.
+        // Plugins may not inject files into an existing core product-type slot; a plugin
+        // fallback is only offered below for types core has no directory for at all.
+        if (file_exists($coreTypeDir . $filename_to_check)) {
+            $dir = $coreTypeDir;
+        }
     } else {
-        // Not shipped in core's own admin/includes/modules/ -- check installed plugins for
-        // an admin/includes/modules/<type_handler>/ directory of their own, so a plugin that
-        // registers a product type doesn't need its admin module files physically copied
-        // into DIR_WS_MODULES. Mirrors Zencart\FileSystem\FileSystem::findPluginAdminPage().
+        // Not a product type core ships an admin/includes/modules/ subfolder for at all --
+        // check installed plugins for an admin/includes/modules/<type_handler>/ directory
+        // of their own, so a plugin that registers a brand-new product type doesn't need
+        // its admin module files physically copied into DIR_WS_MODULES. Mirrors
+        // Zencart\FileSystem\FileSystem::findPluginAdminPage().
         global $installedPlugins;
         foreach ($installedPlugins ?? [] as $plugin) {
             $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];

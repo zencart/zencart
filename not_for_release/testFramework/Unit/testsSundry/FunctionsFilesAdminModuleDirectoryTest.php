@@ -109,6 +109,37 @@ class FunctionsFilesAdminModuleDirectoryTest extends zcTemplateResolverTest
         $this->removeDirectory($otherPluginRoot);
     }
 
+    /**
+     * A core-shipped product-type directory (even one that doesn't contain the specific
+     * file being requested, e.g. admin/includes/modules/product/ which intentionally ships
+     * empty per HOW_OVERRIDES_WORK_HERE.txt) marks this as a type core already knows about.
+     * Plugins may only provide a fallback for types core has no directory for at all --
+     * this locks out plugins from injecting files into an existing core product-type slot.
+     */
+    public function testCoreDirectoryExistingLocksOutPluginFallbackEvenWithoutTheSpecificFile(): void
+    {
+        $this->mockDbForTypeHandler(self::TEST_HANDLER);
+        $this->registerTestPlugin();
+        $this->writeModuleFixture('collect_info.php');
+
+        $coreTypeDir = DIR_WS_MODULES . self::TEST_HANDLER . '/';
+        @mkdir($coreTypeDir, 0777, true);
+        // Core directory exists but does NOT contain collect_info.php.
+
+        try {
+            $resolved = zen_get_admin_module_from_directory(1, 'collect_info.php');
+
+            $this->assertSame(
+                DIR_WS_MODULES . 'collect_info.php',
+                $resolved,
+                'Expected fall-through to the base default location, not the plugin-provided file, '
+                . 'since the core product-type directory already exists.'
+            );
+        } finally {
+            $this->removeDirectory($coreTypeDir);
+        }
+    }
+
     public function testCoreFileTakesPriorityOverAPluginProvidedOne(): void
     {
         $this->mockDbForTypeHandler(self::TEST_HANDLER);
