@@ -350,6 +350,10 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
              * delete IPN session from PayPal table -- housekeeping
              */
             $db->Execute("DELETE FROM " . TABLE_PAYPAL_SESSION . " WHERE session_id = '" . zen_db_input(str_replace($zenSessionId . '=', '', $posted_custom)) . "'");
+            if (!isset($_SESSION['payment'], $_SESSION['shipping'])) {
+                ipn_debug_email('IPN NOTICE :: No payment/shipping module recorded in session -- cannot safely process. IPN handler aborted.');
+                die();
+            }
             /**
              * require shipping class
              */
