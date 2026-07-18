@@ -14,62 +14,57 @@ require 'includes/application_top.php';
 if (isset($_GET['tID'])) {
     $selected_template = (int)$_GET['tID'];
 }
+
+$templateSelect = new TemplateSelect();
+$template_info = $templateSelect->getSelectableTemplates();
+
 $action = $_GET['action'] ?? '';
-$template_info = zen_get_catalog_template_directories();
-
-$installedPluginKeys = [];
-foreach ((new PluginControlRepository($db))->getAll() as $plugin) {
-    if (($plugin['status'] ?? PluginStatus::NOT_INSTALLED) !== PluginStatus::NOT_INSTALLED) {
-        $installedPluginKeys[$plugin['unique_key']] = true;
-    }
-}
-
-$template_info = array_filter(
-    $template_info,
-    static function (array $template) use ($installedPluginKeys): bool {
-        if (empty($template['is_plugin_template'])) {
-            return true;
-        }
-
-        return isset($installedPluginKeys[$template['plugin_key'] ?? '']);
-    }
-);
-
-$templateIsSelectable = static function (string $templateKey) use ($template_info): bool {
-    return isset($template_info[$templateKey]);
-};
-
 if (!empty($action)) {
     switch ($action) {
-        case 'insert':
+        // -----
+        // Activates a template for use on the storefront.
+        //
+        case 'activate':
             $templateKey = (string)($_POST['ln'] ?? '');
-            if (!$templateIsSelectable($templateKey)) {
+            if (!isset($_POST['lang']) || $templateSelect->templateIsSelectable($templateKey) === false) {
                 $messageStack->add_session(ERROR_TEMPLATE_SELECTION_NOT_AVAILABLE, 'error');
                 zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             }
 
-            $selected_template = (int)zen_register_new_template($templateKey, (int)$_POST['lang']);
-            $action = '';
+            $templateSelect->registerNewTemplate($templateKey, (int)$_POST['lang']);
+            zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
             break;
 
-        case 'save':
+        // -----
+        // Updates the template in use on the storefront for a specific language.
+        //
+        case 'update':
             $templateKey = (string)($_POST['ln'] ?? '');
-            if (!$templateIsSelectable($templateKey)) {
+            if (!isset($_POST['tID']) || $templateSelect->templateIsSelectable($templateKey) === false) {
                 $messageStack->add_session(ERROR_TEMPLATE_SELECTION_NOT_AVAILABLE, 'error');
                 zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             }
 
-            zen_update_template_name_for_id($selected_template, $templateKey);
+            $templateSelect->updateTemplateNameForId((int)$_POST['tID'], $templateKey);
+
+            // -----
+            // If a template provides an initialization file (template_init.php), run
+            // it now.
+            //
             $init_file = zen_get_template_init_file_path($templateKey);
-            if ($init_file !== null && file_exists($init_file)) {
+            if ($init_file !== null && is_file($init_file)) {
                 require $init_file;
             }
+
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             break;
 
         case 'deleteconfirm':
-            zen_deregister_template_id((int)($_POST['tID'] ?? 0));
+            $templateSelect->deregisterTemplateId((int)($_POST['tID'] ?? 0));
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
+            break;
+
+        default:
             break;
     }
 }
@@ -104,7 +99,6 @@ if (!empty($action)) {
 // -----
 // Note: No need for pagination!
 //
-$templateSelect = new TemplateSelect();
 $templates = $templateSelect->getAllActiveTemplates();
 foreach ($templates as $template) {
     if (!isset($template_info[$template['template_dir']])) {
@@ -179,7 +173,7 @@ switch ($action) {
     case 'new':
         $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_NEW_TEMPLATE . '</h4>'];
 
-        $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'action=insert', 'post', 'class="form-horizontal"')];
+        $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'action=activate', 'post', 'class="form-horizontal"')];
         $contents[] = ['text' => TEXT_INFO_INSERT_INTRO];
         foreach($template_info as $key => $value) {
             if (isset($value['missing'])) {
@@ -190,7 +184,7 @@ switch ($action) {
                 'text' => $value['name'] . ' (' . ($value['version'] ?? 'V0') . ')',
             ];
         }
-        $lns = zen_get_template_languages_not_registered();
+        $lns = $templateSelect->getUnregisteredTemplateLanguages();
         foreach ($lns as $ln) {
             $language_array[] = [
                 'id' => $ln['language_id'],
@@ -220,7 +214,7 @@ switch ($action) {
     case 'edit':
         $heading[] = ['text' => '<h4>' . TABLE_HEADING_LANGUAGE . ': '  . $template_language . '</h4>'];
 
-        $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"')];
+        $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'action=update', 'post', 'class="form-horizontal"')];
         $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
         foreach($template_info as $key => $value) {
             if (isset($value['missing'])) {
@@ -231,7 +225,8 @@ switch ($action) {
         $contents[] = [
             'text' =>
                 zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') .
-                zen_draw_pull_down_menu('ln', $template_array, $templateSelect->getTemplateDirForLanguage($tInfo->template_language), 'class="form-control" id="ln"')
+                zen_draw_pull_down_menu('ln', $template_array, $templateSelect->getTemplateDirForLanguage($tInfo->template_language), 'class="form-control" id="ln"') .
+                zen_draw_hidden_field('tID', $tInfo->template_id)
         ];
         $contents[] = [
             'align' => 'text-center',

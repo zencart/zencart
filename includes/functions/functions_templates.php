@@ -224,47 +224,6 @@ function zen_resolve_template_key(?\Zencart\ResourceLoaders\TemplateResolver $re
 }
 
 /**
- * @since ZC v1.5.8
- */
-function zen_register_new_template(string $template_dir, int|string $language_id): false|int|string
-{
-    $templateSelect = new \Zencart\Templates\TemplateSelect();
-    return $templateSelect->registerNewTemplate($template_dir, (int)$language_id);
-}
-
-/**
- * @return array of language_name and language_id entries
- * @since ZC v1.5.8
- */
-function zen_get_template_languages_not_registered(): array
-{
-    $templateSelect = new \Zencart\Templates\TemplateSelect();
-    return $templateSelect->getUnregisteredTemplateLanguages();
-}
-
-/**
- * @param numeric $id
- * @param string $template_dir
- * @since ZC v1.5.8
- */
-function zen_update_template_name_for_id(int|string $id, string $template_dir): void
-{
-    $templateSelect = new \Zencart\Templates\TemplateSelect();
-    $templateSelect->updateTemplateNameForId((int)$id, $template_dir);
-}
-
-/**
- * @param numeric $id
- * @return bool whether template existed before delete
- * @since ZC v1.5.8
- */
-function zen_deregister_template_id(int|string $id): bool
-{
-    $templateSelect = new \Zencart\Templates\TemplateSelect();
-    return $templateSelect->deregisterTemplateId((int)$id);
-}
-
-/**
  * Casts scalar values in a decoded per-template settings override array to strings.
  *
  * json_decode() preserves JSON's native types (e.g. a bare numeric override becomes a PHP int,

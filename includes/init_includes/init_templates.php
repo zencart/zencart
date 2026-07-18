@@ -93,8 +93,8 @@ if (empty($tpl_settings) || !is_array($tpl_settings)) {
 /**
  * Load any template override settings from db
  */
-if (!empty($templateSelect->getActiveTemplateSettings())) {
-    $tmp = json_decode($templateSelect->getActiveTemplateSettings(), true);
+if (!empty($templateSelect->getTemplateSettings($template_dir))) {
+    $tmp = json_decode($templateSelect->getTemplateSettings($template_dir), true);
     if (is_array($tmp)) {
         $tmp = zen_normalize_scalar_template_settings($tmp);
         $tpl_settings = array_merge($tmp, $tpl_settings);
