@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -531,10 +533,10 @@ if ($action === 'edit') {
             <table class="table">
                 <tr>
                     <td>
-                        <?= $reviews_split->display_count($reviews_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currentPage, TEXT_DISPLAY_NUMBER_OF_REVIEWS) ?>
+                        <?= $reviews_split->display_count($reviews_query_numrows, (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), $currentPage, TEXT_DISPLAY_NUMBER_OF_REVIEWS) ?>
                     </td>
                     <td class="text-right">
-                        <?= $reviews_split->display_links($reviews_query_numrows, zen_config('MAX_DISPLAY_SEARCH_RESULTS'), zen_config('MAX_DISPLAY_PAGE_LINKS'), $currentPage, zen_get_all_get_params(['page', 'rID'])) ?>
+                        <?= $reviews_split->display_links($reviews_query_numrows, (int)zen_config('MAX_DISPLAY_SEARCH_RESULTS'), (int)zen_config('MAX_DISPLAY_PAGE_LINKS'), $currentPage, zen_get_all_get_params(['page', 'rID'])) ?>
                     </td>
                 </tr>
             </table>
