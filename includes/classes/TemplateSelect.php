@@ -247,7 +247,7 @@ class TemplateSelect
               WHERE template_id = :id:
                 AND template_language = " . self::TEMPLATE_BASE_LANGUAGE;
         $sql = self::$db->bindVars($sql, ':settings:', ($template_settings === null) ? 'NULL' : $template_settings, 'string');
-        $sql = self::$db->bindVars($sql, ':lang:', $language_id, 'integer');
+        $sql = self::$db->bindVars($sql, ':id:', $db_id, 'integer');
         self::$db->Execute($sql, 1);
         if (self::$db->affectedRows() !== 1) {
             return self::SETTINGS_NO_UPDATE;
