@@ -303,7 +303,6 @@ $define = [
     'PAGE_REVIEWS' => 'Reviews',
     'PAGE_SHOPPING_CART' => 'Shopping Cart',
     'PAGE_SPECIALS' => 'Specials',
-    'PAYMENT_JAVASCRIPT_DISABLED' => 'We could not continue with checkout as Javascript is disabled. You must enable it to continue',
     'PAYMENT_METHOD_GV' => 'Gift Certificate/Coupon',
     'PAYMENT_MODULE_GV' => 'GV/DC',
     'PLEASE_SELECT' => 'Please select ...',
