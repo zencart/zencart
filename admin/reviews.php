@@ -383,7 +383,7 @@ if ($action === 'edit') {
                     break;
                 }
             }
-            $currentPage = round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
+            $currentPage = (int)round((($check_count / zen_config('MAX_DISPLAY_SEARCH_RESULTS')) + (fmod_round($check_count, zen_config('MAX_DISPLAY_SEARCH_RESULTS')) != 0 ? .5 : 0)), 0);
             $page_param = $currentPage > 1 ? 'page=' . (int)$currentPage . '&' : '';
         }
     }
