@@ -22,6 +22,7 @@ class AdminInitTemplatesTest extends zcUnitTestCase
 
         require_once $this->repoRoot . 'includes/functions/zen_define_default.php';
         require_once $this->repoRoot . 'includes/functions/zen_config.php';
+        require_once $this->repoRoot . 'includes/functions/functions_templates.php';
         require_once $this->repoRoot . 'includes/classes/class.base.php';
         require_once $this->repoRoot . 'includes/classes/db/mysql/query_factory.php';
         require_once $this->repoRoot . 'includes/classes/TemplateDto.php';

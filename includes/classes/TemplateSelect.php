@@ -120,7 +120,7 @@ class TemplateSelect
         // that aren't installed.
         //
         self::$selectableTemplates = array_filter(
-            zen_get_catalog_template_directories(),
+            \zen_get_catalog_template_directories(),
             static function (array $template) use ($installedPluginKeys): bool {
                 if (empty($template['is_plugin_template'])) {
                     return true;
