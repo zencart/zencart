@@ -109,7 +109,7 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
             foreach ($customers as $customer) { ?>
                 <tr class="dataTableRow"<?php echo($canViewCustomers ? ' onclick="document.location.href = \'' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customer['customers_id'], 'NONSSL') . '\'"' : ''); ?>>
                     <td class="dataTableContent text-right"><?php echo $customer['customers_id']; ?>&nbsp;&nbsp;</td>
-                    <td class="dataTableContent"><?php echo ($canViewCustomers ? '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customer['customers_id'], 'NONSSL') . '">' : '') . $customer['customers_firstname'] . ' ' . $customers['customers_lastname'] . ($canViewCustomers ? '</a>' : ''); ?></td>
+                    <td class="dataTableContent"><?php echo ($canViewCustomers ? '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customer['customers_id'], 'NONSSL') . '">' : '') . zen_output_string_protected($customer['customers_firstname'] . ' ' . $customer['customers_lastname']) . ($canViewCustomers ? '</a>' : ''); ?></td>
                     <td class="dataTableContent text-right"><?php echo $currencies->format($customer['ordersum']); ?></td>
                 </tr>
             <?php } ?>
