@@ -4,7 +4,7 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  *
  * Regression coverage for #7924 / #7921: shoppingCart::add_cart() now refuses to add a
- * new distinct product once the cart already holds self::MAX_CART_DISTINCT_PRODUCTS (200)
+ * new distinct line item once the cart already holds self::MAX_CART_DISTINCT_LINE_ITEMS (200)
  * distinct items, guarding against bots flooding a session's cart with many fake products.
  */
 
@@ -30,7 +30,7 @@ class ShoppingCartFloodPreventionTest extends zcUnitTestCase
         defined('STOCK_ALLOW_CHECKOUT') || define('STOCK_ALLOW_CHECKOUT', 'true');
         defined('WARNING_CART_ITEM_LIMIT_REACHED') || define(
             'WARNING_CART_ITEM_LIMIT_REACHED',
-            'Your shopping cart has reached the maximum number of different products allowed. Please remove an item before adding another.'
+            'Your shopping cart has reached the maximum number of different items allowed. Please remove an item before adding another.'
         );
 
         require_once DIR_FS_CATALOG . 'includes/classes/traits/NotifierManager.php';

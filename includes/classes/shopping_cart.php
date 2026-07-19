@@ -85,11 +85,11 @@ class shoppingCart extends base
     protected const MAX_UPLOAD_COUNT = 50;
 
     /**
-     * Hard ceiling on the number of distinct products a single cart may hold.
-     * Guards against traffic floods that add many distinct products which
-     * balloon the session record and per-item queries.
+     * Hard ceiling on the number of distinct line items (uprids) which a single
+     * cart may hold. Guards against traffic floods that add many distinct items
+     * which balloon the session record and per-item queries.
      */
-    protected const MAX_CART_DISTINCT_PRODUCTS = 200;
+    protected const MAX_CART_DISTINCT_LINE_ITEMS = 200;
 
     /**
      * Instantiate a new shopping cart object
@@ -298,19 +298,22 @@ class shoppingCart extends base
         }
         $this->notify('NOTIFIER_CART_ADD_CART_START', null, $product_id, $qty, $attributes, $notify);
         $uprid = zen_get_uprid($product_id, $attributes);
-        if ($notify) {
-            $_SESSION['new_products_id_in_cart'] = $uprid;
-        }
 
         $qty = $this->adjust_quantity($qty, $uprid, 'shopping_cart');
 
         if ($this->in_cart($uprid)) {
             $this->update_quantity($uprid, $qty, $attributes);
-        } elseif (count($this->contents) >= self::MAX_CART_DISTINCT_PRODUCTS) {
+            if ($notify) {
+                $_SESSION['new_products_id_in_cart'] = $uprid;
+            }
+        } elseif (count($this->contents) >= self::MAX_CART_DISTINCT_LINE_ITEMS) {
             $messageStack->add_session('header', WARNING_CART_ITEM_LIMIT_REACHED, 'caution');
             $this->notify('NOTIFIER_CART_ADD_CART_END', null, $product_id, $qty, $attributes, $notify);
             return;
         } else {
+            if ($notify) {
+                $_SESSION['new_products_id_in_cart'] = $uprid;
+            }
             $this->contents[] = [$uprid];  // @TODO - why is this line here? Appears to be removed in the call to cleanup(), so doesn't really serve any purpose here.
             $this->contents[$uprid] = ['qty' => (float)$qty];
 
