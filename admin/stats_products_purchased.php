@@ -16,6 +16,16 @@ $products_filter_name_model = (isset($_GET['products_filter_name_model']) ? $_GE
 $start_date = (isset($_GET['start_date']) ? zen_db_prepare_input($_GET['start_date']) : '');
 $end_date = (isset($_GET['end_date']) ? zen_db_prepare_input($_GET['end_date']) : '');
 $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
+
+// discard anything that isn't a real YYYY-MM-DD date, or an inverted range
+$start_dt = DateTime::createFromFormat('Y-m-d', $start_date);
+$end_dt = DateTime::createFromFormat('Y-m-d', $end_date);
+if ($start_dt === false || $start_dt->format('Y-m-d') !== $start_date
+    || $end_dt === false || $end_dt->format('Y-m-d') !== $end_date
+    || $start_dt > $end_dt) {
+    $start_date = '';
+    $end_date = '';
+}
 ?>
 <!doctype html>
 <html <?php echo HTML_PARAMS; ?>>
