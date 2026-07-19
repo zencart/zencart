@@ -14,10 +14,11 @@ if (!defined('IS_ADMIN_FLAG')) {
 $show_welcome = false;
 if (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];
-} elseif (isset($_GET['products_id']) && $current_page !== FILENAME_SHOPPING_CART && !zen_check_url_get_terms()) {
-    // The shopping-cart page never legitimately builds its breadcrumb from a
-    // products_id GET param, so this lookup is skipped there to avoid wasted
-    // queries when bots probe arbitrary pages with spoofed query strings.
+} elseif (isset($_GET['products_id']) && !zen_page_skips_catalog_breadcrumb_lookups($current_page) && !zen_check_url_get_terms()) {
+    // Pages such as the shopping cart and checkout steps never legitimately build
+    // their breadcrumb from a products_id GET param, so this lookup is skipped
+    // there to avoid wasted queries when bots probe arbitrary pages with spoofed
+    // query strings. See GitHub issue #7921 / #7924.
     $cPath = zen_get_product_path($_GET['products_id']);
 } else {
     if ($current_page == 'index' && SHOW_CATEGORIES_ALWAYS == '1' && !zen_check_url_get_terms()) {

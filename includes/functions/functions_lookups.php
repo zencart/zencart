@@ -277,6 +277,39 @@ function zen_check_url_get_terms()
     return false;
 }
 
+/**
+ * Pages that never legitimately build a breadcrumb from catalog-filter GET params
+ * (products_id, manufacturers_id, cPath, and other registered "get terms").
+ * Used to skip the associated database lookups when those params show up on such a page
+ * e.g. a bot spoofing them to probe the shopping cart or checkout flow.
+ *
+ * Plugins that register their own checkout-flow pages (ie: one-page-checkout)
+ * can contribute their filenames via the NOTIFY_CATALOG_BREADCRUMB_LOOKUP_SKIP_PAGES
+ * observer by appending to its $additionalExcludedPages parameter.
+ *
+ * @since ZC v2.3.0
+ */
+function zen_page_skips_catalog_breadcrumb_lookups(string $current_page): bool
+{
+    global $zco_notifier;
+
+    $excludedPages = [
+        FILENAME_SHOPPING_CART,
+        FILENAME_CHECKOUT_SHIPPING,
+        FILENAME_CHECKOUT_SHIPPING_ADDRESS,
+        FILENAME_CHECKOUT_PAYMENT,
+        FILENAME_CHECKOUT_PAYMENT_ADDRESS,
+        FILENAME_CHECKOUT_CONFIRMATION,
+        FILENAME_CHECKOUT_PROCESS,
+        FILENAME_CHECKOUT_SUCCESS,
+    ];
+
+    $additionalExcludedPages = [];
+    $zco_notifier->notify('NOTIFY_CATALOG_BREADCRUMB_LOOKUP_SKIP_PAGES', $excludedPages, $additionalExcludedPages);
+
+    return in_array($current_page, array_merge($excludedPages, $additionalExcludedPages), true);
+}
+
 
 /**
  * Returns the status id number of an order-status, based on the name

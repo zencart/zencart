@@ -5,9 +5,10 @@
  *
  * Regression coverage for #7924 / #7921: init_add_crumbs.php used to look up every
  * registered "get term" (manufacturer, music genre, etc.) filter GET-param against the
- * database on every page, even pages like the shopping cart that never use them -- letting
- * bots trigger wasted queries by spoofing arbitrary query-string params. It now skips that
- * lookup entirely when $current_page is the shopping cart page.
+ * database on every page, even pages like the shopping cart and checkout steps that never
+ * use them -- letting bots trigger wasted queries by spoofing arbitrary query-string params.
+ * It now skips that lookup entirely on pages identified by
+ * zen_page_skips_catalog_breadcrumb_lookups() (shopping cart + checkout_*).
  */
 
 namespace Tests\Unit\testsSundry;
@@ -28,6 +29,13 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
         defined('HEADER_TITLE_CATALOG') || define('HEADER_TITLE_CATALOG', 'Catalog');
         defined('FILENAME_DEFAULT') || define('FILENAME_DEFAULT', 'index');
         defined('FILENAME_SHOPPING_CART') || define('FILENAME_SHOPPING_CART', 'shopping_cart');
+        defined('FILENAME_CHECKOUT_SHIPPING') || define('FILENAME_CHECKOUT_SHIPPING', 'checkout_shipping');
+        defined('FILENAME_CHECKOUT_SHIPPING_ADDRESS') || define('FILENAME_CHECKOUT_SHIPPING_ADDRESS', 'checkout_shipping_address');
+        defined('FILENAME_CHECKOUT_PAYMENT') || define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment');
+        defined('FILENAME_CHECKOUT_PAYMENT_ADDRESS') || define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address');
+        defined('FILENAME_CHECKOUT_CONFIRMATION') || define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
+        defined('FILENAME_CHECKOUT_PROCESS') || define('FILENAME_CHECKOUT_PROCESS', 'checkout_process');
+        defined('FILENAME_CHECKOUT_SUCCESS') || define('FILENAME_CHECKOUT_SUCCESS', 'checkout_success');
         defined('TABLE_GET_TERMS_TO_FILTER') || define('TABLE_GET_TERMS_TO_FILTER', 'get_terms_to_filter');
         defined('HTTP_SERVER') || define('HTTP_SERVER', 'https://example.test');
         defined('HTTPS_SERVER') || define('HTTPS_SERVER', 'https://example.test');
@@ -44,6 +52,7 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
 
         require_once DIR_FS_CATALOG . 'includes/functions/functions_strings.php';
         require_once DIR_FS_CATALOG . 'includes/functions/html_output.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_lookups.php';
         require_once DIR_FS_CATALOG . 'includes/classes/breadcrumb.php';
 
         $GLOBALS['zco_notifier'] = new \notifier();
@@ -58,6 +67,16 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
     public function testGetTermsLookupIsSkippedOnTheShoppingCartPage(): void
     {
         $GLOBALS['current_page'] = FILENAME_SHOPPING_CART;
+        $_GET['manufacturers_id'] = 8;
+
+        $GLOBALS['db']->expects($this->never())->method('Execute');
+
+        $this->requireInitAddCrumbs();
+    }
+
+    public function testGetTermsLookupIsSkippedOnCheckoutPages(): void
+    {
+        $GLOBALS['current_page'] = FILENAME_CHECKOUT_SHIPPING;
         $_GET['manufacturers_id'] = 8;
 
         $GLOBALS['db']->expects($this->never())->method('Execute');
