@@ -39,13 +39,13 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
             <div class="form-group">
                 <label class="control-label col-sm-3"><?= TEXT_DATE_RANGE_START_DATE ?></label>
                 <div class="col-sm-5">
-                    <input type="date" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>" class="form-control" required>
+                    <input type="date" name="start_date" value="<?php echo zen_output_string_protected($start_date); ?>" class="form-control" required>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3"><?= TEXT_DATE_RANGE_END_DATE ?></label>
                 <div class="col-sm-5">
-                    <input type="date" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>" class="form-control" required>
+                    <input type="date" name="end_date" value="<?php echo zen_output_string_protected($end_date); ?>" class="form-control" required>
                 </div>
             </div>
             <div class="form-group">
@@ -73,7 +73,7 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
         ?>
 
         <?php if ($start_date != '') { ?>
-            <h4><?= sprintf(TEXT_RESULTS_RANGE, htmlspecialchars($start_date), htmlspecialchars($end_date)) ?></h4>
+            <h4><?= sprintf(TEXT_RESULTS_RANGE, zen_output_string_protected($start_date), zen_output_string_protected($end_date)) ?></h4>
         <?php } else { ?>
             <h4><?= TEXT_RESULTS_ALL_TIME ?></h4>
         <?php } ?>
@@ -109,7 +109,7 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
             foreach ($customers as $customer) { ?>
                 <tr class="dataTableRow"<?php echo($canViewCustomers ? ' onclick="document.location.href = \'' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customer['customers_id'], 'NONSSL') . '\'"' : ''); ?>>
                     <td class="dataTableContent text-right"><?php echo $customer['customers_id']; ?>&nbsp;&nbsp;</td>
-                    <td class="dataTableContent"><?php echo ($canViewCustomers ? '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customer['customers_id'], 'NONSSL') . '">' : '') . $customer['customers_firstname'] . ' ' . $customers->fields['customers_lastname'] . ($canViewCustomers ? '</a>' : ''); ?></td>
+                    <td class="dataTableContent"><?php echo ($canViewCustomers ? '<a href="' . zen_href_link(FILENAME_CUSTOMERS, 'cID=' . $customer['customers_id'], 'NONSSL') . '">' : '') . $customer['customers_firstname'] . ' ' . $customers['customers_lastname'] . ($canViewCustomers ? '</a>' : ''); ?></td>
                     <td class="dataTableContent text-right"><?php echo $currencies->format($customer['ordersum']); ?></td>
                 </tr>
             <?php } ?>

@@ -39,14 +39,14 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
             <div class="form-group">
                 <label class="control-label col-sm-3"><?= TEXT_DATE_RANGE_START_DATE ?></label>
                 <div class="col-sm-4">
-                    <input type="date" name="start_date" value="<?php echo htmlspecialchars($start_date); ?>"
+                    <input type="date" name="start_date" value="<?php echo zen_output_string_protected($start_date); ?>"
                            class="form-control" required>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3"><?= TEXT_DATE_RANGE_END_DATE ?></label>
                 <div class="col-sm-4">
-                    <input type="date" name="end_date" value="<?php echo htmlspecialchars($end_date); ?>"
+                    <input type="date" name="end_date" value="<?php echo zen_output_string_protected($end_date); ?>"
                            class="form-control" required>
                 </div>
             </div>
@@ -142,13 +142,7 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
             <?php } ?>
             <?php
             foreach ($chk_orders_products as $orders_products) {
-                if ($products_filter != '') {
-                    // products_id
-                    $cPath = zen_get_product_path($products_filter);
-                } else {
-                    // products_name or products_model
-                    $cPath = zen_get_product_path($orders_products['products_id']);
-                }
+                $cPath = zen_get_product_path($orders_products['products_id']);
                 $product_type = zen_get_products_type($orders_products['products_id']);
                 ?>
                 <tr class="dataTableRow">
@@ -159,7 +153,7 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
                             href="<?php echo zen_href_link(FILENAME_ORDERS, zen_get_all_get_params(array('oID', 'action', 'page', 'products_filter')) . 'oID=' . $orders_products['orders_id'] . '&action=edit', 'NONSSL'); ?>"><?php echo $orders_products['orders_id']; ?></a>
                     </td>
                     <td class="dataTableContent"><?php echo zen_date_short($orders_products['date_purchased']); ?></td>
-                    <td class="dataTableContent"><?php echo $orders_products['customers_name'] . ($orders_products['customers_company'] != '' ? '<br>' . zen_output_string_protected($orders_products['customers_company']) : '') . '<br>' . $orders_products['customers_email_address']; ?></td>
+                    <td class="dataTableContent"><?php echo zen_output_string_protected($orders_products['customers_name']) . ($orders_products['customers_company'] != '' ? '<br>' . zen_output_string_protected($orders_products['customers_company']) : '') . '<br>' . zen_output_string_protected($orders_products['customers_email_address']); ?></td>
                     <td class="dataTableContent text-center"><?php echo $orders_products['products_quantity']; ?></td>
                     <td class="dataTableContent text-center"><a
                             href="<?php echo zen_href_link(FILENAME_PRODUCT, '&product_type=' . $product_type . '&cPath=' . $cPath . '&pID=' . $orders_products['products_id'] . '&action=new_product'); ?>"><?php echo $orders_products['products_name']; ?></a>
@@ -204,7 +198,7 @@ $all_time = (isset($_GET['all_time']) ? (int)$_GET['all_time'] : 0);
         ?>
 
         <?php if ($start_date != '') { ?>
-            <h4><?= sprintf(TEXT_RESULTS_RANGE, htmlspecialchars($start_date), htmlspecialchars($end_date)) ?></h4>
+            <h4><?= sprintf(TEXT_RESULTS_RANGE, zen_output_string_protected($start_date), zen_output_string_protected($end_date)) ?></h4>
         <?php } else { ?>
             <h4><?= TEXT_RESULTS_ALL_TIME ?></h4>
         <?php } ?>
