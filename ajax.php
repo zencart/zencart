@@ -44,11 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 const IS_AJAX_REQUEST = true;
 
-// -----
-// Buffer all output from this point forward. Nothing should be emitted ahead of the final
-// JSON response, but stray bytes (e.g. a UTF-8 BOM in a language file, an accidental notice)
-// can otherwise corrupt it; discard whatever accumulates before each response is sent.
-//
+/**
+ * Buffer all output from this point forward. Nothing should be emitted ahead of the final
+ * JSON response, but stray bytes (a UTF-8 BOM in a language file, error messages)
+ * can otherwise corrupt it; discard whatever accumulates before each response is sent.
+ *
+ * $ajaxObBaseLevel records the buffering level in effect before this script starts its own
+ * buffer, so cleanup only ever tears down levels *this script* introduced (including the gzip
+ * handler started by init_gzip.php during application_top.php) rather than any buffer that
+ * may already have been active due to the server's own output_buffering configuration.
+ */
+$ajaxObBaseLevel = ob_get_level();
 ob_start();
 require $zc_ajax_base_dir . 'includes/application_top.php';
 
@@ -75,9 +81,7 @@ function ajaxAbort($status = 400, $msg = null)
     global $zc_ajax_base_dir;
     http_response_code($status); // 400 = "Bad Request"
     require $zc_ajax_base_dir . 'includes/application_bottom.php';
-    while (ob_get_level() > 0) {
-        ob_end_clean();
-    }
+    ajaxDiscardBufferedOutput();
     if ($msg) {
         echo $msg;
     }
@@ -86,6 +90,25 @@ function ajaxAbort($status = 400, $msg = null)
 function inDeveloperMode(): bool
 {
     return (defined('DEVELOPER_MODE') && DEVELOPER_MODE === true);
+}
+
+/**
+ * Discards any output buffered since this script's own ob_start() (see $ajaxObBaseLevel
+ * above), without disturbing any buffer that was already active before this script ran
+ * (e.g. a server-level output_buffering setting). Buffers introduced during this request
+ * (such as the gzip handler from init_gzip.php) are fully torn down; this script's own
+ * buffer is emptied via ob_clean() rather than ended, so any pre-existing outer buffer
+ * beneath it is left intact.
+ */
+function ajaxDiscardBufferedOutput(): void
+{
+    global $ajaxObBaseLevel;
+    while (ob_get_level() > $ajaxObBaseLevel + 1) {
+        ob_end_clean();
+    }
+    if (ob_get_level() > $ajaxObBaseLevel) {
+        ob_clean();
+    }
 }
 // --- end support functions ------------------
 
@@ -120,7 +143,5 @@ if (defined($className . '::ALLOWED_METHODS') && !in_array($_GET['method'], $cla
 // Accepted request, so execute and return appropriate response:
 $result = $class->{$_GET['method']}();
 require $zc_ajax_base_dir . 'includes/application_bottom.php';
-while (ob_get_level() > 0) {
-    ob_end_clean();
-}
+ajaxDiscardBufferedOutput();
 echo json_encode($result);
