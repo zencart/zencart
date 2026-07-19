@@ -74,13 +74,13 @@ function ajaxAbort($status = 400, $msg = null)
 {
     global $zc_ajax_base_dir;
     http_response_code($status); // 400 = "Bad Request"
-    if (ob_get_level() > 0) {
+    require $zc_ajax_base_dir . 'includes/application_bottom.php';
+    while (ob_get_level() > 0) {
         ob_end_clean();
     }
     if ($msg) {
         echo $msg;
     }
-    require $zc_ajax_base_dir . 'includes/application_bottom.php';
     exit();
 }
 function inDeveloperMode(): bool
@@ -119,8 +119,8 @@ if (defined($className . '::ALLOWED_METHODS') && !in_array($_GET['method'], $cla
 
 // Accepted request, so execute and return appropriate response:
 $result = $class->{$_GET['method']}();
-if (ob_get_level() > 0) {
+require $zc_ajax_base_dir . 'includes/application_bottom.php';
+while (ob_get_level() > 0) {
     ob_end_clean();
 }
 echo json_encode($result);
-require $zc_ajax_base_dir . 'includes/application_bottom.php';
