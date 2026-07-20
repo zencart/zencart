@@ -62,6 +62,7 @@ class FilesLanguageLoader extends BaseLanguageLoader
             return false;
         }
         $this->mainLoader->addLanguageFilesLoaded('legacy', $defineFile);
+        self::warnIfFileHasBom($defineFile);
         include_once $defineFile;
         return true;
     }
