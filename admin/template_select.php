@@ -31,12 +31,28 @@ if (!empty($action)) {
                 zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             }
 
-            $templateSelect->registerNewTemplate($templateKey, (int)$_POST['lang']);
+            // -----
+            // Attempt to register the template for a given language, recording the
+            // action in a admin activity-log record. If the action isn't successful,
+            // that implies that the tool's form has an issue or an admin is fiddling
+            // with the HTML. No success/fail message is set, intentionally.
+            //
+            $rc = $templateSelect->registerNewTemplate($templateKey, (int)$_POST['lang']);
+            if ($rc === TemplateSelect::SETTINGS_OK) {
+                $action_result = 'Successful';
+                $activity_status = 'info';
+            } else {
+                $action_result = 'Unsuccessful';
+                $activity_status = 'warning';
+            }
+            zen_record_admin_activity("$action_result activation of $templateKey for language id#" . (int)$_POST['lang'], $activity_status);
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
             break;
 
         // -----
-        // Updates the template in use on the storefront for a specific language.
+        // Updates the template in use on the storefront for a previously-selected
+        // language, implying that there is already a template associated for the
+        // language in the database.
         //
         case 'update':
             $templateKey = (string)($_POST['ln'] ?? '');
@@ -45,17 +61,21 @@ if (!empty($action)) {
                 zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             }
 
-            $templateSelect->updateTemplateNameForId((int)$_POST['tID'], $templateKey);
-
             // -----
-            // If a template provides an initialization file (template_init.php), run
-            // it now.
+            // Attempt to update the template for a given template_id, recording the
+            // action in a admin activity-log record. If the action isn't successful,
+            // that implies that the tool's form has an issue or an admin is fiddling
+            // with the HTML. No success/fail message is set, intentionally.
             //
-            $init_file = zen_get_template_init_file_path($templateKey);
-            if ($init_file !== null && is_file($init_file)) {
-                require $init_file;
+            $rc = $templateSelect->updateTemplateNameForId((int)$_POST['tID'], $templateKey);
+            if ($rc === TemplateSelect::SETTINGS_OK) {
+                $action_result = 'successful';
+                $activity_status = 'info';
+            } else {
+                $action_result = 'unsuccessful';
+                $activity_status = 'warning';
             }
-
+            zen_record_admin_activity("Template directory change to $templateKey for id#" . (int)$_POST['tID'] . " was $action_result.", $activity_status);
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             break;
 

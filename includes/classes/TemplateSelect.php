@@ -40,13 +40,13 @@ class TemplateSelect
      * Return values from the setTemplateSettings method.
      */
     public const int SETTINGS_OK = 0;
-    public const int SETTINGS_BAD_JSON = 1;
-    public const int SETTINGS_UNKNOWN_DIR = 2;
-    public const int SETTINGS_NO_UPDATE = 3;
+    public const int SETTINGS_UNKNOWN_DIR = 1;
+    public const int SETTINGS_NO_UPDATE = 2;
+    public const int SETTINGS_BAD_INPUTS = 3;
 
     private static array $activeTemplates;  // Keyed by template_language
     private static array $dbTemplates;      // Keyed by template_id
-    private static array $selectableTemplates;  // Keyed by template_dir
+    private static array $selectableTemplates = [];  // Keyed by template_dir
     private static \queryFactory $db;
 
     /**
@@ -58,7 +58,7 @@ class TemplateSelect
         // If the class 'copy' of the $db object is already set, the class has already
         // initialized and all its static properties can be reused.
         //
-        if (isset(self::$db)) {
+        if (isset(self::$db) || !defined('IS_ADMIN_FLAG')) {
             return;
         }
 
@@ -87,14 +87,18 @@ class TemplateSelect
         // might have been removed or added from the file-system or disabled via
         // the Plugin Manager.
         //
-        $this->resolveTemplates();
+        // This synchronization is run only during admin processing when the "Template
+        // Selection" tool is in use.
+        //
+        global $current_page;
+        if (IS_ADMIN_FLAG === true && $current_page === FILENAME_TEMPLATE_SELECT . '.php') {
+            $this->resolveTemplates();
+        }
 
         $active_template_dir = $this->getActiveTemplateDir();
         if ($active_template_dir !== null) {
             TemplateDto::getInstance()->updateTemplate($active_template_dir, ['is_active' => true]);
         }
-
-//        $this->debug();
     }
 
     /**
@@ -258,19 +262,22 @@ class TemplateSelect
         if (is_array($template_settings) && count($template_settings) === 0) {
             $template_settings = null;
         }
+        if ($template_settings !== null) {
+            $template_settings = json_encode($template_settings);
+        }
         $sql =
             "UPDATE " . TABLE_TEMPLATE_SELECT . "
                 SET template_settings = :settings:
               WHERE template_id = :id:
                 AND template_language = " . self::TEMPLATE_BASE_LANGUAGE;
-        $sql = self::$db->bindVars($sql, ':settings:', ($template_settings === null) ? 'NULL' : json_encode($template_settings), 'string');
+        $sql = self::$db->bindVars($sql, ':settings:', ($template_settings === null) ? 'NULL' : $template_settings, 'string');
         $sql = self::$db->bindVars($sql, ':id:', $id, 'integer');
         self::$db->Execute($sql, 1);
 
         if (self::$db->affectedRows() !== 1) {
             return self::SETTINGS_NO_UPDATE;
         }
-        self::$dbTemplates[$id]['template_settings'] = ($template_settings === null) ? null : json_encode($template_settings);
+        self::$dbTemplates[$id]['template_settings'] = $template_settings;
 
         return self::SETTINGS_OK;
     }
@@ -331,7 +338,7 @@ class TemplateSelect
     public function updateTemplateNameForId(int $id, string $template_dir): int
     {
         if ($template_dir === '' || $id < 0) {
-            return self::SETTINGS_UNKNOWN_DIR;
+            return self::SETTINGS_BAD_INPUTS;
         }
 
         $sql =
@@ -430,10 +437,5 @@ class TemplateSelect
             }
         }
         return null;
-    }
-
-    private function debug(): void
-    {
-        trigger_error(var_export(self::$dbTemplates, true) . "\n" . var_export(self::$activeTemplates, true) . "\n" . var_export(self::$selectableTemplates, true));
     }
 }
