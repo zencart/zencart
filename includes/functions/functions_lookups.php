@@ -281,6 +281,59 @@ function zen_check_url_get_terms()
     return false;
 }
 
+/**
+ * Check whether the specified page legitimately builds a breadcrumb from catalog-filter GET params
+ * (eg: products_id, manufacturers_id, cPath, and other registered "get terms").
+ * Used to gate the associated database lookups so that a page NOT in this list
+ * (e.g. a bot spoofing catalog params on the shopping cart, checkout, or account pages)
+ * doesn't trigger wasted lookups. This is allow-list, not deny-list: a new page (core or plugin)
+ * is safe by default and must be recognized here before it gets them.
+ *
+ * Product-detail pages vary by product type (product_info, document_general_info, etc.),
+ * including types registered by plugins, so that part of the list is derived from TABLE_PRODUCT_TYPES
+ * rather than hardcoded. That query only runs once per request and the query is also cached for an hour.
+ *
+ * Plugins that add their own catalog-browsing page can register it via the
+ * NOTIFY_CATALOG_BREADCRUMB_LOOKUP_PAGES observer, by appending to its by-reference
+ * $additionalPages parameter.
+ * (Product-type pages don't need registering because they're covered by the query already.)
+ *
+ * @since ZC v2.3.0
+ */
+function zen_page_uses_catalog_breadcrumb_lookups(string $current_page): bool
+{
+    global $db, $zco_notifier;
+
+    static $productTypeInfoPages = null;
+    if ($productTypeInfoPages === null) {
+        $productTypeInfoPages = [];
+        $result = $db->Execute('SELECT type_handler FROM ' . TABLE_PRODUCT_TYPES, null, true, 3600);
+        foreach ($result as $productType) {
+            $productTypeInfoPages[] = $productType['type_handler'] . '_info';
+        }
+    }
+
+    $catalogPages = array_merge(
+        [
+            FILENAME_DEFAULT,
+            FILENAME_SEARCH_RESULT,
+            FILENAME_SPECIALS,
+            FILENAME_PRODUCTS_NEW,
+            FILENAME_PRODUCTS_ALL,
+            FILENAME_FEATURED_PRODUCTS,
+            FILENAME_PRODUCT_REVIEWS,
+            FILENAME_PRODUCT_REVIEWS_INFO,
+            FILENAME_PRODUCT_REVIEWS_WRITE,
+        ],
+        $productTypeInfoPages
+    );
+
+    $additionalPages = [];
+    $zco_notifier->notify('NOTIFY_CATALOG_BREADCRUMB_LOOKUP_PAGES', $catalogPages, $additionalPages);
+
+    return in_array($current_page, array_merge($catalogPages, $additionalPages), true);
+}
+
 
 /**
  * Returns the status id number of an order-status, based on the name
