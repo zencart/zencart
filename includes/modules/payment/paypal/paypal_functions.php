@@ -108,7 +108,7 @@ if (!function_exists('convertToLocalTimeZone')) {
         $ordersID = $ipn_id->fields['order_id'];
         $paypalipnID = $ipn_id->fields['paypal_ipn_id'];
       }
-    } else {
+    } elseif (!empty($postArray['txn_id'])) {
       $sqlTxn = $db->bindVars($sql, ':transactionID:', $postArray['txn_id'], 'string');
       $ipn_id = $db->Execute($sqlTxn);
       if ($ipn_id->RecordCount() <= 0) {
