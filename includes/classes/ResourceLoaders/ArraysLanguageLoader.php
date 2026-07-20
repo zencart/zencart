@@ -302,6 +302,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         }
 
         $this->mainLoader->addLanguageFilesLoaded($definesFile);
+        self::warnIfFileHasBom($definesFile);
         // file should return a variable
         $definesList = require $definesFile;
         return $definesList;
