@@ -86,7 +86,13 @@ class zcObserverLogEventListener extends base
          */
         $postdata = $_POST;
         $postdata = self::filterArrayElements($postdata);
+        $maliciousContentFound = false;
         $notes = self::parseForMaliciousContent(print_r($postdata, true));
+        if ($notes !== false) {
+            $maliciousContentFound = true;
+        } else {
+            $notes = '';
+        }
         /**
          * Since the POST data was an array, we json-encode the parsed POST data for storage in the logging system
          */
@@ -103,7 +109,10 @@ class zcObserverLogEventListener extends base
             }
             $specific_message = $data;
             $notes2 = self::parseForMaliciousContent(print_r($data, true));
-            $notes .= ($notes !== '' ? '; ' : '') . $notes2;
+            if ($notes2 !== false) {
+                $maliciousContentFound = true;
+                $notes .= ($notes !== '' ? '; ' : '') . $notes2;
+            }
         }
         if ($specific_message === '') {
             $specific_message = "Accessed page [" . basename($PHP_SELF) . "]";
@@ -114,9 +123,9 @@ class zcObserverLogEventListener extends base
 
         /**
          * Set severity flags
-         * If $notes is not false, then that means the malicious-content detector found things which should be deemed remarkable, so we elevate the severity to 'notice'
+         * If malicious content was found, that's deemed remarkable, so we elevate the severity to 'notice'
          */
-        if ($notes !== false && $notes !== '') {
+        if ($maliciousContentFound === true) {
             $severity = self::NOTICE;
             $flagged = 1;
         }
@@ -150,7 +159,7 @@ class zcObserverLogEventListener extends base
             'ip_address'      => substr($_SERVER['REMOTE_ADDR'], 0, 45),
             'postdata'        => $postdata,
             'flagged'         => $flagged,
-            'attention'       => ($notes === false ? '' : $notes),
+            'attention'       => $notes,
             'severity'        => strtolower(self::$levels[$severity]),  // converts int to corresponding string
         ];
 
