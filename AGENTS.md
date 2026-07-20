@@ -277,9 +277,10 @@ Test Suite: Where to find tests & how the test bootstrap works
 - Unit tests are grouped into topic subdirectories under `not_for_release/testFramework/Unit/` (e.g. `testsTemplateResolver/`, `testsCategories/`, `testsHtmlOutput/`). Place a new test in the subdirectory matching its subject; use `testsSundry/` only when nothing else fits.
 - Test classes extend `Tests\Support\zcUnitTestCase`, whose `setUp()` calls `UnitTestBootstrap::initialize()`. If a test calls `define()` on a global constant (common when stubbing config for a unit under test), add the `#[\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses]` class attribute (or `#[RunInSeparateProcess]` on an individual method) — PHP constants can't be redefined, so without process isolation a later test in the same run can fail or silently reuse an earlier test's constant value. Note: the legacy `protected $runTestInSeparateProcess = true;` / `protected $preserveGlobalState = false;` properties seen in some older tests in this codebase do **not** work on the PHPUnit version in use here (`TestCase::$runTestInSeparateProcess` is now `private`, so a same-named subclass property is just an inert shadow) — use the attribute form for any new test, and treat any test still using the old properties as suspect for order-dependent flakiness.
 - Even though `includes/classes` and `includes/modules` are classmap-autoloaded for tests (`composer.json`), existing tests still `require_once DIR_FS_CATALOG . 'includes/classes/Whatever.php';` explicitly in `setUp()`. Follow that pattern for new tests rather than relying solely on autoloading.
-- Use the `composer` shortcuts defined in `composer.json` to run specific test suites:
-  - composer run-script unit-tests
-  - composer run-script feature-tests
+- Never declare a bare global function (e.g. `namespace { function zen_something() {...} }`) to stub a production function in a test file, even to match an existing test that does this. PHPUnit executes a test file's top-level code at *collection* time — before any test runs and regardless of `RunTestsInSeparateProcesses`, which only isolates method *execution* — so if a second test file (or a `setUp()` in some other test) later does a real `require_once` of the file that legitimately defines that same function, you get a fatal "Cannot redeclare function" that only reproduces when the *full* suite runs together, not when your new test runs alone. Prefer requiring the real function's file (and feeding it realistic fixture data/filesystem state) over stubbing it; if you must stub, guard it with `if (!function_exists(...))` and still expect it may collide with a later real `require_once` elsewhere in the same run.
+- When mocking `queryFactory` for a class whose write path you're testing (`INSERT`/`UPDATE`/`DELETE`), mocking `Execute()` alone isn't enough if the code under test calls `bindVars()` — the real `bindVars()`/`prepare_input()` call `mysqli_real_escape_string($this->link, ...)`, which throws against a mocked object with no live connection (`$this->link` stays `false`). Mock `bindVars()` too (a simple placeholder-substitution callback is enough; test assertions rarely need real SQL-escaping fidelity) rather than trying to keep the real implementation only for `bindVars()`.
+- If a new or changed test fails only when the *full* Unit suite runs together (not when run alone or scoped to its own directory), don't assume your change caused it — this suite has pre-existing (environment-influenced) order-dependent flakiness (e.g. tests in `testsDiscountCoupon/` and `testsSundry/AttributeLookupsTest.php` can fail only in full-suite runs). Re-run the specific failing test file in isolation first to check whether the failure is pre-existing before spending time debugging your own change.
+- Consider running the `-parallel` variants of the feature tests if running into failures caused by clashing require statements or duplicate function declarations.
 - Developer documentation for tests: https://docs.zen-cart.com/dev/testframework/testing/
 
 Actionable examples for agents
@@ -288,10 +289,19 @@ Actionable examples for agents
   - composer install
   - composer run-script tests-unit
   - composer run-script tests-feature
+  - composer run-script tests-feature-parallel
 - Run feature tests for only the storefront:
     - composer run-script tests-feature-store
+    - composer run-script tests-feature-store-parallel
 - Run feature tests for only the Admin side:
     - composer run-script tests-feature-admin
+    - composer run-script tests-feature-admin-parallel
+- Linting:
+  - php -l
+- Static Analysis
+  - phpstan:admin
+  - phpstan:catalog
+
 
 NOTE: the app doesn't have any intended CLI entrypoints. 
 
@@ -301,7 +311,7 @@ Quick bootstrap for ad-hoc PHP scripts/tests:
   - <?php
     require 'includes/application_top.php';
     // ... run logic that depends on DB and bootstrapped services
-    require DIR_WS_INCLUDES . 'application_bottom.php'; // required to properly close session and do any necessary cleanup
+    require DIR_WS_INCLUDES . 'application_bottom.php'; // close session and cleanup
 
 Quick pointers for common tasks
 ------------------------------
