@@ -83,18 +83,13 @@ class TemplateSelect
         }
 
         // -----
-        // Next, synchronize with the template-resolver since templates
-        // might have been removed or added from the file-system or disabled via
-        // the Plugin Manager.
+        // Note: Synchronizing with the template-resolver (to catch templates added,
+        // removed, or (re)enabled/disabled via the Plugin Manager since this class'
+        // static state was last populated) is NOT done here, since it involves a
+        // filesystem scan and potential DB writes on every construction. Callers that
+        // need that synchronization (currently, only the admin's "Template Selection"
+        // tool) must invoke resolveTemplates() explicitly; see admin/template_select.php.
         //
-        // This synchronization is run only during admin processing when the "Template
-        // Selection" tool is in use.
-        //
-        global $current_page;
-        if (IS_ADMIN_FLAG === true && $current_page === FILENAME_TEMPLATE_SELECT . '.php') {
-            $this->resolveTemplates();
-        }
-
         $active_template_dir = $this->getActiveTemplateDir();
         if ($active_template_dir !== null) {
             TemplateDto::getInstance()->updateTemplate($active_template_dir, ['is_active' => true]);
@@ -102,9 +97,19 @@ class TemplateSelect
     }
 
     /**
+     * Synchronizes the `template_select` table with the templates currently found on
+     * the filesystem (and installed via the Plugin Manager, for encapsulated
+     * template plugins), adding a 'base' (template_language = -1) record for any
+     * newly-discovered template directory.
+     *
+     * This involves a filesystem scan and potential DB writes, so it's not run
+     * automatically on every TemplateSelect construction (i.e. on every page load);
+     * callers that need it up to date (currently, only the admin's "Template
+     * Selection" tool) must call it explicitly.
+     *
      * @since ZC v3.0.0
      */
-    private function resolveTemplates(): void
+    public function resolveTemplates(): void
     {
         // -----
         // Determine which encapsulated plugins are currently installed,

@@ -58,6 +58,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsPersistsAndIsRetrievable(): void
     {
         $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
 
@@ -71,6 +72,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsReturnsUnknownDirForATemplateWithNoBaseRecord(): void
     {
         $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('not_a_real_template', ['FOO' => 'bar']);
 
@@ -81,6 +83,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testUpdateTemplateSettingsMergesWithExistingSettings(): void
     {
         $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
         $templateSelect->setTemplateSettings('responsive_classic', ['A' => '1', 'B' => '2']);
 
         $status = $templateSelect->updateTemplateSettings('responsive_classic', ['B' => '20', 'C' => '3']);
@@ -100,6 +103,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testTemplateSettingsSurviveDeregisteringTheActiveLanguageAssignment(): void
     {
         $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
         $templateSelect->setTemplateSettings('responsive_classic', ['THEME' => 'dark']);
 
         $newLanguageId = (int)$templateSelect->registerNewTemplate('responsive_classic', 5);
@@ -123,6 +127,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testRegisterNewTemplateRejectsAnAlreadyRegisteredLanguage(): void
     {
         $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
 
         $this->assertFalse(
             $templateSelect->registerNewTemplate('responsive_classic', 0),
