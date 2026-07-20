@@ -44,7 +44,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
                 $constants_made = true;
                 continue;
             }
-            preg_match_all('/%{2}([^%]+)%{2}/', $defineValue, $matches, \PREG_PATTERN_ORDER);
+            preg_match_all('/%{2}([^%]+)%{2}/', (string)$defineValue, $matches, \PREG_PATTERN_ORDER);
             if (count($matches[1])) {
                 foreach ($matches[1] as $index => $match) {
                     if (isset($defines[$match])) {
@@ -302,6 +302,7 @@ class ArraysLanguageLoader extends BaseLanguageLoader
         }
 
         $this->mainLoader->addLanguageFilesLoaded($definesFile);
+        self::warnIfFileHasBom($definesFile);
         // file should return a variable
         $definesList = require $definesFile;
         return $definesList;
