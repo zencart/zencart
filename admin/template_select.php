@@ -46,7 +46,7 @@ if (!empty($action)) {
             // with the HTML. No success/fail message is set, intentionally.
             //
             $rc = $templateSelect->registerNewTemplate($templateKey, (int)$_POST['lang']);
-            if ($rc === TemplateSelect::SETTINGS_OK) {
+            if ($rc !== false) {
                 $action_result = 'Successful';
                 $activity_status = 'info';
             } else {

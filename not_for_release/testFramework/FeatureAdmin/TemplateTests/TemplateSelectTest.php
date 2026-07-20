@@ -53,6 +53,46 @@ class TemplateSelectTest extends zcInProcessFeatureTestCaseAdmin
         );
     }
 
+    /**
+     * TemplateSelect::resolveTemplates() (which scans the filesystem and can INSERT
+     * new 'base' (-1) template_select records) is only meant to run when the admin's
+     * "Template Selection" tool itself is in use (admin/template_select.php calls it
+     * explicitly). Visiting an unrelated admin page must not trigger it.
+     */
+    public function testVisitingAnUnrelatedAdminPageDoesNotSynchronizeTemplateSelectTable(): void
+    {
+        $this->runCustomSeeder('StoreWizardSeeder');
+
+        $this->submitAdminLogin([
+            'admin_name' => 'Admin',
+            'admin_pass' => 'password',
+        ])->assertOk()
+            ->assertSee('Admin Home');
+
+        $db = $this->bootstrapLegacyDbConnection();
+        $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT);
+        $db->Execute(
+            "INSERT INTO " . TABLE_TEMPLATE_SELECT . "
+                (template_dir, template_language)
+             VALUES
+                ('template_default', 0)"
+        );
+
+        // Revisit Admin Home - unrelated to the Template Selection tool.
+        $this->visitAdminHome()->assertOk();
+
+        $result = $db->Execute(
+            "SELECT COUNT(*) AS the_count
+               FROM " . TABLE_TEMPLATE_SELECT . "
+              WHERE template_language = -1"
+        );
+        $this->assertSame(
+            0,
+            (int)$result->fields['the_count'],
+            'Visiting an unrelated admin page must not synchronize/insert base (-1) template_select records.'
+        );
+    }
+
     public function testDetailsPanelRendersMissingTemplateRecordWithoutSettingsWarning(): void
     {
         $this->runCustomSeeder('StoreWizardSeeder');
