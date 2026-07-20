@@ -37,7 +37,7 @@ class TemplateSelect
     public const int TEMPLATE_BASE_LANGUAGE = -1;
 
     /**
-     * Return values from the setTemplateSettings method.
+     * Return values used by the setTemplateSettings method:
      */
     public const int SETTINGS_OK = 0;
     public const int SETTINGS_UNKNOWN_DIR = 1;
@@ -49,9 +49,6 @@ class TemplateSelect
     private static array $selectableTemplates = [];  // Keyed by template_dir
     private static \queryFactory $db;
 
-    /**
-     * @since ZC v3.0.0
-     */
     public function __construct()
     {
         // -----
@@ -66,8 +63,7 @@ class TemplateSelect
         self::$db = $db;
 
         // -----
-        // Start by gathering the current results from the
-        // database's `template_select` table.
+        // Start by gathering the current results from the database's `template_select` table.
         //
         $result = self::$db->Execute(
             "SELECT *
@@ -87,8 +83,8 @@ class TemplateSelect
         // removed, or (re)enabled/disabled via the Plugin Manager since this class'
         // static state was last populated) is NOT done here, since it involves a
         // filesystem scan and potential DB writes on every construction. Callers that
-        // need that synchronization (currently, only the admin's "Template Selection"
-        // tool) must invoke resolveTemplates() explicitly; see admin/template_select.php.
+        // need that synchronization (currently, only the admin's "Template Selection" tool)
+        // must invoke resolveTemplates() explicitly; see admin/template_select.php.
         //
         $active_template_dir = $this->getActiveTemplateDir();
         if ($active_template_dir !== null) {
@@ -205,8 +201,7 @@ class TemplateSelect
     }
 
     /**
-     * Retrieves the `template_settings` stored for a specified template
-     * directory.
+     * Retrieves the `template_settings` stored for a specified template directory.
      *
      * @since ZC v3.0.0
      */
@@ -221,8 +216,7 @@ class TemplateSelect
     }
 
     /**
-     * Sets/overwrites the `template_settings` stored for a specified template
-     * directory.
+     * Sets/overwrites the `template_settings` stored for a specified template directory.
      *
      * @since ZC v3.0.0
      */
@@ -339,8 +333,8 @@ class TemplateSelect
     }
 
     /**
-     * Updates the template to be used for a specific language. Base
-     * entries (template_language = -1) cannot be updated as they're auto-calculated.
+     * Updates the template to be used for a specific language.
+     * Base entries (template_language = -1) cannot be updated as they're auto-calculated.
      *
      * @since ZC v3.0.0
      */
@@ -378,8 +372,8 @@ class TemplateSelect
     }
 
     /**
-     * "De-register" a template from a specific language. Neither the
-     * default (template_language = 0) nor base (template_language = -1)
+     * "De-register" a template from a specific language.
+     * Neither the default (template_language = 0) nor base (template_language = -1)
      * entries can be de-registered!
      *
      * @since ZC v3.0.0
@@ -411,6 +405,9 @@ class TemplateSelect
     }
 
     /**
+     * Determine languages for which no template is registered.
+     * The global template is used in cases where such a language is selected.
+     *
      * @since ZC v3.0.0
      */
     public function getUnregisteredTemplateLanguages(): array
@@ -428,6 +425,9 @@ class TemplateSelect
     }
 
     /**
+     * Reads a field from the active (non-base) row for the current session's language,
+     * falling back to the default (template_language = 0) row.
+     *
      * @since ZC v3.0.0
      */
     protected function getActiveTemplateField(string $field_name): ?string
@@ -436,6 +436,9 @@ class TemplateSelect
     }
 
     /**
+     * Reads a field from a template_dir's 'base' (template_language = -1) row,
+     * where template_settings is persisted independent of any active-language row.
+     *
      * @since ZC v3.0.0
      */
     protected function getBaseTemplateField(string $template_dir, string $field_name): ?string

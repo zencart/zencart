@@ -56,8 +56,8 @@ class TemplateSelectTest extends zcInProcessFeatureTestCaseAdmin
     /**
      * TemplateSelect::resolveTemplates() (which scans the filesystem and can INSERT
      * new 'base' (-1) template_select records) is only meant to run when the admin's
-     * "Template Selection" tool itself is in use (admin/template_select.php calls it
-     * explicitly). Visiting an unrelated admin page must not trigger it.
+     * "Template Selection" tool itself is in use (admin/template_select.php calls it explicitly).
+     * Visiting an unrelated admin page must not trigger it.
      */
     public function testVisitingAnUnrelatedAdminPageDoesNotSynchronizeTemplateSelectTable(): void
     {
@@ -94,12 +94,12 @@ class TemplateSelectTest extends zcInProcessFeatureTestCaseAdmin
     }
 
     /**
-     * Complements the prior test: visiting the Template Selection tool itself IS
-     * expected to lazily create a 'base' (template_language = -1) record for an
-     * on-disk template not yet represented in the table. This is the only place
-     * that record ever gets created - a fresh install only seeds the default
-     * (template_language = 0) row, so relying on a -1 row existing anywhere else
-     * would be a mistake.
+     * Complements the prior test: visiting the Template Selection tool itself
+     * IS expected to lazily create a 'base' (template_language = -1) record
+     * for an on-disk template not yet represented in the table.
+     * This is the only place that record ever gets created.
+     * A fresh install only seeds the default (template_language = 0) row,
+     * so relying on a -1 row existing anywhere else would be a mistake.
      */
     public function testVisitingTheTemplateSelectionToolLazilyCreatesBaseRecords(): void
     {
