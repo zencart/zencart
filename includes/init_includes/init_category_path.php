@@ -12,12 +12,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 $show_welcome = false;
-if (zen_page_skips_catalog_breadcrumb_lookups($current_page)) {
-    // Pages such as the shopping cart and checkout steps never legitimately build
-    // their breadcrumb/category path from cPath or products_id GET params, so we
-    // skip those lookups here entirely, including a directly-supplied cPath,
-    // to avoid wasted category-lookup queries when bots probe arbitrary pages
-    // with spoofed query strings.
+if (!zen_page_uses_catalog_breadcrumb_lookups($current_page)) {
+    // Only pages recognized as legitimately using catalog-filter parameters
+    // derive $cPath from cPath/products_id GET params.
+    // Other pages related to accounts and checkout ignore them entirely,
+    // including a directly-supplied cPath, to avoid wasted category-lookup queries
+    // when bots probe arbitrary pages with spoofed query strings.
     $cPath = '';
 } elseif (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];

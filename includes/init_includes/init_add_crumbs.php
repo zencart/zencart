@@ -41,11 +41,11 @@ if (isset($cPath_array, $cPath)) {
 /**
  * add get terms (e.g manufacturer, music genre, record company or other user defined selector) to breadcrumb
  *
- * Skipped on pages such as the shopping cart and checkout steps, which never legitimately
- * receive these catalog-filter parameters, to avoid wasted lookups when bots probe arbitrary
- * URLs with spoofed query strings. See GitHub issue #7921 / #7924.
+ * Only run on pages recognized as legitimately using catalog-filter parameters,
+ * so bots probing arbitrary URLs (shopping cart, checkout, account, etc.)
+ * with spoofed query strings don't run wasted lookups.
  */
-if (!zen_page_skips_catalog_breadcrumb_lookups($current_page)) {
+if (zen_page_uses_catalog_breadcrumb_lookups($current_page)) {
     $sql =
         "SELECT *
            FROM " . TABLE_GET_TERMS_TO_FILTER;

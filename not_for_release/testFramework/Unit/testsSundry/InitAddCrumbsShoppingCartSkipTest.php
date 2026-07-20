@@ -7,8 +7,10 @@
  * registered "get term" (manufacturer, music genre, etc.) filter GET-param against the
  * database on every page, even pages like the shopping cart and checkout steps that never
  * use them -- letting bots trigger wasted queries by spoofing arbitrary query-string params.
- * It now skips that lookup entirely on pages identified by
- * zen_page_skips_catalog_breadcrumb_lookups() (shopping cart + checkout_*).
+ * It now only runs that lookup on pages recognized by
+ * zen_page_uses_catalog_breadcrumb_lookups() as legitimately using it. That recognition
+ * function itself issues one (cached, request-scoped) query against product_types, so these
+ * tests assert on the *number* and *content* of queries rather than a blanket zero.
  */
 
 namespace Tests\Unit\testsSundry;
@@ -30,13 +32,16 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
         defined('FILENAME_DEFAULT') || define('FILENAME_DEFAULT', 'index');
         defined('FILENAME_SHOPPING_CART') || define('FILENAME_SHOPPING_CART', 'shopping_cart');
         defined('FILENAME_CHECKOUT_SHIPPING') || define('FILENAME_CHECKOUT_SHIPPING', 'checkout_shipping');
-        defined('FILENAME_CHECKOUT_SHIPPING_ADDRESS') || define('FILENAME_CHECKOUT_SHIPPING_ADDRESS', 'checkout_shipping_address');
-        defined('FILENAME_CHECKOUT_PAYMENT') || define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment');
-        defined('FILENAME_CHECKOUT_PAYMENT_ADDRESS') || define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address');
-        defined('FILENAME_CHECKOUT_CONFIRMATION') || define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
-        defined('FILENAME_CHECKOUT_PROCESS') || define('FILENAME_CHECKOUT_PROCESS', 'checkout_process');
-        defined('FILENAME_CHECKOUT_SUCCESS') || define('FILENAME_CHECKOUT_SUCCESS', 'checkout_success');
+        defined('FILENAME_SEARCH_RESULT') || define('FILENAME_SEARCH_RESULT', 'search_result');
+        defined('FILENAME_SPECIALS') || define('FILENAME_SPECIALS', 'specials');
+        defined('FILENAME_PRODUCTS_NEW') || define('FILENAME_PRODUCTS_NEW', 'products_new');
+        defined('FILENAME_PRODUCTS_ALL') || define('FILENAME_PRODUCTS_ALL', 'products_all');
+        defined('FILENAME_FEATURED_PRODUCTS') || define('FILENAME_FEATURED_PRODUCTS', 'featured_products');
+        defined('FILENAME_PRODUCT_REVIEWS') || define('FILENAME_PRODUCT_REVIEWS', 'product_reviews');
+        defined('FILENAME_PRODUCT_REVIEWS_INFO') || define('FILENAME_PRODUCT_REVIEWS_INFO', 'product_reviews_info');
+        defined('FILENAME_PRODUCT_REVIEWS_WRITE') || define('FILENAME_PRODUCT_REVIEWS_WRITE', 'product_reviews_write');
         defined('TABLE_GET_TERMS_TO_FILTER') || define('TABLE_GET_TERMS_TO_FILTER', 'get_terms_to_filter');
+        defined('TABLE_PRODUCT_TYPES') || define('TABLE_PRODUCT_TYPES', 'product_types');
         defined('HTTP_SERVER') || define('HTTP_SERVER', 'https://example.test');
         defined('HTTPS_SERVER') || define('HTTPS_SERVER', 'https://example.test');
         defined('ENABLE_SSL') || define('ENABLE_SSL', 'false');
@@ -54,6 +59,7 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
         require_once DIR_FS_CATALOG . 'includes/functions/html_output.php';
         require_once DIR_FS_CATALOG . 'includes/functions/functions_lookups.php';
         require_once DIR_FS_CATALOG . 'includes/classes/breadcrumb.php';
+        require_once DIR_FS_CATALOG . 'includes/classes/db/mysql/query_factory.php';
 
         $GLOBALS['zco_notifier'] = new \notifier();
 
@@ -69,7 +75,11 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
         $GLOBALS['current_page'] = FILENAME_SHOPPING_CART;
         $_GET['manufacturers_id'] = 8;
 
-        $GLOBALS['db']->expects($this->never())->method('Execute');
+        // Only the recognition function's own product_types query should run --
+        // never a get_terms_to_filter (or manufacturers) lookup.
+        $GLOBALS['db']->expects($this->once())
+            ->method('Execute')
+            ->willReturnCallback([$this, 'routeQuery']);
 
         $this->requireInitAddCrumbs();
     }
@@ -79,7 +89,9 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
         $GLOBALS['current_page'] = FILENAME_CHECKOUT_SHIPPING;
         $_GET['manufacturers_id'] = 8;
 
-        $GLOBALS['db']->expects($this->never())->method('Execute');
+        $GLOBALS['db']->expects($this->once())
+            ->method('Execute')
+            ->willReturnCallback([$this, 'routeQuery']);
 
         $this->requireInitAddCrumbs();
     }
@@ -89,16 +101,46 @@ class InitAddCrumbsShoppingCartSkipTest extends zcUnitTestCase
         $GLOBALS['current_page'] = FILENAME_DEFAULT;
         $_GET['manufacturers_id'] = 8;
 
-        // foreach($get_terms as ...) needs an Iterator-shaped return value.
-        $emptyResult = $this->getMockBuilder(\queryFactoryResult::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['current', 'key', 'next', 'rewind', 'valid'])
-            ->getMock();
-        $emptyResult->method('valid')->willReturn(false);
-
-        $GLOBALS['db']->expects($this->atLeastOnce())->method('Execute')->willReturn($emptyResult);
+        // The product_types query (for recognition) plus the get_terms_to_filter query.
+        $GLOBALS['db']->expects($this->exactly(2))
+            ->method('Execute')
+            ->willReturnCallback([$this, 'routeQuery']);
 
         $this->requireInitAddCrumbs();
+    }
+
+    /**
+     * Routes a mocked Execute() call to the right canned result based on the table
+     * named in the query, since zen_page_uses_catalog_breadcrumb_lookups() and the
+     * get-terms lookup in init_add_crumbs.php both go through the same $db mock.
+     */
+    public function routeQuery(string $sql): \queryFactoryResult
+    {
+        if (str_contains($sql, TABLE_PRODUCT_TYPES)) {
+            return $this->productTypesResultSet();
+        }
+
+        return $this->emptyResultSet();
+    }
+
+    private function productTypesResultSet(): \queryFactoryResult
+    {
+        $result = new \queryFactoryResult(null);
+        $result->is_cached = true;
+        $result->result = [
+            ['type_handler' => 'product'],
+        ];
+
+        return $result;
+    }
+
+    private function emptyResultSet(): \queryFactoryResult
+    {
+        $result = new \queryFactoryResult(null);
+        $result->is_cached = true;
+        $result->result = [];
+
+        return $result;
     }
 
     /**
