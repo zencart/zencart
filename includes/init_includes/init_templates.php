@@ -32,7 +32,7 @@ $template_dir = $templateSelect->getActiveTemplateDir();
  * Allow admins to switch templates using &t= URL parameter
  */
 if (zen_is_whitelisted_admin_ip()) {
-    // check if a template override was requested and that the template is available
+    // chetck if a template override was requested and that the template is available
     if (isset($_GET['t']) && $templateResolver->getTemplateRecord($_GET['t']) !== null) {
         $_SESSION['tpl_override'] = $_GET['t'];
     }
