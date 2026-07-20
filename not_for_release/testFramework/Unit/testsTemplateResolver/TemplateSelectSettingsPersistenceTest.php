@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\testsTemplateResolver;
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 use Zencart\Templates\TemplateSelect;
@@ -14,6 +15,7 @@ use Zencart\Templates\TemplateSelect;
  * on that base record so that they survive a template being deregistered from any
  * given language, as described in the class-level documentation in TemplateSelect.php.
  */
+#[AllowMockObjectsWithoutExpectations]
 #[RunTestsInSeparateProcesses]
 class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
 {
@@ -65,6 +67,20 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         $this->assertSame(TemplateSelect::SETTINGS_OK, $status);
         $this->assertSame(
             ['FOO' => 'bar'],
+            $templateSelect->getTemplateSettings('responsive_classic')
+        );
+    }
+
+    public function testSetTemplateSettingsPersistsJsonStringContainingNull(): void
+    {
+        $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
+
+        $status = $templateSelect->setTemplateSettings('responsive_classic', ['LABEL' => 'contains NULL text']);
+
+        $this->assertSame(TemplateSelect::SETTINGS_OK, $status);
+        $this->assertSame(
+            ['LABEL' => 'contains NULL text'],
             $templateSelect->getTemplateSettings('responsive_classic')
         );
     }
@@ -145,6 +161,12 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
             function (string $sql, string $token, $value, string $rule): string {
                 if ($rule === 'integer') {
                     $replacement = (string)(int)$value;
+                } elseif ($rule === 'passthru') {
+                    $replacement = (string)$value;
+                } elseif ($rule === 'string' && preg_match('/NULL/', (string)$value)) {
+                    $replacement = 'NULL';
+                } elseif ($rule === 'string' || $rule === 'stringIgnoreNull') {
+                    $replacement = "'" . addslashes((string)$value) . "'";
                 } elseif ($value === 'NULL') {
                     $replacement = 'NULL';
                 } else {

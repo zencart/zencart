@@ -274,8 +274,12 @@ class TemplateSelect
             "UPDATE " . TABLE_TEMPLATE_SELECT . "
                 SET template_settings = :settings:
               WHERE template_id = :id:
-                AND template_language = " . self::TEMPLATE_BASE_LANGUAGE;
-        $sql = self::$db->bindVars($sql, ':settings:', ($template_settings === null) ? 'NULL' : $template_settings, 'string');
+                AND template_language = " . (int)self::TEMPLATE_BASE_LANGUAGE;
+        if ($template_settings === null) {
+            $sql = self::$db->bindVars($sql, ':settings:', 'NULL', 'passthru');
+        } else {
+            $sql = self::$db->bindVars($sql, ':settings:', $template_settings, 'stringIgnoreNull');
+        }
         $sql = self::$db->bindVars($sql, ':id:', $id, 'integer');
         self::$db->Execute($sql, 1);
 
