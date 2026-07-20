@@ -270,7 +270,7 @@ class TemplateSelect
         if (self::$db->affectedRows() !== 1) {
             return self::SETTINGS_NO_UPDATE;
         }
-        self::$dbTemplates[$id]['tpl_settings'] = $template_settings;
+        self::$dbTemplates[$id]['template_settings'] = $template_settings;
 
         return self::SETTINGS_OK;
     }
