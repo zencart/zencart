@@ -73,6 +73,8 @@ class TemplateSelect
             "SELECT *
                FROM " . TABLE_TEMPLATE_SELECT
         );
+        self::$dbTemplates = [];
+        self::$activeTemplates = [];
         foreach ($result as $next_template) {
             self::$dbTemplates[(int)$next_template['template_id']] = $next_template;
             if ($next_template['template_language'] !== (string)self::TEMPLATE_BASE_LANGUAGE) {
@@ -177,14 +179,6 @@ class TemplateSelect
     /**
      * @since ZC v3.0.0
      */
-    public function getActiveTemplateId(): int
-    {
-        return (int)$this->getActiveTemplateField('template_id');
-    }
-
-    /**
-     * @since ZC v3.0.0
-     */
     public function getActiveTemplateDir(): ?string
     {
         return $this->getActiveTemplateField('template_dir');
@@ -207,52 +201,76 @@ class TemplateSelect
      *
      * @since ZC v3.0.0
      */
-    public function getTemplateSettings(string $template_dir): ?string
+    public function getTemplateSettings(string $template_dir): ?array
     {
-         foreach (self::$dbTemplates as $id => $info) {
-            if ($info['template_dir'] === $template_dir && (int)$info['template_language'] === self::TEMPLATE_BASE_LANGUAGE) {
-                return $info['template_settings'];
-            }
+        $template_settings = $this->getBaseTemplateField($template_dir, 'template_settings');
+        if ($template_settings === null) {
+            return null;
         }
-        return null;
+        $template_settings = json_decode($template_settings, true);
+        return is_array($template_settings) ? $template_settings : null;
     }
 
     /**
      * Sets/overwrites the `template_settings` stored for a specified template
-     * directory. The value submitted for the settings must either be null or a
-     * string that can be validly run through PHP's json_decode function.
+     * directory.
      *
      * @since ZC v3.0.0
      */
-    public function setTemplateSettings(string $template_dir, ?string $template_settings): int
+    public function setTemplateSettings(string $template_dir, ?array $template_settings): int
     {
-        if ($template_settings !== null && !is_array(json_decode($template_settings, true))) {
-            return self::SETTINGS_BAD_JSON;
-        }
-
-        $db_id = false;
-        foreach (self::$dbTemplates as $id => $info) {
-            if ($info['template_dir'] === $template_dir && (int)$info['template_language'] === self::TEMPLATE_BASE_LANGUAGE) {
-                $db_id = $id;
-                break;
-            }
-        }
-        if ($db_id === false) {
+        $db_id = $this->getBaseTemplateField($template_dir, 'template_id');
+        if ($db_id === null) {
             return self::SETTINGS_UNKNOWN_DIR;
         }
 
+        return $this->updateDbTemplateSettings((int)$db_id, $template_settings);
+    }
+
+    /**
+     * Updates the `template_settings` stored for a specified template, merging the
+     * supplied array of template settings with those currently registered for the
+     * template. The values in the array supplied overwrite any existing settings.
+     *
+     * @since ZC v3.0.0
+     */
+    public function updateTemplateSettings(string $template_dir, array $template_settings): int
+    {
+        $db_id = $this->getBaseTemplateField($template_dir, 'template_id');
+        if ($db_id === null) {
+            return self::SETTINGS_UNKNOWN_DIR;
+        }
+
+        $current_settings = $this->getTemplateSettings($template_dir);
+        if ($current_settings === null) {
+            $current_settings = [];
+        }
+        $updated_settings = array_merge($current_settings, $template_settings);
+
+        return $this->updateDbTemplateSettings((int)$db_id, $updated_settings);
+    }
+
+    /*
+     * @since ZC v3.0.0
+     */
+    protected function updateDbTemplateSettings(int $id, ?array $template_settings): int
+    {
+        if (is_array($template_settings) && count($template_settings) === 0) {
+            $template_settings = null;
+        }
         $sql =
             "UPDATE " . TABLE_TEMPLATE_SELECT . "
                 SET template_settings = :settings:
               WHERE template_id = :id:
                 AND template_language = " . self::TEMPLATE_BASE_LANGUAGE;
-        $sql = self::$db->bindVars($sql, ':settings:', ($template_settings === null) ? 'NULL' : $template_settings, 'string');
-        $sql = self::$db->bindVars($sql, ':id:', $db_id, 'integer');
+        $sql = self::$db->bindVars($sql, ':settings:', ($template_settings === null) ? 'NULL' : json_encode($template_settings), 'string');
+        $sql = self::$db->bindVars($sql, ':id:', $id, 'integer');
         self::$db->Execute($sql, 1);
+
         if (self::$db->affectedRows() !== 1) {
             return self::SETTINGS_NO_UPDATE;
         }
-        self::$dbTemplates[$db_id]['tpl_settings'] = $tpl_settings;
+        self::$dbTemplates[$id]['tpl_settings'] = $template_settings;
 
         return self::SETTINGS_OK;
     }
@@ -288,7 +306,7 @@ class TemplateSelect
         $sql = self::$db->bindVars($sql, ':tpl:', $template_dir, 'string');
         $sql = self::$db->bindVars($sql, ':lang:', $language_id, 'integer');
         self::$db->Execute($sql);
-        $template_id = (int)self::$db->insert_ID();
+        $template_id = self::$db->insert_ID();
 
         $template_info = [
             'template_id' => (string)$template_id,
@@ -310,10 +328,10 @@ class TemplateSelect
      *
      * @since ZC v3.0.0
      */
-    public function updateTemplateNameForId(int $id, string $template_dir): void
+    public function updateTemplateNameForId(int $id, string $template_dir): int
     {
         if ($template_dir === '' || $id < 0) {
-            return;
+            return self::SETTINGS_UNKNOWN_DIR;
         }
 
         $sql =
@@ -330,7 +348,7 @@ class TemplateSelect
         // perform any adjustment of the class-based arrays.
         //
         if (self::$db->affectedRows() !== 1) {
-            return;
+            return self::SETTINGS_NO_UPDATE;
         }
 
         foreach (self::$activeTemplates as $language_id => $template_info) {
@@ -340,6 +358,7 @@ class TemplateSelect
                 break;
             }
         }
+        return self::SETTINGS_OK;
     }
 
     /**
@@ -380,16 +399,16 @@ class TemplateSelect
      */
     public function getUnregisteredTemplateLanguages(): array
     {
-        $templates = [];
+        $languages = [];
         $sql =
             "SELECT lng.name as language_name, lng.languages_id as language_id
                FROM " . TABLE_LANGUAGES . " lng
               WHERE lng.languages_id NOT IN (SELECT template_language FROM " . TABLE_TEMPLATE_SELECT . " WHERE template_language != " . self::TEMPLATE_BASE_LANGUAGE . ")";
         $results = self::$db->Execute($sql);
         foreach ($results as $result) {
-            $templates[] = $result;
+            $languages[] = $result;
         }
-        return $templates;
+        return $languages;
     }
 
     /**
@@ -398,6 +417,19 @@ class TemplateSelect
     protected function getActiveTemplateField(string $field_name): ?string
     {
         return self::$activeTemplates[$_SESSION['languages_id']][$field_name] ?? self::$activeTemplates['0'][$field_name] ?? null;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function getBaseTemplateField(string $template_dir, string $field_name): ?string
+    {
+        foreach (self::$dbTemplates as $id => $info) {
+            if ($info['template_dir'] === $template_dir && (int)$info['template_language'] === self::TEMPLATE_BASE_LANGUAGE) {
+                return $info[$field_name] ?? null;
+            }
+        }
+        return null;
     }
 
     private function debug(): void
