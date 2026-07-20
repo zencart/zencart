@@ -151,6 +151,38 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         );
     }
 
+    /**
+     * queryFactory::affectedRows() reports mysqli_affected_rows(), which counts rows
+     * whose stored value actually *changed*, not rows merely matched by the WHERE clause.
+     * Re-saving a template_dir that's already assigned to a row is a legitimate no-op
+     * and must not be treated as a failure.
+     */
+    public function testUpdatingATemplateDirToItsCurrentValueIsNotTreatedAsAFailure(): void
+    {
+        $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
+
+        // Row id 1 (seeded in setUp()) is already 'responsive_classic' for language 0.
+        $status = $templateSelect->updateTemplateNameForId(1, 'responsive_classic');
+
+        $this->assertSame(TemplateSelect::SETTINGS_OK, $status);
+    }
+
+    /**
+     * Same idempotent-save concern as above, applied to template_settings.
+     */
+    public function testReSavingIdenticalSettingsIsNotTreatedAsAFailure(): void
+    {
+        $templateSelect = new TemplateSelect();
+        $templateSelect->resolveTemplates();
+        $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
+
+        // Save the exact same settings again - a no-op from MySQL's point of view.
+        $status = $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
+
+        $this->assertSame(TemplateSelect::SETTINGS_OK, $status);
+    }
+
     private function makeMockDb(): \queryFactory
     {
         $db = $this->getMockBuilder(\queryFactory::class)
@@ -214,10 +246,16 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         if (stripos($sql, 'SET template_settings') !== false) {
             preg_match("/SET template_settings = (NULL|'.*?')\s+WHERE template_id = (\d+)/s", $sql, $matches);
             $id = (int)$matches[2];
+            $newValue = ($matches[1] === 'NULL') ? null : trim($matches[1], "'");
+            // Mirrors real MySQL: affectedRows() counts rows whose value actually
+            // *changed*, not rows merely matched by the WHERE clause.
+            // A no-op save (ie: identical value) reports 0 even though the row exists.
             $this->lastAffectedRows = 0;
             if (isset($this->rows[$id])) {
-                $this->rows[$id]['template_settings'] = ($matches[1] === 'NULL') ? null : trim($matches[1], "'");
-                $this->lastAffectedRows = 1;
+                if ($this->rows[$id]['template_settings'] !== $newValue) {
+                    $this->lastAffectedRows = 1;
+                }
+                $this->rows[$id]['template_settings'] = $newValue;
             }
             return $this->makeQueryResult([]);
         }
@@ -225,10 +263,14 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         if (stripos($sql, 'SET template_dir') !== false) {
             preg_match("/SET template_dir = '([^']*)'\s+WHERE template_id = (\d+)/s", $sql, $matches);
             $id = (int)$matches[2];
+            $newValue = $matches[1];
+            // See note above: a no-op save (identical value) reports 0 too.
             $this->lastAffectedRows = 0;
             if (isset($this->rows[$id])) {
-                $this->rows[$id]['template_dir'] = $matches[1];
-                $this->lastAffectedRows = 1;
+                if ($this->rows[$id]['template_dir'] !== $newValue) {
+                    $this->lastAffectedRows = 1;
+                }
+                $this->rows[$id]['template_dir'] = $newValue;
             }
             return $this->makeQueryResult([]);
         }

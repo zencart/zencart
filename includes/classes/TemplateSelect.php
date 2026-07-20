@@ -258,6 +258,10 @@ class TemplateSelect
      */
     protected function updateDbTemplateSettings(int $id, ?array $template_settings): int
     {
+        if (!isset(self::$dbTemplates[$id]) || (int)self::$dbTemplates[$id]['template_language'] !== self::TEMPLATE_BASE_LANGUAGE) {
+            return self::SETTINGS_NO_UPDATE;
+        }
+
         if (is_array($template_settings) && count($template_settings) === 0) {
             $template_settings = null;
         }
@@ -277,9 +281,12 @@ class TemplateSelect
         $sql = self::$db->bindVars($sql, ':id:', $id, 'integer');
         self::$db->Execute($sql, 1);
 
-        if (self::$db->affectedRows() !== 1) {
-            return self::SETTINGS_NO_UPDATE;
-        }
+        // -----
+        // affectedRows() only counts rows whose stored value actually changed,
+        // so re-saving identical settings would report 0 here even though the row was
+        // matched and the desired state is already in place. Existence against the
+        // base row was already confirmed above, so that's not treated as a failure.
+        //
         self::$dbTemplates[$id]['template_settings'] = $template_settings;
 
         return self::SETTINGS_OK;
@@ -344,6 +351,10 @@ class TemplateSelect
             return self::SETTINGS_BAD_INPUTS;
         }
 
+        if (!isset(self::$dbTemplates[$id]) || (int)self::$dbTemplates[$id]['template_language'] === self::TEMPLATE_BASE_LANGUAGE) {
+            return self::SETTINGS_NO_UPDATE;
+        }
+
         $sql =
             "UPDATE " . TABLE_TEMPLATE_SELECT . "
                 SET template_dir = :tpl:
@@ -354,13 +365,12 @@ class TemplateSelect
         self::$db->Execute($sql, 1);
 
         // -----
-        // If the row wasn't updated (specifically 1 row "should be"), don't
-        // perform any adjustment of the class-based arrays.
+        // affectedRows() only counts rows whose stored value actually changed,
+        // so a no-op save (submitting the same template_dir that's already set)
+        // would report 0 here even though the row was matched and the desired state is
+        // already in place. Existence against the row was already confirmed above,
+        // so that's not treated as a failure.
         //
-        if (self::$db->affectedRows() !== 1) {
-            return self::SETTINGS_NO_UPDATE;
-        }
-
         foreach (self::$activeTemplates as $language_id => $template_info) {
             if ($id === (int)$template_info['template_id']) {
                 self::$activeTemplates[$language_id]['template_dir'] = $template_dir;
