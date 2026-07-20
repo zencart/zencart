@@ -40,38 +40,44 @@ if (isset($cPath_array, $cPath)) {
 
 /**
  * add get terms (e.g manufacturer, music genre, record company or other user defined selector) to breadcrumb
+ *
+ * Only run on pages recognized as legitimately using catalog-filter parameters,
+ * so bots probing arbitrary URLs (shopping cart, checkout, account, etc.)
+ * with spoofed query strings don't run wasted lookups.
  */
-$sql =
-    "SELECT *
-       FROM " . TABLE_GET_TERMS_TO_FILTER;
-$get_terms = $db->Execute($sql);
-foreach ($get_terms as $next_get_term) {
-    $next_get_term_name = $next_get_term['get_term_name'];
-    if (isset($_GET[$next_get_term_name])) {
-        $sql =
-            "SELECT " . $next_get_term['get_term_name_field'] . "
-               FROM " . constant($next_get_term['get_term_table']) . "
-              WHERE " . $next_get_term_name . " = " . (int)$_GET[$next_get_term_name];
-        $get_term_breadcrumb = $db->Execute($sql, 1);
+if (zen_page_uses_catalog_breadcrumb_lookups($current_page)) {
+    $sql =
+        "SELECT *
+           FROM " . TABLE_GET_TERMS_TO_FILTER;
+    $get_terms = $db->Execute($sql);
+    foreach ($get_terms as $next_get_term) {
+        $next_get_term_name = $next_get_term['get_term_name'];
+        if (isset($_GET[$next_get_term_name])) {
+            $sql =
+                "SELECT " . $next_get_term['get_term_name_field'] . "
+                   FROM " . constant($next_get_term['get_term_table']) . "
+                  WHERE " . $next_get_term_name . " = " . (int)$_GET[$next_get_term_name];
+            $get_term_breadcrumb = $db->Execute($sql, 1);
 
-        if (!$get_term_breadcrumb->EOF) {
-            // -----
-            // Enable a watching observer to modify the parameters to a breadcrumb link.
-            //
-            $link_parameters = $next_get_term_name . '=' . $_GET[$next_get_term_name];
-            $zco_notifier->notify('NOTIFY_INIT_ADD_CRUMBS_GET_TERMS_LINK_PARAMETERS', $next_get_term, $link_parameters);
+            if (!$get_term_breadcrumb->EOF) {
+                // -----
+                // Enable a watching observer to modify the parameters to a breadcrumb link.
+                //
+                $link_parameters = $next_get_term_name . '=' . $_GET[$next_get_term_name];
+                $zco_notifier->notify('NOTIFY_INIT_ADD_CRUMBS_GET_TERMS_LINK_PARAMETERS', $next_get_term, $link_parameters);
 
-            $breadcrumb->add($get_term_breadcrumb->fields[$next_get_term['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $link_parameters));
+                $breadcrumb->add($get_term_breadcrumb->fields[$next_get_term['get_term_name_field']], zen_href_link(FILENAME_DEFAULT, $link_parameters));
+            }
         }
     }
-}
 
-/**
- * add the products name to the breadcrumb trail
- */
-if (isset($_GET['products_id'])) {
-    $productname = zen_get_products_name($_GET['products_id']);
-    if (!empty($productname)) {
-        $breadcrumb->add($productname, zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
+    /**
+     * add the products name to the breadcrumb trail
+     */
+    if (isset($_GET['products_id'])) {
+        $productname = zen_get_products_name($_GET['products_id']);
+        if (!empty($productname)) {
+            $breadcrumb->add($productname, zen_href_link(zen_get_info_page($_GET['products_id']), 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
+        }
     }
 }
