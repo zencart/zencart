@@ -237,7 +237,7 @@ if ($action === 'edit') {
                         <p class="control-label"><?= ENTRY_FROM ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control border-0 shadow-none"><?= $rInfo->customers_name ?></span>
+                        <span class="form-control border-0 shadow-none"><?= zen_output_string_protected($rInfo->customers_name) ?></span>
                     </div>
                 </div>
                 <div class="form-group mb-1">
