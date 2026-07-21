@@ -133,11 +133,24 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
         $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
     }
 
-    public function testMissingMainPageWithAFilterParamIsRejected(): void
+    /**
+     * A missing/empty main_page must be treated the same as init_sanitize.php treats
+     * it -- an empty main_page defaults to the index page (FILENAME_DEFAULT), so
+     * index.php?manufacturers_id=8 (no main_page at all) is a real, legitimate URL
+     * shape that renders as the index/manufacturer listing today. Must not be rejected.
+     */
+    public function testMissingMainPageWithAFilterParamIsNotRejected(): void
     {
         $get = ['manufacturers_id' => '8'];
 
-        $this->assertTrue(\zen_request_has_disallowed_catalog_param($get));
+        $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
+    }
+
+    public function testEmptyMainPageWithAFilterParamIsNotRejected(): void
+    {
+        $get = ['main_page' => '', 'manufacturers_id' => '8'];
+
+        $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
     }
 
     /**

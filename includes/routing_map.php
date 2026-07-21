@@ -68,7 +68,15 @@ function zen_request_has_disallowed_catalog_param(array $get): bool
         'categories_id', 'sale_category', 'reviews_id',
     ];
 
-    if (in_array($get['main_page'] ?? '', $catalogPages, true)) {
+    // Mirrors init_sanitize.php's own fallback:
+    // an empty/missing main_page defaults to the index page (FILENAME_DEFAULT)
+    // e.g. index.php?manufacturers_id=8 is a legitimate URL shape that renders as the index/manufacturer listing
+    $page = $get['main_page'] ?? '';
+    if ($page === '') {
+        $page = 'index';
+    }
+
+    if (in_array($page, $catalogPages, true)) {
         return false;
     }
 
