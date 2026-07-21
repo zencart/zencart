@@ -76,6 +76,19 @@ define('DB_DATABASE', '%%_DB_DATABASE_%%');
 define('SQL_CACHE_METHOD', '%%_SQL_CACHE_METHOD_%%');
 
 /**
+ * Optional: List of trusted proxy IP addresses.
+ * Leave it as an empty string/array if you are not using a proxy.
+ *
+ * But if you are hosting behind a proxy such as Cloudflare, you must add the official IP addresses of the proxy here.
+ * For example, for Cloudflare, you can find the list of IP addresses here: https://www.cloudflare.com/ips/
+ *
+ * Entries may be individual IPs or CIDR ranges (e.g. '173.245.48.0/20'),
+ * both IPv4 and IPv6 are supported.
+ * Supports listing entries as an array or a comma-delimited string.
+ */
+define('TRUSTED_PROXIES', []);
+
+/**
  * Reserved for future use
  */
 define('SESSION_STORAGE', '%%_SESSION_STORAGE_%%');
