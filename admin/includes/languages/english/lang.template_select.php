@@ -9,7 +9,7 @@
 $define = [
     'HEADING_TITLE' => 'Template Selection',
     'TEXT_INFO_DEFAULT_LANGUAGE' => 'Default (all)',
-    'TEXT_TEMPLATE_SELECT_INFO' => '<p>Use this tool change the template used to display the storefront. The default template is normally used for <strong>all</strong> languages. Adding template-to-language assignments is typically used when supporting RTL languages alongside LTR languages.</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template: see the online Help <strong>?</strong></p>',
+    'TEXT_TEMPLATE_SELECT_INFO' => '<p>Use this tool to change the template used to display the storefront. The default template is normally used for <strong>all</strong> languages. Adding template-to-language assignments is typically used when supporting RTL languages alongside LTR languages.</p><p>It is possible to view a template in a <em>private</em> session, for example when testing a new template: see the online Help <strong>?</strong></p>',
     'TABLE_HEADING_LANGUAGE' => 'Template Language',
     'TABLE_HEADING_NAME' => 'Template Name',
     'TABLE_HEADING_DIRECTORY' => 'Template Directory',
