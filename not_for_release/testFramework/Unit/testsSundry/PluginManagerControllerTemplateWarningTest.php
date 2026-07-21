@@ -31,6 +31,7 @@ namespace {
 
 namespace Tests\Unit\testsSundry {
 
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 use Zencart\PluginSupport\PluginStatus;
@@ -40,6 +41,7 @@ use Zencart\ViewBuilders\TableViewDefinition;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
 
+#[AllowMockObjectsWithoutExpectations]
 #[RunTestsInSeparateProcesses]
 class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
 {
