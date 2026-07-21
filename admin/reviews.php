@@ -224,52 +224,52 @@ if ($action === 'edit') {
                 <div class="form-group">
                     <?= zen_info_image($rInfo->products_image, $rInfo->products_name, zen_config('SMALL_IMAGE_WIDTH'), zen_config('SMALL_IMAGE_HEIGHT')) ?>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                     <div class="col-sm-3">
                         <p class="control-label"><?= ENTRY_PRODUCT ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= $rInfo->products_name ?></span>
+                        <span class="form-control border-0 shadow-none"><?= $rInfo->products_name ?></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                     <div class="col-sm-3">
                         <p class="control-label"><?= ENTRY_FROM ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= $rInfo->customers_name ?></span>
+                        <span class="form-control border-0 shadow-none"><?= zen_output_string_protected($rInfo->customers_name) ?></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                     <div class="col-sm-3">
                         <p class="control-label"><?= ENTRY_DATE ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= zen_date_short($rInfo->date_added) ?></span>
+                        <span class="form-control border-0 shadow-none"><?= zen_date_short($rInfo->date_added) ?></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                     <div class="col-sm-3">
                         <p class="control-label"><?= ENTRY_REVIEW_TITLE ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= zen_output_string_protected($rInfo->reviews_title) ?></span>
+                        <span class="form-control border-0 shadow-none"><?= zen_output_string_protected($rInfo->reviews_title) ?></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                     <div class="col-sm-3">
                         <p class="control-label"><?= ENTRY_REVIEW ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none"><?= nl2br(zen_output_string_protected(zen_trunc_string($rInfo->reviews_text, 15)), false) ?></span>
+                        <span class="form-control"><?= nl2br(zen_output_string_protected($rInfo->reviews_text), false) ?></span>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-1">
                     <div class="col-sm-3">
                         <p class="control-label"><?= ENTRY_RATING ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
-                        <span class="form-control" style="border:none; -webkit-box-shadow: none" title="<?= sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>">
+                        <span class="form-control border-0 shadow-none" title="<?= sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>">
                             <?= str_repeat(zen_icon('star-shadow', size: 'lg'), (int)$rInfo->reviews_rating) ?>
                             &nbsp;<small>[<?= sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>]</small>
                         </span>
@@ -451,7 +451,7 @@ if ($action === 'edit') {
         } else {
 ?>
                             <a href="<?= zen_href_link(FILENAME_REVIEWS, zen_get_all_get_params(['rID']) . 'rID=' . $review['reviews_id']) ?>" title="<?= IMAGE_ICON_INFO ?>" role="button">
-                                <?= zen_icon('circle-info') ?>
+                                <?= zen_icon('circle-info', '', '2x', true, false) ?>
                             </a>
 <?php
         }

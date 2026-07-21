@@ -1216,6 +1216,12 @@ tbody>tr>td.align-bottom {
 .object-fit-none {
     object-fit: none;
 }
+.border-0 {
+    border: 0 !important;
+}
+.shadow-none {
+    box-shadow: none !important;
+}
 /**/
 
 /* CKEditor */
