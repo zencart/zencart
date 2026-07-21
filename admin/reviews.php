@@ -266,7 +266,7 @@ if ($action === 'edit') {
                 </div>
                 <div class="form-group mb-1">
                     <div class="col-sm-3">
-                        <p class="control-label border-0 shadow-none"><?= ENTRY_RATING ?></p>
+                        <p class="control-label"><?= ENTRY_RATING ?></p>
                     </div>
                     <div class="col-sm-9 col-md-6">
                         <span class="form-control border-0 shadow-none" title="<?= sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating) ?>">
