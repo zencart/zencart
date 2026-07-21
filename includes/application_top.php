@@ -207,6 +207,16 @@ if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
     }
 }
 
+/**
+ * reject catalog-filter params (cPath, manufacturers_id, etc.) when supplied
+ * for a page that never legitimately reads them, such as bots stuffing shopping_cart
+ * or other non-catalog pages with spoofed query strings. See includes/routing_map.php.
+ */
+if (!$contaminated) {
+    require_once __DIR__ . '/routing_map.php';
+    $contaminated = zen_request_has_disallowed_catalog_param($_GET);
+}
+
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
