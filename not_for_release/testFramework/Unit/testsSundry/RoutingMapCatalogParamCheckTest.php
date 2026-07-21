@@ -5,13 +5,19 @@
  *
  * Regression coverage for #7924 / #7921's follow-up discussion: application_top.php's
  * very-early inoculation block now rejects (406, before any session/DB/file loads
- * beyond this one) a request that supplies a catalog-only filter param (cPath,
- * manufacturers_id, etc.) for a page that never legitimately reads it -- e.g. the
- * original forum-reported bot pattern, shopping_cart?manufacturers_id=8&products_id=1.
+ * beyond this one) a request that supplies a catalog-only filter param (manufacturers_id,
+ * etc.) for a page confirmed to never legitimately read it -- e.g. the original
+ * forum-reported bot pattern, shopping_cart?manufacturers_id=8&products_id=1.
  *
- * zen_request_has_disallowed_catalog_param() (includes/routing_map.php) is deliberately
- * self-contained (no framework, no constants, no DB) because it runs before
- * includes/configure.php is even loaded -- see application_top.php's inoculation block.
+ * zen_request_has_disallowed_catalog_param() (includes/routing_map.php) is a deny-list
+ * of known-bad targets (shopping_cart + checkout_*), not an allow-list of known-good
+ * pages -- deliberately, since this runs before plugins load and has no way to let a
+ * plugin register its own catalog-style page. A page NOT on the deny-list, including
+ * any plugin page or any core page nobody's added yet, is always allowed through.
+ *
+ * It's also deliberately self-contained (no framework, no constants, no DB) because it
+ * runs before includes/configure.php is even loaded -- see application_top.php's
+ * inoculation block.
  */
 
 namespace Tests\Unit\testsSundry;
@@ -95,8 +101,8 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     /**
      * brands/featured_categories both read $_GET['typefilter'] today (even though
      * they then discard/never act on it), so a request carrying it currently renders
-     * 200. They must stay in the allow-list to avoid turning that into a 406 for no
-     * functional gain.
+     * 200. Under the deny-list model they're simply never listed, so they're allowed
+     * by default -- no special-casing needed, unlike the old allow-list.
      */
     public function testBrandsAndFeaturedCategoriesAreNotRejectedForTypefilter(): void
     {
@@ -105,10 +111,10 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     }
 
     /**
-     * Every recognized catalog page, with a representative filter key, must NOT
-     * be rejected -- guards against a typo silently removing a page from the list.
+     * Every catalog "listing" page must NOT be rejected -- guards against a typo
+     * accidentally adding one of these to the deny-list.
      */
-    public function testEachCatalogPageIsAllowedToUseFilterParams(): void
+    public function testCatalogListingPagesAreNotRejected(): void
     {
         $catalogPages = [
             'index', 'search', 'search_result', 'advanced_search', 'advanced_search_result',
@@ -123,6 +129,36 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
                 \zen_request_has_disallowed_catalog_param($get),
                 "Expected '$page' to be allowed to use catalog filter params."
             );
+        }
+    }
+
+    /**
+     * The whole point of the deny-list model: a page this check has never heard of
+     * -- standing in for any plugin-added page -- must never be rejected, even
+     * when it carries a restricted key. An allow-list would 406 this permanently,
+     * with no way for the page to ever opt in (plugins aren't loaded yet). See
+     * GitHub issue #7924's follow-up discussion.
+     */
+    public function testAnUnrecognizedPluginLikePageIsNeverRejected(): void
+    {
+        $get = ['main_page' => 'some_plugins_custom_catalog_page', 'manufacturers_id' => '8', 'sort' => '2a'];
+
+        $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
+    }
+
+    /**
+     * Documents the accepted trade-off: core utility pages not on the deny-list
+     * (login, contact_us, account, ...) no longer get this specific early-reject
+     * optimization. That's intentional -- growing the deny-list to cover every
+     * non-catalog core page would reintroduce the same false-positive risk the
+     * deny-list model exists to avoid. These pages simply fall through to normal
+     * processing, exactly as if this file didn't exist.
+     */
+    public function testCoreUtilityPagesNotOnTheDenyListAreNotRejectedEither(): void
+    {
+        foreach (['login', 'contact_us', 'account'] as $page) {
+            $get = ['main_page' => $page, 'manufacturers_id' => '8'];
+            $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
         }
     }
 
@@ -176,32 +212,70 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
      * also legitimate on the open-ended, DB-driven set of product-detail "_info" pages
      * (product_info, product_music_info, ... including plugin-added product types).
      * This static, pre-DB check can't safely enumerate that set, so both keys are
-     * excluded here and left to the downstream DB-driven check instead. Getting this
-     * wrong would 406 every normal product-page view -- this is the regression this
-     * test guards against.
+     * excluded from $catalogFilterKeys entirely and left to the downstream DB-driven
+     * check instead. Tested against a page that IS on the deny-list (shopping_cart) --
+     * not product_info, which was never going to be checked anyway -- to actually
+     * exercise the exclusion rather than pass trivially.
      */
     public function testCPathAndProductsIdAreDeliberatelyExcluded(): void
     {
-        $get = ['main_page' => 'product_info', 'products_id' => '1', 'cPath' => '1_4'];
+        $get = ['main_page' => 'shopping_cart', 'products_id' => '1', 'cPath' => '1_4'];
 
         $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
     }
 
     /**
-     * Product-type "_info" pages and checkout pages are intentionally NOT covered
-     * by this early static check -- they're gated downstream (once the DB is
-     * available) by zen_page_uses_catalog_breadcrumb_lookups(). Confirms this
-     * function doesn't (incorrectly) reject them itself.
+     * Product-detail "_info" pages are never on the deny-list (open-ended, DB-driven
+     * set -- see class docblock), so they're never rejected by this early check
+     * regardless of which key is supplied. They're gated downstream instead, once
+     * the DB is available, by zen_page_uses_catalog_breadcrumb_lookups().
      */
-    public function testProductInfoAndCheckoutPagesAreNotRejectedHere(): void
+    public function testProductInfoPagesAreNeverRejectedHere(): void
     {
-        $pagesHandledDownstreamInstead = ['product_info', 'checkout_shipping', 'checkout_payment'];
+        $get = ['main_page' => 'product_info', 'products_id' => '1', 'cPath' => '1_4', 'manufacturers_id' => '8'];
 
-        foreach ($pagesHandledDownstreamInstead as $page) {
-            $get = ['main_page' => $page, 'products_id' => '1', 'cPath' => '1_4'];
+        $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
+    }
+
+    /**
+     * Unlike product_info, checkout pages ARE on the deny-list -- so, since the
+     * earlier PR extended this same reasoning to checkout, a checkout page carrying
+     * a manufacturers_id-class key (never legitimately used there) IS rejected here,
+     * even though cPath/products_id specifically remain deferred downstream (see
+     * testCPathAndProductsIdAreDeliberatelyExcluded).
+     */
+    public function testCheckoutPagesAreRejectedForManufacturersIdClassKeysButNotCPathOrProductsId(): void
+    {
+        foreach (['checkout_shipping', 'checkout_payment'] as $page) {
+            $this->assertTrue(
+                \zen_request_has_disallowed_catalog_param(['main_page' => $page, 'manufacturers_id' => '8']),
+                "Expected '$page' to reject manufacturers_id."
+            );
             $this->assertFalse(
+                \zen_request_has_disallowed_catalog_param(['main_page' => $page, 'products_id' => '1', 'cPath' => '1_4']),
+                "Expected '$page' to still allow products_id/cPath (deferred downstream)."
+            );
+        }
+    }
+
+    /**
+     * Every deny-listed page, with a representative filter key, must actually be
+     * rejected -- guards against a typo silently removing a page from the list.
+     */
+    public function testEachKnownNonCatalogPageIsRejected(): void
+    {
+        $knownNonCatalogPages = [
+            'shopping_cart',
+            'checkout_shipping', 'checkout_shipping_address',
+            'checkout_payment', 'checkout_payment_address',
+            'checkout_confirmation', 'checkout_process', 'checkout_success',
+        ];
+
+        foreach ($knownNonCatalogPages as $page) {
+            $get = ['main_page' => $page, 'manufacturers_id' => '8'];
+            $this->assertTrue(
                 \zen_request_has_disallowed_catalog_param($get),
-                "Expected '$page' to be left to the downstream DB-driven check, not rejected here."
+                "Expected '$page' to reject manufacturers_id."
             );
         }
     }
