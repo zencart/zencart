@@ -16,6 +16,19 @@ namespace Zencart\ViewBuilders {
     }
 }
 
+namespace {
+    function zen_get_catalog_template_directories(): array
+    {
+        return [
+            'template_default' => ['is_plugin_template' => false],
+            'responsive_classic_plugin' => [
+                'is_plugin_template' => true,
+                'plugin_key' => 'ResponsiveClassicPlugin',
+            ],
+        ];
+    }
+}
+
 namespace Tests\Unit\testsSundry {
 
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;

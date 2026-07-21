@@ -53,6 +53,99 @@ class TemplateSelectTest extends zcInProcessFeatureTestCaseAdmin
         );
     }
 
+    /**
+     * TemplateSelect::resolveTemplates() (which scans the filesystem and can INSERT
+     * new 'base' (-1) template_select records) is only meant to run when the admin's
+     * "Template Selection" tool itself is in use (admin/template_select.php calls it explicitly).
+     * Visiting an unrelated admin page must not trigger it.
+     */
+    public function testVisitingAnUnrelatedAdminPageDoesNotSynchronizeTemplateSelectTable(): void
+    {
+        $this->runCustomSeeder('StoreWizardSeeder');
+
+        $this->submitAdminLogin([
+            'admin_name' => 'Admin',
+            'admin_pass' => 'password',
+        ])->assertOk()
+            ->assertSee('Admin Home');
+
+        $db = $this->bootstrapLegacyDbConnection();
+        $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT);
+        $db->Execute(
+            "INSERT INTO " . TABLE_TEMPLATE_SELECT . "
+                (template_dir, template_language)
+             VALUES
+                ('template_default', 0)"
+        );
+
+        // Revisit Admin Home - unrelated to the Template Selection tool.
+        $this->visitAdminHome()->assertOk();
+
+        $result = $db->Execute(
+            "SELECT COUNT(*) AS the_count
+               FROM " . TABLE_TEMPLATE_SELECT . "
+              WHERE template_language = -1"
+        );
+        $this->assertSame(
+            0,
+            (int)$result->fields['the_count'],
+            'Visiting an unrelated admin page must not synchronize/insert base (-1) template_select records.'
+        );
+    }
+
+    /**
+     * Complements the prior test: visiting the Template Selection tool itself
+     * IS expected to lazily create a 'base' (template_language = -1) record
+     * for an on-disk template not yet represented in the table.
+     * This is the only place that record ever gets created.
+     * A fresh install only seeds the default (template_language = 0) row,
+     * so relying on a -1 row existing anywhere else would be a mistake.
+     */
+    public function testVisitingTheTemplateSelectionToolLazilyCreatesBaseRecords(): void
+    {
+        $this->runCustomSeeder('StoreWizardSeeder');
+
+        $this->submitAdminLogin([
+            'admin_name' => 'Admin',
+            'admin_pass' => 'password',
+        ])->assertOk()
+            ->assertSee('Admin Home');
+
+        $db = $this->bootstrapLegacyDbConnection();
+        $db->Execute("DELETE FROM " . TABLE_TEMPLATE_SELECT);
+        $db->Execute(
+            "INSERT INTO " . TABLE_TEMPLATE_SELECT . "
+                (template_dir, template_language)
+             VALUES
+                ('template_default', 0)"
+        );
+
+        $before = $db->Execute(
+            "SELECT COUNT(*) AS the_count
+               FROM " . TABLE_TEMPLATE_SELECT . "
+              WHERE template_language = -1"
+        );
+        $this->assertSame(
+            0,
+            (int)$before->fields['the_count'],
+            'A fresh install only seeds the template_language = 0 row; no base (-1) record should exist yet.'
+        );
+
+        $this->visitAdminCommand('template_select')->assertOk();
+
+        $result = $db->Execute(
+            "SELECT COUNT(*) AS the_count
+               FROM " . TABLE_TEMPLATE_SELECT . "
+              WHERE template_dir = 'responsive_classic'
+                AND template_language = -1"
+        );
+        $this->assertSame(
+            1,
+            (int)$result->fields['the_count'],
+            'Visiting the Template Selection tool must lazily create a base (-1) record for an on-disk template.'
+        );
+    }
+
     public function testDetailsPanelRendersMissingTemplateRecordWithoutSettingsWarning(): void
     {
         $this->runCustomSeeder('StoreWizardSeeder');

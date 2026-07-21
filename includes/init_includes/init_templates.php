@@ -91,14 +91,14 @@ if (empty($tpl_settings) || !is_array($tpl_settings)) {
 }
 
 /**
- * Load any template override settings from db
+ * Load any template override settings from db. Note that
+ * any $tpl_settings values specified in the template's
+ * template_settings.php file take precedence over the
+ * database values.
  */
-if (!empty($templateSelect->getActiveTemplateSettings())) {
-    $tmp = json_decode($templateSelect->getActiveTemplateSettings(), true);
-    if (is_array($tmp)) {
-        $tmp = zen_normalize_scalar_template_settings($tmp);
-        $tpl_settings = array_merge($tmp, $tpl_settings);
-    }
+$tmp = $templateSelect->getTemplateSettings($template_dir);
+if ($tmp !== null) {
+    $tpl_settings = array_merge(zen_normalize_scalar_template_settings($tmp), $tpl_settings);
 }
 $tpl_settings['template_dir'] = $template_dir;
 

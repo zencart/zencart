@@ -14,62 +14,85 @@ require 'includes/application_top.php';
 if (isset($_GET['tID'])) {
     $selected_template = (int)$_GET['tID'];
 }
+
+$templateSelect = new TemplateSelect();
+
+// -----
+// This tool is the only place that needs the `template_select` table synchronized
+// with the templates currently found on the filesystem/installed via the Plugin
+// Manager, so it's the only caller responsible for triggering that (non-free)
+// synchronization; see TemplateSelect::resolveTemplates().
+//
+$templateSelect->resolveTemplates();
+$template_info = $templateSelect->getSelectableTemplates();
+
 $action = $_GET['action'] ?? '';
-$template_info = zen_get_catalog_template_directories();
-
-$installedPluginKeys = [];
-foreach ((new PluginControlRepository($db))->getAll() as $plugin) {
-    if (($plugin['status'] ?? PluginStatus::NOT_INSTALLED) !== PluginStatus::NOT_INSTALLED) {
-        $installedPluginKeys[$plugin['unique_key']] = true;
-    }
-}
-
-$template_info = array_filter(
-    $template_info,
-    static function (array $template) use ($installedPluginKeys): bool {
-        if (empty($template['is_plugin_template'])) {
-            return true;
-        }
-
-        return isset($installedPluginKeys[$template['plugin_key'] ?? '']);
-    }
-);
-
-$templateIsSelectable = static function (string $templateKey) use ($template_info): bool {
-    return isset($template_info[$templateKey]);
-};
-
 if (!empty($action)) {
     switch ($action) {
-        case 'insert':
+        // -----
+        // Activates a template for use on the storefront.
+        //
+        case 'activate':
             $templateKey = (string)($_POST['ln'] ?? '');
-            if (!$templateIsSelectable($templateKey)) {
+            if (!isset($_POST['lang']) || $templateSelect->templateIsSelectable($templateKey) === false) {
                 $messageStack->add_session(ERROR_TEMPLATE_SELECTION_NOT_AVAILABLE, 'error');
                 zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             }
 
-            $selected_template = (int)zen_register_new_template($templateKey, (int)$_POST['lang']);
-            $action = '';
+            // -----
+            // Attempt to register the template for a given language, recording the
+            // action in a admin activity-log record. If the action isn't successful,
+            // that implies that the tool's form has an issue or an admin is fiddling
+            // with the HTML. No success/fail message is set, intentionally.
+            //
+            $rc = $templateSelect->registerNewTemplate($templateKey, (int)$_POST['lang']);
+            if ($rc !== false) {
+                $action_result = 'Successful';
+                $activity_status = 'info';
+            } else {
+                $action_result = 'Unsuccessful';
+                $activity_status = 'warning';
+            }
+            zen_record_admin_activity("$action_result activation of $templateKey for language id#" . (int)$_POST['lang'], $activity_status);
+            zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
             break;
 
-        case 'save':
+        // -----
+        // Updates the template in use on the storefront for a previously-selected
+        // language, implying that there is already a template associated for the
+        // language in the database.
+        //
+        case 'update':
             $templateKey = (string)($_POST['ln'] ?? '');
-            if (!$templateIsSelectable($templateKey)) {
+            if (!isset($_POST['tID']) || $templateSelect->templateIsSelectable($templateKey) === false) {
                 $messageStack->add_session(ERROR_TEMPLATE_SELECTION_NOT_AVAILABLE, 'error');
                 zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             }
 
-            zen_update_template_name_for_id($selected_template, $templateKey);
-            $init_file = zen_get_template_init_file_path($templateKey);
-            if ($init_file !== null && file_exists($init_file)) {
-                require $init_file;
+            // -----
+            // Attempt to update the template for a given template_id, recording the
+            // action in a admin activity-log record. If the action isn't successful,
+            // that implies that the tool's form has an issue or an admin is fiddling
+            // with the HTML. No success/fail message is set, intentionally.
+            //
+            $rc = $templateSelect->updateTemplateNameForId((int)$_POST['tID'], $templateKey);
+            if ($rc === TemplateSelect::SETTINGS_OK) {
+                $action_result = 'successful';
+                $activity_status = 'info';
+            } else {
+                $action_result = 'unsuccessful';
+                $activity_status = 'warning';
             }
+            zen_record_admin_activity("Template directory change to $templateKey for id#" . (int)$_POST['tID'] . " was $action_result.", $activity_status);
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT, zen_get_all_get_params(['action'])));
             break;
 
         case 'deleteconfirm':
-            zen_deregister_template_id((int)($_POST['tID'] ?? 0));
+            $templateSelect->deregisterTemplateId((int)($_POST['tID'] ?? 0));
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
+            break;
+
+        default:
             break;
     }
 }
@@ -104,7 +127,6 @@ if (!empty($action)) {
 // -----
 // Note: No need for pagination!
 //
-$templateSelect = new TemplateSelect();
 $templates = $templateSelect->getAllActiveTemplates();
 foreach ($templates as $template) {
     if (!isset($template_info[$template['template_dir']])) {
@@ -179,7 +201,7 @@ switch ($action) {
     case 'new':
         $heading[] = ['text' => '<h4>' . TEXT_INFO_HEADING_NEW_TEMPLATE . '</h4>'];
 
-        $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'action=insert', 'post', 'class="form-horizontal"')];
+        $contents = ['form' => zen_draw_form('zones', FILENAME_TEMPLATE_SELECT, 'action=activate', 'post', 'class="form-horizontal"')];
         $contents[] = ['text' => TEXT_INFO_INSERT_INTRO];
         foreach($template_info as $key => $value) {
             if (isset($value['missing'])) {
@@ -190,7 +212,7 @@ switch ($action) {
                 'text' => $value['name'] . ' (' . ($value['version'] ?? 'V0') . ')',
             ];
         }
-        $lns = zen_get_template_languages_not_registered();
+        $lns = $templateSelect->getUnregisteredTemplateLanguages();
         foreach ($lns as $ln) {
             $language_array[] = [
                 'id' => $ln['language_id'],
@@ -220,7 +242,7 @@ switch ($action) {
     case 'edit':
         $heading[] = ['text' => '<h4>' . TABLE_HEADING_LANGUAGE . ': '  . $template_language . '</h4>'];
 
-        $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'tID=' . $tInfo->template_id . '&action=save', 'post', 'class="form-horizontal"')];
+        $contents = ['form' => zen_draw_form('templateselect', FILENAME_TEMPLATE_SELECT, 'action=update', 'post', 'class="form-horizontal"')];
         $contents[] = ['text' => TEXT_INFO_EDIT_INTRO];
         foreach($template_info as $key => $value) {
             if (isset($value['missing'])) {
@@ -231,7 +253,8 @@ switch ($action) {
         $contents[] = [
             'text' =>
                 zen_draw_label(TEXT_INFO_TEMPLATE_NAME, 'ln', 'class="control-label"') .
-                zen_draw_pull_down_menu('ln', $template_array, $templateSelect->getTemplateDirForLanguage($tInfo->template_language), 'class="form-control" id="ln"')
+                zen_draw_pull_down_menu('ln', $template_array, $templateSelect->getTemplateDirForLanguage($tInfo->template_language), 'class="form-control" id="ln"') .
+                zen_draw_hidden_field('tID', $tInfo->template_id)
         ];
         $contents[] = [
             'align' => 'text-center',
