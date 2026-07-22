@@ -5,11 +5,20 @@
  * @copyright Copyright 2003-2024 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2024 Jun 13 Modified in v2.1.0-alpha1 $
+ * @version $Id: ZenExpert 2026-07-22 Modified in v2.3.0
  */
 
 // This should be first line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_FREE_SHIPPING_INFO');
+
+// strict cPath validation
+if (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0 && isset($_GET['cPath'])) {
+    $true_cPath = zen_validate_product_cpath((int)$_GET['products_id'], $_GET['cPath']);
+
+    if ($true_cPath !== '' && $_GET['cPath'] !== $true_cPath) {
+        zen_execute_cpath_redirect($true_cPath, (int)$_GET['products_id']);
+    }
+}
 
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 

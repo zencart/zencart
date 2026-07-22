@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2026 Feb 28 Modified in v2.2.1 $
+ * @version $Id: ZenExpert 2026-07-22 Modified in v2.3.0
  */
 
 // This should be first line of the script:
@@ -22,6 +22,16 @@ $current_category_not_found = false;
 $current_category_is_disabled = false;
 $current_category_has_products = false;
 $current_category_has_subcats = false;
+
+// strict cPath validation
+if (isset($_GET['cPath']) && isset($current_category_id) && $current_category_id > 0) {
+    $true_cPath = zen_get_generated_category_path_rev($current_category_id);
+
+    if ($_GET['cPath'] !== $true_cPath) {
+        zen_execute_cpath_redirect($true_cPath);
+    }
+}
+
 if (isset($cPath) && zen_not_null($cPath)) {
     if ($cPath > 0) {
         $category_status_query =

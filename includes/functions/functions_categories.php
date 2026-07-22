@@ -5,7 +5,7 @@
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @version $Id: ZenExpert 2026-07-22 Modified in v2.3.0
  */
 
 /**
@@ -1483,4 +1483,67 @@ function zen_get_products_to_categories($category_id, bool $include_inactive = f
     }
 
     return $products_linked;
+}
+
+
+/**
+ * Validates a product's requested cPath against its actual linked categories or master category.
+ * Returns the true, mathematically correct cPath string.
+ *
+ * @param int $products_id
+ * @param string $current_cpath
+ * @return string
+ * @since ZC v2.3.0
+ */
+function zen_validate_product_cpath($products_id, $current_cpath) {
+    global $db;
+    $products_id = (int)$products_id;
+    $cPath_array = explode('_', $current_cpath);
+    $last_category_id = (int)end($cPath_array);
+
+    // check if the product actually exists in the category the URL claims it is in
+    $check_link_query = "SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = :prodId AND categories_id = :catId LIMIT 1";
+    $check_link_query = $db->bindVars($check_link_query, ':prodId', $products_id, 'integer');
+    $check_link_query = $db->bindVars($check_link_query, ':catId', $last_category_id, 'integer');
+    $check_link_result = $db->Execute($check_link_query);
+
+    if (!$check_link_result->EOF) {
+        // product is in this category - generate the perfect path chain.
+        return zen_get_generated_category_path_rev($last_category_id);
+    } else {
+        // product is NOT in this category (e.g., mangled bot URL) - find the Master Category
+        $master_cat_query = "SELECT master_categories_id FROM " . TABLE_PRODUCTS . " WHERE products_id = :prodId LIMIT 1";
+        $master_cat_query = $db->bindVars($master_cat_query, ':prodId', $products_id, 'integer');
+        $master_cat_result = $db->Execute($master_cat_query);
+
+        if (!$master_cat_result->EOF) {
+            return zen_get_generated_category_path_rev($master_cat_result->fields['master_categories_id']);
+        }
+    }
+    return '';
+}
+
+/**
+ * Executes a 301 Permanent Redirect to a clean cPath, preserving all other valid GET parameters.
+ *
+ * @param string $true_cPath
+ * @param int $products_id
+ * @since ZC v2.3.0
+ */
+function zen_execute_cpath_redirect($true_cPath, $products_id = 0) {
+    $get_params = 'cPath=' . $true_cPath;
+
+    if ((int)$products_id > 0) {
+        $get_params .= '&products_id=' . (int)$products_id;
+    }
+
+    // preserve other valid GET parameters (pagination, filters, etc.)
+    foreach ($_GET as $key => $value) {
+        if ($key !== 'main_page' && $key !== 'cPath' && $key !== 'products_id' && $key !== 'zenid' && !is_array($value)) {
+            $get_params .= '&' . $key . '=' . $value;
+        }
+    }
+
+    $main_page = $_GET['main_page'] ?? FILENAME_DEFAULT;
+    zen_redirect(zen_href_link($main_page, $get_params), 301);
 }
