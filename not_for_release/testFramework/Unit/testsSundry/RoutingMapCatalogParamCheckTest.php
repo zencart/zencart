@@ -10,10 +10,12 @@
  * forum-reported bot pattern, shopping_cart?manufacturers_id=8&products_id=1.
  *
  * zen_request_has_disallowed_catalog_param() (includes/routing_map.php) is a deny-list
- * of known-bad targets (shopping_cart + checkout_*), not an allow-list of known-good
- * pages -- deliberately, since this runs before plugins load and has no way to let a
- * plugin register its own catalog-style page. A page NOT on the deny-list, including
- * any plugin page or any core page nobody's added yet, is always allowed through.
+ * of known-bad targets -- shopping_cart matched explicitly, every checkout-flow page
+ * (core and third-party one-page/guest-checkout addons alike) matched by the
+ * 'checkout_' prefix -- not an allow-list of known-good pages -- deliberately, since
+ * this runs before plugins load and has no way to let a plugin register its own
+ * catalog-style page. A page that doesn't match, including any plugin page or any
+ * core page nobody's added yet, is always allowed through.
  *
  * It's also deliberately self-contained (no framework, no constants, no DB) because it
  * runs before includes/configure.php is even loaded -- see application_top.php's
@@ -259,8 +261,9 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     }
 
     /**
-     * Every deny-listed page, with a representative filter key, must actually be
-     * rejected -- guards against a typo silently removing a page from the list.
+     * shopping_cart plus every core checkout-flow page, with a representative
+     * filter key, must actually be rejected -- guards against the prefix logic
+     * (or the explicit shopping_cart check) silently breaking.
      */
     public function testEachKnownNonCatalogPageIsRejected(): void
     {
@@ -278,5 +281,41 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
                 "Expected '$page' to reject manufacturers_id."
             );
         }
+    }
+
+    /**
+     * Also match a 'checkout_' prefix match to accommodate both core and third-party
+     * one-page-checkout addon pages which follow the same naming convention:
+     * all get the same protection automatically, with no maintenance burden per addon.
+     */
+    public function testThirdPartyCheckoutAddonPagesAreAlsoRejected(): void
+    {
+        $knownAddonCheckoutPages = [
+            'checkout_one', 'checkout_one_confirmation', 'checkout_one_send_welcome_email',
+        ];
+
+        foreach ($knownAddonCheckoutPages as $page) {
+            $get = ['main_page' => $page, 'manufacturers_id' => '8'];
+            $this->assertTrue(
+                \zen_request_has_disallowed_catalog_param($get),
+                "Expected '$page' to reject manufacturers_id."
+            );
+        }
+    }
+
+    /**
+     * Documents the accepted trade-off of the prefix match, called out explicitly
+     * in routing_map.php's docblock: ANY page starting with 'checkout_' is denied here,
+     * even one from an unrelated plugin that has nothing to do with the checkout flow.
+     * Judged unlikely enough in practice to accept, in exchange for not having to enumerate
+     * every checkout-flow page (core and third-party) by hand.
+     * If this test starts failing a real plugin's build, that's the trade-off
+     * materializing, not a bug in this function.
+     */
+    public function testAnyCheckoutPrefixedPageIsRejectedEvenIfUnrelatedToCheckout(): void
+    {
+        $get = ['main_page' => 'checkout_totally_unrelated_plugin_page', 'manufacturers_id' => '8'];
+
+        $this->assertTrue(\zen_request_has_disallowed_catalog_param($get));
     }
 }

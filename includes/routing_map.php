@@ -15,15 +15,20 @@
  * This is a deny-list of known-bad targets, not an allow-list of known-good pages.
  * That's deliberate: this check runs before plugins are loaded, so it has no way
  * to let a plugin register its own catalog-style page
- * (e.g. a custom "Deals" page reading manufacturers_id/sort/keyword)
+ * (e.g. a custom "Deals" page reading manufacturers_id/sort/keyword).
+ *
+ * shopping_cart is matched explicitly. Every checkout-flow page including core
+ * (checkout_shipping, checkout_payment, ...) and known third-party addons like
+ * (checkout_one, checkout_one_confirmation, etc) is matched by the 'checkout_' prefix
+ * instead of an enumerated list. Accepted trade-off: a plugin that names an unrelated
+ * page starting with 'checkout_' would also be denied here, judged unlikely enough
+ * in practice to be worth the reduced maintenance burden versus enumerating every
+ * checkout-flow page by hand.
  *
  * Deliberately narrow, by design:
  *  - This is NOT an exhaustive deny-list of every non-catalog page in core,
- *    let alone every plugin page. It only lists the pages actually confirmed as
+ *    let alone every plugin page. It only targets the pages actually confirmed as
  *    real bot targets: the shopping cart and the checkout flow.
- *    Extend it over time with other guaranteed-core, guaranteed-stable page names
- *    as more patterns get reported, never with anything that could plausibly
- *    be a plugin-defined page name.
  *  - The restricted param list below is NOT an exhaustive allow-list of every GET
  *    key either, to avoid rejecting legitimate params this system doesn't control
  *    (such as marketing/tracking params (utm_source, gclid, fbclid) or plugin-added keys).
@@ -39,8 +44,8 @@
  * Keys deliberately left OUT, documented so a future edit doesn't "helpfully" add them:
  *  - pID / pid: look like catalog candidates but are used by shopping_cart.php's
  *    own remove/update links, plus ask_a_question and the popup_image pages.
- *    Restricting them here would break the shopping cart's own UI -- notably,
- *    shopping_cart is itself on the deny-list below, so this isn't hypothetical.
+ *    Restricting them here would break the shopping cart's own UI ... notably,
+ *    shopping_cart is itself denied below, so this isn't hypothetical.
  *  - page: used broadly, not catalog-specific.
  */
 
@@ -53,13 +58,6 @@
  */
 function zen_request_has_disallowed_catalog_param(array $get): bool
 {
-    static $knownNonCatalogPages = [
-        'shopping_cart',
-        'checkout_shipping', 'checkout_shipping_address',
-        'checkout_payment', 'checkout_payment_address',
-        'checkout_confirmation', 'checkout_process', 'checkout_success',
-    ];
-
     // NOTE: cPath and products_id are intentionally excluded -- see the docblock above.
     static $catalogFilterKeys = [
         'manufacturers_id',
@@ -78,7 +76,7 @@ function zen_request_has_disallowed_catalog_param(array $get): bool
         $page = 'index';
     }
 
-    if (!in_array($page, $knownNonCatalogPages, true)) {
+    if ($page !== 'shopping_cart' && !str_starts_with($page, 'checkout_')) {
         return false;
     }
 
