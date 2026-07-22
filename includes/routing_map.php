@@ -17,18 +17,22 @@
  * to let a plugin register its own catalog-style page
  * (e.g. a custom "Deals" page reading manufacturers_id/sort/keyword).
  *
- * shopping_cart is matched explicitly. Every checkout-flow page including core
- * (checkout_shipping, checkout_payment, ...) and known third-party addons like
- * (checkout_one, checkout_one_confirmation, etc) is matched by the 'checkout_' prefix
- * instead of an enumerated list. Accepted trade-off: a plugin that names an unrelated
- * page starting with 'checkout_' would also be denied here, judged unlikely enough
- * in practice to be worth the reduced maintenance burden versus enumerating every
- * checkout-flow page by hand.
+ * Only checkout-flow pages are matched here. Core pages (checkout_shipping,
+ * checkout_payment, ...) and known third-party addons alike (checkout_one,
+ * checkout_one_confirmation, etc), all via the 'checkout_' prefix instead of an
+ * enumerated list.
+ *
+ * shopping_cart is deliberately NOT matched here because actionBuyNow() legitimately
+ * redirects to shopping_cart carrying the query string of whatever catalog listing
+ * the "Buy Now" button was clicked from. The actual protection against wasted
+ * breadcrumb/category queries lives downstream instead, in functions_lookups.php
+ * at zen_page_uses_catalog_breadcrumb_lookups().
  *
  * Deliberately narrow, by design:
  *  - This is NOT an exhaustive deny-list of every non-catalog page in core,
- *    let alone every plugin page. It only targets the pages actually confirmed as
- *    real bot targets: the shopping cart and the checkout flow.
+ *    let alone every plugin page. It only targets the checkout flow, the one place
+ *    confirmed safe from the redirect-leakage problem above (checkout is never the
+ *    target of a "Buy Now from a listing" redirect).
  *  - The restricted param list below is NOT an exhaustive allow-list of every GET
  *    key either, to avoid rejecting legitimate params this system doesn't control
  *    (such as marketing/tracking params (utm_source, gclid, fbclid) or plugin-added keys).
@@ -42,10 +46,7 @@
  *    correctly enumerate that page set from TABLE_PRODUCT_TYPES.
  *
  * Keys deliberately left OUT, documented so a future edit doesn't "helpfully" add them:
- *  - pID / pid: look like catalog candidates but are used by shopping_cart.php's
- *    own remove/update links, plus ask_a_question and the popup_image pages.
- *    Restricting them here would break the shopping cart's own UI ... notably,
- *    shopping_cart is itself denied below, so this isn't hypothetical.
+ *  - pID / pid: look like catalog candidates but are used legitimately on several pages.
  *  - page: used broadly, not catalog-specific.
  */
 
@@ -62,10 +63,12 @@ function zen_request_has_disallowed_catalog_param(array $get): bool
     static $catalogFilterKeys = [
         'manufacturers_id',
         'sort',
-        'music_genre_id', 'record_company_id',
         'disp_order', 'typefilter', 'filter_id', 'alpha_filter_id',
         'keyword', 'dfrom', 'pfrom', 'dto', 'pto', 'search_in_description', 'inc_subcat',
-        'categories_id', 'sale_category', 'reviews_id',
+        'categories_id',
+        'sale_category',
+        'reviews_id',
+        'music_genre_id', 'record_company_id',
     ];
 
     // Mirrors init_sanitize.php's own fallback:
@@ -76,7 +79,7 @@ function zen_request_has_disallowed_catalog_param(array $get): bool
         $page = 'index';
     }
 
-    if ($page !== 'shopping_cart' && !str_starts_with($page, 'checkout_')) {
+    if (!str_starts_with($page, 'checkout_')) {
         return false;
     }
 

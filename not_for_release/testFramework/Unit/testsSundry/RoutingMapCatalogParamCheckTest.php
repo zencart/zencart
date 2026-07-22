@@ -4,18 +4,29 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  *
  * Regression coverage for #7924 / #7921's follow-up discussion: application_top.php's
- * very-early inoculation block now rejects (406, before any session/DB/file loads
- * beyond this one) a request that supplies a catalog-only filter param (manufacturers_id,
- * etc.) for a page confirmed to never legitimately read it -- e.g. the original
- * forum-reported bot pattern, shopping_cart?manufacturers_id=8&products_id=1.
+ * very-early inoculation block rejects (406, before any session/DB/file loads beyond
+ * this one) a request that supplies a catalog-only filter param (manufacturers_id,
+ * etc.) for a checkout-flow page confirmed to never legitimately read it.
  *
  * zen_request_has_disallowed_catalog_param() (includes/routing_map.php) is a deny-list
- * of known-bad targets -- shopping_cart matched explicitly, every checkout-flow page
- * (core and third-party one-page/guest-checkout addons alike) matched by the
- * 'checkout_' prefix -- not an allow-list of known-good pages -- deliberately, since
- * this runs before plugins load and has no way to let a plugin register its own
- * catalog-style page. A page that doesn't match, including any plugin page or any
- * core page nobody's added yet, is always allowed through.
+ * of known-bad targets -- checkout-flow pages only (core and third-party
+ * one-page/guest-checkout addons alike), matched by the 'checkout_' prefix -- not an
+ * allow-list of known-good pages -- deliberately, since this runs before plugins load
+ * and has no way to let a plugin register its own catalog-style page. A page that
+ * doesn't match, including any plugin page or any core page nobody's added yet, is
+ * always allowed through.
+ *
+ * shopping_cart is deliberately NOT matched here (even though it's the page named in
+ * the original problem report): actionBuyNow()'s redirect-to-cart legitimately carries the
+ * entire query string of whatever catalog listing "Buy Now" was clicked from
+ * (a pre-existing dead-parameter bug in shopping_cart.php that this file can't safely
+ * work around), so shopping_cart?manufacturers_id=X is sometimes a real, just-completed
+ * purchase, not a bot -- confirmed via live production testing after an earlier version
+ * of this file DID match shopping_cart and broke the "Buy Now" button.
+ * shopping_cart's actual protection lives downstream instead, in
+ * zen_page_uses_catalog_breadcrumb_lookups() (functions_lookups.php), whose failure
+ * mode is skipping an already-unneeded breadcrumb lookup rather than rejecting the
+ * request outright.
  *
  * It's also deliberately self-contained (no framework, no constants, no DB) because it
  * runs before includes/configure.php is even loaded -- see application_top.php's
@@ -36,11 +47,11 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     }
 
     /**
-     * Every catalog-filter key, fired at a page that never legitimately uses it.
-     * This is the actual bug: a bot supplying these params on, say, the shopping
-     * cart page to force wasted breadcrumb/category lookups downstream.
+     * Every catalog-filter key, fired at a checkout page that never legitimately
+     * uses it. This is the actual problem: a bot supplying these params to force
+     * wasted breadcrumb/category lookups downstream.
      */
-    public function testEachCatalogFilterKeyIsRejectedOnANonCatalogPage(): void
+    public function testEachCatalogFilterKeyIsRejectedOnACheckoutPage(): void
     {
         // NOTE: cPath and products_id are NOT in this list -- see
         // testCPathAndProductsIdAreDeliberatelyExcluded() for why.
@@ -52,18 +63,22 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
         ];
 
         foreach ($catalogFilterKeys as $key) {
-            $get = ['main_page' => 'shopping_cart', $key => '1'];
+            $get = ['main_page' => 'checkout_shipping', $key => '1'];
             $this->assertTrue(
                 \zen_request_has_disallowed_catalog_param($get),
-                "Expected '$key' on shopping_cart to be rejected."
+                "Expected '$key' on checkout_shipping to be rejected."
             );
         }
     }
 
     /**
-     * The exact URL pattern reported in the forum thread behind #7921.
+     * The exact URL pattern reported in the forum thread behind #7921 is NOT rejected
+     * by this function. See the class docblock: shopping_cart was removed from
+     * this early check because the "Buy Now" redirect legitimately produces indistinguishable URLs.
+     * shopping_cart's protection against the wasted-query problem this issue report was
+     * actually about lives downstream in zen_page_uses_catalog_breadcrumb_lookups().
      */
-    public function testTheOriginalForumReportedBotPatternIsRejected(): void
+    public function testTheOriginalForumReportedBotPatternIsNotRejectedHereAnymore(): void
     {
         $get = [
             'main_page' => 'shopping_cart',
@@ -73,7 +88,52 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
             'products_id' => '1',
         ];
 
-        $this->assertTrue(\zen_request_has_disallowed_catalog_param($get));
+        $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
+    }
+
+    /**
+     * Regression test for the issue this file's shopping_cart exclusion exists to fix:
+     * actionBuyNow(), when DISPLAY_CART is enabled, redirects to shopping_cart carrying
+     * the *entire* query string of the catalog listing the "Buy Now" button was clicked from
+     * (a pre-existing dead-parameter bug in shopping_cart.php, not something this file can detect or work around).
+     * A customer buying from a manufacturer-filtered, sorted listing legitimately lands
+     * on exactly this URL shape and must not be 406'd for it.
+     */
+    public function testALegitimateBuyNowRedirectCarryingListingFiltersIsNotRejected(): void
+    {
+        $get = [
+            'main_page' => 'shopping_cart',
+            'manufacturers_id' => '5',
+            'sort' => '2a',
+            'disp_order' => '1',
+            'products_id' => '42',
+        ];
+
+        $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
+    }
+
+    /**
+     * shopping_cart must never be rejected by this early check, regardless of which
+     * catalog-filter key is present -- every one of them can legitimately leak
+     * through the Buy Now redirect described above, not just the ones in the
+     * specific regression case above.
+     */
+    public function testShoppingCartIsNeverRejectedForAnyCatalogFilterKey(): void
+    {
+        $catalogFilterKeys = [
+            'manufacturers_id', 'music_genre_id', 'record_company_id',
+            'disp_order', 'sort', 'typefilter', 'filter_id', 'alpha_filter_id',
+            'keyword', 'dfrom', 'pfrom', 'dto', 'pto', 'search_in_description', 'inc_subcat',
+            'categories_id', 'sale_category', 'reviews_id',
+        ];
+
+        foreach ($catalogFilterKeys as $key) {
+            $get = ['main_page' => 'shopping_cart', $key => '1'];
+            $this->assertFalse(
+                \zen_request_has_disallowed_catalog_param($get),
+                "Expected '$key' on shopping_cart to NOT be rejected."
+            );
+        }
     }
 
     /**
@@ -138,8 +198,8 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
      * The whole point of the deny-list model: a page this check has never heard of
      * -- standing in for any plugin-added page -- must never be rejected, even
      * when it carries a restricted key. An allow-list would 406 this permanently,
-     * with no way for the page to ever opt in (plugins aren't loaded yet). See
-     * GitHub issue #7924's follow-up discussion.
+     * with no way for the page to ever opt in (plugins aren't loaded yet).
+     * See GitHub issue #7924's follow-up discussion.
      */
     public function testAnUnrecognizedPluginLikePageIsNeverRejected(): void
     {
@@ -166,14 +226,14 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
 
     public function testANonCatalogPageWithNoFilterParamsIsNotRejected(): void
     {
-        $get = ['main_page' => 'shopping_cart', 'action' => 'add_product'];
+        $get = ['main_page' => 'checkout_shipping', 'action' => 'add_product'];
 
         $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
     }
 
     /**
      * A missing/empty main_page must be treated the same as init_sanitize.php treats
-     * it -- an empty main_page defaults to the index page (FILENAME_DEFAULT), so
+     * it: an empty main_page defaults to the index page (FILENAME_DEFAULT), so
      * index.php?manufacturers_id=8 (no main_page at all) is a real, legitimate URL
      * shape that renders as the index/manufacturer listing today. Must not be rejected.
      */
@@ -192,16 +252,18 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     }
 
     /**
-     * pID/pid look like catalog candidates but are used by shopping_cart's own
-     * remove/update links, ask_a_question, and the popup_image pages -- they must
-     * stay out of the restricted list, or the cart's own UI breaks.
+     * pID/pid look like catalog candidates but are used by shopping_cart.php's own
+     * remove/update links, ask_a_question, and the popup_image pages; they must
+     * stay out of the restricted list. Tested against checkout_shipping (a page this
+     * check actually inspects) rather than shopping_cart, which is never checked at
+     * all now regardless of key.
      */
     public function testDeliberatelyExcludedKeysAreNeverRejected(): void
     {
         $deliberatelyExcludedKeys = ['pID', 'pid', 'page', 'action', 'cID', 'id'];
 
         foreach ($deliberatelyExcludedKeys as $key) {
-            $get = ['main_page' => 'shopping_cart', $key => '1'];
+            $get = ['main_page' => 'checkout_shipping', $key => '1'];
             $this->assertFalse(
                 \zen_request_has_disallowed_catalog_param($get),
                 "Expected '$key' to remain unrestricted (see routing_map.php's excluded-keys notes)."
@@ -215,13 +277,12 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
      * (product_info, product_music_info, ... including plugin-added product types).
      * This static, pre-DB check can't safely enumerate that set, so both keys are
      * excluded from $catalogFilterKeys entirely and left to the downstream DB-driven
-     * check instead. Tested against a page that IS on the deny-list (shopping_cart) --
-     * not product_info, which was never going to be checked anyway -- to actually
-     * exercise the exclusion rather than pass trivially.
+     * check instead. Tested against checkout_shipping (a page this check actually
+     * inspects), not shopping_cart, which is never checked at all now.
      */
     public function testCPathAndProductsIdAreDeliberatelyExcluded(): void
     {
-        $get = ['main_page' => 'shopping_cart', 'products_id' => '1', 'cPath' => '1_4'];
+        $get = ['main_page' => 'checkout_shipping', 'products_id' => '1', 'cPath' => '1_4'];
 
         $this->assertFalse(\zen_request_has_disallowed_catalog_param($get));
     }
@@ -240,11 +301,9 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     }
 
     /**
-     * Unlike product_info, checkout pages ARE on the deny-list -- so, since the
-     * earlier PR extended this same reasoning to checkout, a checkout page carrying
-     * a manufacturers_id-class key (never legitimately used there) IS rejected here,
-     * even though cPath/products_id specifically remain deferred downstream (see
-     * testCPathAndProductsIdAreDeliberatelyExcluded).
+     * Checkout pages carrying a manufacturers_id-class key (never legitimately used
+     * there) ARE rejected here, even though cPath/products_id specifically remain
+     * deferred downstream (see testCPathAndProductsIdAreDeliberatelyExcluded).
      */
     public function testCheckoutPagesAreRejectedForManufacturersIdClassKeysButNotCPathOrProductsId(): void
     {
@@ -261,20 +320,18 @@ class RoutingMapCatalogParamCheckTest extends zcUnitTestCase
     }
 
     /**
-     * shopping_cart plus every core checkout-flow page, with a representative
-     * filter key, must actually be rejected -- guards against the prefix logic
-     * (or the explicit shopping_cart check) silently breaking.
+     * Every core checkout-flow page, with a representative filter key, must actually
+     * be rejected -- guards against the 'checkout_' prefix logic silently breaking.
      */
-    public function testEachKnownNonCatalogPageIsRejected(): void
+    public function testEachCoreCheckoutPageIsRejected(): void
     {
-        $knownNonCatalogPages = [
-            'shopping_cart',
+        $coreCheckoutPages = [
             'checkout_shipping', 'checkout_shipping_address',
             'checkout_payment', 'checkout_payment_address',
             'checkout_confirmation', 'checkout_process', 'checkout_success',
         ];
 
-        foreach ($knownNonCatalogPages as $page) {
+        foreach ($coreCheckoutPages as $page) {
             $get = ['main_page' => $page, 'manufacturers_id' => '8'];
             $this->assertTrue(
                 \zen_request_has_disallowed_catalog_param($get),
