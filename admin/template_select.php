@@ -15,15 +15,10 @@ if (isset($_GET['tID'])) {
     $selected_template = (int)$_GET['tID'];
 }
 
-$templateSelect = new TemplateSelect();
-
 // -----
-// This tool is the only place that needs the `template_select` table synchronized
-// with the templates currently found on the filesystem/installed via the Plugin
-// Manager, so it's the only caller responsible for triggering that (non-free)
-// synchronization; see TemplateSelect::resolveTemplates().
+// Retrieve the currently-selectable templates.
 //
-$templateSelect->resolveTemplates();
+$templateSelect = new TemplateSelect();
 $template_info = $templateSelect->getSelectableTemplates();
 
 $action = $_GET['action'] ?? '';

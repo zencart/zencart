@@ -5,75 +5,102 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: Leonard 2026 Feb 17 Modified in v2.2.1 $
  */
+use Zencart\Templates\TemplateSelect;
+
 require 'includes/application_top.php';
+
+const SAVE_TO_ALL = 'all';
 
 $gID = (int)($_GET['gID'] ?? 1);
 $_GET['gID'] = $gID;
 
+$templateSelect = new TemplateSelect();
+
 $action = $_GET['action'] ?? '';
+switch ($action) {
+    case 'saveto':
+        if (!isset($_POST['saveto'])) {
+            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
+        }
 
-if (!empty($action)) {
-    switch ($action) {
-        case 'saveall':
-            if (!is_array($_POST['configuration'] ?? false) || !is_array($_POST['original'] ?? false)) {
-                zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
+        if ($templateSelect->templateIsSelectable($_POST['saveto']) === true) {
+            $_SESSION['configuration_saveto'] = $_POST['saveto'];
+        } else {
+            $_SESSION['configuration_saveto'] = SAVE_TO_ALL;
+        }
+        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
+        break;
+
+    case 'saveall':
+        if (!is_array($_POST['configuration'] ?? false) || !is_array($_POST['original'] ?? false)) {
+            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
+        }
+
+        require 'includes/functions/configuration_checks.php';
+
+        // Prepare values for confirmation reporting and activity logging.
+        $posted_configuration = $_POST['configuration'];
+        $posted_original = $_POST['original'];
+
+        $cfg_ids = [];
+        foreach ($posted_configuration as $key => $value) {
+            if (str_starts_with($key, 'cfg_')) {
+                $cfg_ids[] = (int)substr($key, 4);
             }
-
-            require 'includes/functions/configuration_checks.php';
-
-            // Prepare values for confirmation reporting and activity logging.
-            $posted_configuration = $_POST['configuration'];
-            $posted_original = $_POST['original'];
-
-            $cfg_ids = [];
-            foreach ($posted_configuration as $key => $value) {
-                if (str_starts_with($key, 'cfg_')) {
-                    $cfg_ids[] = (int)substr($key, 4);
+        }
+        if ($cfg_ids !== []) {
+            $sensitive_keys_check = $db->Execute(
+                "SELECT configuration_id, configuration_key FROM " . TABLE_CONFIGURATION . "
+                  WHERE configuration_id IN (" . implode(',', $cfg_ids) . ")"
+            );
+            foreach ($sensitive_keys_check as $row) {
+                if (zcObserverLogEventListener::isSensitiveFieldName($row['configuration_key'])) {
+                    $cfg_key = 'cfg_' . $row['configuration_id'];
+                    $_POST['configuration'][$cfg_key] = '[redacted]';
+                    $_POST['original'][$cfg_key] = '[redacted]';
                 }
             }
-            if ($cfg_ids !== []) {
-                $sensitive_keys_check = $db->Execute(
-                    "SELECT configuration_id, configuration_key FROM " . TABLE_CONFIGURATION . "
-                      WHERE configuration_id IN (" . implode(',', $cfg_ids) . ")"
-                );
-                foreach ($sensitive_keys_check as $row) {
-                    if (zcObserverLogEventListener::isSensitiveFieldName($row['configuration_key'])) {
-                        $cfg_key = 'cfg_' . $row['configuration_id'];
-                        $_POST['configuration'][$cfg_key] = '[redacted]';
-                        $_POST['original'][$cfg_key] = '[redacted]';
-                    }
-                }
+        }
+
+        // -----
+        // Determine whether the current configuration changes are destined
+        // to the `configuration` table (affecting all templates) or to a
+        // specific template's settings, controlled by the TemplateSelect class.
+        //
+        $saving_for_all = ($_SESSION['configuration_saveto'] ?? SAVE_TO_ALL) === SAVE_TO_ALL;
+        $saveto_template = $_SESSION['configuration_saveto'] ?? '';
+        $template_settings = [];
+
+        foreach ($posted_configuration as $key => $value) {
+            if (!str_starts_with($key, 'cfg_')) {
+                continue;
             }
 
-            foreach ($posted_configuration as $key => $value) {
-                if (!str_starts_with($key, 'cfg_')) {
+            if (is_array($value)) {
+                $value = implode(', ', $value);
+                $value = preg_replace('/, --none--/', '', $value);
+            }
+            if ($posted_original[$key] === $value) {
+                continue; // No change, skip update
+            }
+
+            $config_id = (int)substr($key, 4);
+            $configuration_value = zen_db_prepare_input($value);
+
+            // See for a valid configuration_id and the presence of a 'val_function'.
+            $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
+            if ($checks->EOF) {
+                continue;
+            }
+
+            if ($checks->fields['val_function'] !== null) {
+                if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'], $checks->fields['configuration_title'])) {
+                    $cID_param ??= "&cID=$config_id";
                     continue;
                 }
+            }
 
-                if (is_array($value)) {
-                    $value = implode(', ', $value);
-                    $value = preg_replace('/, --none--/', '', $value);
-                }
-                if ($posted_original[$key] === $value) {
-                    continue; // No change, skip update
-                }
-
-                $config_id = (int)substr($key, 4);
-                $configuration_value = zen_db_prepare_input($value);
-
-                // See for a valid configuration_id and the presence of a 'val_function'.
-                $checks = $db->Execute("SELECT configuration_title, val_function FROM " . TABLE_CONFIGURATION . " WHERE configuration_id = " . $config_id, 1);
-                if ($checks->EOF) {
-                    continue;
-                }
-
-                if ($checks->fields['val_function'] !== null) {
-                    if (!zen_validate_configuration_entry($configuration_value, $checks->fields['val_function'], $checks->fields['configuration_title'])) {
-                        $cID_param ??= "&cID=$config_id";
-                        continue;
-                    }
-                }
-
+            if ($saving_for_all === true) {
                 $db->Execute(
                     "UPDATE " . TABLE_CONFIGURATION . "
                         SET configuration_value = '" . zen_db_input($configuration_value) . "',
@@ -81,43 +108,65 @@ if (!empty($action)) {
                       WHERE configuration_id = " . $config_id . "
                       LIMIT 1"
                 );
-                $messageStack->add_session(
-                    sprintf(TEXT_VALUE_SAVED,
-                        $checks->fields['configuration_title'],
-                        '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
-                        '<code>' . zen_output_string_protected($configuration_value) . '</code>'
-                    ),
-                    'success'
-                );
+            }
+            $messageStack->add_session(
+                sprintf(TEXT_VALUE_SAVED,
+                    $checks->fields['configuration_title'],
+                    '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
+                    '<code>' . zen_output_string_protected($configuration_value) . '</code>'
+                ),
+                'success'
+            );
 
-                $result = $db->Execute(
-                    "SELECT configuration_key
-                       FROM " . TABLE_CONFIGURATION . "
-                      WHERE configuration_id = " . $config_id . "
-                      LIMIT 1"
-                );
-                zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value), 'warning');
+            $result = $db->Execute(
+                "SELECT configuration_key
+                   FROM " . TABLE_CONFIGURATION . "
+                  WHERE configuration_id = " . $config_id . "
+                  LIMIT 1"
+            );
+            zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value), 'warning');
 
-                // Notify that a configuration change has been made
-                $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
+            // -----
+            // If saving to a specific template, record the changed value for the
+            // associated configuration key.
+            //
+            if ($saving_for_all === false) {
+                $template_settings[$result->fields['configuration_key']] = $configuration_value;
             }
 
-            // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
-            if (zen_config('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE') === 'true') {
-                $db->Execute(
-                    "UPDATE " . TABLE_CONFIGURATION . "
-                        SET configuration_value = 'false',
-                            last_modified = now()
-                      WHERE configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'
-                      LIMIT 1"
-                );
-            }
-            zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . ($cID_param ?? '')));
-            break;
+            // Notify that a configuration change has been made
+            $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
+        }
 
-        default:
-            break;
-    }
+        if ($saving_for_all === false) {
+            $results = $db->Execute(
+                "SELECT configuration_key
+                   FROM " . TABLE_CONFIGURATION . "
+                  WHERE configuration_group_id = " . (int)$gID . "
+                    AND is_template_setting = 1"
+            );
+            $settings_keys = [];
+            foreach ($results as $next_result) {
+                $settings_keys[] = $next_result['configuration_key'];
+            }
+            $templateSelect->updateTemplateSettingsForKeys($saveto_template, $template_settings, $settings_keys);
+        }
+
+        // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
+        if (zen_config('WARN_BEFORE_DOWN_FOR_MAINTENANCE') === 'true' && zen_config('DOWN_FOR_MAINTENANCE') === 'true') {
+            $db->Execute(
+                "UPDATE " . TABLE_CONFIGURATION . "
+                    SET configuration_value = 'false',
+                        last_modified = now()
+                  WHERE configuration_key = 'WARN_BEFORE_DOWN_FOR_MAINTENANCE'
+                  LIMIT 1"
+            );
+        }
+        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . ($cID_param ?? '')));
+        break;
+
+    default:
+        break;
 }
 
 $cfg_group = $db->Execute(
@@ -179,12 +228,12 @@ if ($gID === 7) {
             margin: 0;
             border: 0;
             border-top: 1px solid #949494;
-}
-@media (max-width: 767px) {
-        .form-control {
-            margin-bottom: .5rem;
         }
-}
+        @media (max-width: 767px) {
+                .form-control {
+                    margin-bottom: .5rem;
+                }
+        }
     </style>
 </head>
 <body>
@@ -196,10 +245,76 @@ if ($gID === 7) {
 <div class="container-fluid">
     <h1><?= $cfg_group->fields['configuration_group_title'] ?></h1>
 <?php
+// -----
+// Check to see if the current configuration group contains any template-specific
+// settings. If so, the admin is given the choice of saving any changes for "All"
+// templates (i.e. in the `configuration` table) or only for the selected template
+// (i.e. in the the template's `template_select::template_settings` field.
+//
+$result = $db->Execute(
+    "SELECT is_template_setting
+       FROM " . TABLE_CONFIGURATION . "
+      WHERE configuration_group_id = " . (int)$gID . "
+        AND is_template_setting = 1
+      LIMIT 1"
+);
+$has_template_settings = !$result->EOF;
+?>
+    <div class="alert alert-info text-center font-weight-bold"><?= ($has_template_settings === true) ? TEXT_TEMPLATE_SETTINGS : TEXT_NO_TEMPLATE_SETTINGS; ?></div>
+<?php
+if ($has_template_settings === true) {
+    $template_info = $templateSelect->getSelectableTemplates();
+    $template_array = [['id' => SAVE_TO_ALL, 'text' => TEXT_ALL_TEMPLATES]];
+    foreach($template_info as $key => $value) {
+        $template_array[] = [
+            'id' => $key,
+            'text' => $value['name'] . ' (' . ($value['version'] ?? 'V0') . ')' . ($templateSelect->isActiveTemplate($key) ? ' [*]' : ''),
+        ];
+    }
+    unset($template_info);
+
+    $saveto_template = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
+?>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <?= zen_draw_form('saveto', FILENAME_CONFIGURATION, "gID=$gID&action=saveto", 'post', 'class="form-horizontal"') ?>
+                <div class="form-group">
+                    <?= zen_draw_label(TEXT_CHOOSE_SAVETO, 'save-to', 'class="control-label col-sm-3"') ?>
+                    <div class="col-sm-6">
+                        <?= zen_draw_pull_down_menu('saveto', $template_array, $saveto_template, 'class="form-control" id="save-to"') ?>
+                    </div>
+                    <div class="col-sm-2 text-right">
+                        <button type="submit" class="btn btn-primary">
+                            <?= BUTTON_GO ?>
+                        </button>
+                    </div>
+                </div>
+            <?= '</form>' ?>
+        </div>
+    </div>
+<?php
+}
+
+// -----
+// Start main settings' form ...
+//
+?>
+    <?= zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&action=saveall', 'post', 'class="form-horizontal"') ?>
+    <div class="row font-weight-bold bg-primary py-3">
+        <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_TITLE ?></div>
+        <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_VALUE ?></div>
+        <div class="col-md-6"></div>
+    </div>
+<?php
+$using_template_settings = ($has_template_settings === true && $saveto_template !== SAVE_TO_ALL);
+$template_settings = ($using_template_settings === false) ? [] : $templateSelect->getTemplateSettings($saveto_template);
+$template_settings ??= [];
+
 $query =
-    "SELECT configuration_id, configuration_title, configuration_description, configuration_value, configuration_key, set_function
+    "SELECT configuration_id, configuration_title, configuration_description, configuration_value, configuration_key, set_function, is_template_setting
        FROM " . TABLE_CONFIGURATION . "
       WHERE configuration_group_id = " . (int)$gID;
+
 $default_sort = true;
 if (defined('CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME') && !empty(CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME)) {
     $sorted_menus = explode(',', CONFIGURATION_MENU_ENTRIES_TO_SORT_BY_NAME);
@@ -213,15 +328,16 @@ if ($default_sort) {
     $query .= " ORDER BY configuration_title";
 }
 $configuration = $db->Execute($query);
-echo zen_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&action=saveall', 'post', 'class="form-horizontal"');
-?>
-    <div class="row font-weight-bold bg-primary py-3">
-        <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_TITLE ?></div>
-        <div class="col-md-3"><?= TABLE_HEADING_CONFIGURATION_VALUE ?></div>
-        <div class="col-md-6"></div>
-    </div>
-<?php
 foreach ($configuration as $item) {
+    $baseCfgValue = $templateSelect->getInheritedSetting($saveto_template, $item['configuration_key'], $item['configuration_value']);
+    $cfgValue = $baseCfgValue;
+    if ($using_template_settings === true) {
+        if ($item['is_template_setting'] !== '1') {
+            continue;
+        }
+        $cfgValue = $template_settings[$item['configuration_key']] ?? $baseCfgValue;
+    }
+
     $fieldName = 'cfg_' . $item['configuration_id'];
     if (isset($_GET['cID']) && (int)$_GET['cID'] === (int)$item['configuration_id']) {
         $focusField = 'configuration[' . $fieldName . ']';
@@ -233,7 +349,6 @@ foreach ($configuration as $item) {
     if (defined('CFGDESC_' . $item['configuration_key'])) {
         $item['configuration_description'] = constant('CFGDESC_' . $item['configuration_key']);
     }
-
 ?>
     <div class="row row-hover align-items-center py-2">
         <div class="col-md-3">
@@ -246,7 +361,7 @@ foreach ($configuration as $item) {
         </div>
         <div class="col-md-3">
             <?php
-            $cfgValue = htmlspecialchars($item['configuration_value'], ENT_COMPAT, CHARSET, true);
+            $cfgValue = htmlspecialchars($cfgValue, ENT_COMPAT, CHARSET, true);
             if (empty($item['set_function'])) {
                 echo '<input type="text" name="configuration[' . $fieldName . ']" value="' . $cfgValue . '" class="form-control">';
             } else {
@@ -265,8 +380,14 @@ foreach ($configuration as $item) {
 
                 echo $inputField;
             }
+
+            if ($using_template_settings === true) {
             ?>
-            <?= zen_draw_hidden_field("original[$fieldName]", $cfgValue) ?>
+            <span class="help-block"><?= sprintf(TEXT_INHERITED_VALUE, htmlspecialchars($baseCfgValue, ENT_COMPAT, CHARSET, true)) ?></span>
+            <?php
+            }
+            ?>
+            <?= zen_draw_hidden_field("original[$fieldName]", $baseCfgValue) ?>
         </div>
         <div class="col-md-6 bg-info p-3"><?= $item['configuration_description'] ?></div>
     </div>

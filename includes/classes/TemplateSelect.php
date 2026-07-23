@@ -46,7 +46,9 @@ class TemplateSelect
 
     private static array $activeTemplates;  // Keyed by template_language
     private static array $dbTemplates;      // Keyed by template_id
-    private static array $selectableTemplates = [];  // Keyed by template_dir
+    private static array $selectableTemplates;  // Keyed by template_dir
+    private static array $parentTemplates = []; // Keyed by template_dir
+    private static array $templateSettings = [];  // Keyed by template_dir
     private static \queryFactory $db;
 
     public function __construct()
@@ -79,12 +81,8 @@ class TemplateSelect
         }
 
         // -----
-        // Note: Synchronizing with the template-resolver (to catch templates added,
-        // removed, or (re)enabled/disabled via the Plugin Manager since this class'
-        // static state was last populated) is NOT done here, since it involves a
-        // filesystem scan and potential DB writes on every construction. Callers that
-        // need that synchronization (currently, only the admin's "Template Selection" tool)
-        // must invoke resolveTemplates() explicitly; see admin/template_select.php.
+        // Determine if there's an active template directory (i.e. chosen for
+        // the current language) and, if so, save that for cross-class use.
         //
         $active_template_dir = $this->getActiveTemplateDir();
         if ($active_template_dir !== null) {
@@ -94,18 +92,18 @@ class TemplateSelect
 
     /**
      * Synchronizes the `template_select` table with the templates currently found on
-     * the filesystem (and installed via the Plugin Manager, for encapsulated
-     * template plugins), adding a 'base' (template_language = -1) record for any
+     * the filesystem and installed via the Plugin Manager, for encapsulated
+     * template plugins, adding a 'base' (template_language = -1) record for any
      * newly-discovered template directory.
      *
      * This involves a filesystem scan and potential DB writes, so it's not run
-     * automatically on every TemplateSelect construction (i.e. on every page load);
-     * callers that need it up to date (currently, only the admin's "Template
-     * Selection" tool) must call it explicitly.
+     * automatically on every TemplateSelect construction (i.e. on every page load).
+     * It's called by other class methods that require the $selectableTemplates
+     * property if that property has not yet been set.
      *
      * @since ZC v3.0.0
      */
-    public function resolveTemplates(): void
+    protected function resolveTemplates(): void
     {
         // -----
         // Determine which encapsulated plugins are currently installed,
@@ -162,6 +160,9 @@ class TemplateSelect
      */
     public function getSelectableTemplates(): array
     {
+        if (!isset(self::$selectableTemplates)) {
+            $this->resolveTemplates();
+        }
         return self::$selectableTemplates;
     }
 
@@ -170,6 +171,9 @@ class TemplateSelect
      */
     public function templateIsSelectable(string $template_dir): bool
     {
+        if (!isset(self::$selectableTemplates)) {
+            $this->resolveTemplates();
+        }
         return isset(self::$selectableTemplates[$template_dir]);
     }
 
@@ -179,6 +183,19 @@ class TemplateSelect
     public function getAllActiveTemplates(): array
     {
         return self::$activeTemplates;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function isActiveTemplate(string $template_dir): bool
+    {
+        foreach (self::$activeTemplates as $lang => $info) {
+            if ($info['template_dir'] === $template_dir) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -207,12 +224,55 @@ class TemplateSelect
      */
     public function getTemplateSettings(string $template_dir): ?array
     {
-        $template_settings = $this->getBaseTemplateField($template_dir, 'template_settings');
-        if ($template_settings === null) {
-            return null;
+        if (array_key_exists($template_dir, self::$templateSettings)) {
+            return self::$templateSettings[$template_dir];
         }
-        $template_settings = json_decode($template_settings, true);
-        return is_array($template_settings) ? $template_settings : null;
+
+        $template_settings = $this->getBaseTemplateField($template_dir, 'template_settings');
+        if ($template_settings !== null) {
+            $template_settings = json_decode($template_settings, true);
+            if (!is_array($template_settings)) {
+                $template_settings = null;
+            }
+        }
+        self::$templateSettings[$template_dir] = $template_settings;
+
+        return $template_settings;
+    }
+
+    /**
+     * Returns the 'inherited' value of a given setting for a specified template; returning a default
+     * value if no inherited value is present.
+     *
+     * @since ZC v3.0.0
+     */
+    public function getInheritedSetting(string $template_dir, string $setting_key, string $default): string
+    {
+        // -----
+        // Save the requested template's parents' settings statically, so they don't need to be determined on
+        // every call to this method. zen_get_template_inheritance_chain's returned array (numerically indexed)
+        // includes the requested template as its first element. That's discarded prior to the assignment.
+        //
+        if (!isset(self::$parentTemplates[$template_dir])) {
+            $inheritance_chain = zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
+            array_shift($inheritance_chain);
+            self::$parentTemplates[$template_dir] = $inheritance_chain;
+        }
+
+        // -----
+        // Loop through the template's parents, looking for the requested setting and returning the
+        // first parent-value found. If no setting exists for the parent, return the supplied default.
+        //
+        foreach (self::$parentTemplates[$template_dir] as $parent_dir) {
+            $parent_settings = $this->getTemplateSettings($parent_dir);
+            if ($parent_settings === null) {
+                continue;
+            }
+            if (array_key_exists($setting_key, $parent_settings)) {
+                return $parent_settings[$setting_key];
+            }
+        }
+        return $default;
     }
 
     /**
@@ -233,7 +293,51 @@ class TemplateSelect
     /**
      * Updates the `template_settings` stored for a specified template, merging the
      * supplied array of template settings with those currently registered for the
+     * template.
+     *
+     * The values in the array supplied overwrite any existing settings (by key) and any
+     * existing setting-key that doesn't appear in the updated `$template_settings` is
+     * removed from the template's settings.
+     *
+     * @var $template_settings is a single-dimension associative array, keyed by a
+     *      configuration_key value.
+     * @var $settings_keys is a single-dimension indexed array that contains the
+     *      configuration_key values associated with this update.
+     *
+     * @since ZC v3.0.0
+     */
+    public function updateTemplateSettingsForKeys(string $template_dir, array $template_settings, array $settings_keys): int
+    {
+        $db_id = $this->getBaseTemplateField($template_dir, 'template_id');
+        if ($db_id === null) {
+            return self::SETTINGS_UNKNOWN_DIR;
+        }
+
+        $current_settings = $this->getTemplateSettings($template_dir);
+        if ($current_settings === null) {
+            $current_settings = [];
+        }
+
+        // -----
+        // Remove any settings (based on the $settings_keys supplied) from the template's
+        // current `template_settings` and merge the supplied settings into
+        // that array.
+        //
+        // This handling enables a setting to be removed as a template-specific one.
+        //
+        $updated_settings = array_diff_key($current_settings, array_flip($settings_keys));
+        $updated_settings = array_merge($updated_settings, $template_settings);
+
+        return $this->updateDbTemplateSettings((int)$db_id, $updated_settings);
+    }
+
+    /**
+     * Updates the `template_settings` stored for a specified template, merging the
+     * supplied array of template settings with those currently registered for the
      * template. The values in the array supplied overwrite any existing settings.
+     *
+     * For this usage, the caller is "presumed" to have properly dealt with settings
+     * that were removed.
      *
      * @since ZC v3.0.0
      */
