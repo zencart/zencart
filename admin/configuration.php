@@ -386,7 +386,7 @@ foreach ($configuration as $item) {
             <?php
             }
             ?>
-            <?= zen_draw_hidden_field("original[$fieldName]", $baseCfgValue) ?>
+            <?= zen_draw_hidden_field("original[$fieldName]", $cfgValue) ?>
         </div>
         <div class="col-md-6 bg-info p-3"><?= $item['configuration_description'] ?></div>
     </div>
