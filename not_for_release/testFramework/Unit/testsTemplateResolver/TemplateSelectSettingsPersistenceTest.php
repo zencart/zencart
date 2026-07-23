@@ -51,6 +51,12 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
                 'template_language' => '0',
                 'template_settings' => null,
             ],
+            2 => [
+                'template_id' => '2',
+                'template_dir' => 'responsive_classic',
+                'template_language' => '-1',
+                'template_settings' => null,
+            ],
         ];
         $this->nextId = 2;
 
