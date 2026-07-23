@@ -230,16 +230,31 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         }
 
         if (stripos($sql, 'INSERT INTO') !== false) {
-            if (!preg_match("/VALUES\s*\(\s*'((?:[^'\\\\]|\\\\.)*)'\s*,\s*(-?\d+)\s*\)/is", $sql, $matches)) {
+            // Support:
+            // VALUES ('dir', 5)
+            // VALUES ('dir', 5, NULL)
+            // VALUES ('dir', 5, '{"A":"1"}')
+            if (!preg_match(
+                "/VALUES\s*\(\s*'((?:[^'\\\\]|\\\\.)*)'\s*,\s*(-?\d+)(?:\s*,\s*(NULL|'(?:[^'\\\\]|\\\\.)*'))?\s*\)/is",
+                $sql,
+                $matches
+            )) {
                 $this->lastAffectedRows = 0;
                 return $this->makeQueryResult([]);
             }
-            $id = $this->nextId++;
+
+            $id = ++$this->nextId;
+            $settingsToken = $matches[3] ?? null;
+            $settingsValue = null;
+            if ($settingsToken !== null && strtoupper($settingsToken) !== 'NULL') {
+                $settingsValue = stripslashes(trim($settingsToken, "'"));
+            }
+
             $this->rows[$id] = [
                 'template_id' => (string)$id,
                 'template_dir' => stripslashes($matches[1]),
                 'template_language' => (string)(int)$matches[2],
-                'template_settings' => null,
+                'template_settings' => $settingsValue,
             ];
             $this->lastInsertId = $id;
             $this->lastAffectedRows = 1;
