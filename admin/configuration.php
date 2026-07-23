@@ -262,6 +262,7 @@ $has_template_settings = !$result->EOF;
 ?>
     <div class="alert alert-info text-center font-weight-bold"><?= ($has_template_settings === true) ? TEXT_TEMPLATE_SETTINGS : TEXT_NO_TEMPLATE_SETTINGS; ?></div>
 <?php
+$saveto_template = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
 if ($has_template_settings === true) {
     $template_info = $templateSelect->getSelectableTemplates();
     $template_array = [['id' => SAVE_TO_ALL, 'text' => TEXT_ALL_TEMPLATES]];
@@ -272,8 +273,6 @@ if ($has_template_settings === true) {
         ];
     }
     unset($template_info);
-
-    $saveto_template = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
 ?>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
