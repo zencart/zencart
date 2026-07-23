@@ -8,6 +8,8 @@
 $define = [
     'BUTTON_GO' => 'Go',
 
+    'ERROR_TEMPLATE_NOT_SELECTABLE' => 'The template you previously selected (%1$s) is no longer available; the changes you just submitted have been discarded. Please try again.',
+
     'TEXT_ALL_TEMPLATES' => 'All Templates',
     'TEXT_CHOOSE_SAVETO' => 'Save to:',
     'TEXT_INHERITED_VALUE' => 'Inherited value: %1$s',
