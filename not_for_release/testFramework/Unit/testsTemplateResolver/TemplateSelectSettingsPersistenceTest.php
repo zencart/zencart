@@ -60,7 +60,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsPersistsAndIsRetrievable(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
 
@@ -74,7 +73,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsPersistsJsonStringContainingNull(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('responsive_classic', ['LABEL' => 'contains NULL text']);
 
@@ -88,7 +86,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsReturnsUnknownDirForATemplateWithNoBaseRecord(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('not_a_real_template', ['FOO' => 'bar']);
 
@@ -119,7 +116,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testTemplateSettingsSurviveDeregisteringTheActiveLanguageAssignment(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
         $templateSelect->setTemplateSettings('responsive_classic', ['THEME' => 'dark']);
 
         $newLanguageId = (int)$templateSelect->registerNewTemplate('responsive_classic', 5);
@@ -143,7 +139,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testRegisterNewTemplateRejectsAnAlreadyRegisteredLanguage(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $this->assertFalse(
             $templateSelect->registerNewTemplate('responsive_classic', 0),
@@ -160,7 +155,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testUpdatingATemplateDirToItsCurrentValueIsNotTreatedAsAFailure(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         // Row id 1 (seeded in setUp()) is already 'responsive_classic' for language 0.
         $status = $templateSelect->updateTemplateNameForId(1, 'responsive_classic');
@@ -174,7 +168,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testReSavingIdenticalSettingsIsNotTreatedAsAFailure(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
+
         $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
 
         // Save the exact same settings again - a no-op from MySQL's point of view.
