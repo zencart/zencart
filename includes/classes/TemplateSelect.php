@@ -233,6 +233,8 @@ class TemplateSelect
             $template_settings = json_decode($template_settings, true);
             if (!is_array($template_settings)) {
                 $template_settings = null;
+            } else {
+                $template_settings = zen_normalize_scalar_template_settings($template_settings);
             }
         }
         self::$templateSettings[$template_dir] = $template_settings;

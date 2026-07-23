@@ -14,6 +14,21 @@ const SAVE_TO_ALL = 'all';
 $gID = (int)($_GET['gID'] ?? 1);
 $_GET['gID'] = $gID;
 
+// -----
+// Check to see if the current configuration group contains any template-specific
+// settings. If so, the admin is given the choice of saving any changes for "All"
+// templates (i.e. in the `configuration` table) or only for the selected template
+// (i.e. in the the template's `template_select::template_settings` field.
+//
+$result = $db->Execute(
+    "SELECT is_template_setting
+       FROM " . TABLE_CONFIGURATION . "
+      WHERE configuration_group_id = " . (int)$gID . "
+        AND is_template_setting = 1
+      LIMIT 1"
+);
+$has_template_settings = !$result->EOF;
+
 $templateSelect = new TemplateSelect();
 
 $action = $_GET['action'] ?? '';
@@ -67,7 +82,7 @@ switch ($action) {
         // to the `configuration` table (affecting all templates) or to a
         // specific template's settings, controlled by the TemplateSelect class.
         //
-        $saving_for_all = ($_SESSION['configuration_saveto'] ?? SAVE_TO_ALL) === SAVE_TO_ALL;
+        $saving_for_all = $has_template_settings === false || ($_SESSION['configuration_saveto'] ?? SAVE_TO_ALL) === SAVE_TO_ALL;
         $saveto_template = $_SESSION['configuration_saveto'] ?? '';
         $template_settings = [];
 
@@ -244,22 +259,6 @@ if ($gID === 7) {
 <!-- body //-->
 <div class="container-fluid">
     <h1><?= $cfg_group->fields['configuration_group_title'] ?></h1>
-<?php
-// -----
-// Check to see if the current configuration group contains any template-specific
-// settings. If so, the admin is given the choice of saving any changes for "All"
-// templates (i.e. in the `configuration` table) or only for the selected template
-// (i.e. in the the template's `template_select::template_settings` field.
-//
-$result = $db->Execute(
-    "SELECT is_template_setting
-       FROM " . TABLE_CONFIGURATION . "
-      WHERE configuration_group_id = " . (int)$gID . "
-        AND is_template_setting = 1
-      LIMIT 1"
-);
-$has_template_settings = !$result->EOF;
-?>
     <div class="alert alert-info text-center font-weight-bold"><?= ($has_template_settings === true) ? TEXT_TEMPLATE_SETTINGS : TEXT_NO_TEMPLATE_SETTINGS; ?></div>
 <?php
 $saveto_template = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
@@ -328,12 +327,13 @@ if ($default_sort) {
 }
 $configuration = $db->Execute($query);
 foreach ($configuration as $item) {
-    $baseCfgValue = $templateSelect->getInheritedSetting($saveto_template, $item['configuration_key'], $item['configuration_value']);
+    $baseCfgValue = $item['configuration_value'];
     $cfgValue = $baseCfgValue;
     if ($using_template_settings === true) {
         if ($item['is_template_setting'] !== '1') {
             continue;
         }
+        $baseCfgValue = $templateSelect->getInheritedSetting($saveto_template, $item['configuration_key'], $item['configuration_value']);
         $cfgValue = $template_settings[$item['configuration_key']] ?? $baseCfgValue;
     }
 
