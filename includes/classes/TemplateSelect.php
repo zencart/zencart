@@ -366,11 +366,13 @@ class TemplateSelect
             return self::SETTINGS_NO_UPDATE;
         }
 
-        if (is_array($template_settings) && count($template_settings) === 0) {
+        $raw_template_settings = $template_settings;
+        if (is_array($raw_template_settings) && count($raw_template_settings) === 0) {
             $template_settings = null;
+            $raw_template_settings = null;
         }
-        if ($template_settings !== null) {
-            $template_settings = json_encode($template_settings);
+        if ($raw_template_settings !== null) {
+            $template_settings = json_encode($raw_template_settings);
         }
         $sql =
             "UPDATE " . TABLE_TEMPLATE_SELECT . "
@@ -386,12 +388,11 @@ class TemplateSelect
         self::$db->Execute($sql, 1);
 
         // -----
-        // affectedRows() only counts rows whose stored value actually changed,
-        // so re-saving identical settings would report 0 here even though the row was
-        // matched and the desired state is already in place. Existence against the
-        // base row was already confirmed above, so that's not treated as a failure.
+        // Update the local cache of database settings (with the json_encoded version of the settings)
+        // and the templateSettings cache (which contains the null|array values).
         //
         self::$dbTemplates[$id]['template_settings'] = $template_settings;
+        self::$templateSettings[self::$dbTemplates[$id]['template_dir']] = $raw_template_settings;
 
         return self::SETTINGS_OK;
     }
