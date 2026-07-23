@@ -1498,8 +1498,14 @@ function zen_get_products_to_categories($category_id, bool $include_inactive = f
 function zen_validate_product_cpath($products_id, $current_cpath) {
     global $db;
     $products_id = (int)$products_id;
-    $cPath_array = explode('_', $current_cpath);
+
+    $cPath_array = zen_parse_category_path((string)$current_cpath);
     $last_category_id = (int)end($cPath_array);
+
+    // fail closed if the resulting category id is invalid
+    if ($last_category_id <= 0) {
+        return '';
+    }
 
     // check if the product actually exists in the category the URL claims it is in
     $check_link_query = "SELECT products_id FROM " . TABLE_PRODUCTS_TO_CATEGORIES . " WHERE products_id = :prodId AND categories_id = :catId LIMIT 1";
@@ -1516,8 +1522,9 @@ function zen_validate_product_cpath($products_id, $current_cpath) {
         $master_cat_query = $db->bindVars($master_cat_query, ':prodId', $products_id, 'integer');
         $master_cat_result = $db->Execute($master_cat_query);
 
-        if (!$master_cat_result->EOF) {
-            return zen_get_generated_category_path_rev($master_cat_result->fields['master_categories_id']);
+        // guard against a zero/empty master category ID (schema default)
+        if (!$master_cat_result->EOF && (int)$master_cat_result->fields['master_categories_id'] > 0) {
+            return zen_get_generated_category_path_rev((int)$master_cat_result->fields['master_categories_id']);
         }
     }
     return '';
@@ -1538,10 +1545,9 @@ function zen_execute_cpath_redirect($true_cPath, $products_id = 0) {
     }
 
     // preserve other valid GET parameters (pagination, filters, etc.)
-    foreach ($_GET as $key => $value) {
-        if ($key !== 'main_page' && $key !== 'cPath' && $key !== 'products_id' && $key !== 'zenid' && !is_array($value)) {
-            $get_params .= '&' . $key . '=' . $value;
-        }
+    $other_params = zen_get_all_get_params(['cPath', 'products_id', 'zenid']);
+    if ($other_params !== '') {
+        $get_params .= '&' . rtrim($other_params, '&');
     }
 
     $main_page = $_GET['main_page'] ?? FILENAME_DEFAULT;
