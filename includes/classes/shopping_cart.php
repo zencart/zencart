@@ -459,11 +459,17 @@ class shoppingCart extends base
                 }
 
                 if ($blank_value === false) {
+                    $option = (int)$option;
                     if (is_array($value)) {
+                        $sanitizedValues = [];
                         foreach ($value as $opt => $val) {
+                            $val = (int)$val;
+                            $sanitizedValues[$opt] = $val;
                             $this->contents[$uprid]['attributes'][$option . '_chk' . $val] = $val;
                         }
+                        $value = $sanitizedValues;
                     } else {
+                        $value = (int)$value;
                         $this->contents[$uprid]['attributes'][$option] = $value;
                     }
 
