@@ -96,7 +96,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testUpdateTemplateSettingsMergesWithExistingSettings(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
+
         $templateSelect->setTemplateSettings('responsive_classic', ['A' => '1', 'B' => '2']);
 
         $status = $templateSelect->updateTemplateSettings('responsive_classic', ['B' => '20', 'C' => '3']);
@@ -224,11 +224,14 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         }
 
         if (stripos($sql, 'INSERT INTO') !== false) {
-            preg_match("/VALUES\s*\('([^']*)',\s*(-?\d+)\)/", $sql, $matches);
+            if (!preg_match("/VALUES\s*\(\s*'((?:[^'\\\\]|\\\\.)*)'\s*,\s*(-?\d+)\s*\)/is", $sql, $matches)) {
+                $this->lastAffectedRows = 0;
+                return $this->makeQueryResult([]);
+            }
             $id = $this->nextId++;
             $this->rows[$id] = [
                 'template_id' => (string)$id,
-                'template_dir' => $matches[1],
+                'template_dir' => stripslashes($matches[1]),
                 'template_language' => (string)(int)$matches[2],
                 'template_settings' => null,
             ];
