@@ -1487,7 +1487,7 @@ PHP
             copy($this->rootPath . '/includes/classes/Console/' . $file, $root . '/includes/classes/Console/' . $file);
         }
 
-        foreach (['ConfigGetCommand.php', 'HelpCommand.php', 'ListCommand.php', 'PluginListCommand.php', 'VersionShowCommand.php'] as $file) {
+        foreach (['ConfigGetCommand.php', 'HelpCommand.php', 'ListCommand.php', 'PluginListCommand.php', 'VersionShowCommand.php', 'CurrencyRatesUpdateCommand.php'] as $file) {
             copy(
                 $this->rootPath . '/includes/classes/Console/Commands/' . $file,
                 $root . '/includes/classes/Console/Commands/' . $file
