@@ -12,7 +12,7 @@
 $zco_notifier->notify('NOTIFY_HEADER_START_DOCUMENT_GENERAL_INFO');
 
 // strict cPath validation
-if (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0 && isset($_GET['cPath'])) {
+if (isset($_GET['products_id'], $_GET['cPath']) && (int)$_GET['products_id'] > 0 ) {
     $true_cPath = zen_validate_product_cpath((int)$_GET['products_id'], $_GET['cPath']);
 
     if ($true_cPath !== '' && $_GET['cPath'] !== $true_cPath) {

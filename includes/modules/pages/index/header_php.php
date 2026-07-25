@@ -25,7 +25,7 @@ $current_category_has_subcats = false;
 
 // strict cPath validation
 if (isset($_GET['cPath']) && isset($current_category_id) && $current_category_id > 0) {
-    $true_cPath = zen_get_generated_category_path_rev($current_category_id);
+    $true_cPath = zen_validate_product_cpath($current_category_id);
 
     if ($_GET['cPath'] !== $true_cPath) {
         zen_execute_cpath_redirect($true_cPath);

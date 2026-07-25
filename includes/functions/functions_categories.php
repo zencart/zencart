@@ -1489,13 +1489,10 @@ function zen_get_products_to_categories($category_id, bool $include_inactive = f
 /**
  * Validates a product's requested cPath against its actual linked categories or master category.
  * Returns the true, mathematically correct cPath string.
- *
- * @param int $products_id
- * @param string $current_cpath
- * @return string
  * @since ZC v2.3.0
  */
-function zen_validate_product_cpath($products_id, $current_cpath) {
+function zen_validate_product_cpath(int $products_id, string $current_cpath): string
+{
     global $db;
     $products_id = (int)$products_id;
 
@@ -1532,12 +1529,10 @@ function zen_validate_product_cpath($products_id, $current_cpath) {
 
 /**
  * Executes a 301 Permanent Redirect to a clean cPath, preserving all other valid GET parameters.
- *
- * @param string $true_cPath
- * @param int $products_id
- * @since ZC v2.3.0
+  * @since ZC v2.3.0
  */
-function zen_execute_cpath_redirect($true_cPath, $products_id = 0) {
+function zen_execute_cpath_redirect(string $true_cPath, int $products_id = 0): void
+{
     $get_params = 'cPath=' . $true_cPath;
 
     if ((int)$products_id > 0) {
