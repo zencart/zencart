@@ -217,7 +217,8 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
         $defineList = array_merge($defineList, $defineListPlugin);
 
         // -----
-        // Finally, load any extra definitions in the current template's override directory, **for the current session language*.
+        // Finally, load any extra definitions in the current template's override directory, first the 'fallback' language
+        // (i.e. 'english') and then the current session language, if different.
         //
         // Any definitions found here overwrite **all** previous-found definitions.
         //
@@ -230,8 +231,14 @@ class CatalogArraysLanguageLoader extends ArraysLanguageLoader
             $languageMainDir = $this->templateResolver->getTemplateBasePath($templateKey) . DIR_WS_LANGUAGES;
             $defineListTemplate = array_merge(
                 $defineListTemplate,
-                $this->loadArraysFromDirectory($languageMainDir, $_SESSION['language'], '/extra_definitions/' . $templateKey)
+                $this->loadArraysFromDirectory($languageMainDir, $this->fallback, '/extra_definitions/' . $templateKey)
             );
+            if ($this->fallback !== $_SESSION['language']) {
+                $defineListTemplate = array_merge(
+                    $defineListTemplate,
+                    $this->loadArraysFromDirectory($languageMainDir, $_SESSION['language'], '/extra_definitions/' . $templateKey)
+                );
+            }
         }
 
         // -----
