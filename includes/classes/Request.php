@@ -107,6 +107,78 @@ class Request
     }
 
     /**
+     * Return the request host, without a port.
+     *
+     * X-Forwarded-Host is client-suppliable, so — exactly as in isSecure() and
+     * resolveClientFromForwardedChain() — it is honoured only when the genuine TCP peer is a
+     * configured trusted proxy. If a proxy chain supplies several comma-separated hosts, the
+     * rightmost non-empty value is the one written by the proxy closest to the application, and
+     * therefore the only entry a client cannot forge.
+     *
+     * @since ZC v3.0.0
+     */
+    public static function getRequestHost(): string
+    {
+        $host = (string)($_SERVER['HTTP_HOST'] ?? '');
+        if (self::isFromTrustedProxy() && !empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $forwardedHosts = array_values(array_filter(
+                array_map('trim', explode(',', (string)$_SERVER['HTTP_X_FORWARDED_HOST'])),
+                static fn(string $forwardedHost): bool => $forwardedHost !== ''
+            ));
+            if ($forwardedHosts !== []) {
+                $host = $forwardedHosts[array_key_last($forwardedHosts)];
+            }
+        }
+        return self::normalizeHost($host);
+    }
+
+    /**
+     * Determine whether an absolute referer URL belongs to the current request host.
+     *
+     * Used to reject cross-site 'BUY NOW' requests during bootstrap. Ports are deliberately
+     * ignored: HTTP_HOST carries a non-standard port while parse_url() returns only the bare
+     * hostname, so comparing them with the port attached would reject every Buy Now click on a
+     * development or staging site served from a non-standard port.
+     *
+     * @since ZC v3.0.0
+     */
+    public static function isInternalReferer(string $referer): bool
+    {
+        if ($referer === '') {
+            return false;
+        }
+        $refererHost = parse_url($referer, PHP_URL_HOST);
+        if (!is_string($refererHost) || $refererHost === '') {
+            return false;
+        }
+        return self::normalizeHost($refererHost) === self::getRequestHost();
+    }
+
+    /**
+     * Normalize a hostname for comparison, including bracketed IPv6 addresses.
+     *
+     * parse_url() returns an IPv6 host still wrapped in brackets ("[::1]") while HTTP_HOST holds
+     * brackets plus a port ("[::1]:8443"), so both sides of a host comparison must pass through
+     * here or an IPv6 literal host can never match itself.
+     *
+     * The bracketed form returns early rather than falling through to the trailing-port strip,
+     * because /:\d+$/ cannot tell a port from the final group of an IPv6 address: applying it to
+     * an already-unbracketed "::1" would eat the ":1" and leave ":". RFC 7230 requires the
+     * brackets in Host, and parse_url() preserves them, so the early return covers every host
+     * these callers actually see.
+     *
+     * @since ZC v3.0.0
+     */
+    private static function normalizeHost(string $host): string
+    {
+        $host = strtolower(trim($host));
+        if (preg_match('/^\[(.*)\](?::\d+)?$/D', $host, $matches)) {
+            return $matches[1];
+        }
+        return preg_replace('/:\d+$/D', '', $host) ?? '';
+    }
+
+    /**
      * Return the genuine TCP peer address captured at the start of the request.
      *
      * Lazily captures on first read as a safety net in case captureOriginalRemoteAddr() was not

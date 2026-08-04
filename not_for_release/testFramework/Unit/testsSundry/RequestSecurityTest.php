@@ -57,6 +57,133 @@ class RequestSecurityTest extends zcUnitTestCase
         Request::resetTrustedProxiesCacheForTesting();
     }
 
+    /**
+     * isInternalReferer() gates the 'BUY NOW' rejection in includes/application_top.php. The tests
+     * below cover the ordinary same-host / cross-host decision, the port and IPv6 normalization
+     * that a naive string comparison gets wrong, and — most importantly — that a client-suppliable
+     * X-Forwarded-Host cannot be used to manufacture a "matching" referer.
+     */
+    public function testRefererOnSameHostIsInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test/index.php?main_page=product_info'));
+    }
+
+    public function testEmptyRefererIsNotInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertFalse(Request::isInternalReferer(''));
+    }
+
+    public function testCrossSiteRefererIsNotInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertFalse(Request::isInternalReferer('https://evil.test/landing'));
+    }
+
+    /**
+     * A referer carrying no host at all (a relative or malformed URL) must not be treated as
+     * internal just because parse_url() didn't fail outright.
+     */
+    public function testRefererWithoutHostIsNotInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertFalse(Request::isInternalReferer('/index.php?main_page=product_info'));
+    }
+
+    /**
+     * Ports are deliberately ignored: HTTP_HOST carries the non-standard port while
+     * parse_url(PHP_URL_HOST) returns the bare hostname, so a comparison that kept the port
+     * would reject every Buy Now click on a non-standard-port development or staging site.
+     */
+    public function testRefererIsInternalWhenHostHeaderCarriesNonStandardPort(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test:8443';
+
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test:8443/index.php'));
+    }
+
+    /**
+     * parse_url() returns an IPv6 host still wrapped in brackets ("[::1]") while HTTP_HOST holds
+     * brackets plus a port ("[::1]:8443"). Both sides must be normalized identically, and the
+     * bracketed form must not fall through to the trailing-port strip — /:\d+$/ cannot tell a port
+     * from the final group of an IPv6 address, so "::1" would be reduced to ":" and an IPv6
+     * literal host could never match itself.
+     */
+    public function testIpv6LiteralHostRefererIsInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = '[::1]:8443';
+
+        $this->assertTrue(Request::isInternalReferer('https://[::1]:8443/index.php'));
+    }
+
+    public function testIpv6LiteralHostDoesNotMatchDifferentIpv6Host(): void
+    {
+        $_SERVER['HTTP_HOST'] = '[::1]:8443';
+
+        $this->assertFalse(Request::isInternalReferer('https://[2001:db8::1]:8443/index.php'));
+    }
+
+    /**
+     * The security case this guard exists for: an attacker who can set X-Forwarded-Host could
+     * otherwise pair it with a matching forged Referer and satisfy the "internal referer" test
+     * from an arbitrary origin. With no trusted proxy configured, the forwarded host must be
+     * ignored entirely and the real HTTP_HOST used instead.
+     */
+    public function testForwardedHostIsIgnoredForRefererCheckWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'evil.test';
+        $_SERVER['REMOTE_ADDR'] = '203.0.113.9';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('shop.example.test', Request::getRequestHost());
+        $this->assertFalse(Request::isInternalReferer('https://evil.test/landing'));
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedHostIsHonoredForRefererCheckWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTP_HOST'] = 'origin-internal.lan';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'shop.example.test';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('shop.example.test', Request::getRequestHost());
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test/index.php'));
+    }
+
+    /**
+     * Mirrors resolveClientFromForwardedChain()'s reasoning for X-Forwarded-For: each hop appends,
+     * so the leftmost entry is client-forgeable and the rightmost is the one written by the proxy
+     * nearest the application. Taking the leftmost here would hand the attacker the same bypass
+     * that testForwardedHostIsIgnoredForRefererCheckWithoutTrustedProxy() guards against.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedHostChainUsesRightmostEntry(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTP_HOST'] = 'origin-internal.lan';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'evil.test, shop.example.test';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('shop.example.test', Request::getRequestHost());
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test/index.php'));
+        $this->assertFalse(Request::isInternalReferer('https://evil.test/landing'));
+    }
+
     public function testPlainHttpRequestIsNotSecure(): void
     {
         $_SERVER['HTTPS'] = 'off';
