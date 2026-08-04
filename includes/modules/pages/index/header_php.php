@@ -35,6 +35,11 @@ if (isset($cPath) && zen_not_null($cPath)) {
             $current_category_not_found = true;
         } elseif ($category_status->fields['categories_status'] == '0') {
             $current_category_is_disabled = true;
+        } elseif (isset($_GET['cPath']) && is_string($_GET['cPath'])) {
+            $valid_cPath = zen_get_generated_category_path_rev($current_category_id);
+            if ($_GET['cPath'] !== $valid_cPath) {
+                zen_redirect_to_valid_cpath($valid_cPath);
+            }
         }
     }
     $category_products_query =

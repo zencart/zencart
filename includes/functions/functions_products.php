@@ -22,11 +22,37 @@ function zen_get_product_details($product_id, $language_id = null): Product
 }
 
 /**
+ * Return the canonical category path for a product, preserving a requested category
+ * only when the product is directly linked to that category.
+ *
+ * @since ZC v2.3.0
+ */
+function zen_get_product_path_for_category(Product $product_info, int $category_id): string
+{
+    $master_category_id = (int)$product_info->get('master_categories_id');
+    $master_cPath = $master_category_id > 0 ? (string)$product_info->get('cPath') : '';
+
+    if ($category_id === $master_category_id) {
+        return $master_cPath;
+    }
+
+    $linked_categories = $product_info->get('linked_categories');
+    if ($category_id > 0 && is_array($linked_categories)) {
+        $linked_categories = array_map('intval', $linked_categories);
+        if (in_array($category_id, $linked_categories, true)) {
+            return zen_get_generated_category_path_rev($category_id);
+        }
+    }
+
+    return $master_cPath;
+}
+
+/**
  * @since ZC v1.5.7
  */
 function zen_product_set_header_response(int|string $product_id, ?Product $product_info = null): void
 {
-    global $zco_notifier, $breadcrumb, $robotsNoIndex;
+    global $zco_notifier, $breadcrumb, $robotsNoIndex, $current_category_id;
 
     // make sure we got a Product-class instance and it's for the current product
     if ($product_info === null || get_class($product_info) !== 'Product' || $product_info->getID() !== (int)$product_id) {
@@ -82,6 +108,13 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
         $robotsNoIndex = true;
         header('HTTP/1.1 410 Gone');
         return;
+    }
+
+    if (isset($_GET['cPath'], $current_category_id) && is_string($_GET['cPath'])) {
+        $valid_cPath = zen_get_product_path_for_category($product_info, (int)$current_category_id);
+        if ($valid_cPath !== '' && $_GET['cPath'] !== $valid_cPath) {
+            zen_redirect_to_valid_cpath($valid_cPath, (int)$product_id);
+        }
     }
 }
 
