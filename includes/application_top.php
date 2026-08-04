@@ -152,16 +152,42 @@ if (!$contaminated) {
 }
 
 /**
+ * Determine the query string as the CLIENT actually sent it, which is not always $_SERVER['QUERY_STRING'].
+ *
+ * An internal mod_rewrite rewrite replaces QUERY_STRING with the rewritten one,
+ * and SEO-URL rulesets routinely synthesize extra parameters while doing so.
+ * The stock Ultimate SEO URLs .htaccess, for example, rewrites with
+ *   RewriteRule ^(.*)$ index.php?main_page=$1&%{QUERY_STRING} [L]
+ * so a request for /products_all.html?main_page=products_all&disp_order=3 reaches
+ * PHP with QUERY_STRING = "main_page=products_all.html&main_page=products_all&disp_order=3".
+ * That repeated (and differing) main_page is authored by the web server, not the
+ * client, so judging it as parameter pollution rejects ordinary catalog requests.
+ *
+ * REQUEST_URI is left untouched by internal rewrites, so its query portion is the
+ * client's own input: the only part an attacker controls, and the only part that
+ * any upstream layer (WAF, CDN, log parser) would have parsed differently than PHP.
+ *
+ * $_GET-based checks are deliberately left operating on the post-rewrite values,
+ * so parameters injected by the rewrite are still validated for length and content.
+ */
+// Start with QUERY_STRING to support SAPIs that do not publish REQUEST_URI.
+$clientQueryString = $_SERVER['QUERY_STRING'] ?? '';
+if (isset($_SERVER['REQUEST_URI'])) {
+    $queryDelimiter = strpos($_SERVER['REQUEST_URI'], '?');
+    $clientQueryString = $queryDelimiter === false ? '' : substr($_SERVER['REQUEST_URI'], $queryDelimiter + 1);
+}
+
+/**
  * Reject excessive query strings and raw control/non-ASCII bytes.
  * Payment and checkout returns receive a larger allowance
  * because off-site providers can legitimately return longer query strings.
  */
-if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
+if (!$contaminated && $clientQueryString !== '') {
     $longQueryPages = ['checkout_process', 'checkout_payment', 'checkout', 'checkout_one', 'checkout_one_confirmation'];
     $maxQueryLength = in_array($_GET['main_page'] ?? '', $longQueryPages, true) ? 2048 : 256;
 
-    if (strlen($_SERVER['QUERY_STRING']) > $maxQueryLength
-        || preg_match('/[\x00-\x1F\x7F-\xFF]/', $_SERVER['QUERY_STRING'])
+    if (strlen($clientQueryString) > $maxQueryLength
+        || preg_match('/[\x00-\x1F\x7F-\xFF]/', $clientQueryString)
     ) {
         $contaminated = true;
     }
@@ -171,8 +197,12 @@ if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
  * Reject HTTP parameter pollution for keys Zen Cart expects to be scalar.
  * We inspect and normalize the raw query keys before system bootstrap.
  * Matching is intentionally case-insensitive.
+ *
+ * Operates on the client-supplied query string (see $clientQueryString above)
+ * so that duplicates synthesized by a mod_rewrite SEO-URL ruleset are not mistaken
+ * for an attack.
  */
-if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
+if (!$contaminated && $clientQueryString !== '') {
     $protectedScalarKeys = [];
     foreach ($paramsToCheck as $protectedKey) {
         $protectedScalarKeys[strtolower($protectedKey)] = true;
@@ -182,7 +212,7 @@ if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
     $querySeparators = (string) ini_get('arg_separator.input');
     $queryPairs = preg_split(
         '/[' . preg_quote($querySeparators !== '' ? $querySeparators : '&', '/') . ']/',
-        $_SERVER['QUERY_STRING']
+        $clientQueryString
     );
 
     if ($queryPairs === false) {
@@ -222,8 +252,9 @@ if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
 }
 
 unset(
-    $len, $paramsToCheck, $paramsToAvoid, $key, $longQueryPages, $maxQueryLength, $protectedScalarKeys, $protectedKey,
-    $seenProtectedKeys, $querySeparators, $queryPairs, $pair, $rawKey, $decodedKey, $normalizedKey, $bracketPosition, $baseKey
+    $len, $paramsToCheck, $paramsToAvoid, $key, $clientQueryString, $queryDelimiter, $longQueryPages,
+    $maxQueryLength, $protectedScalarKeys, $protectedKey, $seenProtectedKeys, $querySeparators,
+    $queryPairs, $pair, $rawKey, $decodedKey, $normalizedKey, $bracketPosition, $baseKey
 );
 
 if ($contaminated) {
