@@ -199,38 +199,6 @@ unset(
 );
 
 /**
- * reject crawler 'BUY NOW' attempts
- * crawlers should never be adding items to the cart.
- */
-if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
-    $isCrawlerUA = (
-        empty($_SERVER['HTTP_USER_AGENT']) ||
-        preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
-    );
-
-    $refHost = !empty($_SERVER['HTTP_REFERER'])
-        ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
-        : null;
-
-    // Prefer X-Forwarded-Host when present (proxy/CDN); else fall back to HTTP_HOST.
-    // X-Forwarded-Host can be a comma-separated list; take the first.
-    $hostHeader = !empty($_SERVER['HTTP_X_FORWARDED_HOST'])
-        ? trim(strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ','))
-        : ($_SERVER['HTTP_HOST'] ?? '');
-
-    // Strip :port (IPv4/hostname) or ]:port (IPv6-in-brackets), and strip brackets for IPv6.
-    $hostOnly = strtolower($hostHeader);
-    $hostOnly = preg_replace('/^\[(.*)\](?::\d+)?$/', '$1', $hostOnly); // [::1]:8443 -> ::1
-    $hostOnly = preg_replace('/:\d+$/', '', $hostOnly);                // example.com:8443 -> example.com
-
-    $hasInternalReferer = (!empty($refHost) && strtolower($refHost) === $hostOnly);
-
-    if ($isCrawlerUA || !$hasInternalReferer) {
-        $contaminated = true;
-    }
-}
-
-/**
  * reject catalog-filter params (manufacturers_id, sort, etc.) when supplied for
  * a page confirmed to never legitimately read them, such as bots stuffing
  * shopping_cart or checkout with spoofed query strings. cPath and products_id are
@@ -245,7 +213,7 @@ if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
 }
-unset($contaminated, $isCrawlerUA, $refHost, $hostHeader, $hostOnly, $hasInternalReferer);
+unset($contaminated);
 
 /* *** END OF INOCULATION *** */
 
@@ -355,6 +323,28 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
     $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
     require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
     exit;
+}
+
+/**
+ * Reject automated or cross-site 'BUY NOW' requests before initializing the application.
+ * Crawlers should never be adding items to the cart, and a Buy Now link is only ever
+ * followed from one of our own pages.
+ *
+ * This deliberately sits below the inoculation block rather than inside it: the host
+ * comparison consults TRUSTED_PROXIES so that a forwarded host is honoured only when the
+ * genuine TCP peer is a configured reverse proxy, and that constant does not exist until
+ * includes/configure.php has been loaded just above.
+ */
+if (isset($_GET['action']) && $_GET['action'] === 'buy_now') {
+    $isCrawlerUserAgent = empty($_SERVER['HTTP_USER_AGENT'])
+        || preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', (string) $_SERVER['HTTP_USER_AGENT']);
+    $hasInternalReferer = \Zencart\Request\Request::isInternalReferer((string) ($_SERVER['HTTP_REFERER'] ?? ''));
+
+    if ($isCrawlerUserAgent || !$hasInternalReferer) {
+        header('HTTP/1.1 406 Not Acceptable');
+        exit(0);
+    }
+    unset($isCrawlerUserAgent, $hasInternalReferer);
 }
 
 /**

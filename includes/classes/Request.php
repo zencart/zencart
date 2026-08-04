@@ -5,6 +5,8 @@
  * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
  */
 
+declare(strict_types=1);
+
 namespace Zencart\Request;
 
 use Zencart\Traits\Singleton;
@@ -23,7 +25,8 @@ class Request
      * request, captured once before any init code (notably init_sessions.php, which overwrites
      * $_SERVER['REMOTE_ADDR'] with the result of zen_get_ip_address()) can mutate it.
      *
-     * Trust decisions about client-suppliable forwarded headers (zen_get_ip_address())
+     * Trust decisions about client-suppliable forwarded headers (isSecure(), getRequestHost(),
+     * zen_get_ip_address())
      * must be made against this immutable original peer address, never against the live
      * $_SERVER['REMOTE_ADDR'] which may already have been resolved/overwritten earlier in the request.
      * A static property (rather than a define() constant) is used deliberately so
@@ -71,6 +74,111 @@ class Request
     public function has($key)
     {
         return (isset($this->paramBag[$key]));
+    }
+
+    /**
+     * Determine whether the current request was made over HTTPS.
+     *
+     * Forwarded protocol headers are only authoritative when the genuine TCP peer is a
+     * configured trusted proxy. Native web-server HTTPS indicators remain authoritative
+     * for direct requests.
+     *
+     * NOTE: there are some intentional loose-comparisons here for numeric strings.
+     *
+     * @since ZC v2.3.0
+     */
+    public static function isSecure(): bool
+    {
+        $nativelySecure = (isset($_SERVER['HTTPS']) && (strtolower((string) $_SERVER['HTTPS']) === 'on' || $_SERVER['HTTPS'] == '1'))
+            || (isset($_SERVER['SCRIPT_URI']) && stripos((string) $_SERVER['SCRIPT_URI'], 'https:') === 0)
+            || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443');
+        if ($nativelySecure) {
+            return true;
+        }
+
+        /**
+         * The X-Forwarded-* headers (and HTTP_SSLSESSIONID) are client-suppliable and only
+         * trustworthy when they are known to be set/overwritten by a trusted reverse proxy.
+         * The trust check is made against the captured original peer address (not the live
+         * $_SERVER['REMOTE_ADDR'], which may already have been overwritten by init_sessions.php).
+         */
+        if (!self::isFromTrustedProxy()) {
+            return false;
+        }
+
+        $httpsServer = defined('HTTPS_SERVER') ? strtolower(str_replace('https://', '', (string) HTTPS_SERVER)) : '';
+        $forwardedHost = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_HOST'] ?? ''));
+        $forwardedServer = strtolower((string) ($_SERVER['HTTP_X_FORWARDED_SERVER'] ?? ''));
+
+        return (isset($_SERVER['HTTP_X_FORWARDED_BY']) && str_contains(strtoupper((string) $_SERVER['HTTP_X_FORWARDED_BY']), 'SSL'))
+            || ($forwardedHost !== '' && (str_contains(strtoupper($forwardedHost), 'SSL') || ($httpsServer !== '' && str_contains($forwardedHost, $httpsServer))))
+            || ($forwardedServer !== '' && $httpsServer !== '' && str_contains($forwardedServer, $httpsServer))
+            || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && ($_SERVER['HTTP_X_FORWARDED_SSL'] == '1' || strtolower((string) $_SERVER['HTTP_X_FORWARDED_SSL']) === 'on'))
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && in_array(strtolower((string) $_SERVER['HTTP_X_FORWARDED_PROTO']), ['ssl', 'https'], true))
+            || !empty($_SERVER['HTTP_SSLSESSIONID'])
+            || (isset($_SERVER['HTTP_X_FORWARDED_PORT']) && $_SERVER['HTTP_X_FORWARDED_PORT'] == '443');
+    }
+
+    /**
+     * Return the request host without a port.
+     *
+     * A forwarded host is used only when the genuine TCP peer is trusted. If a proxy chain
+     * supplies multiple hosts, the rightmost non-empty value is the one added by the proxy
+     * closest to the application, so it is the only entry a client cannot forge.
+     *
+     * @since ZC v2.3.0
+     */
+    public static function getRequestHost(): string
+    {
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? '');
+        if (self::isFromTrustedProxy() && !empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+            $forwardedHosts = array_values(array_filter(
+                array_map('trim', explode(',', (string) $_SERVER['HTTP_X_FORWARDED_HOST'])),
+                static fn(string $forwardedHost): bool => $forwardedHost !== ''
+            ));
+            if ($forwardedHosts !== []) {
+                $host = $forwardedHosts[array_key_last($forwardedHosts)];
+            }
+        }
+        return self::normalizeHost($host);
+    }
+
+    /**
+     * Determine whether an absolute referer URL belongs to the current request host.
+     *
+     * Ports are deliberately ignored. This allows Buy Now links to work when HTTP_HOST
+     * includes a non-standard port while parse_url() returns only the referer hostname.
+     *
+     * @since ZC v2.3.0
+     */
+    public static function isInternalReferer(string $referer): bool
+    {
+        if ($referer === '') {
+            return false;
+        }
+        $refererHost = parse_url($referer, PHP_URL_HOST);
+        if (!is_string($refererHost) || $refererHost === '') {
+            return false;
+        }
+        return self::normalizeHost($refererHost) === self::getRequestHost();
+    }
+
+    /**
+     * Normalize a hostname for comparison, including bracketed IPv6 addresses.
+     *
+     * parse_url() returns an IPv6 host still wrapped in brackets ("[::1]") while HTTP_HOST
+     * may carry both brackets and a port, so both sides of a host comparison must pass
+     * through here or an IPv6 literal host can never match itself.
+     *
+     * @since ZC v2.3.0
+     */
+    private static function normalizeHost(string $host): string
+    {
+        $host = strtolower(trim($host));
+        if (preg_match('/^\[(.*)\](?::\d+)?$/D', $host, $matches)) {
+            return $matches[1];
+        }
+        return preg_replace('/:\d+$/D', '', $host) ?? '';
     }
 
     /**
@@ -159,6 +267,8 @@ class Request
      * Return the parsed TRUSTED_PROXIES list, computed once per request and cached thereafter.
      *
      * Accepts either an array or a comma-separated string; trims and drops empty entries.
+     * Shared by isSecure(), getRequestHost() and zen_get_ip_address() so the trust-list parsing
+     * lives in one place.
      *
      * @since ZC v2.3.0
      */

@@ -3,10 +3,11 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  *
- * Trusted-proxy hardening coverage for zen_get_ip_address(): forwarded IP headers
- * (X-Forwarded-For et al.) are only honored when the genuine TCP peer is a configured
- * TRUSTED_PROXIES entry, and forwarded-header chains are resolved from the trusted (right) side
- * rather than trusting the client-suppliable leftmost entry.
+ * Trusted-proxy hardening coverage for Request::isSecure(), Request::isInternalReferer() and
+ * zen_get_ip_address(): forwarded headers (X-Forwarded-For / -Proto / -Host et al.) are only
+ * honored when the genuine TCP peer is a configured TRUSTED_PROXIES entry, and forwarded-header
+ * chains are resolved from the trusted (right) side rather than trusting the client-suppliable
+ * leftmost entry.
  */
 
 namespace Tests\Unit\testsSundry;
@@ -60,6 +61,363 @@ class RequestSecurityTest extends zcUnitTestCase
          * order.
          */
         Request::resetTrustedProxiesCacheForTesting();
+    }
+
+    public function testPlainHttpRequestIsNotSecure(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    public function testNativeHttpsRequestIsSecure(): void
+    {
+        $_SERVER['HTTPS'] = 'on';
+        $_SERVER['SERVER_PORT'] = '443';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * isSecure()'s native-signal check is a 3-way OR (HTTPS / SCRIPT_URI / SERVER_PORT); the test
+     * above only exercises it with HTTPS and SERVER_PORT set together. The following three tests
+     * isolate each native signal individually, with the other two absent, so a regression that
+     * broke one specific branch wouldn't hide behind the other two still passing.
+     */
+    public function testScriptUriHttpsAloneIsSecure(): void
+    {
+        $_SERVER['SCRIPT_URI'] = 'https://example.test/page';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * HTTPS is checked with a loose comparison against '1' as an alternative to the 'on'/'off'
+     * string convention tested elsewhere in this file; this isolates that numeric form.
+     */
+    public function testHttpsNumericOneAloneIsSecure(): void
+    {
+        $_SERVER['HTTPS'] = '1';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    public function testServerPortAloneIsSecure(): void
+    {
+        $_SERVER['SERVER_PORT'] = '443';
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    public function testForwardedHttpsRequestIsNotSecureWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    public function testForwardedSslHeaderRequestIsNotSecureWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_SSL'] = 'on';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    public function testForwardedPortRequestIsNotSecureWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = '443';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    public function testForwardedHostContainingSslIsNotSecureWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'ssl-proxy.example.test';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    public function testForwardedServerDoesNotMatchHttpsServerByAccident(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'different-host.local';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    /**
+     * HTTP_SSLSESSIONID is the one forwarded-header branch with no "false without a trusted proxy"
+     * counterpart elsewhere, so both directions are covered here and below.
+     */
+    public function testSslSessionIdHeaderIsNotSecureWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_SSLSESSIONID'] = 'abc123';
+
+        $this->assertFalse(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedHttpsRequestIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+
+        /**
+         * isSecure() reads the captured original peer address rather than $_SERVER['REMOTE_ADDR']
+         * directly, so capture it after the peer address has been set up.
+         */
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * isSecure()'s trusted-proxy OR-chain has six forwarded-header branches. Without the tests
+     * below, only HTTP_X_FORWARDED_PROTO would have a "true when trusted" case, so a regression
+     * that broke one of the other five specifically (e.g. an inverted condition) would not be
+     * caught by the "false without a trusted proxy" tests alone.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedByHeaderIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_BY'] = 'ssl-terminator';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedHostContainingSslIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'ssl-proxy.example.test';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * Counterpart to testForwardedServerDoesNotMatchHttpsServerByAccident(): when the forwarded
+     * server header actually matches the configured HTTPS_SERVER host, isSecure() must trust it.
+     * The expected value is derived from the live HTTPS_SERVER constant (the same way isSecure()
+     * itself derives it) rather than hardcoded, since its value is environment-dependent.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedServerMatchingHttpsServerIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $httpsServerHost = defined('HTTPS_SERVER') ? str_replace('https://', '', HTTPS_SERVER) : '';
+        if ($httpsServerHost === '') {
+            $this->markTestSkipped('HTTPS_SERVER is not configured in this environment.');
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_SERVER'] = $httpsServerHost;
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedSslHeaderIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_SSL'] = 'on';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedPortIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_X_FORWARDED_PORT'] = '443';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    #[RunInSeparateProcess]
+    public function testSslSessionIdHeaderIsSecureWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTPS'] = 'off';
+        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        $_SERVER['HTTP_SSLSESSIONID'] = 'abc123';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertTrue(Request::isSecure());
+    }
+
+    /**
+     * isInternalReferer() gates the 'BUY NOW' rejection in includes/application_top.php. The tests
+     * below cover the ordinary same-host / cross-host decision, the port and IPv6 normalization
+     * that a naive string comparison gets wrong, and — most importantly — that a client-suppliable
+     * X-Forwarded-Host cannot be used to manufacture a "matching" referer.
+     */
+    public function testRefererOnSameHostIsInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test/index.php?main_page=product_info'));
+    }
+
+    public function testEmptyRefererIsNotInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertFalse(Request::isInternalReferer(''));
+    }
+
+    public function testCrossSiteRefererIsNotInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertFalse(Request::isInternalReferer('https://evil.test/landing'));
+    }
+
+    /**
+     * A referer carrying no host at all (a relative or malformed URL) must not be treated as
+     * internal just because parse_url() didn't fail outright.
+     */
+    public function testRefererWithoutHostIsNotInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+
+        $this->assertFalse(Request::isInternalReferer('/index.php?main_page=product_info'));
+    }
+
+    /**
+     * Ports are deliberately ignored: HTTP_HOST carries the non-standard port while
+     * parse_url(PHP_URL_HOST) returns the bare hostname, so a comparison that kept the port
+     * would reject every Buy Now click on a non-standard-port development or staging site.
+     */
+    public function testRefererIsInternalWhenHostHeaderCarriesNonStandardPort(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test:8443';
+
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test:8443/index.php'));
+    }
+
+    /**
+     * parse_url() returns an IPv6 host still wrapped in brackets ("[::1]") while HTTP_HOST holds
+     * brackets plus a port ("[::1]:8443"). Both sides must be normalized identically or an IPv6
+     * literal host can never match itself and Buy Now is rejected outright.
+     */
+    public function testIpv6LiteralHostRefererIsInternal(): void
+    {
+        $_SERVER['HTTP_HOST'] = '[::1]:8443';
+
+        $this->assertTrue(Request::isInternalReferer('https://[::1]:8443/index.php'));
+    }
+
+    /**
+     * The security case this guard exists for: an attacker who can set X-Forwarded-Host could
+     * otherwise pair it with a matching forged Referer and satisfy the "internal referer" test
+     * from an arbitrary origin. With no trusted proxy configured, the forwarded host must be
+     * ignored entirely and the real HTTP_HOST used instead.
+     */
+    public function testForwardedHostIsIgnoredForRefererCheckWithoutTrustedProxy(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'shop.example.test';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'evil.test';
+        $_SERVER['REMOTE_ADDR'] = '203.0.113.9';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('shop.example.test', Request::getRequestHost());
+        $this->assertFalse(Request::isInternalReferer('https://evil.test/landing'));
+    }
+
+    #[RunInSeparateProcess]
+    public function testForwardedHostIsHonoredForRefererCheckWhenFromTrustedProxy(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTP_HOST'] = 'origin-internal.lan';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'shop.example.test';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('shop.example.test', Request::getRequestHost());
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test/index.php'));
+    }
+
+    /**
+     * Mirrors resolveClientFromForwardedChain()'s reasoning for X-Forwarded-For: each hop appends,
+     * so the leftmost entry is client-forgeable and the rightmost is the one written by the proxy
+     * nearest the application. Taking the leftmost here would hand the attacker the same bypass
+     * that testForwardedHostIsIgnoredForRefererCheckWithoutTrustedProxy() guards against.
+     */
+    #[RunInSeparateProcess]
+    public function testForwardedHostChainUsesRightmostEntry(): void
+    {
+        if (!defined('TRUSTED_PROXIES')) {
+            define('TRUSTED_PROXIES', self::TEST_TRUSTED_PROXIES);
+        }
+
+        $_SERVER['HTTP_HOST'] = 'origin-internal.lan';
+        $_SERVER['HTTP_X_FORWARDED_HOST'] = 'evil.test, shop.example.test';
+        $_SERVER['REMOTE_ADDR'] = '10.0.0.1';
+        Request::captureOriginalRemoteAddr();
+
+        $this->assertSame('shop.example.test', Request::getRequestHost());
+        $this->assertTrue(Request::isInternalReferer('https://shop.example.test/index.php'));
+        $this->assertFalse(Request::isInternalReferer('https://evil.test/landing'));
     }
 
     /**
