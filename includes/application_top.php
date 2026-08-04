@@ -152,64 +152,79 @@ if (!$contaminated) {
 }
 
 /**
- * reject long query strings
- * reject suspicious non-ASCII characters
- * allows standard printable ASCII but flags common exploit symbols
+ * Reject excessive query strings and raw control/non-ASCII bytes.
+ * Payment and checkout returns receive a larger allowance
+ * because off-site providers can legitimately return longer query strings.
  */
 if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
+    $longQueryPages = ['checkout_process', 'checkout_payment', 'checkout', 'checkout_one', 'checkout_one_confirmation'];
+    $maxQueryLength = in_array($_GET['main_page'] ?? '', $longQueryPages, true) ? 2048 : 256;
 
-    // define pages that need long query strings
-    $long_query_pages = ['checkout_process', 'checkout_payment', 'checkout', 'checkout_one', 'checkout_one_confirmation'];
-
-    // set a dynamic length limit
-    // allow 2048 characters for payment pages, but keep the strict 256 for everything else
-    $max_length = in_array($_GET['main_page'] ?? '', $long_query_pages) ? 2048 : 256;
-
-    // cap query string length (prevents buffer overflow/fuzzing)
-    if (strlen($_SERVER['QUERY_STRING']) > $max_length) {
-        $contaminated = true;
-    }
-
-    // check for the specific '¤' (%C2%A4) or characters outside standard range
-    // allow basic printable ASCII but specifically target high-bit "junk"
-    if (preg_match('/[\x00-\x1F\x7F-\xFF]/', $_SERVER['QUERY_STRING'])) {
+    if (strlen($_SERVER['QUERY_STRING']) > $maxQueryLength
+        || preg_match('/[\x00-\x1F\x7F-\xFF]/', $_SERVER['QUERY_STRING'])
+    ) {
         $contaminated = true;
     }
 }
 
 /**
- * reject parameter pollution (any repeated keys)
- * scans the raw query string for any key appearing more than twice.
+ * Reject HTTP parameter pollution for keys Zen Cart expects to be scalar.
+ * We inspect and normalize the raw query keys before system bootstrap.
+ * Matching is intentionally case-insensitive.
  */
-if (!empty($_SERVER['QUERY_STRING'])) {
-    // break the query string into individual "key=value" pairs
-    $pairs = explode('&', $_SERVER['QUERY_STRING']);
-    $keys = [];
-
-    foreach ($pairs as $pair) {
-        // get just the part before the "="
-        $parts = explode('=', $pair, 2);
-
-        // skip if the pair is empty (e.g., &&) or the key is missing
-        if (empty($parts[0])) {
-            continue;
-        }
-
-        $key = strtolower($parts[0]);
-        $keys[] = $key;
+if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
+    $protectedScalarKeys = [];
+    foreach ($paramsToCheck as $protectedKey) {
+        $protectedScalarKeys[strtolower($protectedKey)] = true;
     }
 
-    // count occurrences of each key
-    $counts = array_count_values($keys);
-    foreach ($counts as $key => $count) {
-        // allow one duplication (possibly accidental), more than 2 is not accidental
-        if ($count > 2) {
-            $contaminated = true;
-            break;
+    $seenProtectedKeys = [];
+    $querySeparators = (string) ini_get('arg_separator.input');
+    $queryPairs = preg_split(
+        '/[' . preg_quote($querySeparators !== '' ? $querySeparators : '&', '/') . ']/',
+        $_SERVER['QUERY_STRING']
+    );
+
+    if ($queryPairs === false) {
+        $contaminated = true;
+    } else {
+        foreach ($queryPairs as $pair) {
+            $rawKey = explode('=', $pair, 2)[0];
+            if ($rawKey === '') {
+                continue;
+            }
+
+            // Reject leading spaces
+            $decodedKey = ltrim(urldecode($rawKey), ' ');
+
+            // PHP truncates parameter names at decoded NUL bytes; no control byte is valid key content.
+            if (preg_match('/[\x00-\x1F\x7F]/', $decodedKey)) {
+                $contaminated = true;
+                break;
+            }
+
+            $normalizedKey = strtolower(str_replace(['.', ' '], '_', $decodedKey));
+            $bracketPosition = strpos($normalizedKey, '[');
+            $baseKey = $bracketPosition === false ? $normalizedKey : substr($normalizedKey, 0, $bracketPosition);
+
+            if (!isset($protectedScalarKeys[$baseKey])) {
+                continue;
+            }
+
+            if ($bracketPosition !== false || isset($seenProtectedKeys[$baseKey])) {
+                $contaminated = true;
+                break;
+            }
+
+            $seenProtectedKeys[$baseKey] = true;
         }
     }
 }
-unset($len, $paramsToCheck, $paramsToAvoid, $long_query_pages, $max_length, $pairs, $pair, $parts, $keys, $key, $counts, $count);
+
+unset(
+    $len, $paramsToCheck, $paramsToAvoid, $key, $longQueryPages, $maxQueryLength, $protectedScalarKeys, $protectedKey,
+    $seenProtectedKeys, $querySeparators, $queryPairs, $pair, $rawKey, $decodedKey, $normalizedKey, $bracketPosition, $baseKey
+);
 
 /**
  * reject crawler 'BUY NOW' attempts
