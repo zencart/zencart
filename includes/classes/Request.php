@@ -34,8 +34,8 @@ class Request
     /**
      * Per-request cache of the parsed TRUSTED_PROXIES list. TRUSTED_PROXIES is a define()'d
      * constant and cannot change during a request, so re-parsing it (explode/array_map/array_filter)
-     * on every call — potentially once per zen_get_ip_address() call plus once per forwarded-header hop
-     * while resolving a chain — would be pure repeated work for an unchanging result.
+     * on every call, potentially once per zen_get_ip_address() call plus once per forwarded-header hop
+     * while resolving a chain, would be pure repeated work for an unchanging result.
      * Nullable so ??= can distinguish "not yet computed" from "computed to an empty list"
      * (an absent/empty TRUSTED_PROXIES is itself a valid, cacheable result).
      */
@@ -91,7 +91,7 @@ class Request
      * Capture the genuine TCP peer address once, as early as possible in the request.
      *
      * Uses null-coalescing assignment so that the first capture sticks: calling this more than
-     * once during a single request is harmless and idempotent — the originally-captured value is
+     * once during a single request is harmless and idempotent. The originally-captured value is
      * never overwritten by a later (possibly already-mutated) $_SERVER['REMOTE_ADDR'].
      *
      * @since ZC v2.3.0
@@ -119,13 +119,13 @@ class Request
      * Determine whether the given address matches a configured trusted reverse proxy.
      *
      * Each TRUSTED_PROXIES entry may be a single IP (exact match) or a CIDR range
-     * (e.g. 173.245.48.0/20) — providers such as Cloudflare publish their edge ranges as CIDR blocks
+     * (e.g. 173.245.48.0/20). Providers such as Cloudflare publish their edge ranges as CIDR blocks
      * (see the TRUSTED_PROXIES doc comment in includes/dist-configure.php), so an exact-match-only
      * check could never match a real peer against the documented configuration.
      *
      * Unlike isFromTrustedProxy() (which always checks the captured original peer), this accepts
      * an arbitrary address so callers can also test intermediate hops from a forwarded-header
-     * chain — see resolveClientFromForwardedChain().
+     * chain. See resolveClientFromForwardedChain().
      *
      * @since ZC v2.3.0
      */
@@ -187,14 +187,14 @@ class Request
     /**
      * Resolve the real client address from a forwarded-header chain (e.g. X-Forwarded-For),
      * which each hop conventionally APPENDS its observed source address to rather than
-     * overwriting — so the chain reads left-to-right as [client-claimed value, hop1, hop2, ...].
+     * overwriting, so the chain reads left-to-right as [client-claimed value, hop1, hop2, ...].
      *
      * A client can freely forge the leftmost entries before the request ever reaches a trusted
      * proxy, so naively taking the first (leftmost) entry trusts attacker-controlled input even
      * when the connection genuinely came through a trusted proxy. Instead, walk the chain from
      * the right (the trusted-peer side): each trusted proxy's own append is authoritative for
      * "who connected to me", so skip entries that are themselves trusted proxies and return the
-     * first (rightmost-to-leftmost) entry that isn't — that is the address the nearest trusted hop
+     * first (rightmost-to-leftmost) entry that isn't. That is the address the nearest trusted hop
      * actually observed. If every entry in the chain is a trusted proxy (or the chain is empty
      * after trimming), fall back to the captured original peer address.
      *
@@ -219,7 +219,7 @@ class Request
      *
      * Exact-IP entries are compared as inet_pton() binary, not as raw text: IPv6 addresses have
      * multiple valid textual representations for the same address (e.g. a fully- or partially-expanded form
-     * vs the "::" zero-run shorthand — "2001:db8:0:0::1" and "2001:db8::1" are the same address),
+     * vs the "::" zero-run shorthand; "2001:db8:0:0::1" and "2001:db8::1" are the same address),
      * so a plain string comparison could silently fail to trust a genuinely configured proxy
      * whenever REMOTE_ADDR happens to be reported in a different (but equivalent)
      * textual form than what an operator typed into TRUSTED_PROXIES.

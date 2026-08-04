@@ -466,7 +466,7 @@ class ot_coupon extends base
      *
      * @param array $coupon_details coupon row as fetched from TABLE_COUPONS
      * @return bool true when the coupon is still valid; false when it was dropped
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function revalidateCouponAtFinalization(array $coupon_details): bool
     {
@@ -598,7 +598,7 @@ class ot_coupon extends base
      * timeout is used so a stuck peer cannot hang checkout indefinitely.
      *
      * @return bool true when the lock was granted
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function getNamedLock(string $lockName, int $timeoutSeconds = 10): bool
     {
@@ -612,7 +612,7 @@ class ot_coupon extends base
     /**
      * Release a MySQL named advisory lock previously obtained via getNamedLock().
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function releaseNamedLock(string $lockName): void
     {
@@ -629,7 +629,7 @@ class ot_coupon extends base
      * second concurrent checkout from receiving the same discount before the first request
      * records its redeem-track row.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function prepareCouponForFinalization(array $coupon_details): bool
     {
@@ -664,7 +664,7 @@ class ot_coupon extends base
      * Hold coupon finalization locks only during checkout_process, where the discounted totals
      * are about to be persisted.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function shouldHoldRedemptionLockDuringCheckoutProcess(): bool
     {
@@ -676,7 +676,7 @@ class ot_coupon extends base
     /**
      * True when the coupon has a finite usage cap that needs concurrency control.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function couponHasUsageCaps(array $coupon_details): bool
     {
@@ -689,7 +689,7 @@ class ot_coupon extends base
      * Global caps must serialize all users of the coupon. Per-user-only caps should serialize only
      * requests for the same customer, so independent customers can still check out concurrently.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function getCouponRedemptionLockName(array $coupon_details): ?string
     {
@@ -709,7 +709,7 @@ class ot_coupon extends base
     /**
      * Resolve the customer identifier used for per-user redemption locking.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function getCouponRedemptionLockCustomerId(array $coupon_details): int
     {
@@ -730,7 +730,7 @@ class ot_coupon extends base
      * Guest-checkout integrations can supply a more specific lock identity than the default shared
      * guest bucket by observing the notifier fired here.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function resolveGuestCouponRedemptionLockCustomerId(array $coupon_details): int
     {
@@ -746,7 +746,7 @@ class ot_coupon extends base
      * Guests remain tracked as customer_id 0 in core; guest-checkout integrations that maintain
      * their own identity ledger can use notifiers around validation/finalization for stricter rules.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function getCouponRedemptionTrackingCustomerId(): int
     {
@@ -756,7 +756,7 @@ class ot_coupon extends base
     /**
      * Release any checkout_process coupon finalization lock currently held by this instance.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function releaseHeldRedemptionLockIfAny(): void
     {
@@ -772,7 +772,7 @@ class ot_coupon extends base
      * True when checkout_process must redirect the customer back instead of finalizing an order at
      * a different total than the one they confirmed.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     public function shouldAbortCheckoutProcess(): bool
     {
@@ -782,7 +782,7 @@ class ot_coupon extends base
     /**
      * Clear the checkout-process abort flag after the caller has handled it.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     public function clearCheckoutProcessAbort(): void
     {
@@ -792,7 +792,7 @@ class ot_coupon extends base
     /**
      * Message-stack target used when a coupon is dropped during checkout.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function getCheckoutCouponMessageStack(): string
     {
@@ -803,7 +803,7 @@ class ot_coupon extends base
      * Queue a caution message on the page the customer will be returned to when checkout cannot
      * proceed with the coupon they previously confirmed.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function queueCheckoutProcessAbortMessage(string $message): void
     {
@@ -818,7 +818,7 @@ class ot_coupon extends base
      * Build the customer-facing message used when checkout cannot obtain the finalization lock for
      * this coupon.
      *
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function buildLockUnavailableMessage(array $coupon_details): string
     {

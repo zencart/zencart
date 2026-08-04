@@ -222,7 +222,7 @@ class upload extends base
     }
 
     /**
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     function setPermittedDestinationBase($base)
     {
@@ -230,7 +230,7 @@ class upload extends base
     }
 
     /**
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     function getPermittedDestinationBases()
     {
@@ -249,7 +249,7 @@ class upload extends base
     }
 
     /**
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     function destinationIsContained()
     {

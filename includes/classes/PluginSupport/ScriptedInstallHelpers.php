@@ -125,7 +125,7 @@ trait ScriptedInstallHelpers
     }
 
     /**
-     * @since ZC v2.2.3
+     * @since ZC v2.3.0
      */
     protected function redactSensitiveConfigValue(array $sql_data_array, string $key_name): array
     {

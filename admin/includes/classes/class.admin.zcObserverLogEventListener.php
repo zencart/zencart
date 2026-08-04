@@ -175,7 +175,7 @@ class zcObserverLogEventListener extends base {
 
   /**
    * Decide whether a POST field name should be redacted from the activity log.
-   * @since ZC v2.2.3
+   * @since ZC v2.3.0
    */
   static function isSensitiveFieldName($key)
   {
@@ -188,7 +188,7 @@ class zcObserverLogEventListener extends base {
 
   /**
    * Backstop redaction for an already-json-encoded postdata blob.
-   * @since ZC v2.2.3
+   * @since ZC v2.3.0
    */
   static function filterJsonPostdata($json)
   {
@@ -204,7 +204,7 @@ class zcObserverLogEventListener extends base {
 
   /**
    * admin/configuration.php consumes this function to redact sensitive data from being logged
-   * @since ZC v2.2.3
+   * @since ZC v2.3.0
    */
   static function filterLogMessage($message)
   {

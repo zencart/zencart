@@ -124,7 +124,7 @@ function issetorArray(array $array, $key, $default = null)
  * If both the request header and POST field are present but don't match, null is returned
  * so callers fail closed rather than silently choosing one source.
  *
- * @since ZC v2.2.3
+ * @since ZC v2.3.0
  */
 function zen_get_csrf_token_from_request(): ?string
 {
@@ -149,7 +149,7 @@ function zen_get_csrf_token_from_request(): ?string
 /**
  * Validates the current request's CSRF token against the session token.
  *
- * @since ZC v2.2.3
+ * @since ZC v2.3.0
  */
 function zen_request_has_valid_csrf_token(): bool
 {
@@ -198,7 +198,7 @@ function zen_limit_image_filename($filename, $table_name, $field_name, $extensio
 /**
  * Normalize a local download filename for storage.
  *
- * @since ZC v2.2.3
+ * @since ZC v2.3.0
  */
 function zen_sanitize_download_filename($filename): string
 {
@@ -223,7 +223,7 @@ function zen_sanitize_download_filename($filename): string
 /**
  * Check whether a local download filename resolves to a file inside the download directory.
  *
- * @since ZC v2.2.3
+ * @since ZC v2.3.0
  */
 function zen_download_filename_within_basedir($filename, ?string $base_dir = null): bool
 {

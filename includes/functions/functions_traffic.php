@@ -23,7 +23,7 @@ function zen_get_ip_address() {
      *
      * A trusted proxy conventionally APPENDS its own observed source address to an existing
      * forwarded-header value rather than replacing it, so the header can read
-     * "client-claimed-value, hop1, hop2" — the leftmost entry is whatever the original,
+     * "client-claimed-value, hop1, hop2". The leftmost entry is whatever the original,
      * potentially untrusted, client supplied, and is not authoritative.
      * Request::resolveClientFromForwardedChain() walks the chain from the right (the trusted side) and
      * returns the first entry that isn't itself a trusted proxy, instead of naively trusting
