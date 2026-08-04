@@ -299,10 +299,7 @@ function zen_redirect_to_valid_cpath(string $valid_cPath, int $products_id = 0):
         $parameters .= '&products_id=' . $products_id;
     }
 
-    $other_parameters = zen_get_all_get_params(['cPath', 'products_id']);
-    if ($other_parameters !== '') {
-        $parameters .= '&' . rtrim($other_parameters, '&');
-    }
+    $other_parameters = zen_get_all_get_params(['cPath', 'products_id', 'action', 'notify']);
 
     $page = FILENAME_DEFAULT;
     if (isset($_GET['main_page']) && is_string($_GET['main_page'])) {
