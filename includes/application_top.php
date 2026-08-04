@@ -257,6 +257,17 @@ unset(
     $queryPairs, $pair, $rawKey, $decodedKey, $normalizedKey, $bracketPosition, $baseKey
 );
 
+/**
+ * reject catalog-filter params (manufacturers_id, sort, etc.) when supplied for
+ * a page confirmed to never legitimately read them, such as bots stuffing
+ * shopping_cart or checkout with spoofed query strings. cPath and products_id are
+ * deliberately NOT covered here -- see includes/routing_map.php.
+ */
+if (!$contaminated) {
+    require_once __DIR__ . '/routing_map.php';
+    $contaminated = zen_request_has_disallowed_catalog_param($_GET);
+}
+
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
@@ -335,10 +346,7 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
  * Crawlers should never be adding items to the cart, and a Buy Now link is only ever
  * followed from one of our own pages.
  *
- * This sits below the inoculation block rather than inside it because the host comparison
- * consults TRUSTED_PROXIES — so that a forwarded host is honoured only when the genuine TCP
- * peer is a configured reverse proxy — and that constant does not exist until
- * includes/configure.php has been loaded just above.
+ * Depends on TRUSTED_PROXIES (loaded above) for forwarded-host authenticity checking.
  */
 if (isset($_GET['action']) && $_GET['action'] === 'buy_now') {
     $isCrawlerUserAgent = empty($_SERVER['HTTP_USER_AGENT'])
