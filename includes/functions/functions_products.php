@@ -26,7 +26,7 @@ function zen_get_product_details($product_id, $language_id = null): Product
  */
 function zen_product_set_header_response(int|string $product_id, ?Product $product_info = null): void
 {
-    global $zco_notifier, $breadcrumb, $robotsNoIndex;
+    global $zco_notifier, $breadcrumb, $robotsNoIndex, $current_category_id;
 
     // make sure we got a Product-class instance and it's for the current product
     if ($product_info === null || get_class($product_info) !== 'Product' || $product_info->getID() !== (int)$product_id) {
@@ -82,6 +82,14 @@ function zen_product_set_header_response(int|string $product_id, ?Product $produ
         $robotsNoIndex = true;
         header('HTTP/1.1 410 Gone');
         return;
+    }
+
+    // normalize a malformed/fabricated category path so that one URL serves the product
+    if (isset($_GET['cPath']) && is_string($_GET['cPath'])) {
+        $valid_cPath = zen_get_valid_cpath_for_product($product_info, (int)($current_category_id ?? 0));
+        if ($valid_cPath !== '' && $_GET['cPath'] !== $valid_cPath) {
+            zen_redirect_to_valid_cpath($valid_cPath, (int)$product_id);
+        }
     }
 }
 
