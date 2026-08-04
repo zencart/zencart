@@ -802,9 +802,13 @@ function zen_get_generated_category_path_rev($this_categories_id): string
     $categories = array_reverse($categories);
     $categories[] = $this_categories_id;
 
-    $paths[$cache_key] = implode('_', $categories);
+    $path = implode('_', $categories);
 
-    return $paths[$cache_key];
+    if ($cacheable) {
+        $paths[$cache_key] = $path;
+    }
+
+    return $path;
 }
 
 /**
