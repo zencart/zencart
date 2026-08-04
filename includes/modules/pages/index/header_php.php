@@ -35,11 +35,6 @@ if (isset($cPath) && zen_not_null($cPath)) {
             $current_category_not_found = true;
         } elseif ($category_status->fields['categories_status'] == '0') {
             $current_category_is_disabled = true;
-        } elseif (isset($_GET['cPath']) && is_string($_GET['cPath'])) {
-            $valid_cPath = zen_get_generated_category_path_rev($current_category_id);
-            if ($_GET['cPath'] !== $valid_cPath) {
-                zen_redirect_to_valid_cpath($valid_cPath);
-            }
         }
     }
     $category_products_query =
@@ -103,6 +98,11 @@ if (isset($cPath) && zen_not_null($cPath)) {
     //      of display for stores that have an 'invalid' mix of products and categories within a
     //      category.
     //
+    // 4. Finally, if the category is present and enabled but the requested 'cPath' doesn't match the
+    //    category's authoritative path (e.g. a malformed or fabricated hierarchy), redirect (301) to
+    //    the generated path so that one URL serves the category.  Determining the category-depth first
+    //    keeps the page displayable for observers of NOTIFY_ZEN_REDIRECT that cancel the redirect.
+    //
     if (!$category_redirect_handled) {
         if ($current_category_not_found) {
             unset($_GET['cPath']);
@@ -119,6 +119,14 @@ if (isset($cPath) && zen_not_null($cPath)) {
             $category_depth = 'products';
         } else {
             $category_depth = ($current_category_has_subcats) ? 'nested' : 'products';
+        }
+
+        if (!$current_category_not_found && !$current_category_is_disabled
+            && $current_category_id > 0 && isset($_GET['cPath']) && is_string($_GET['cPath'])) {
+            $valid_cPath = zen_get_generated_category_path_rev($current_category_id);
+            if ($_GET['cPath'] !== $valid_cPath) {
+                zen_redirect_to_valid_cpath($valid_cPath);
+            }
         }
     }
 }

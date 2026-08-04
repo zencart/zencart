@@ -6,12 +6,13 @@
 
 namespace Tests\Unit\testsCategories;
 
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
-#[RunTestsInSeparateProcesses]
-class ProductPathForCategoryTest extends zcUnitTestCase
+class ValidCpathForProductTest extends zcUnitTestCase
 {
+    protected $preserveGlobalState = false;
+    protected $runTestInSeparateProcess = true;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -36,7 +37,7 @@ class ProductPathForCategoryTest extends zcUnitTestCase
 
         $GLOBALS['db']->expects($this->never())->method('Execute');
 
-        $this->assertSame('1_9', \zen_get_product_path_for_category($product, 9));
+        $this->assertSame('1_9', \zen_get_valid_cpath_for_product($product, 9));
     }
 
     public function testDirectlyLinkedCategoryUsesItsGeneratedPath(): void
@@ -51,7 +52,7 @@ class ProductPathForCategoryTest extends zcUnitTestCase
             ->method('Execute')
             ->willReturnCallback([$this, 'parentCategoryQuery']);
 
-        $this->assertSame('3_14', \zen_get_product_path_for_category($product, 14));
+        $this->assertSame('3_14', \zen_get_valid_cpath_for_product($product, 14));
     }
 
     public function testUnrelatedCategoryFallsBackToMasterPathWithoutAQuery(): void
@@ -64,7 +65,7 @@ class ProductPathForCategoryTest extends zcUnitTestCase
 
         $GLOBALS['db']->expects($this->never())->method('Execute');
 
-        $this->assertSame('1_9', \zen_get_product_path_for_category($product, 22));
+        $this->assertSame('1_9', \zen_get_valid_cpath_for_product($product, 22));
     }
 
     public function testInvalidTerminalCategoryFallsBackToMasterPathWithoutAQuery(): void
@@ -77,7 +78,7 @@ class ProductPathForCategoryTest extends zcUnitTestCase
 
         $GLOBALS['db']->expects($this->never())->method('Execute');
 
-        $this->assertSame('1_9', \zen_get_product_path_for_category($product, 0));
+        $this->assertSame('1_9', \zen_get_valid_cpath_for_product($product, 0));
     }
 
     public function testProductWithoutAMasterCategoryDoesNotProduceAPath(): void
@@ -90,7 +91,7 @@ class ProductPathForCategoryTest extends zcUnitTestCase
 
         $GLOBALS['db']->expects($this->never())->method('Execute');
 
-        $this->assertSame('', \zen_get_product_path_for_category($product, 0));
+        $this->assertSame('', \zen_get_valid_cpath_for_product($product, 0));
     }
 
     private function createProduct(array $data): \Product

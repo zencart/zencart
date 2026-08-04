@@ -265,6 +265,39 @@ function zen_get_product_path($product_id): string
 }
 
 /**
+ * Return the authoritative category path for a product, preserving a requested category
+ * only when the product is directly linked to that category.
+ *
+ * Unlike zen_get_product_path(), this uses the already-loaded Product data, so the
+ * master-category and unrelated-category cases add no queries; only a legitimate alternate
+ * linked category needs its path generated.
+ *
+ * @param Product $product_info the loaded product
+ * @param int $requested_category_id the category asked for (0 when the request had no usable cPath)
+ * @return string authoritative cPath, or '' when the product has no master category
+ * @since ZC v2.3.0
+ */
+function zen_get_valid_cpath_for_product(Product $product_info, int $requested_category_id): string
+{
+    $master_category_id = (int)$product_info->get('master_categories_id');
+    $master_cPath = $master_category_id > 0 ? (string)$product_info->get('cPath') : '';
+
+    if ($requested_category_id === $master_category_id) {
+        return $master_cPath;
+    }
+
+    $linked_categories = $product_info->get('linked_categories');
+    if ($requested_category_id > 0 && is_array($linked_categories)) {
+        $linked_categories = array_map('intval', $linked_categories);
+        if (in_array($requested_category_id, $linked_categories, true)) {
+            return zen_get_generated_category_path_rev($requested_category_id);
+        }
+    }
+
+    return $master_cPath;
+}
+
+/**
  * Parse and sanitize the cPath parameter values
  * @param string $cPath
  * @return array
@@ -289,23 +322,46 @@ function zen_parse_category_path(string $cPath): array
 /**
  * Redirect to an authoritative category path while retaining other applicable GET parameters.
  *
+ * The retained parameters are the ones init_canonical already decided are keepable for this
+ * request ($excludeParams), so a permanent redirect only carries over what the store already
+ * treats as part of a URL's identity.  That list also has every unrecognized parameter of this
+ * request appended to it, so bot-supplied junk is not reflected back into a permanently-cacheable
+ * Location header.  Plugins adjust it via NOTIFY_INIT_CANONICAL_PARAM_WHITELIST.
+ *
+ * Only GET requests are redirected: a 301 causes browsers to re-issue as GET, which would
+ * silently discard the body of any other request method.
+ *
+ * @param string $valid_cPath authoritative category path
+ * @param int $products_id 0 for a category listing
  * @since ZC v2.3.0
  */
 function zen_redirect_to_valid_cpath(string $valid_cPath, int $products_id = 0): void
 {
+    global $current_page_base, $excludeParams;
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
+        return;
+    }
+
     $parameters = 'cPath=' . $valid_cPath;
 
     if ($products_id > 0) {
         $parameters .= '&products_id=' . $products_id;
     }
 
-    $other_parameters = zen_get_all_get_params(['cPath', 'products_id', 'action', 'notify']);
-
-    $page = FILENAME_DEFAULT;
-    if (isset($_GET['main_page']) && is_string($_GET['main_page'])) {
-        $page = $_GET['main_page'];
+    // if init_canonical didn't run (or was overridden away), fail closed and retain nothing
+    if (!empty($excludeParams)) {
+        $other_parameters = zen_get_all_get_params(array_merge($excludeParams, ['cPath', 'products_id', 'action', 'notify']));
+        if ($other_parameters !== '') {
+            $parameters .= '&' . rtrim($other_parameters, '&');
+        }
     }
-    zen_redirect(zen_href_link($page, $parameters), 301);
+
+    // use the sanitized current page rather than the raw request value
+    $page = !empty($current_page_base) ? $current_page_base : FILENAME_DEFAULT;
+
+    // no session id: this response is permanently cacheable, and by search engines too
+    zen_redirect(zen_href_link($page, $parameters, 'NONSSL', false), 301);
 }
 
 /**
@@ -729,13 +785,26 @@ function zen_get_generated_category_path_ids($id, string $from = 'category')
  */
 function zen_get_generated_category_path_rev($this_categories_id): string
 {
+    // Memoize/cache lookups already done.
+    // the ancestor walk is one uncached query per level, and the storefront asks for the
+    // same path more than once per request (canonical, cPath validation, sideboxes).
+    // Not memoized in admin, where the tree can change mid-request.
+    static $paths = [];
+    $cacheable = !defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true;
+    $cache_key = (string)$this_categories_id;
+    if ($cacheable && isset($paths[$cache_key])) {
+        return $paths[$cache_key];
+    }
+
     $categories = [];
     zen_get_parent_categories($categories, $this_categories_id);
 
     $categories = array_reverse($categories);
     $categories[] = $this_categories_id;
 
-    return implode('_', $categories);
+    $paths[$cache_key] = implode('_', $categories);
+
+    return $paths[$cache_key];
 }
 
 /**
