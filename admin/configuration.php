@@ -250,20 +250,7 @@ foreach ($configuration as $item) {
             if (empty($item['set_function'])) {
                 echo '<input type="text" name="configuration[' . $fieldName . ']" value="' . $cfgValue . '" class="form-control">';
             } else {
-                // use addslashes() instead of $cfgValue directly here.
-                $safe_value = addslashes($cfgValue);
-                $set_function = $item['set_function'] . '\'' . $safe_value . '\', \'' . $fieldName . '\')';
-
-                eval('$inputField = ' . $set_function . ';');
-
-                // backward compatibility
-                // if a plugin ignores the new $fieldName parameter and hardcodes 'configuration_value', dynamically rewrite the name and id attributes
-                if (strpos($inputField, 'configuration_value') !== false) {
-                    $inputField = preg_replace('/name=[\'"]configuration_value(\[\])?[\'"]/', 'name="' . $fieldName . '$1"', $inputField);
-                    $inputField = preg_replace('/id=[\'"]configuration_value[\'"]/', 'id="' . $fieldName . '"', $inputField);
-                }
-
-                echo $inputField;
+                echo zen_render_config_set_function($item['set_function'], $cfgValue, $fieldName) ?? '<input type="text" name="configuration[' . $fieldName . ']" value="' . $cfgValue . '" class="form-control">';
             }
             ?>
             <?= zen_draw_hidden_field("original[$fieldName]", $cfgValue) ?>

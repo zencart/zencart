@@ -319,6 +319,262 @@ function zen_cfg_select_drop_down(array $select_array, string $key_value, string
 }
 
 /**
+ * @since ZC v3.0.0
+ */
+function zen_render_config_set_function(string $set_function, string $configuration_value, string $configuration_key = ''): ?string
+{
+    $spec = zen_parse_config_set_function($set_function);
+    if ($spec === null) {
+        zen_record_admin_activity('Blocked invalid configuration set_function syntax.', 'warning');
+        return null;
+    }
+
+    $renderers = zen_get_config_set_function_renderers();
+    $function = $spec['function'];
+    if (!isset($renderers[$function])) {
+        zen_record_admin_activity('Blocked unregistered configuration set_function [' . preg_replace('/[^\w.\-]/', '*', $function) . '].', 'warning');
+        return null;
+    }
+
+    $input_field = $renderers[$function]($spec, $configuration_value, $configuration_key);
+    if ($configuration_key !== '' && strpos($input_field, 'configuration_value') !== false) {
+        $input_field = preg_replace('/name=[\'"]configuration_value(\[\])?[\'"]/', 'name="configuration[' . $configuration_key . ']$1"', $input_field);
+        $input_field = preg_replace('/id=[\'"]configuration_value[\'"]/', 'id="' . $configuration_key . '"', $input_field);
+    }
+
+    return $input_field;
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_get_config_set_function_renderers(): array
+{
+    $renderers = [
+        'zen_cfg_select_coupon_id' => static fn(array $spec, string $value, string $key): string => zen_cfg_select_coupon_id($value, $key),
+        'zen_cfg_pull_down_country_list' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_country_list($value, $key),
+        'zen_cfg_pull_down_country_list_none' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_country_list_none($value, $key),
+        'zen_cfg_pull_down_zone_list' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_zone_list($value, $key),
+        'zen_cfg_pull_down_tax_classes' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_tax_classes($value, $key),
+        'zen_cfg_pull_down_zone_classes' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_zone_classes($value, $key),
+        'zen_cfg_pull_down_order_statuses' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_order_statuses($value, $key),
+        'zen_cfg_textarea' => static fn(array $spec, string $value, string $key): string => zen_cfg_textarea($value, $key),
+        'zen_cfg_textarea_small' => static fn(array $spec, string $value, string $key): string => zen_cfg_textarea_small($value, $key),
+        'zen_cfg_pull_down_htmleditors' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_htmleditors($value, $key ?: null),
+        'zen_cfg_pull_down_exchange_rate_sources' => static fn(array $spec, string $value, string $key): string => zen_cfg_pull_down_exchange_rate_sources($value, $key),
+        'zen_cfg_password_input' => static fn(array $spec, string $value, string $key): string => zen_cfg_password_input($value, $key),
+        'zen_cfg_select_option' => static fn(array $spec, string $value, string $key): string => zen_cfg_select_option(zen_config_set_function_choices($spec), $value, $key),
+        'zen_cfg_select_drop_down' => static fn(array $spec, string $value, string $key): string => zen_cfg_select_drop_down(zen_config_set_function_choices($spec), $value, $key),
+        'zen_cfg_select_multioption' => static fn(array $spec, string $value, string $key): string => zen_cfg_select_multioption(zen_config_set_function_choices($spec), $value, $key),
+        'zen_cfg_select_multioption_pairs' => static fn(array $spec, string $value, string $key): string => zen_cfg_select_multioption_pairs(zen_config_set_function_choices($spec), $value, $key),
+        'zen_cfg_read_only' => static fn(array $spec, string $value, string $key): string => zen_cfg_read_only($value, $key),
+    ];
+
+    $new_renderers = [];
+    if (isset($GLOBALS['zco_notifier'])) {
+        $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_CONFIGURATION_SET_FUNCTION_RENDERERS', $renderers, $new_renderers);
+    }
+    if (is_array($new_renderers)) {
+        $renderers += $new_renderers;
+    }
+
+    return array_filter($renderers, static fn($renderer): bool => is_callable($renderer));
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_parse_config_set_function(string $set_function): ?array
+{
+    $set_function = trim($set_function);
+    if ($set_function === '') {
+        return null;
+    }
+
+    if (str_starts_with($set_function, '{')) {
+        try {
+            $spec = json_decode($set_function, true, 4, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return null;
+        }
+        if (!is_array($spec) || !isset($spec['function']) || !is_string($spec['function'])) {
+            return null;
+        }
+        if (!preg_match('/\A[A-Za-z_][A-Za-z0-9_]*\z/', $spec['function'])) {
+            return null;
+        }
+        if (isset($spec['params']) && !is_array($spec['params'])) {
+            return null;
+        }
+        $params = $spec['params'] ?? [];
+        if (array_key_exists('choices', $spec)) {
+            $params['choices'] = $spec['choices'];
+        }
+        return [
+            'function' => $spec['function'],
+            'params' => $params,
+        ];
+    }
+
+    if (!preg_match('/\A\s*([A-Za-z_][A-Za-z0-9_]*)\s*\((.*)\z/s', $set_function, $matches)) {
+        return null;
+    }
+
+    $remaining = trim($matches[2]);
+    if ($remaining === '') {
+        return [
+            'function' => $matches[1],
+            'params' => [],
+        ];
+    }
+
+    $tokens = token_get_all('<?php ' . $remaining);
+    $offset = 1;
+    $choices = zen_parse_config_set_function_php_literal($tokens, $offset);
+    if ($choices === zen_config_set_function_parse_failed() || !is_array($choices)) {
+        return null;
+    }
+
+    $token = zen_config_set_function_next_token($tokens, $offset);
+    if ($token !== ',') {
+        return null;
+    }
+    while (($token = zen_config_set_function_next_token($tokens, $offset)) !== null) {
+        if ($token !== ',') {
+            return null;
+        }
+    }
+
+    return [
+        'function' => $matches[1],
+        'params' => ['choices' => $choices],
+    ];
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_config_set_function_choices(array $spec): array
+{
+    return is_array($spec['params']['choices'] ?? null) ? $spec['params']['choices'] : [];
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_parse_config_set_function_php_literal(array $tokens, int &$offset): mixed
+{
+    $token = zen_config_set_function_next_token($tokens, $offset);
+    if ($token === '[') {
+        return zen_parse_config_set_function_php_array($tokens, $offset, ']');
+    }
+    if (is_array($token) && $token[0] === T_ARRAY) {
+        if (zen_config_set_function_next_token($tokens, $offset) !== '(') {
+            return zen_config_set_function_parse_failed();
+        }
+        return zen_parse_config_set_function_php_array($tokens, $offset, ')');
+    }
+    if (is_array($token) && $token[0] === T_CONSTANT_ENCAPSED_STRING) {
+        return zen_config_set_function_decode_php_string($token[1]);
+    }
+    if (is_array($token) && $token[0] === T_LNUMBER) {
+        return (int)$token[1];
+    }
+    if (is_array($token) && $token[0] === T_DNUMBER) {
+        return (float)$token[1];
+    }
+    if (is_array($token) && $token[0] === T_STRING) {
+        return match (strtolower($token[1])) {
+            'true' => true,
+            'false' => false,
+            'null' => null,
+            default => zen_config_set_function_parse_failed(),
+        };
+    }
+    return zen_config_set_function_parse_failed();
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_parse_config_set_function_php_array(array $tokens, int &$offset, string $close_token): ?array
+{
+    $array = [];
+    while (true) {
+        $token = zen_config_set_function_next_token($tokens, $offset);
+        if ($token === $close_token) {
+            return $array;
+        }
+        if ($token === null) {
+            return null;
+        }
+        $offset--;
+
+        $value = zen_parse_config_set_function_php_literal($tokens, $offset);
+        if ($value === zen_config_set_function_parse_failed()) {
+            return null;
+        }
+        $token = zen_config_set_function_next_token($tokens, $offset);
+        if (is_array($token) && $token[0] === T_DOUBLE_ARROW) {
+            $key = $value;
+            if (!is_int($key) && !is_string($key)) {
+                return null;
+            }
+            $value = zen_parse_config_set_function_php_literal($tokens, $offset);
+            if ($value === zen_config_set_function_parse_failed()) {
+                return null;
+            }
+            $array[$key] = $value;
+            $token = zen_config_set_function_next_token($tokens, $offset);
+        } else {
+            $array[] = $value;
+        }
+
+        if ($token === $close_token) {
+            return $array;
+        }
+        if ($token !== ',') {
+            return null;
+        }
+    }
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_config_set_function_parse_failed(): object
+{
+    static $failed;
+
+    return $failed ??= new stdClass();
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_config_set_function_next_token(array $tokens, int &$offset): mixed
+{
+    while ($offset < count($tokens)) {
+        $token = $tokens[$offset++];
+        if (is_array($token) && in_array($token[0], [T_OPEN_TAG, T_WHITESPACE, T_COMMENT, T_DOC_COMMENT], true)) {
+            continue;
+        }
+        return $token;
+    }
+    return null;
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_config_set_function_decode_php_string(string $string): string
+{
+    $quote = $string[0];
+    $inner = substr($string, 1, -1);
+    return $quote === "'" ? str_replace(["\\\\", "\\'"], ["\\", "'"], $inner) : stripcslashes($inner);
+}
+
+/**
  * @TODO: Is this still used?  It's nowhere in core.
  *
  * @since ZC v1.0.3
@@ -458,6 +714,122 @@ function zen_call_function(string $function, mixed $parameter, object|string $ob
     }
 
     return call_user_func([$object, $function], $parameter);
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_call_config_use_function(string $function, mixed $parameter, object|string $object = ''): mixed
+{
+    if ($object !== '') {
+        if (!zen_is_valid_config_use_function_method($object, $function)) {
+            zen_record_admin_activity('Blocked unregistered configuration use_function [' . preg_replace('/[^\w.\-]/', '*', get_class($object) . '->' . $function) . '].', 'warning');
+            return $parameter;
+        }
+
+        return zen_call_function($function, $parameter, $object);
+    }
+
+    if (!zen_is_valid_config_use_function($function)) {
+        zen_record_admin_activity('Blocked unregistered configuration use_function [' . preg_replace('/[^\w.\-]/', '*', $function) . '].', 'warning');
+        return $parameter;
+    }
+
+    return zen_call_function($function, $parameter);
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_is_valid_config_use_function(string $function): bool
+{
+    $functions = [
+        'zen_get_country_name',
+        'zen_cfg_get_zone_name',
+        'zen_cfg_password_display',
+        'zen_get_tax_class_title',
+        'zen_get_zone_class_title',
+        'zen_get_order_status_name',
+        'zen_get_orders_status_name',
+    ];
+
+    $new_functions = [];
+    if (isset($GLOBALS['zco_notifier'])) {
+        $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_CONFIGURATION_USE_FUNCTIONS', $functions, $new_functions);
+    }
+    if (is_array($new_functions)) {
+        foreach ($new_functions as $new_function) {
+            if (is_string($new_function) && !in_array($new_function, $functions, true)) {
+                $functions[] = $new_function;
+            }
+        }
+    }
+
+    return in_array($function, array_filter($functions, 'is_string'), true) && is_callable($function);
+}
+
+/**
+ * Validates a class/method pair used for the object-based form of `use_function`
+ * (e.g. `currencies->format`) before it's dispatched via zen_call_function(). The
+ * class name and method both come from the `configuration` table, so an unchecked
+ * dispatch here would let a compromised row invoke an arbitrary method on any
+ * instantiated object.
+ *
+ * @since ZC v3.0.0
+ */
+function zen_is_valid_config_use_function_method(object $object, string $method): bool
+{
+    $methods = zen_get_config_use_function_class_methods();
+    $class = get_class($object);
+
+    return isset($methods[$class]) && in_array($method, $methods[$class], true) && is_callable([$object, $method]);
+}
+
+/**
+ * Validates the class name in the object-based form of `use_function` (e.g.
+ * `currencies->format`) BEFORE it's used to build an include path or instantiated.
+ * The class name comes straight from the `configuration` table, so this must run
+ * ahead of any `include`/`new $class()`, not just ahead of the method call --
+ * otherwise a compromised row could still force an arbitrary file include (via
+ * DIR_WS_CLASSES . $class . '.php', including path traversal) and run that
+ * class's constructor even though the method call itself would later be blocked.
+ *
+ * @since ZC v3.0.0
+ */
+function zen_is_valid_config_use_function_class(string $class): bool
+{
+    if (!preg_match('/\A[A-Za-z_][A-Za-z0-9_]*\z/', $class)) {
+        return false;
+    }
+
+    return array_key_exists($class, zen_get_config_use_function_class_methods());
+}
+
+/**
+ * @since ZC v3.0.0
+ */
+function zen_get_config_use_function_class_methods(): array
+{
+    $methods = [
+        'currencies' => ['format'],
+    ];
+
+    $new_methods = [];
+    if (isset($GLOBALS['zco_notifier'])) {
+        $GLOBALS['zco_notifier']->notify('NOTIFY_ADMIN_CONFIGURATION_USE_FUNCTION_METHODS', $methods, $new_methods);
+    }
+    if (is_array($new_methods)) {
+        foreach ($new_methods as $new_class => $new_class_methods) {
+            if (is_string($new_class) && is_array($new_class_methods)) {
+                $methods[$new_class] = array_values(array_unique(array_merge(
+                    $methods[$new_class] ?? [],
+                    array_filter($new_class_methods, 'is_string')
+                )));
+            }
+        }
+    }
+
+    return $methods;
 }
 
 /**
