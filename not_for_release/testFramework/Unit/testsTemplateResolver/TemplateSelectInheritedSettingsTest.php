@@ -22,6 +22,10 @@ use Zencart\Templates\TemplateSelect;
  * A three-deep on-disk template chain is created for the duration of each test:
  *
  *      zz_test_grandchild -> zz_test_child -> zz_test_parent -> (template_default)
+ *
+ * These run as IS_ADMIN_FLAG === true: getSelectableTemplates() and templateIsSelectable()
+ * are admin-only, and the unit bootstrap otherwise defaults that constant to false. See
+ * TemplateSelectStorefrontAccessTest for the storefront side of that gate.
  */
 #[AllowMockObjectsWithoutExpectations]
 #[RunTestsInSeparateProcesses]
@@ -40,6 +44,11 @@ class TemplateSelectInheritedSettingsTest extends zcUnitTestCase
 
     public function setUp(): void
     {
+        // Must precede the bootstrap, which defaults IS_ADMIN_FLAG to false.
+        if (!defined('IS_ADMIN_FLAG')) {
+            define('IS_ADMIN_FLAG', true);
+        }
+
         parent::setUp();
 
         require_once DIR_FS_CATALOG . 'includes/classes/class.base.php';
