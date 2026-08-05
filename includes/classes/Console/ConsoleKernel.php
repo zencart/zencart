@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Zencart\Console;
 
+use Zencart\Console\Commands\CurrencyRatesUpdateCommand;
 use Aura\Autoload\Loader;
 use Zencart\Console\Commands\HelpCommand;
 use Zencart\Console\Commands\ListCommand;
@@ -125,6 +126,7 @@ class ConsoleKernel
         $this->registry->register(new PluginListCommand($this->pluginListProvider));
         $this->registry->register(new VersionShowCommand($this->versionProvider));
         $this->registry->register(new ConfigGetCommand($this->configurationProvider));
+        $this->registry->register(new CurrencyRatesUpdateCommand($this->configurationProvider));
     }
 
     /**
