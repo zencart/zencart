@@ -160,6 +160,10 @@ class TemplateSelect
      */
     public function getSelectableTemplates(): array
     {
+        if (IS_ADMIN_FLAG !== true) {
+            return [];
+        }
+
         if (!isset(self::$selectableTemplates)) {
             $this->resolveTemplates();
         }
@@ -171,6 +175,10 @@ class TemplateSelect
      */
     public function templateIsSelectable(string $template_dir): bool
     {
+        if (IS_ADMIN_FLAG !== true) {
+            return false;
+        }
+
         if (!isset(self::$selectableTemplates)) {
             $this->resolveTemplates();
         }

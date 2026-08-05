@@ -9,10 +9,12 @@ use Zencart\Templates\TemplateSelect;
 
 require 'includes/application_top.php';
 
-const SAVE_TO_ALL = 'all';
+const SAVE_TO_ALL = '__all';
 
 $gID = (int)($_GET['gID'] ?? 1);
 $_GET['gID'] = $gID;
+
+$saveto_template = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
 
 // -----
 // Check to see if the current configuration group contains any template-specific
@@ -21,7 +23,7 @@ $_GET['gID'] = $gID;
 // (i.e. in the the template's `template_select::template_settings` field.
 //
 $result = $db->Execute(
-    "SELECT is_template_setting
+    "SELECT configuration_id
        FROM " . TABLE_CONFIGURATION . "
       WHERE configuration_group_id = " . (int)$gID . "
         AND is_template_setting = 1
@@ -42,7 +44,7 @@ if ($action === 'saveto') {
         zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
     }
 
-    if ($templateSelect->templateIsSelectable($_POST['saveto']) === true) {
+    if ($_POST['saveto'] === SAVE_TO_ALL || $templateSelect->templateIsSelectable($_POST['saveto']) === true) {
         $_SESSION['configuration_saveto'] = $_POST['saveto'];
     } else {
         $messageStack->add_session(sprintf(ERROR_TEMPLATE_NOT_SELECTABLE, zen_output_string_protected($_POST['saveto'])), 'error');
@@ -60,9 +62,8 @@ if ($action === 'saveto') {
 //
 // If not, let the admin know via message and redirect back to reload.
 //
-$configuration_saveto = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
-if ($has_template_settings === true && $configuration_saveto !== SAVE_TO_ALL && !$templateSelect->templateIsSelectable($configuration_saveto)) {
-    $messageStack->add_session(sprintf(ERROR_TEMPLATE_NOT_SELECTABLE, zen_output_string_protected($configuration_saveto)), 'error');
+if ($has_template_settings === true && $saveto_template !== SAVE_TO_ALL && !$templateSelect->templateIsSelectable($saveto_template)) {
+    $messageStack->add_session(sprintf(ERROR_TEMPLATE_NOT_SELECTABLE, zen_output_string_protected($saveto_template)), 'error');
     unset($_SESSION['configuration_saveto']);
     zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
 }
@@ -107,9 +108,22 @@ if ($action === 'saveall') {
     // to the `configuration` table (affecting all templates) or to a
     // specific template's settings, controlled by the TemplateSelect class.
     //
-    $saving_for_all = $has_template_settings === false || ($_SESSION['configuration_saveto'] ?? SAVE_TO_ALL) === SAVE_TO_ALL;
-    $saveto_template = $_SESSION['configuration_saveto'] ?? '';
+    $saving_for_all = $has_template_settings === false || $saveto_template === SAVE_TO_ALL;
     $template_settings = [];
+
+    // -----
+    // Generate a couple of helper lookup arrays for the update-checking loop that follows.
+    //
+    $and_clause = ($saving_for_all === true) ? '' : ' AND is_template_setting = 1';
+    $id_key_val = $db->Execute(
+        "SELECT configuration_id, configuration_key, configuration_value
+           FROM " . TABLE_CONFIGURATION . "
+          WHERE configuration_group_id = " . (int)$gID . $and_clause
+    );
+    foreach ($id_key_val as $next_group) {
+        $id2key[$next_group['configuration_id']] = $next_group['configuration_key'];
+        $id2val[$next_group['configuration_id']] = $next_group['configuration_value'];
+    }
 
     foreach ($posted_configuration as $key => $value) {
         if (!str_starts_with($key, 'cfg_')) {
@@ -119,9 +133,6 @@ if ($action === 'saveall') {
         if (is_array($value)) {
             $value = implode(', ', $value);
             $value = preg_replace('/, --none--/', '', $value);
-        }
-        if ($posted_original[$key] === $value) {
-            continue; // No change, skip update
         }
 
         $config_id = (int)substr($key, 4);
@@ -140,15 +151,73 @@ if ($action === 'saveall') {
             }
         }
 
-        if ($saving_for_all === true) {
-            $db->Execute(
-                "UPDATE " . TABLE_CONFIGURATION . "
-                    SET configuration_value = '" . zen_db_input($configuration_value) . "',
-                        last_modified = now()
-                  WHERE configuration_id = " . $config_id . "
-                  LIMIT 1"
-            );
+        // -----
+        // Lookup the current configuration_key being modified, based on the current
+        // configuration_id. If the configuration-id isn't part of this config-group or
+        // it's not template-selectable when we're saving for a template, it's a rogue
+        // submission and is silently ignored.
+        //
+        $configuration_key = $id2key[$config_id] ?? -1;
+        if ($configuration_key === -1) {
+            continue;
         }
+
+        // -----
+        // If saving to a specific template, record the value for the
+        // associated configuration key and, if changed, note it in the admin activity log.
+        //
+        if ($saving_for_all === false) {
+            $inherited_value = $templateSelect->getInheritedSetting($saveto_template, $configuration_key, $id2val[$config_id]);
+            if ($inherited_value === $configuration_value) {
+                if (($posted_original[$key] ?? $value) !== $value) {
+                    $messageStack->add_session(
+                        sprintf(TEXT_VALUE_SAVED,
+                            $checks->fields['configuration_title'],
+                            '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
+                            '<code>' . zen_output_string_protected($configuration_value) . '</code>'
+                        ),
+                        'success'
+                    );
+                    zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage("Template $saveto_template value for $configuration_key changed to $configuration_value"), 'warning');
+                    $zco_notifier->notify('NOTIFY_ADMIN_TEMPLATE_CONFIG_CHANGE', compact('saveto_template', 'configuration_key', 'configuration_value'));
+                }
+                continue;
+            }
+
+            $template_settings[$configuration_key] = $configuration_value;
+
+            if (($posted_original[$key] ?? $value) === $value) {
+                continue;
+            }
+
+            $messageStack->add_session(
+                sprintf(TEXT_VALUE_SAVED,
+                    $checks->fields['configuration_title'],
+                    '<code>' . zen_output_string_protected($posted_original[$key]) . '</code>',
+                    '<code>' . zen_output_string_protected($configuration_value) . '</code>'
+                ),
+                'success'
+            );
+            zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage("Template $saveto_template value for $configuration_key changed to $configuration_value"), 'warning');
+            $zco_notifier->notify('NOTIFY_ADMIN_TEMPLATE_CONFIG_CHANGE', compact('saveto_template', 'configuration_key', 'configuration_value'));
+            continue;
+        }
+
+        // -----
+        // Got here? Saving to the base configuration table ... if the value's been changed.
+        //
+        if (($posted_original[$key] ?? $value) === $value) {
+            continue; // No change or missing original, skip update
+        }
+
+        $db->Execute(
+            "UPDATE " . TABLE_CONFIGURATION . "
+                SET configuration_value = '" . zen_db_input($configuration_value) . "',
+                    last_modified = now()
+              WHERE configuration_id = " . $config_id . "
+              LIMIT 1"
+        );
+
         $messageStack->add_session(
             sprintf(TEXT_VALUE_SAVED,
                 $checks->fields['configuration_title'],
@@ -157,39 +226,18 @@ if ($action === 'saveall') {
             ),
             'success'
         );
-
-        $result = $db->Execute(
-            "SELECT configuration_key
-               FROM " . TABLE_CONFIGURATION . "
-              WHERE configuration_id = " . $config_id . "
-              LIMIT 1"
-        );
-        zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage('Configuration setting changed for ' . $result->fields['configuration_key'] . ': ' . $configuration_value), 'warning');
-
-        // -----
-        // If saving to a specific template, record the changed value for the
-        // associated configuration key.
-        //
-        if ($saving_for_all === false) {
-            $template_settings[$result->fields['configuration_key']] = $configuration_value;
-        }
+        zen_record_admin_activity(zcObserverLogEventListener::filterLogMessage("Configuration value for $configuration_key changed to $configuration_value"), 'warning');
 
         // Notify that a configuration change has been made
-        $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', $result->fields['configuration_key']);
+        $zco_notifier->notify('NOTIFY_ADMIN_CONFIG_CHANGE', compact('configuration_key', 'configuration_value'));
     }
 
+    // -----
+    // If saving for a specific template, update the settings gathered above, based on the current
+    // configuration group's template-selectable settings.
+    //
     if ($saving_for_all === false) {
-        $results = $db->Execute(
-            "SELECT configuration_key
-               FROM " . TABLE_CONFIGURATION . "
-              WHERE configuration_group_id = " . (int)$gID . "
-                AND is_template_setting = 1"
-        );
-        $settings_keys = [];
-        foreach ($results as $next_result) {
-            $settings_keys[] = $next_result['configuration_key'];
-        }
-        $templateSelect->updateTemplateSettingsForKeys($saveto_template, $template_settings, $settings_keys);
+        $templateSelect->updateTemplateSettingsForKeys($saveto_template, $template_settings, array_values($id2key));
     }
 
     // set the WARN_BEFORE_DOWN_FOR_MAINTENANCE to false if DOWN_FOR_MAINTENANCE = true
@@ -282,7 +330,6 @@ if ($gID === 7) {
     <h1><?= $cfg_group->fields['configuration_group_title'] ?></h1>
     <div class="alert alert-info text-center font-weight-bold"><?= ($has_template_settings === true) ? TEXT_TEMPLATE_SETTINGS : TEXT_NO_TEMPLATE_SETTINGS; ?></div>
 <?php
-$saveto_template = $_SESSION['configuration_saveto'] ?? SAVE_TO_ALL;
 if ($has_template_settings === true) {
     $template_info = $templateSelect->getSelectableTemplates();
     $template_array = [['id' => SAVE_TO_ALL, 'text' => TEXT_ALL_TEMPLATES]];
