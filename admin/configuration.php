@@ -112,7 +112,9 @@ if ($action === 'saveall') {
     $template_settings = [];
 
     // -----
-    // Generate a couple of helper lookup arrays for the update-checking loop that follows.
+    // Generate a couple of helper lookup arrays for the update-checking loop that follows. If no
+    // configuration entries "match", then someone's fussing with the form and they're rewarded
+    // with a silent redirect back to the main configuration entry for the group.
     //
     $and_clause = ($saving_for_all === true) ? '' : ' AND is_template_setting = 1';
     $id_key_val = $db->Execute(
@@ -120,6 +122,9 @@ if ($action === 'saveall') {
            FROM " . TABLE_CONFIGURATION . "
           WHERE configuration_group_id = " . (int)$gID . $and_clause
     );
+    if ($id_key_val->EOF) {
+        zen_redirect(zen_href_link(FILENAME_CONFIGURATION, "gID=$gID"));
+    }
     foreach ($id_key_val as $next_group) {
         $id2key[$next_group['configuration_id']] = $next_group['configuration_key'];
         $id2val[$next_group['configuration_id']] = $next_group['configuration_value'];
