@@ -3,7 +3,7 @@
 declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Oct 25 Modified in v2.2.0 $
  * @since ZC v1.5.8
  */
@@ -22,7 +22,13 @@ class Customer extends base
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
 
-    public function __construct($customer_id = null)
+    /**
+     * @param int|string|null $customer_id
+     * @param bool $load_order_statistics Admin-only: set false to skip the order-count/lifetime-value
+     *                                    queries when only the base customer record is needed,
+     *                                    such as when building a customer listing.
+     */
+    public function __construct($customer_id = null, protected bool $load_order_statistics = true)
     {
         $this->is_logged_in = $this->someoneIsLoggedIn();
         $this->is_in_guest_checkout = $this->isInGuestCheckout();
@@ -635,10 +641,19 @@ class Customer extends base
         $this->data['number_of_reviews'] = (int)$result->fields['number_of_reviews'];
 
         if (IS_ADMIN_FLAG) {
-            $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
-            // only calculating this on the Admin side, for performance reasons
-            if ($this->data['number_of_orders']) {
-                $this->data['lifetime_value'] = $this->getLifetimeValue();
+            /**
+             * The order-history queries are the expensive part of loading a customer, and a listing
+             * page such as admin/customers.php only needs them for the one customer it has selected.
+             * When they're deferred, the related keys are left unset rather than zeroed, so callers
+             * can tell "not loaded" apart from "no orders". ('lifetime_value' already behaves that
+             * way for a customer with no orders.)
+             */
+            if ($this->load_order_statistics) {
+                $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
+                // only calculating this on the Admin side, for performance reasons
+                if ($this->data['number_of_orders']) {
+                    $this->data['lifetime_value'] = $this->getLifetimeValue();
+                }
             }
         } else {
             $this->data['lifetime_value'] = null;
@@ -778,18 +793,22 @@ class Customer extends base
     protected function getPricingGroupAssociation(): void
     {
         global $db;
-        $sql =
-            "SELECT group_name, group_percentage
-               FROM " . TABLE_GROUP_PRICING . "
-              WHERE group_id = " . (int)$this->data['customers_group_pricing'];
-        $result = $db->Execute($sql);
 
-        if ($result->RecordCount()) {
-            $this->data['pricing_group_name'] = $result->fields['group_name'];
-            $this->data['pricing_group_discount_percentage'] = $result->fields['group_percentage'];
-        } else {
-            $this->data['pricing_group_name'] = defined('TEXT_NONE') ? TEXT_NONE : '';
-            $this->data['pricing_group_discount_percentage'] = 0;
+        $this->data['pricing_group_name'] = defined('TEXT_NONE') ? TEXT_NONE : '';
+        $this->data['pricing_group_discount_percentage'] = 0;
+
+        // group_pricing.group_id is auto_increment, so it is never zero. Skip unnecessary lookups.
+        if (!empty($this->data['customers_group_pricing'])) {
+            $sql =
+                "SELECT group_name, group_percentage
+                   FROM " . TABLE_GROUP_PRICING . "
+                  WHERE group_id = " . (int)$this->data['customers_group_pricing'];
+            $result = $db->Execute($sql);
+
+            if ($result->RecordCount()) {
+                $this->data['pricing_group_name'] = $result->fields['group_name'];
+                $this->data['pricing_group_discount_percentage'] = $result->fields['group_percentage'];
+            }
         }
 
         $this->notify('NOTIFY_CUSTOMER_PRICING_GROUP_LOADED', $this->data);
@@ -1002,7 +1021,8 @@ class Customer extends base
                     entry_country_id AS country_id,
                     countries_name AS country_name,
                     countries_iso_code_3 AS country_iso,
-                    countries_iso_code_2 AS country_iso_2
+                    countries_iso_code_2 AS country_iso_2,
+                    c.address_format_id
                FROM " . TABLE_ADDRESS_BOOK . " ab
                     INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
                     LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id AND z.zone_country_id = c.countries_id)
@@ -1015,7 +1035,11 @@ class Customer extends base
         $addressArray = [];
 
         foreach ($results as $result) {
-            $format_id = zen_get_address_format_id((int)$result['country_id']);
+            // The countries table is already joined above, so the address format comes back with the row
+            // so we use that instead of calling zen_get_address_format_id() here for extra queries.
+            // It's removed from the row afterwards to keep the returned 'address' element unchanged.
+            $format_id = (int)$result['address_format_id'];
+            unset($result['address_format_id']);
 
             if (empty($result['state']) && !empty($result['zone_name'])) {
                 $result['state'] = $result['zone_name'];
