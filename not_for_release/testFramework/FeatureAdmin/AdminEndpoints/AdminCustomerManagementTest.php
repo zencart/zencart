@@ -26,6 +26,35 @@ class AdminCustomerManagementTest extends zcInProcessFeatureTestCaseAdmin
         $this->resetStorefrontSession();
     }
 
+    /**
+     * The customers listing only loads order statistics for the selected customer; this confirms
+     * the info panel is still fully populated for that customer, whether it was selected by cID or
+     * defaulted to the first row.
+     *
+     * @see \Customer::__construct() $load_order_statistics
+     */
+    public function testAdminCustomerListingShowsOrderStatisticsForSelectedCustomer(): void
+    {
+        $profile = $this->createCustomerAccountOrLogin('florida-basic2');
+        $customerId = $this->getCustomerIdFromEmail($profile['email_address']);
+
+        $this->assertNotNull($customerId);
+
+        $this->completeInitialAdminSetup();
+
+        $this->getAdmin('/admin/index.php?cmd=customers&cID=' . $customerId)
+            ->assertOk()
+            ->assertHeader('X-ZC-InProcess-Runner', 'admin')
+            ->assertSee($profile['email_address'])
+            ->assertSee('Number of Orders:')
+            ->assertSee('Number of Reviews:');
+
+        $this->visitAdminCommand('customers')
+            ->assertOk()
+            ->assertSee('Number of Orders:')
+            ->assertSee('Number of Reviews:');
+    }
+
     public function testAdminCanEditCustomerAndAssignGroups(): void
     {
         $profile = $this->createCustomerAccountOrLogin('florida-basic2');

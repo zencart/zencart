@@ -22,7 +22,13 @@ class Customer extends base
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
 
-    public function __construct($customer_id = null)
+    /**
+     * @param int|string|null $customer_id
+     * @param bool $load_order_statistics Admin-only: set false to skip the order-count/lifetime-value
+     *                                    queries when only the base customer record is needed,
+     *                                    such as when building a customer listing.
+     */
+    public function __construct($customer_id = null, protected bool $load_order_statistics = true)
     {
         $this->is_logged_in = $this->someoneIsLoggedIn();
         $this->is_in_guest_checkout = $this->isInGuestCheckout();
@@ -635,10 +641,19 @@ class Customer extends base
         $this->data['number_of_reviews'] = (int)$result->fields['number_of_reviews'];
 
         if (IS_ADMIN_FLAG) {
-            $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
-            // only calculating this on the Admin side, for performance reasons
-            if ($this->data['number_of_orders']) {
-                $this->data['lifetime_value'] = $this->getLifetimeValue();
+            /**
+             * The order-history queries are the expensive part of loading a customer, and a listing
+             * page such as admin/customers.php only needs them for the one customer it has selected.
+             * When they're deferred, the related keys are left unset rather than zeroed, so callers
+             * can tell "not loaded" apart from "no orders". ('lifetime_value' already behaves that
+             * way for a customer with no orders.)
+             */
+            if ($this->load_order_statistics) {
+                $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
+                // only calculating this on the Admin side, for performance reasons
+                if ($this->data['number_of_orders']) {
+                    $this->data['lifetime_value'] = $this->getLifetimeValue();
+                }
             }
         } else {
             $this->data['lifetime_value'] = null;
