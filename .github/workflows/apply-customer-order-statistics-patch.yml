@@ -1,16 +1,17 @@
 name: Apply customer order statistics patch
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize]
     branches:
-      - agent/defer-customer-order-statistics
+      - master
 
 permissions:
   contents: write
 
 jobs:
   apply-patch:
-    if: github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'agent/defer-customer-order-statistics' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Check out branch
