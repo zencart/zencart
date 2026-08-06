@@ -21,9 +21,11 @@ class Customer extends base
     protected bool $is_logged_in = false;
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
+    protected bool $load_order_statistics = true;
 
-    public function __construct($customer_id = null)
+    public function __construct($customer_id = null, bool $load_order_statistics = true)
     {
+        $this->load_order_statistics = $load_order_statistics;
         $this->is_logged_in = $this->someoneIsLoggedIn();
         $this->is_in_guest_checkout = $this->isInGuestCheckout();
 
@@ -634,13 +636,13 @@ class Customer extends base
         $result = $db->Execute($sql);
         $this->data['number_of_reviews'] = (int)$result->fields['number_of_reviews'];
 
-        if (IS_ADMIN_FLAG) {
+        if (IS_ADMIN_FLAG && $this->load_order_statistics) {
             $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
             // only calculating this on the Admin side, for performance reasons
             if ($this->data['number_of_orders']) {
                 $this->data['lifetime_value'] = $this->getLifetimeValue();
             }
-        } else {
+        } elseif (!IS_ADMIN_FLAG) {
             $this->data['lifetime_value'] = null;
             $this->data['number_of_orders'] = $this->getNumberOfOrders();
         }

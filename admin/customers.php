@@ -1345,11 +1345,18 @@ if ($action === 'edit' || $action === 'update') {
         $customers_query_numrows
     );
     $customers = $db->Execute($customers_query_raw);
+    $selected_customer = null;
     foreach ($customers as $result) {
-        $cust = new Customer($result['customers_id']);
+        $load_order_statistics = !isset($cInfo)
+            && (!isset($_GET['cID']) || (int)$_GET['cID'] === (int)$result['customers_id']);
+        $cust = new Customer(
+            $result['customers_id'],
+            load_order_statistics: $load_order_statistics
+        );
         $customer = $cust->getData();
-        if ((!isset($_GET['cID']) || (int)$_GET['cID'] === $customer['customers_id']) && !isset($cInfo)) {
+        if ($load_order_statistics) {
             $cInfo = new objectInfo($customer);
+            $selected_customer = $cust;
         }
 
         if (isset($cInfo) && is_object($cInfo) && ($customer['customers_id'] === (int)$cInfo->customers_id)) {
@@ -1640,7 +1647,7 @@ if ($action === 'edit' || $action === 'update') {
                 $_GET['search'] = zen_output_string_protected($_GET['search']);
             }
             if (isset($cInfo) && is_object($cInfo)) {
-                $customer = new Customer($cInfo->customers_id);
+                $customer = $selected_customer ?? new Customer($cInfo->customers_id);
 
                 $heading[] = [
                     'text' =>
