@@ -35,89 +35,79 @@ jobs:
 
           replace_once(
               'includes/classes/Customer.php',
-              """    protected ?int $customer_id = null;
-              protected bool $is_logged_in = false;
-              protected bool $is_in_guest_checkout = false;
-              protected array $data = [];
-
-              public function __construct($customer_id = null)
-              {
-                  $this->is_logged_in = $this->someoneIsLoggedIn();
-          """,
-              """    protected ?int $customer_id = null;
-              protected bool $is_logged_in = false;
-              protected bool $is_in_guest_checkout = false;
-              protected array $data = [];
-              protected bool $load_order_statistics = true;
-
-              public function __construct($customer_id = null, bool $load_order_statistics = true)
-              {
-                  $this->load_order_statistics = $load_order_statistics;
-                  $this->is_logged_in = $this->someoneIsLoggedIn();
-          """,
+              "    protected ?int $customer_id = null;\n"
+              "    protected bool $is_logged_in = false;\n"
+              "    protected bool $is_in_guest_checkout = false;\n"
+              "    protected array $data = [];\n\n"
+              "    public function __construct($customer_id = null)\n"
+              "    {\n"
+              "        $this->is_logged_in = $this->someoneIsLoggedIn();\n",
+              "    protected ?int $customer_id = null;\n"
+              "    protected bool $is_logged_in = false;\n"
+              "    protected bool $is_in_guest_checkout = false;\n"
+              "    protected array $data = [];\n"
+              "    protected bool $load_order_statistics = true;\n\n"
+              "    public function __construct($customer_id = null, bool $load_order_statistics = true)\n"
+              "    {\n"
+              "        $this->load_order_statistics = $load_order_statistics;\n"
+              "        $this->is_logged_in = $this->someoneIsLoggedIn();\n",
           )
 
           replace_once(
               'includes/classes/Customer.php',
-              """        if (IS_ADMIN_FLAG) {
-                      $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
-                      // only calculating this on the Admin side, for performance reasons
-                      if ($this->data['number_of_orders']) {
-                          $this->data['lifetime_value'] = $this->getLifetimeValue();
-                      }
-                  } else {
-                      $this->data['lifetime_value'] = null;
-                      $this->data['number_of_orders'] = $this->getNumberOfOrders();
-                  }
-          """,
-              """        if (IS_ADMIN_FLAG && $this->load_order_statistics) {
-                      $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
-                      // only calculating this on the Admin side, for performance reasons
-                      if ($this->data['number_of_orders']) {
-                          $this->data['lifetime_value'] = $this->getLifetimeValue();
-                      }
-                  } elseif (!IS_ADMIN_FLAG) {
-                      $this->data['lifetime_value'] = null;
-                      $this->data['number_of_orders'] = $this->getNumberOfOrders();
-                  }
-          """,
+              "        if (IS_ADMIN_FLAG) {\n"
+              "            $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();\n"
+              "            // only calculating this on the Admin side, for performance reasons\n"
+              "            if ($this->data['number_of_orders']) {\n"
+              "                $this->data['lifetime_value'] = $this->getLifetimeValue();\n"
+              "            }\n"
+              "        } else {\n"
+              "            $this->data['lifetime_value'] = null;\n"
+              "            $this->data['number_of_orders'] = $this->getNumberOfOrders();\n"
+              "        }\n",
+              "        if (IS_ADMIN_FLAG && $this->load_order_statistics) {\n"
+              "            $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();\n"
+              "            // only calculating this on the Admin side, for performance reasons\n"
+              "            if ($this->data['number_of_orders']) {\n"
+              "                $this->data['lifetime_value'] = $this->getLifetimeValue();\n"
+              "            }\n"
+              "        } elseif (!IS_ADMIN_FLAG) {\n"
+              "            $this->data['lifetime_value'] = null;\n"
+              "            $this->data['number_of_orders'] = $this->getNumberOfOrders();\n"
+              "        }\n",
           )
 
           replace_once(
               'admin/customers.php',
-              """    $customers = $db->Execute($customers_query_raw);
-              foreach ($customers as $result) {
-                  $cust = new Customer($result['customers_id']);
-                  $customer = $cust->getData();
-                  if ((!isset($_GET['cID']) || (int)$_GET['cID'] === $customer['customers_id']) && !isset($cInfo)) {
-                      $cInfo = new objectInfo($customer);
-                  }
-          """,
-              """    $customers = $db->Execute($customers_query_raw);
-              $selected_customer = null;
-              foreach ($customers as $result) {
-                  $load_order_statistics = !isset($cInfo)
-                      && (!isset($_GET['cID']) || (int)$_GET['cID'] === (int)$result['customers_id']);
-                  $cust = new Customer(
-                      $result['customers_id'],
-                      load_order_statistics: $load_order_statistics
-                  );
-                  $customer = $cust->getData();
-                  if ($load_order_statistics) {
-                      $cInfo = new objectInfo($customer);
-                      $selected_customer = $cust;
-                  }
-          """,
+              "    $customers = $db->Execute($customers_query_raw);\n"
+              "    foreach ($customers as $result) {\n"
+              "        $cust = new Customer($result['customers_id']);\n"
+              "        $customer = $cust->getData();\n"
+              "        if ((!isset($_GET['cID']) || (int)$_GET['cID'] === $customer['customers_id']) && !isset($cInfo)) {\n"
+              "            $cInfo = new objectInfo($customer);\n"
+              "        }\n",
+              "    $customers = $db->Execute($customers_query_raw);\n"
+              "    $selected_customer = null;\n"
+              "    foreach ($customers as $result) {\n"
+              "        $load_order_statistics = !isset($cInfo)\n"
+              "            && (!isset($_GET['cID']) || (int)$_GET['cID'] === (int)$result['customers_id']);\n"
+              "        $cust = new Customer(\n"
+              "            $result['customers_id'],\n"
+              "            load_order_statistics: $load_order_statistics\n"
+              "        );\n"
+              "        $customer = $cust->getData();\n"
+              "        if ($load_order_statistics) {\n"
+              "            $cInfo = new objectInfo($customer);\n"
+              "            $selected_customer = $cust;\n"
+              "        }\n",
           )
 
           replace_once(
               'admin/customers.php',
-              """            if (isset($cInfo) && is_object($cInfo)) {
-                          $customer = new Customer($cInfo->customers_id);
-          """,
-              """            if (isset($cInfo) && is_object($cInfo)) {
-                          $customer = $selected_customer ?? new Customer($cInfo->customers_id);
-          """,
+              "            if (isset($cInfo) && is_object($cInfo)) {\n"
+              "                $customer = new Customer($cInfo->customers_id);\n",
+              "            if (isset($cInfo) && is_object($cInfo)) {\n"
+              "                $customer = $selected_customer ?? new Customer($cInfo->customers_id);\n",
           )
           PY
 
