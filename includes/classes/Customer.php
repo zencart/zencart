@@ -757,14 +757,17 @@ class Customer extends base
             if (null === $last_order) {
                 $last_order = [
                     'date_purchased' => $result['date_purchased'],
-                    'order_total' => $currencies->format($result['order_total_raw'], false, $result['currency'], $result['currency_value']),
+                    'order_total' => $currencies->format($result['order_total_raw'], true, $result['currency'], $result['currency_value']),
                     'order_total_raw' => $result['order_total_raw'],
                     'currency' => $result['currency'],
                     'currency_value' => $result['currency_value'],
                     'language_code' => $result['language_code'],
                 ];
             }
-            $lifetime_value += $result['order_total_raw'] * $result['currency_value'];
+            // orders.order_total is stored in the store's default currency, so the orders are
+            // already in a common unit; multiplying by the order's currency_value here would
+            // convert each one *out* of that unit and sum unlike currencies.
+            $lifetime_value += $result['order_total_raw'];
         }
         $this->data['last_order'] = $last_order;
         $this->data['lifetime_value'] = $lifetime_value;
