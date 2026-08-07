@@ -1065,8 +1065,16 @@ class Customer extends base
             $results = $db->Execute($sql, $max_number_to_return);
         }
 
-        $ordersArray = [];
+        $orders = [];
         foreach ($results as $result) {
+            $orders[] = $result;
+        }
+
+        // Counted for the whole page in one statement, rather than a query per order.
+        $product_counts = $this->getProductCountsForOrders(array_column($orders, 'orders_id'));
+
+        $ordersArray = [];
+        foreach ($orders as $result) {
             if (!empty($result['delivery_name'])) {
                 $order_type = defined('TEXT_ORDER_SHIPPED_TO') ? TEXT_ORDER_SHIPPED_TO : 'Shipped To:';
                 $order_name = $result['delivery_name'];
@@ -1076,13 +1084,6 @@ class Customer extends base
                 $order_name = $result['billing_name'];
                 $order_country = $result['billing_country'];
             }
-
-            $sql =
-                "SELECT COUNT(*) AS count
-                   FROM " . TABLE_ORDERS_PRODUCTS . "
-                  WHERE orders_id = " . (int)$result['orders_id'];
-            $queryResult = $db->Execute($sql);
-            $products_count = $queryResult->EOF ? 0 : $queryResult->fields['count'];
 
             $ordersArray[] = [
                 'orders_id' => (int)$result['orders_id'],
@@ -1096,10 +1097,45 @@ class Customer extends base
                 'currency' => $result['currency'],
                 'currency_value' => $result['currency_value'],
                 'language_code' => $result['language_code'],
-                'product_count' => $products_count,
+                'product_count' => $product_counts[(int)$result['orders_id']] ?? 0,
             ];
         }
         return $ordersArray;
+    }
+
+    /**
+     * Return the number of line-items in each of the supplied orders, keyed by orders_id.
+     *
+     * Counting a page's orders in one statement keeps getOrderHistory() from issuing a query per
+     * order. Only the grouped column and the aggregate are selected, so this stays valid under
+     * ONLY_FULL_GROUP_BY, and (orders_id, products_id) covers it.
+     *
+     * @param array $orders_ids
+     * @return array<int, int> orders_id => line-item count; orders with no line-items are absent
+     * @since ZC v3.0.0
+     */
+    protected function getProductCountsForOrders(array $orders_ids): array
+    {
+        global $db;
+
+        $orders_ids = array_filter(array_map('intval', $orders_ids));
+        if (empty($orders_ids)) {
+            return [];
+        }
+
+        $sql =
+            "SELECT orders_id, COUNT(*) AS count
+               FROM " . TABLE_ORDERS_PRODUCTS . "
+              WHERE orders_id IN (" . implode(',', $orders_ids) . ")
+              GROUP BY orders_id";
+        $results = $db->Execute($sql);
+
+        $counts = [];
+        foreach ($results as $result) {
+            $counts[(int)$result['orders_id']] = (int)$result['count'];
+        }
+
+        return $counts;
     }
 
     /**
