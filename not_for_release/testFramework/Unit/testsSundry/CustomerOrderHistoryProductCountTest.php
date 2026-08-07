@@ -12,8 +12,9 @@
  * queries that no longer run.
  */
 
-namespace Tests\Unit\testsSundry;
+declare(strict_types=1);
 
+namespace Tests\Unit\testsSundry;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use Tests\Support\zcUnitTestCase;
 
