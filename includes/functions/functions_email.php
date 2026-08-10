@@ -190,9 +190,8 @@
                     $zen_fix_current = $zen_fix_currencies[$i];
                     $zen_fix_replace = $zen_fix_currencies[$i + 1];
                     if (strlen($zen_fix_current) !== 0) {
-                        while (strpos($email_text, $zen_fix_current)) {
-                            $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
-                        }
+                        // Single pass: str_replace() replaces every occurrence (was previously an over-aggressive while() loop)
+                        $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
                     }
                 }
             }
