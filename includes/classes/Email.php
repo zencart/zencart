@@ -317,27 +317,24 @@ class Email
         $zen_fix_replace = [];
 
         if (!empty(zen_config('CURRENCIES_TRANSLATIONS'))) {
-            // Add curency conversions if any
+            // Add currency conversions, if any, as parallel search/replace pairs
             $zen_fix_currencies = preg_split("/[:,]/", str_replace(' ', '', zen_config('CURRENCIES_TRANSLATIONS')));
-            $size = count($zen_fix_currencies);
-            
-            // Convert in to array
-            for ($i = 0, $n = $size; $i < $n; $i += 2) {
+            for ($i = 0, $n = count($zen_fix_currencies); $i < $n; $i += 2) {
                 if (empty($zen_fix_currencies[$i + 1])) {
                     break;
                 }
                 $current = $zen_fix_currencies[$i];
-
                 if ($current !== '') {
-                    $zen_fix_current[]  = $current;
+                    $zen_fix_current[] = $current;
                     $zen_fix_replace[] = $zen_fix_currencies[$i + 1];
                 }
             }
         }
-        //Add special characters
-        $zen_fix_current  = array_merge($zen_fix_current,  ['&quot;', '&lt;', '&gt;', "\x00", '&nbsp;', '&#8209;']);
+
+        // Add special characters
+        $zen_fix_current = array_merge($zen_fix_current, ['&quot;', '&lt;', '&gt;', "\x00", '&nbsp;', '&#8209;']);
         $zen_fix_replace = array_merge($zen_fix_replace, ['"', '<', '>', ' ', ' ', '-']);
-        // Replace in string
+
         $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
 
         return $email_text;
