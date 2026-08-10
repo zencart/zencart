@@ -282,8 +282,11 @@ class Email
 
     /**
      * Strip tags, append disclaimers, and decode entities from the plain-text portion of an outgoing email.
+     *
+     * @internal Not part of the public API. Declared protected only so that unit tests can reach it
+     *           via a subclass; do not call from outside this class.
      */
-    private function sanitizeTextContent(string $email_text, string $html_fallback, string $module, string $to_email_address): string
+    protected function sanitizeTextContent(string $email_text, string $html_fallback, string $module, string $to_email_address): string
     {
         // if no text portion provided, build text-only portion from html content
         if ($email_text === '') {
