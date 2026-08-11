@@ -289,4 +289,72 @@ class EmailTextSanitizationTest extends zcUnitTestCase
         self::assertSame('Widget <Large> shirt', $this->sanitize('Widget <Large> shirt'));
         self::assertSame('Qty 5 < 6 units', $this->sanitize('Qty 5 < 6 units'));
     }
+
+    /**
+     * CHANGE-417 regression cases. 'small', 'big' and 'center' are real HTML tag names AND
+     * ordinary words, so they must be absent from Email::TAGS_TO_STRIP - otherwise a product
+     * name like "Widget <Small>" is silently truncated while "<Large>" survives.
+     */
+    public function testProductNameSizesInAngleBracketsAreNeverTruncated(): void
+    {
+        self::assertSame('Widget <Small> shirt', $this->sanitize('Widget <Small> shirt'));
+        self::assertSame('Widget <Medium> shirt', $this->sanitize('Widget <Medium> shirt'));
+        self::assertSame('T-shirt <Big> size', $this->sanitize('T-shirt <Big> size'));
+        self::assertSame('Table <Center> piece', $this->sanitize('Table <Center> piece'));
+    }
+
+    /**
+     * A listed tag name followed by punctuation is NOT a tag. Catalog text is full of
+     * "<BR-2032" (battery form factor), "<UL-94" (flammability rating) and "<A/V" - all of
+     * which begin with a listed tag name. If these are mistaken for markup, strip_tags()
+     * deletes from that '<' to the next '>', or to the end of the text when there is none,
+     * silently truncating the rest of the email.
+     */
+    public function testTagNamesFollowedByPunctuationAreTreatedAsContent(): void
+    {
+        self::assertSame('Battery <BR-2032 cell', $this->sanitize('Battery <BR-2032 cell'));
+        self::assertSame('Panel <UL-94 V0 rated', $this->sanitize('Panel <UL-94 V0 rated'));
+        self::assertSame('Cable <A/V input', $this->sanitize('Cable <A/V input'));
+        self::assertSame('Widget <A-Grade> shirt', $this->sanitize('Widget <A-Grade> shirt'));
+        self::assertSame('Grade <EM-500 motor', $this->sanitize('Grade <EM-500 motor'));
+    }
+
+    /**
+     * An unterminated '<' must not swallow the remainder of the message.
+     */
+    public function testUnterminatedAngleBracketDoesNotTruncateTheRest(): void
+    {
+        self::assertSame(
+            'Ships to zone <A and costs $5',
+            $this->sanitize('Ships to zone <A and costs $5')
+        );
+    }
+
+    /**
+     * Tag handling must not depend on letter case. The previous character-class implementation
+     * stripped '<br />' but kept '<BR />', and returned '</strong>' as '<strong>'.
+     */
+    public function testTagHandlingIsCaseInsensitive(): void
+    {
+        self::assertSame('ab', $this->sanitize('a<br />b'));
+        self::assertSame('ab', $this->sanitize('a<BR />b'));
+        self::assertSame('x', $this->sanitize('<strong>x</strong>'));
+        self::assertSame('x', $this->sanitize('<STRONG>x</STRONG>'));
+    }
+
+    /**
+     * Tags outside TAGS_TO_STRIP are content, so they survive - but intact, not mangled.
+     * The old regex dropped the slash, turning '</div>' into '<div>'.
+     */
+    public function testUnlistedTagsSurviveWithoutBeingMangled(): void
+    {
+        self::assertSame('<div class="x">div text</div>', $this->sanitize('<div class="x">div text</div>'));
+    }
+
+    public function testImageTagsAreRemovedFromThePlainTextPart(): void
+    {
+        self::assertSame('', $this->sanitize('<img src=x onerror=alert(1)>'));
+        // Only the tag is removed; the spaces that surrounded it remain, hence the double space.
+        self::assertSame('before  after', $this->sanitize('before <img src="cid:logo"> after'));
+    }
 }
