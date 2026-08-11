@@ -459,7 +459,16 @@ foreach ($configuration as $item) {
             <?php
             }
             ?>
-            <?= zen_draw_hidden_field("original[$fieldName]", $cfgValue) ?>
+            <?php
+            /**
+             * Rendered directly, rather than via zen_draw_hidden_field, so that this field carries
+             * exactly the same escaping as the visible input above it, bypassing the zen_not_null
+             * check that could make an untouched setting look edited on every save.
+             *
+             * $cfgValue is already htmlspecialchars()'d for use in a double-quoted attribute.
+             */
+            ?>
+            <input type="hidden" name="original[<?= $fieldName ?>]" value="<?= $cfgValue ?>">
         </div>
         <div class="col-md-6 bg-info p-3"><?= $item['configuration_description'] ?></div>
     </div>
