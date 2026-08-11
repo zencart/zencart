@@ -152,102 +152,127 @@ if (!$contaminated) {
 }
 
 /**
- * reject long query strings
- * reject suspicious non-ASCII characters
- * allows standard printable ASCII but flags common exploit symbols
+ * Determine the query string as the CLIENT actually sent it, which is not always $_SERVER['QUERY_STRING'].
+ *
+ * An internal mod_rewrite rewrite replaces QUERY_STRING with the rewritten one,
+ * and SEO-URL rulesets routinely synthesize extra parameters while doing so.
+ * The stock Ultimate SEO URLs .htaccess, for example, rewrites with
+ *   RewriteRule ^(.*)$ index.php?main_page=$1&%{QUERY_STRING} [L]
+ * so a request for /products_all.html?main_page=products_all&disp_order=3 reaches
+ * PHP with QUERY_STRING = "main_page=products_all.html&main_page=products_all&disp_order=3".
+ * That repeated (and differing) main_page is authored by the web server, not the
+ * client, so judging it as parameter pollution rejects ordinary catalog requests.
+ *
+ * REQUEST_URI is left untouched by internal rewrites, so its query portion is the
+ * client's own input: the only part an attacker controls, and the only part that
+ * any upstream layer (WAF, CDN, log parser) would have parsed differently than PHP.
+ *
+ * $_GET-based checks are deliberately left operating on the post-rewrite values,
+ * so parameters injected by the rewrite are still validated for length and content.
  */
-if (!$contaminated && !empty($_SERVER['QUERY_STRING'])) {
+// Start with QUERY_STRING to support SAPIs that do not publish REQUEST_URI.
+$clientQueryString = $_SERVER['QUERY_STRING'] ?? '';
+if (isset($_SERVER['REQUEST_URI'])) {
+    $queryDelimiter = strpos($_SERVER['REQUEST_URI'], '?');
+    $clientQueryString = $queryDelimiter === false ? '' : substr($_SERVER['REQUEST_URI'], $queryDelimiter + 1);
+}
 
-    // define pages that need long query strings
-    $long_query_pages = ['checkout_process', 'checkout_payment', 'checkout', 'checkout_one', 'checkout_one_confirmation'];
+/**
+ * Reject excessive query strings and raw control/non-ASCII bytes.
+ * Payment and checkout returns receive a larger allowance
+ * because off-site providers can legitimately return longer query strings.
+ */
+if (!$contaminated && $clientQueryString !== '') {
+    $longQueryPages = ['checkout_process', 'checkout_payment', 'checkout', 'checkout_one', 'checkout_one_confirmation'];
+    $maxQueryLength = in_array($_GET['main_page'] ?? '', $longQueryPages, true) ? 2048 : 256;
 
-    // set a dynamic length limit
-    // allow 2048 characters for payment pages, but keep the strict 256 for everything else
-    $max_length = in_array($_GET['main_page'] ?? '', $long_query_pages) ? 2048 : 256;
-
-    // cap query string length (prevents buffer overflow/fuzzing)
-    if (strlen($_SERVER['QUERY_STRING']) > $max_length) {
-        $contaminated = true;
-    }
-
-    // check for the specific '¤' (%C2%A4) or characters outside standard range
-    // allow basic printable ASCII but specifically target high-bit "junk"
-    if (preg_match('/[\x00-\x1F\x7F-\xFF]/', $_SERVER['QUERY_STRING'])) {
+    if (strlen($clientQueryString) > $maxQueryLength
+        || preg_match('/[\x00-\x1F\x7F-\xFF]/', $clientQueryString)
+    ) {
         $contaminated = true;
     }
 }
 
 /**
- * reject parameter pollution (any repeated keys)
- * scans the raw query string for any key appearing more than twice.
+ * Reject HTTP parameter pollution for keys Zen Cart expects to be scalar.
+ * We inspect and normalize the raw query keys before system bootstrap.
+ * Matching is intentionally case-insensitive.
+ *
+ * Operates on the client-supplied query string (see $clientQueryString above)
+ * so that duplicates synthesized by a mod_rewrite SEO-URL ruleset are not mistaken
+ * for an attack.
  */
-if (!empty($_SERVER['QUERY_STRING'])) {
-    // break the query string into individual "key=value" pairs
-    $pairs = explode('&', $_SERVER['QUERY_STRING']);
-    $keys = [];
-
-    foreach ($pairs as $pair) {
-        // get just the part before the "="
-        $parts = explode('=', $pair, 2);
-
-        // skip if the pair is empty (e.g., &&) or the key is missing
-        if (empty($parts[0])) {
-            continue;
-        }
-
-        $key = strtolower($parts[0]);
-        $keys[] = $key;
+if (!$contaminated && $clientQueryString !== '') {
+    $protectedScalarKeys = [];
+    foreach ($paramsToCheck as $protectedKey) {
+        $protectedScalarKeys[strtolower($protectedKey)] = true;
     }
 
-    // count occurrences of each key
-    $counts = array_count_values($keys);
-    foreach ($counts as $key => $count) {
-        // allow one duplication (possibly accidental), more than 2 is not accidental
-        if ($count > 2) {
-            $contaminated = true;
-            break;
-        }
-    }
-}
-unset($len, $paramsToCheck, $paramsToAvoid, $long_query_pages, $max_length, $pairs, $pair, $parts, $keys, $key, $counts, $count);
-
-/**
- * reject crawler 'BUY NOW' attempts
- * crawlers should never be adding items to the cart.
- */
-if (!$contaminated && isset($_GET['action']) && $_GET['action'] === 'buy_now') {
-    $isCrawlerUA = (
-        empty($_SERVER['HTTP_USER_AGENT']) ||
-        preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', $_SERVER['HTTP_USER_AGENT'])
+    $seenProtectedKeys = [];
+    $querySeparators = (string) ini_get('arg_separator.input');
+    $queryPairs = preg_split(
+        '/[' . preg_quote($querySeparators !== '' ? $querySeparators : '&', '/') . ']/',
+        $clientQueryString
     );
 
-    $refHost = !empty($_SERVER['HTTP_REFERER'])
-        ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST)
-        : null;
-
-    // Prefer X-Forwarded-Host when present (proxy/CDN); else fall back to HTTP_HOST.
-    // X-Forwarded-Host can be a comma-separated list; take the first.
-    $hostHeader = !empty($_SERVER['HTTP_X_FORWARDED_HOST'])
-        ? trim(strtok($_SERVER['HTTP_X_FORWARDED_HOST'], ','))
-        : ($_SERVER['HTTP_HOST'] ?? '');
-
-    // Strip :port (IPv4/hostname) or ]:port (IPv6-in-brackets), and strip brackets for IPv6.
-    $hostOnly = strtolower($hostHeader);
-    $hostOnly = preg_replace('/^\[(.*)\](?::\d+)?$/', '$1', $hostOnly); // [::1]:8443 -> ::1
-    $hostOnly = preg_replace('/:\d+$/', '', $hostOnly);                // example.com:8443 -> example.com
-
-    $hasInternalReferer = (!empty($refHost) && strtolower($refHost) === $hostOnly);
-
-    if ($isCrawlerUA || !$hasInternalReferer) {
+    if ($queryPairs === false) {
         $contaminated = true;
+    } else {
+        foreach ($queryPairs as $pair) {
+            $rawKey = explode('=', $pair, 2)[0];
+            if ($rawKey === '') {
+                continue;
+            }
+
+            // Reject leading spaces
+            $decodedKey = ltrim(urldecode($rawKey), ' ');
+
+            // PHP truncates parameter names at decoded NUL bytes; no control byte is valid key content.
+            if (preg_match('/[\x00-\x1F\x7F]/', $decodedKey)) {
+                $contaminated = true;
+                break;
+            }
+
+            $normalizedKey = strtolower(str_replace(['.', ' '], '_', $decodedKey));
+            $bracketPosition = strpos($normalizedKey, '[');
+            $baseKey = $bracketPosition === false ? $normalizedKey : substr($normalizedKey, 0, $bracketPosition);
+
+            if (!isset($protectedScalarKeys[$baseKey])) {
+                continue;
+            }
+
+            if ($bracketPosition !== false || isset($seenProtectedKeys[$baseKey])) {
+                $contaminated = true;
+                break;
+            }
+
+            $seenProtectedKeys[$baseKey] = true;
+        }
     }
+}
+
+unset(
+    $len, $paramsToCheck, $paramsToAvoid, $key, $clientQueryString, $queryDelimiter, $longQueryPages,
+    $maxQueryLength, $protectedScalarKeys, $protectedKey, $seenProtectedKeys, $querySeparators,
+    $queryPairs, $pair, $rawKey, $decodedKey, $normalizedKey, $bracketPosition, $baseKey
+);
+
+/**
+ * Reject catalog-filter params (manufacturers_id, sort, etc.) when supplied for
+ * a page confirmed to never legitimately read them, such as bots stuffing
+ * shopping_cart or checkout with spoofed query strings.
+ * cPath and products_id are deliberately NOT covered here; see includes/routing_map.php.
+ */
+if (!$contaminated) {
+    require_once __DIR__ . '/routing_map.php';
+    $contaminated = zen_request_has_disallowed_catalog_param($_GET);
 }
 
 if ($contaminated) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
 }
-unset($contaminated, $isCrawlerUA, $refHost, $hostHeader, $hostOnly, $hasInternalReferer);
+unset($contaminated);
 
 /* *** END OF INOCULATION *** */
 
@@ -314,6 +339,25 @@ if (!defined('DIR_FS_CATALOG') || !is_dir(DIR_FS_CATALOG.'/includes/classes')) {
     $problemString = 'includes/configure.php file contents invalid.  ie: DIR_FS_CATALOG not valid or not set';
     require 'includes/templates/template_default/templates/tpl_zc_install_suggested_default.php';
     exit;
+}
+
+/**
+ * Reject automated or cross-site 'BUY NOW' requests before initializing the application.
+ * Crawlers should never be adding items to the cart, and a Buy Now link is only ever
+ * followed from one of our own pages.
+ *
+ * Depends on TRUSTED_PROXIES (loaded above) for forwarded-host authenticity checking.
+ */
+if (isset($_GET['action']) && $_GET['action'] === 'buy_now') {
+    $isCrawlerUserAgent = empty($_SERVER['HTTP_USER_AGENT'])
+        || preg_match('/bot|crawl|spider|facebook|meta|externalagent/i', (string)$_SERVER['HTTP_USER_AGENT']);
+    $hasInternalReferer = \Zencart\Request\Request::isInternalReferer((string)($_SERVER['HTTP_REFERER'] ?? ''));
+
+    if ($isCrawlerUserAgent || !$hasInternalReferer) {
+        header('HTTP/1.1 406 Not Acceptable');
+        exit(0);
+    }
+    unset($isCrawlerUserAgent, $hasInternalReferer);
 }
 
 /**

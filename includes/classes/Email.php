@@ -20,6 +20,20 @@ class Email
 {
     use NotifierManager;
 
+    /**
+     * HTML tags removed from the text/plain part of an email, as a regex alternation.
+     * Anything not listed here is treated as content rather than markup, so entries must be
+     * tag names that would never appear as ordinary words in, say, a product name - which is
+     * why 'small', 'big', 'center' and 'table' are deliberately absent.
+     */
+    private const TAGS_TO_STRIP = 'strong|br|a|p|span|script|iframe|object|embed|style|img|li|ol|ul|em|b|i|u';
+
+    /**
+     * Stands in for a literal '<' while strip_tags() runs. Every occurrence is restored
+     * immediately afterwards, so it never reaches a recipient.
+     */
+    private const LT_PLACEHOLDER = '@lt@';
+
     private static ?self $instance = null;
 
     public static function getInstance(): self
@@ -282,8 +296,11 @@ class Email
 
     /**
      * Strip tags, append disclaimers, and decode entities from the plain-text portion of an outgoing email.
+     *
+     * @internal Not part of the public API. Declared protected only so that unit tests can reach it
+     *           via a subclass; do not call from outside this class.
      */
-    private function sanitizeTextContent(string $email_text, string $html_fallback, string $module, string $to_email_address): string
+    protected function sanitizeTextContent(string $email_text, string $html_fallback, string $module, string $to_email_address): string
     {
         // if no text portion provided, build text-only portion from html content
         if ($email_text === '') {
@@ -294,10 +311,42 @@ class Email
             );
             $email_text = ($module !== 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
         } elseif ($module !== 'xml_record') {
-            // Strip potentially nefarious tags while preserving a safe subset
-            $email_text = preg_replace('~</?([^(strong>|br ?\/?>|a href=|p |span|script|li|ol|ul|em|b>|i>|u>)])~', '@lt@\\1', $email_text);
+            /**
+             * Remove HTML markup from the text/plain part, while keeping a literal '<' that is
+             * part of the content. A product name such as "Widget <Large>" would otherwise be
+             * truncated by strip_tags(), which is the bug CHANGE-417 fixed in 2013.
+             *
+             * Any '<' that does not begin one of TAGS_TO_STRIP is swapped for a placeholder so
+             * strip_tags() cannot see it, then restored verbatim afterwards. Tags outside that
+             * list are treated as content, not markup.
+             *
+             * This has to be an alternation. The original was written as the character class
+             * '[^(strong>|br ?\/?>|a href=|...)]', which PCRE reads as a set of single
+             * characters rather than a list of tag names, so whether a tag was stripped
+             * depended on its first letter and its letter case.
+             *
+             * The tag must also be seen to CLOSE before it is trusted as markup. A bare word
+             * boundary is not enough: it matches before punctuation too, so "<BR-2032" and
+             * "<UL-94" would read as tags, and strip_tags() would then delete from that '<' to
+             * the next '>' - or to the end of the text if there is no '>'.
+             *
+             * The two branches after the tag name are not interchangeable. Whitespace may be
+             * followed by anything (attributes), but a slash may only be followed by optional
+             * whitespace and then '>', i.e. a genuine self-closing tag. Allowing arbitrary text
+             * after the slash would swallow ordinary labels such as "<A/V>", "<I/O>" and
+             * "<P/N 123>", which are markup only by coincidence.
+             *
+             * Known limitation: a listed tag name followed by content containing a later '>'
+             * is still consumed - "Is 5 <A bigger number than 3? Thanks -> Bob" loses its
+             * middle. That is inherent to guessing markup from content, and predates this code.
+             */
+            $email_text = preg_replace(
+                '~<(?!/?(?:' . self::TAGS_TO_STRIP . ')(?:\s[^<>]*|/\s*)?>)~i',
+                self::LT_PLACEHOLDER,
+                $email_text
+            );
             $email_text = strip_tags($email_text);
-            $email_text = str_replace('@lt@', '<', $email_text);
+            $email_text = str_replace(self::LT_PLACEHOLDER, '<', $email_text);
         }
 
         // TRANSACTIONAL EMAILS GET DISCLAIMERS
@@ -313,28 +362,29 @@ class Email
         // CLEAN UP CHARACTERS
         $email_text = preg_replace('/((&amp;)|&)+/', '&', $email_text);
 
+        $zen_fix_current = [];
+        $zen_fix_replace = [];
+
         if (!empty(zen_config('CURRENCIES_TRANSLATIONS'))) {
+            // Add currency conversions, if any, as parallel search/replace pairs
             $zen_fix_currencies = preg_split("/[:,]/", str_replace(' ', '', zen_config('CURRENCIES_TRANSLATIONS')));
-            $size = count($zen_fix_currencies);
-            for ($i = 0, $n = $size; $i < $n; $i += 2) {
+            for ($i = 0, $n = count($zen_fix_currencies); $i < $n; $i += 2) {
                 if (empty($zen_fix_currencies[$i + 1])) {
                     break;
                 }
-                $zen_fix_current = $zen_fix_currencies[$i];
-                $zen_fix_replace = $zen_fix_currencies[$i + 1];
-                if ($zen_fix_current !== '') {
-                    while (str_contains($email_text, $zen_fix_current)) {
-                        $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
-                    }
+                $current = $zen_fix_currencies[$i];
+                if ($current !== '') {
+                    $zen_fix_current[] = $current;
+                    $zen_fix_replace[] = $zen_fix_currencies[$i + 1];
                 }
             }
         }
 
-        $email_text = str_replace(
-            ['&quot;', '&lt;', '&gt;', "\x00", '&nbsp;', '&#8209;'],
-            ['"', '<', '>', ' ', ' ', '-'],
-            $email_text
-        );
+        // Add special characters
+        $zen_fix_current = array_merge($zen_fix_current, ['&quot;', '&lt;', '&gt;', "\x00", '&nbsp;', '&#8209;']);
+        $zen_fix_replace = array_merge($zen_fix_replace, ['"', '<', '>', ' ', ' ', '-']);
+
+        $email_text = str_replace($zen_fix_current, $zen_fix_replace, $email_text);
 
         return $email_text;
     }

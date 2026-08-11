@@ -3,7 +3,7 @@
 declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2025 Zen Cart Development Team
- * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2025 Oct 25 Modified in v2.2.0 $
  * @since ZC v1.5.8
  */
@@ -22,7 +22,13 @@ class Customer extends base
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
 
-    public function __construct($customer_id = null)
+    /**
+     * @param int|string|null $customer_id
+     * @param bool $load_order_statistics Admin-only: set false to skip the order-count/lifetime-value
+     *                                    queries when only the base customer record is needed,
+     *                                    such as when building a customer listing.
+     */
+    public function __construct($customer_id = null, protected bool $load_order_statistics = true)
     {
         $this->is_logged_in = $this->someoneIsLoggedIn();
         $this->is_in_guest_checkout = $this->isInGuestCheckout();
@@ -635,10 +641,19 @@ class Customer extends base
         $this->data['number_of_reviews'] = (int)$result->fields['number_of_reviews'];
 
         if (IS_ADMIN_FLAG) {
-            $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
-            // only calculating this on the Admin side, for performance reasons
-            if ($this->data['number_of_orders']) {
-                $this->data['lifetime_value'] = $this->getLifetimeValue();
+            /**
+             * The order-history queries are the expensive part of loading a customer, and a listing
+             * page such as admin/customers.php only needs them for the one customer it has selected.
+             * When they're deferred, the related keys are left unset rather than zeroed, so callers
+             * can tell "not loaded" apart from "no orders". ('lifetime_value' already behaves that
+             * way for a customer with no orders.)
+             */
+            if ($this->load_order_statistics) {
+                $this->data['number_of_orders'] = $this->countCustomersPreviousOrders();
+                // only calculating this on the Admin side, for performance reasons
+                if ($this->data['number_of_orders']) {
+                    $this->data['lifetime_value'] = $this->getLifetimeValue();
+                }
             }
         } else {
             $this->data['lifetime_value'] = null;
@@ -757,14 +772,17 @@ class Customer extends base
             if (null === $last_order) {
                 $last_order = [
                     'date_purchased' => $result['date_purchased'],
-                    'order_total' => $currencies->format($result['order_total_raw'], false, $result['currency'], $result['currency_value']),
+                    'order_total' => $currencies->format($result['order_total_raw'], true, $result['currency'], $result['currency_value']),
                     'order_total_raw' => $result['order_total_raw'],
                     'currency' => $result['currency'],
                     'currency_value' => $result['currency_value'],
                     'language_code' => $result['language_code'],
                 ];
             }
-            $lifetime_value += $result['order_total_raw'] * $result['currency_value'];
+            // orders.order_total is stored in the store's default currency, so the orders are
+            // already in a common unit; multiplying by the order's currency_value here would
+            // convert each one *out* of that unit and sum unlike currencies.
+            $lifetime_value += $result['order_total_raw'];
         }
         $this->data['last_order'] = $last_order;
         $this->data['lifetime_value'] = $lifetime_value;
@@ -778,18 +796,22 @@ class Customer extends base
     protected function getPricingGroupAssociation(): void
     {
         global $db;
-        $sql =
-            "SELECT group_name, group_percentage
-               FROM " . TABLE_GROUP_PRICING . "
-              WHERE group_id = " . (int)$this->data['customers_group_pricing'];
-        $result = $db->Execute($sql);
 
-        if ($result->RecordCount()) {
-            $this->data['pricing_group_name'] = $result->fields['group_name'];
-            $this->data['pricing_group_discount_percentage'] = $result->fields['group_percentage'];
-        } else {
-            $this->data['pricing_group_name'] = defined('TEXT_NONE') ? TEXT_NONE : '';
-            $this->data['pricing_group_discount_percentage'] = 0;
+        $this->data['pricing_group_name'] = defined('TEXT_NONE') ? TEXT_NONE : '';
+        $this->data['pricing_group_discount_percentage'] = 0;
+
+        // group_pricing.group_id is auto_increment, so it is never zero. Skip unnecessary lookups.
+        if (!empty($this->data['customers_group_pricing'])) {
+            $sql =
+                "SELECT group_name, group_percentage
+                   FROM " . TABLE_GROUP_PRICING . "
+                  WHERE group_id = " . (int)$this->data['customers_group_pricing'];
+            $result = $db->Execute($sql);
+
+            if ($result->RecordCount()) {
+                $this->data['pricing_group_name'] = $result->fields['group_name'];
+                $this->data['pricing_group_discount_percentage'] = $result->fields['group_percentage'];
+            }
         }
 
         $this->notify('NOTIFY_CUSTOMER_PRICING_GROUP_LOADED', $this->data);
@@ -1002,7 +1024,8 @@ class Customer extends base
                     entry_country_id AS country_id,
                     countries_name AS country_name,
                     countries_iso_code_3 AS country_iso,
-                    countries_iso_code_2 AS country_iso_2
+                    countries_iso_code_2 AS country_iso_2,
+                    c.address_format_id
                FROM " . TABLE_ADDRESS_BOOK . " ab
                     INNER JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
                     LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id AND z.zone_country_id = c.countries_id)
@@ -1015,7 +1038,11 @@ class Customer extends base
         $addressArray = [];
 
         foreach ($results as $result) {
-            $format_id = zen_get_address_format_id((int)$result['country_id']);
+            // The countries table is already joined above, so the address format comes back with the row
+            // so we use that instead of calling zen_get_address_format_id() here for extra queries.
+            // It's removed from the row afterwards to keep the returned 'address' element unchanged.
+            $format_id = (int)$result['address_format_id'];
+            unset($result['address_format_id']);
 
             if (empty($result['state']) && !empty($result['zone_name'])) {
                 $result['state'] = $result['zone_name'];
@@ -1065,8 +1092,16 @@ class Customer extends base
             $results = $db->Execute($sql, $max_number_to_return);
         }
 
-        $ordersArray = [];
+        $orders = [];
         foreach ($results as $result) {
+            $orders[] = $result;
+        }
+
+        // Counted for the whole page in one statement, rather than a query per order.
+        $product_counts = $this->getProductCountsForOrders(array_column($orders, 'orders_id'));
+
+        $ordersArray = [];
+        foreach ($orders as $result) {
             if (!empty($result['delivery_name'])) {
                 $order_type = defined('TEXT_ORDER_SHIPPED_TO') ? TEXT_ORDER_SHIPPED_TO : 'Shipped To:';
                 $order_name = $result['delivery_name'];
@@ -1076,13 +1111,6 @@ class Customer extends base
                 $order_name = $result['billing_name'];
                 $order_country = $result['billing_country'];
             }
-
-            $sql =
-                "SELECT COUNT(*) AS count
-                   FROM " . TABLE_ORDERS_PRODUCTS . "
-                  WHERE orders_id = " . (int)$result['orders_id'];
-            $queryResult = $db->Execute($sql);
-            $products_count = $queryResult->EOF ? 0 : $queryResult->fields['count'];
 
             $ordersArray[] = [
                 'orders_id' => (int)$result['orders_id'],
@@ -1096,10 +1124,45 @@ class Customer extends base
                 'currency' => $result['currency'],
                 'currency_value' => $result['currency_value'],
                 'language_code' => $result['language_code'],
-                'product_count' => $products_count,
+                'product_count' => $product_counts[(int)$result['orders_id']] ?? 0,
             ];
         }
         return $ordersArray;
+    }
+
+    /**
+     * Return the number of line-items in each of the supplied orders, keyed by orders_id.
+     *
+     * Counting a page's orders in one statement keeps getOrderHistory() from issuing a query per
+     * order. Only the grouped column and the aggregate are selected, so this stays valid under
+     * ONLY_FULL_GROUP_BY, and (orders_id, products_id) covers it.
+     *
+     * @param array $orders_ids
+     * @return array<int, int> orders_id => line-item count; orders with no line-items are absent
+     * @since ZC v3.0.0
+     */
+    protected function getProductCountsForOrders(array $orders_ids): array
+    {
+        global $db;
+
+        $orders_ids = array_filter(array_map('intval', $orders_ids));
+        if (empty($orders_ids)) {
+            return [];
+        }
+
+        $sql =
+            "SELECT orders_id, COUNT(*) AS count
+               FROM " . TABLE_ORDERS_PRODUCTS . "
+              WHERE orders_id IN (" . implode(',', $orders_ids) . ")
+              GROUP BY orders_id";
+        $results = $db->Execute($sql);
+
+        $counts = [];
+        foreach ($results as $result) {
+            $counts[(int)$result['orders_id']] = (int)$result['count'];
+        }
+
+        return $counts;
     }
 
     /**

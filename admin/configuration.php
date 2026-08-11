@@ -306,7 +306,7 @@ if ($gID === 7) {
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <style>
         .row-hover:hover {
-            background-color: #f8f9fa; /* Bootstrap's .table-hover color */
+            background-color: #E7E7E7; /* Matches .navbar-adm1-collapse color */
         }
         .save-button {
             position: fixed;
