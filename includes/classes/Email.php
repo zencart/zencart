@@ -20,6 +20,20 @@ class Email
 {
     use NotifierManager;
 
+    /**
+     * HTML tags removed from the text/plain part of an email, as a regex alternation.
+     * Anything not listed here is treated as content rather than markup, so entries must be
+     * tag names that would never appear as ordinary words in, say, a product name - which is
+     * why 'small', 'big', 'center' and 'table' are deliberately absent.
+     */
+    private const TAGS_TO_STRIP = 'strong|br|a|p|span|script|iframe|object|embed|style|img|li|ol|ul|em|b|i|u';
+
+    /**
+     * Stands in for a literal '<' while strip_tags() runs. Every occurrence is restored
+     * immediately afterwards, so it never reaches a recipient.
+     */
+    private const LT_PLACEHOLDER = '@lt@';
+
     private static ?self $instance = null;
 
     public static function getInstance(): self
@@ -297,10 +311,42 @@ class Email
             );
             $email_text = ($module !== 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
         } elseif ($module !== 'xml_record') {
-            // Strip potentially nefarious tags while preserving a safe subset
-            $email_text = preg_replace('~</?([^(strong>|br ?\/?>|a href=|p |span|script|li|ol|ul|em|b>|i>|u>)])~', '@lt@\\1', $email_text);
+            /**
+             * Remove HTML markup from the text/plain part, while keeping a literal '<' that is
+             * part of the content. A product name such as "Widget <Large>" would otherwise be
+             * truncated by strip_tags(), which is the bug CHANGE-417 fixed in 2013.
+             *
+             * Any '<' that does not begin one of TAGS_TO_STRIP is swapped for a placeholder so
+             * strip_tags() cannot see it, then restored verbatim afterwards. Tags outside that
+             * list are treated as content, not markup.
+             *
+             * This has to be an alternation. The original was written as the character class
+             * '[^(strong>|br ?\/?>|a href=|...)]', which PCRE reads as a set of single
+             * characters rather than a list of tag names, so whether a tag was stripped
+             * depended on its first letter and its letter case.
+             *
+             * The tag must also be seen to CLOSE before it is trusted as markup. A bare word
+             * boundary is not enough: it matches before punctuation too, so "<BR-2032" and
+             * "<UL-94" would read as tags, and strip_tags() would then delete from that '<' to
+             * the next '>' - or to the end of the text if there is no '>'.
+             *
+             * The two branches after the tag name are not interchangeable. Whitespace may be
+             * followed by anything (attributes), but a slash may only be followed by optional
+             * whitespace and then '>', i.e. a genuine self-closing tag. Allowing arbitrary text
+             * after the slash would swallow ordinary labels such as "<A/V>", "<I/O>" and
+             * "<P/N 123>", which are markup only by coincidence.
+             *
+             * Known limitation: a listed tag name followed by content containing a later '>'
+             * is still consumed - "Is 5 <A bigger number than 3? Thanks -> Bob" loses its
+             * middle. That is inherent to guessing markup from content, and predates this code.
+             */
+            $email_text = preg_replace(
+                '~<(?!/?(?:' . self::TAGS_TO_STRIP . ')(?:\s[^<>]*|/\s*)?>)~i',
+                self::LT_PLACEHOLDER,
+                $email_text
+            );
             $email_text = strip_tags($email_text);
-            $email_text = str_replace('@lt@', '<', $email_text);
+            $email_text = str_replace(self::LT_PLACEHOLDER, '<', $email_text);
         }
 
         // TRANSACTIONAL EMAILS GET DISCLAIMERS
