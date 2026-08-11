@@ -51,6 +51,12 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
                 'template_language' => '0',
                 'template_settings' => null,
             ],
+            2 => [
+                'template_id' => '2',
+                'template_dir' => 'responsive_classic',
+                'template_language' => '-1',
+                'template_settings' => null,
+            ],
         ];
         $this->nextId = 2;
 
@@ -60,7 +66,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsPersistsAndIsRetrievable(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
 
@@ -74,7 +79,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsPersistsJsonStringContainingNull(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('responsive_classic', ['LABEL' => 'contains NULL text']);
 
@@ -88,7 +92,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testSetTemplateSettingsReturnsUnknownDirForATemplateWithNoBaseRecord(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $status = $templateSelect->setTemplateSettings('not_a_real_template', ['FOO' => 'bar']);
 
@@ -99,7 +102,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testUpdateTemplateSettingsMergesWithExistingSettings(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
+
         $templateSelect->setTemplateSettings('responsive_classic', ['A' => '1', 'B' => '2']);
 
         $status = $templateSelect->updateTemplateSettings('responsive_classic', ['B' => '20', 'C' => '3']);
@@ -119,7 +122,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testTemplateSettingsSurviveDeregisteringTheActiveLanguageAssignment(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
         $templateSelect->setTemplateSettings('responsive_classic', ['THEME' => 'dark']);
 
         $newLanguageId = (int)$templateSelect->registerNewTemplate('responsive_classic', 5);
@@ -143,7 +145,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testRegisterNewTemplateRejectsAnAlreadyRegisteredLanguage(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         $this->assertFalse(
             $templateSelect->registerNewTemplate('responsive_classic', 0),
@@ -160,7 +161,6 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testUpdatingATemplateDirToItsCurrentValueIsNotTreatedAsAFailure(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
 
         // Row id 1 (seeded in setUp()) is already 'responsive_classic' for language 0.
         $status = $templateSelect->updateTemplateNameForId(1, 'responsive_classic');
@@ -174,7 +174,7 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
     public function testReSavingIdenticalSettingsIsNotTreatedAsAFailure(): void
     {
         $templateSelect = new TemplateSelect();
-        $templateSelect->resolveTemplates();
+
         $templateSelect->setTemplateSettings('responsive_classic', ['FOO' => 'bar']);
 
         // Save the exact same settings again - a no-op from MySQL's point of view.
@@ -230,13 +230,31 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
         }
 
         if (stripos($sql, 'INSERT INTO') !== false) {
-            preg_match("/VALUES\s*\('([^']*)',\s*(-?\d+)\)/", $sql, $matches);
-            $id = $this->nextId++;
+            // Support:
+            // VALUES ('dir', 5)
+            // VALUES ('dir', 5, NULL)
+            // VALUES ('dir', 5, '{"A":"1"}')
+            if (!preg_match(
+                "/VALUES\s*\(\s*'((?:[^'\\\\]|\\\\.)*)'\s*,\s*(-?\d+)(?:\s*,\s*(NULL|'(?:[^'\\\\]|\\\\.)*'))?\s*\)/is",
+                $sql,
+                $matches
+            )) {
+                $this->lastAffectedRows = 0;
+                return $this->makeQueryResult([]);
+            }
+
+            $id = ++$this->nextId;
+            $settingsToken = $matches[3] ?? null;
+            $settingsValue = null;
+            if ($settingsToken !== null && strtoupper($settingsToken) !== 'NULL') {
+                $settingsValue = stripslashes(trim($settingsToken, "'"));
+            }
+
             $this->rows[$id] = [
                 'template_id' => (string)$id,
-                'template_dir' => $matches[1],
+                'template_dir' => stripslashes($matches[1]),
                 'template_language' => (string)(int)$matches[2],
-                'template_settings' => null,
+                'template_settings' => $settingsValue,
             ];
             $this->lastInsertId = $id;
             $this->lastAffectedRows = 1;

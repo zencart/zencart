@@ -95,10 +95,16 @@ if (empty($tpl_settings) || !is_array($tpl_settings)) {
  * any $tpl_settings values specified in the template's
  * template_settings.php file take precedence over the
  * database values.
+ *
+ * The inheritance-chain returned starts with the current template and works
+ * its way back through its ancestors, so the current loop's template directory
+ * can **add to** the template-settings but cannot override any previous settings.
  */
-$tmp = $templateSelect->getTemplateSettings($template_dir);
-if ($tmp !== null) {
-    $tpl_settings = array_merge(zen_normalize_scalar_template_settings($tmp), $tpl_settings);
+foreach (zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false) as $next_tmp_dir) {
+    $tmp = $templateSelect->getTemplateSettings($next_tmp_dir);
+    if ($tmp !== null) {
+        $tpl_settings = array_merge(zen_normalize_scalar_template_settings($tmp), $tpl_settings);
+    }
 }
 $tpl_settings['template_dir'] = $template_dir;
 
