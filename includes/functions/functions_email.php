@@ -158,7 +158,24 @@
                 );
                 $email_text = ($module !== 'xml_record') ? zen_output_string_protected(stripslashes(strip_tags($email_text))) : $email_text;
             } elseif ($module !== 'xml_record') {
-                $email_text = preg_replace('~</?([^(strong>|br ?\/?>|a href=|p |span|script|li|ol|ul|em|b>|i>|u>)])~', '@lt@\\1', $email_text);
+                /**
+                 * Remove HTML markup from the text/plain part, while keeping a literal '<' that is part
+                 * of the content -- a product name such as "Widget <Large>" would otherwise be truncated
+                 * by strip_tags() (CHANGE-417, 2013).
+                 *
+                 * This must be an alternation, not a character class. The previous form
+                 * '[^(strong>|br ?\/?>|...)]' is read by PCRE as a set of single characters, so whether
+                 * a tag was stripped depended on its first letter and its letter case.
+                 *
+                 * The tag must also be seen to CLOSE before it is trusted as markup, and the two branches
+                 * after the tag name are not interchangeable: whitespace may be followed by anything
+                 * (attributes), but a slash may be followed only by optional whitespace and then '>', i.e.
+                 * a genuine self-closing tag. A looser form eats ordinary labels such as "<A/V>", "<I/O>"
+                 * and "<P/N 123>", and a bare word boundary eats "<BR-2032" and "<UL-94" -- deleting from
+                 * that '<' to the next '>', or to the end of the message when there is none.
+                 */
+                $tags_to_strip = 'strong|br|a|p|span|script|iframe|object|embed|style|img|li|ol|ul|em|b|i|u';
+                $email_text = preg_replace('~<(?!/?(?:' . $tags_to_strip . ')(?:\s[^<>]*|/\s*)?>)~i', '@lt@', $email_text);
                 $email_text = strip_tags($email_text);
                 $email_text = str_replace('@lt@', '<', $email_text);
             }
