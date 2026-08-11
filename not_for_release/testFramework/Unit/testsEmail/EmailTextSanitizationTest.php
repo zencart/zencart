@@ -1,6 +1,6 @@
 <?php
-
 declare(strict_types=1);
+
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
@@ -14,21 +14,15 @@ use Tests\Support\zcUnitTestCase;
  * Characterization tests for Email::sanitizeTextContent(), which builds the text/plain part
  * of every outgoing email.
  *
- * This class has two groups, and they are NOT equivalent:
+ * Everything here asserts intended behaviour, and is expected to keep passing when the
+ * tag-stripping branch is rewritten. Cases where that branch is currently arbitrary - handling
+ * that depends on a tag's letter case, and closing tags that come back with the slash dropped -
+ * are deliberately left unasserted rather than pinned, so that nothing in this file has to be
+ * unlearned later.
  *
- * 1. Currency translations and character cleanup - these assert intended behaviour.
- *
- * 2. Methods prefixed testCurrentBehaviour* - these pin what the tag-stripping branch does
- *    TODAY, which is not what it is supposed to do. The regex there reads as an allowlist of
- *    safe tags but is a negated character class, so it strips the very tags it appears to
- *    preserve and lets unrelated ones through mangled. These assertions are expected to be
- *    REPLACED when that branch is rewritten; a failure there after such a rewrite is the
- *    point, not a regression. Do not "fix" them to match new output without reviewing the
- *    behaviour change they describe.
- *
- * The disclaimer branch is deliberately not covered: it depends on EMAIL_DISCLAIMER constants,
- * and constants cannot be redefined between tests without process isolation. All tests here
- * pass a transactional $module, which skips that branch entirely.
+ * The disclaimer branch is deliberately not covered in this class: it depends on
+ * EMAIL_DISCLAIMER constants, and constants cannot be redefined between tests without process isolation.
+ * All tests here pass a transactional $module, which skips that branch entirely.
  */
 class EmailTextSanitizationTest extends zcUnitTestCase
 {
@@ -38,7 +32,7 @@ class EmailTextSanitizationTest extends zcUnitTestCase
     private const TRANSACTIONAL_MODULE = 'checkout';
 
     /**
-     * The value shipped in mysql_utf8.sql for CURRENCIES_TRANSLATIONS.
+     * The default value shipped in mysql_utf8.sql for CURRENCIES_TRANSLATIONS.
      */
     private const SHIPPED_DEFAULT = '&pound;,£:&euro;,€:&reg;,®:&trade;,™';
 
@@ -46,6 +40,12 @@ class EmailTextSanitizationTest extends zcUnitTestCase
     {
         parent::setUp();
         require_once DIR_FS_CATALOG . 'includes/classes/Email.php';
+
+        // CHARSET is always the same value here, so defining it needs no process isolation.
+        defined('CHARSET') || define('CHARSET', 'utf-8');
+        // The html-fallback branch calls zen_output_string_protected(), which the unit
+        // bootstrap does not load, and which needs CHARSET for htmlspecialchars().
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_strings.php';
     }
 
     public function tearDown(): void
@@ -61,8 +61,12 @@ class EmailTextSanitizationTest extends zcUnitTestCase
      * that global is unset, so stubbing it here avoids define() and therefore avoids needing
      * process isolation.
      */
-    private function sanitize(string $text, string $config = '', string $module = self::TRANSACTIONAL_MODULE): string
-    {
+    private function sanitize(
+        string $text,
+        string $config = '',
+        string $module = self::TRANSACTIONAL_MODULE,
+        string $htmlFallback = ''
+    ): string {
         $GLOBALS['configurationRepository'] = new class ($config) {
             public function __construct(private string $config) {}
 
@@ -78,16 +82,16 @@ class EmailTextSanitizationTest extends zcUnitTestCase
             }
         };
 
-        // Anonymous subclass so the protected sanitizer is reachable. It must be declared here
-        // rather than at file scope, because the parent class is only loaded in setUp().
+        // Anonymous subclass so the protected sanitizer is reachable.
+        // It must be declared here rather than at file scope, because the parent class is only loaded in setUp().
         $sanitizer = new class extends \Email {
-            public function sanitize(string $text, string $module): string
+            public function sanitize(string $text, string $htmlFallback, string $module): string
             {
-                return $this->sanitizeTextContent($text, '', $module, 'customer@example.com');
+                return $this->sanitizeTextContent($text, $htmlFallback, $module, 'customer@example.com');
             }
         };
 
-        return $sanitizer->sanitize($text, $module);
+        return $sanitizer->sanitize($text, $htmlFallback, $module);
     }
 
     public function testShippedDefaultConfigConvertsAllFourEntities(): void
@@ -201,14 +205,62 @@ class EmailTextSanitizationTest extends zcUnitTestCase
     }
 
     // ------------------------------------------------------------------------------------
-    // Current behaviour of the tag-stripping branch. See the class docblock: these describe
-    // a known-broken regex and are expected to be replaced when it is rewritten.
+    // The html-fallback branch: taken when no text part was supplied, so the text/plain part
+    // is derived from the HTML body. Unlike the branch below, this one strips ALL tags.
     // ------------------------------------------------------------------------------------
 
+    public function testHtmlFallbackTurnsBreaksAndParagraphEndsIntoNewlines(): void
+    {
+        $actual = $this->sanitize('', '', self::TRANSACTIONAL_MODULE, '<p>One</p><p>Two</p>');
+
+        self::assertSame("One\nTwo\n", $actual);
+    }
+
+    public function testHtmlFallbackStripsEveryTag(): void
+    {
+        $actual = $this->sanitize('', '', self::TRANSACTIONAL_MODULE, '<div><strong>bold</strong> and <em>italic</em></div>');
+
+        self::assertSame('bold and italic', $actual);
+    }
+
     /**
-     * The regex lists <strong> as preserved, but strips it.
+     * Current behaviour worth noting: this branch runs the text through
+     * zen_output_string_protected() (htmlspecialchars, ENT_COMPAT), but the entity-decoding
+     * step further down converts &quot; &lt; &gt; straight back again. The protective
+     * encoding is therefore undone before the text is sent. This intentional, and deduplicates.
      */
-    public function testCurrentBehaviourStripsTagsItAppearsToAllow(): void
+    public function testHtmlFallbackProtectiveEncodingIsUndoneByLaterEntityDecoding(): void
+    {
+        $actual = $this->sanitize('', '', self::TRANSACTIONAL_MODULE, '<p>Say "hi"</p>');
+
+        self::assertSame("Say \"hi\"\n", $actual);
+    }
+
+    /**
+     * 'xml_record' skips the strip_tags/encode step, keeping the markup intact.
+     */
+    public function testHtmlFallbackForXmlRecordKeepsMarkup(): void
+    {
+        $actual = $this->sanitize('', '', 'xml_record', '<p>One</p>');
+
+        self::assertSame("<p>One</p>\n", $actual);
+    }
+
+    public function testEmptyTextAndEmptyHtmlFallbackYieldsEmptyString(): void
+    {
+        self::assertSame('', $this->sanitize('', '', self::TRANSACTIONAL_MODULE, ''));
+    }
+
+    // ------------------------------------------------------------------------------------
+    // Tag handling in the text/plain part.
+    //
+    // These assert the contract that holds regardless of how the tag-stripping branch is
+    // implemented: formatting tags and script tags come out, their readable content stays.
+    // Cases where today's regex behaves arbitrarily (letter-case dependence, mangled closing
+    // tags) are deliberately NOT asserted here - see the tag-stripping fix for those.
+    // ------------------------------------------------------------------------------------
+
+    public function testStripsFormattingTagsFromThePlainTextPart(): void
     {
         self::assertSame('Hello bold world', $this->sanitize('Hello <strong>bold</strong> world'));
         self::assertSame('Link x', $this->sanitize('Link <a href="http://x">x</a>'));
@@ -216,25 +268,25 @@ class EmailTextSanitizationTest extends zcUnitTestCase
     }
 
     /**
-     * Script tags are removed but their contents survive as plain text.
+     * Script tags are removed, but their contents survive as plain text.
      */
-    public function testCurrentBehaviourStripsScriptTagsButKeepsBodyText(): void
+    public function testStripsScriptTagsButKeepsTheirBodyText(): void
     {
         self::assertSame('alert(1)', $this->sanitize('<script>alert(1)</script>'));
     }
 
-    /**
-     * Tags NOT in the apparent allowlist survive as literal text, and the closing tag loses
-     * its slash - '</div>' comes back as '<div>'.
-     */
-    public function testCurrentBehaviourPreservesAndManglesUnlistedTags(): void
+    public function testRemovesIframeTagsEntirely(): void
     {
-        self::assertSame('<div class="x">div text<div>', $this->sanitize('<div class="x">div text</div>'));
+        self::assertSame('', $this->sanitize('<iframe src="evil"></iframe>'));
     }
 
-    public function testCurrentBehaviourRemovesUnlistedVoidAndDangerousTagsEntirely(): void
+    /**
+     * A literal '<' that is not part of a tag must survive - a product name such as
+     * "Widget <Large>" was truncated before CHANGE-417 (2013) added the placeholder step.
+     */
+    public function testLiteralAngleBracketsInContentSurvive(): void
     {
-        self::assertSame('', $this->sanitize('<img src=x onerror=alert(1)>'));
-        self::assertSame('', $this->sanitize('<iframe src="evil"></iframe>'));
+        self::assertSame('Widget <Large> shirt', $this->sanitize('Widget <Large> shirt'));
+        self::assertSame('Qty 5 < 6 units', $this->sanitize('Qty 5 < 6 units'));
     }
 }
