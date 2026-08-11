@@ -326,12 +326,22 @@ class Email
              * depended on its first letter and its letter case.
              *
              * The tag must also be seen to CLOSE before it is trusted as markup. A bare word
-             * boundary is not enough: it matches before punctuation too, so "<BR-2032",
-             * "<UL-94" and "<A/V" would read as tags, and strip_tags() would then delete from
-             * that '<' to the next '>' - or to the end of the text if there is no '>'.
+             * boundary is not enough: it matches before punctuation too, so "<BR-2032" and
+             * "<UL-94" would read as tags, and strip_tags() would then delete from that '<' to
+             * the next '>' - or to the end of the text if there is no '>'.
+             *
+             * The two branches after the tag name are not interchangeable. Whitespace may be
+             * followed by anything (attributes), but a slash may only be followed by optional
+             * whitespace and then '>', i.e. a genuine self-closing tag. Allowing arbitrary text
+             * after the slash would swallow ordinary labels such as "<A/V>", "<I/O>" and
+             * "<P/N 123>", which are markup only by coincidence.
+             *
+             * Known limitation: a listed tag name followed by content containing a later '>'
+             * is still consumed - "Is 5 <A bigger number than 3? Thanks -> Bob" loses its
+             * middle. That is inherent to guessing markup from content, and predates this code.
              */
             $email_text = preg_replace(
-                '~<(?!/?(?:' . self::TAGS_TO_STRIP . ')(?:[\s/][^<>]*)?>)~i',
+                '~<(?!/?(?:' . self::TAGS_TO_STRIP . ')(?:\s[^<>]*|/\s*)?>)~i',
                 self::LT_PLACEHOLDER,
                 $email_text
             );

@@ -320,6 +320,30 @@ class EmailTextSanitizationTest extends zcUnitTestCase
     }
 
     /**
+     * A slash is both markup punctuation ('<br/>') and ordinary label punctuation ('<A/V>'),
+     * so the self-closing branch must accept only optional whitespace before the '>'. If it
+     * accepts arbitrary text, closed abbreviations like these are silently eaten - and unlike
+     * the unterminated cases above, these have a closing '>', so they look well-formed.
+     */
+    public function testSlashAbbreviationsAreTreatedAsContent(): void
+    {
+        self::assertSame('Cable <A/V> input', $this->sanitize('Cable <A/V> input'));
+        self::assertSame('Port <I/O> module', $this->sanitize('Port <I/O> module'));
+        self::assertSame('Part <P/N 123> ordered', $this->sanitize('Part <P/N 123> ordered'));
+    }
+
+    /**
+     * ...while genuine self-closing tags must still be removed.
+     */
+    public function testSelfClosingTagsAreStillStripped(): void
+    {
+        self::assertSame('ab', $this->sanitize('a<br/>b'));
+        self::assertSame('ab', $this->sanitize('a<br />b'));
+        self::assertSame('ab', $this->sanitize('a<br    />b'));
+        self::assertSame('ab', $this->sanitize('a<br class="x"/>b'));
+    }
+
+    /**
      * An unterminated '<' must not swallow the remainder of the message.
      */
     public function testUnterminatedAngleBracketDoesNotTruncateTheRest(): void
