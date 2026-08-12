@@ -54,11 +54,24 @@ load_test_files() {
     done < "$TEST_LIST_FILE"
 }
 
+strip_ansi_sequences() {
+    local esc
+    esc="$(printf '\033')"
+    sed "s/${esc}\[[0-9;]*m//g" "$1"
+}
+
 accumulate_phpunit_counts() {
     local output_file="$1"
     local summary_line=""
 
-    summary_line="$(grep -E 'OK \([0-9]+ tests?, [0-9]+ assertions?\)|Tests: [0-9]+, Assertions: [0-9]+' "$output_file" | tail -n 1 || true)"
+    # phpunit.xml enables colours, and PHPUnit colours its summary line one segment
+    # at a time whenever a run ends with anything other than a plain pass. That puts
+    # escape sequences between the count and the comma:
+    #   <esc>[30;42mTests: 60<esc>[0m<esc>[30;42m, Assertions: 256<esc>[0m
+    # so the patterns below never matched for any file that reported a skip, a
+    # warning or a deprecation, and those files silently contributed nothing to the
+    # totals. Colours are left enabled because the log is echoed on failure.
+    summary_line="$(strip_ansi_sequences "$output_file" | grep -E 'OK \([0-9]+ tests?, [0-9]+ assertions?\)|Tests: [0-9]+, Assertions: [0-9]+' | tail -n 1 || true)"
 
     if [[ "$summary_line" =~ OK\ \(([0-9]+)\ tests?,\ ([0-9]+)\ assertions? ]]; then
         TOTAL_TESTS=$((TOTAL_TESTS + BASH_REMATCH[1]))
@@ -145,20 +158,17 @@ run_test_file() {
     slug="$(printf "%s" "$relative" | tr "/:" "__")"
     local output_file="$WORK_DIR/$slug.log"
     local status_file="$WORK_DIR/$slug.status"
-    local class_name
-
-    class_name="$(sed -nE 's/^[[:space:]]*class[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)[[:space:]].*/\1/p' "$file" | head -n 1)"
 
     echo "START $relative"
 
+    # The file is named directly rather than filtered on the class name declared
+    # inside it. PHPUnit's --filter is an unanchored expression matched against the
+    # namespaced test name, so a class whose name contains another class's name ran
+    # both files' tests in one process: --filter CatalogUrlGenerationTest also
+    # selected AdminCatalogUrlGenerationTest. Those tests then executed twice and
+    # were counted twice, and a failure in one file was reported against the other.
     (
-        if [ -n "$class_name" ]; then
-            if "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --process-isolation --testsuite Unit "${PHPUNIT_ARGS[@]+"${PHPUNIT_ARGS[@]}"}" --filter "${class_name}" >"$output_file" 2>&1; then
-                echo 0 >"$status_file"
-            else
-                echo $? >"$status_file"
-            fi
-        elif "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --process-isolation "${PHPUNIT_ARGS[@]+"${PHPUNIT_ARGS[@]}"}" "$file" >"$output_file" 2>&1; then
+        if "$PHP_BIN" "$PHPUNIT_BIN" --configuration "$ROOT_DIR/phpunit.xml" --process-isolation "${PHPUNIT_ARGS[@]+"${PHPUNIT_ARGS[@]}"}" "$file" >"$output_file" 2>&1; then
             echo 0 >"$status_file"
         else
             echo $? >"$status_file"
