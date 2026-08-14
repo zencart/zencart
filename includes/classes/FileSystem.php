@@ -109,52 +109,6 @@ class FileSystem
     /**
      * @since ZC v1.5.7
      */
-    public function isAdminDir(string $filePath): bool
-    {
-        if (!defined('DIR_FS_ADMIN')) {
-            return false;
-        }
-        $test = str_replace(DIR_FS_ADMIN, '', $filePath);
-
-        return $test === $filePath;
-    }
-
-    /**
-     * @since ZC v1.5.7
-     */
-    public function isCatalogDir(string $filePath): bool
-    {
-        if ($this->isAdminDir($filePath)) {
-            return false;
-        }
-        if (!defined('DIR_FS_CATALOG')) {
-            return false;
-        }
-        $test = str_replace(DIR_FS_CATALOG, '', $filePath);
-        if ($test !== $filePath) {
-            return false;
-        }
-        return true;
-
-    }
-
-    /**
-     * @since ZC v1.5.7
-     */
-    public function getRelativeDir(string $filePath): string
-    {
-        if ($this->isAdminDir($filePath)) {
-            return str_replace(DIR_FS_ADMIN, '', $filePath);
-        }
-        if ($this->isCatalogDir($filePath)) {
-            return str_replace(DIR_FS_CATALOG, '', $filePath);
-        }
-        return $filePath;
-    }
-
-    /**
-     * @since ZC v1.5.7
-     */
     public function getDirectorySize(string $path, $decimals = 2, bool $addSuffix = true): string
     {
         $bytes = 0;

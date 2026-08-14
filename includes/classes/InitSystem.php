@@ -99,11 +99,19 @@ class InitSystem
             $filePath = $entry['classPath'];
         }
         if ($entry['loaderType'] === 'plugin') {
-            $filePath = $this->findPluginDirectory($entry['classPath'] ?? DIR_WS_CLASSES, $entry['pluginInfo']['unique_key']);
+            $classPath = $entry['classPath'] ?? DIR_WS_CLASSES;
+            $pluginPath = $this->findPluginDirectory($classPath, $entry['pluginInfo']['unique_key']);
+            // We check the joined fragment, to avoid misfires from concatenation.
+            if ($pluginPath === null || !$this->isPluginRelativePath($classPath . $entry['loadFile'])) {
+                $this->debugList[] = 'loading class - ' . $entry['loadFile'] . ' - REFUSED';
+                return;
+            }
+            $filePath = $pluginPath;
         }
         $this->debugList[] = 'processing class - ' . $filePath . $entry['loadFile'];
         $result = 'FAILED';
-        if (file_exists($filePath . $entry['loadFile'])) {
+        // is_file() rather than file_exists(), which also accepts a directory
+        if (is_file($filePath . $entry['loadFile'])) {
             $result = 'SUCCESS';
             $this->actionList[] = ['type' => 'include', 'filePath' => $filePath . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
         }
@@ -122,13 +130,18 @@ class InitSystem
         $this->debugList[] = 'processing class instantiate - class = ' . $className . ' object name = ' . $objectName;
         $classSession = (isset($entry['classSession']) && $entry['classSession'] === true);
         $checkInstantiated = (isset($entry['checkInstantiated']) && $entry['checkInstantiated'] === true);
+        /**
+         * loaderType travels with the action so that the autoloader loop can tell a
+         * broken plugin from a broken core install. Only the former is recoverable:
+         * continuing without a core class leaves the request half-initialised.
+         */
         if (!$classSession) {
             $this->debugList[] = 'instantiating normal class - ' . $className . ' as ' . $objectName;
-            $this->actionList[] = ['type' => 'class', 'object' => $objectName, 'class' => $className];
+            $this->actionList[] = ['type' => 'class', 'object' => $objectName, 'class' => $className, 'loaderType' => $entry['loaderType']];
             return;
         }
         $this->debugList[] = 'instantiating session bound class - ' . $className . ' as ' . $objectName;
-        $this->actionList[] = ['type' => 'sessionClass', 'object' => $objectName, 'class' => $className, 'checkInstantiated' => $checkInstantiated];
+        $this->actionList[] = ['type' => 'sessionClass', 'object' => $objectName, 'class' => $className, 'checkInstantiated' => $checkInstantiated, 'loaderType' => $entry['loaderType']];
         return;
     }
 
@@ -140,7 +153,7 @@ class InitSystem
         $objectName = $entry['objectName'];
         $methodName = $entry['methodName'];
         $this->debugList[] = 'processing object method - ' . $objectName . ' => ' . $methodName;
-        $this->actionList[] = ['type' => 'objectMethod', 'object' => $objectName, 'method' => $methodName];
+        $this->actionList[] = ['type' => 'objectMethod', 'object' => $objectName, 'method' => $methodName, 'loaderType' => $entry['loaderType']];
     }
 
     /**
@@ -184,16 +197,39 @@ class InitSystem
      */
     protected function processAutoTypeInit_script(array $entry): void
     {
-        $actualDir = DIR_WS_INCLUDES . 'init_includes/';
-        if ($entry['loaderType'] === 'plugin') {
-            $actualDir = $this->findPluginDirectory($actualDir, $entry['pluginInfo']['unique_key']);
+        $isPluginEntry = ($entry['loaderType'] === 'plugin');
+        $relativeDir = DIR_WS_INCLUDES . 'init_includes/';
+        $actualDir = $relativeDir;
+        if ($isPluginEntry) {
+            $pluginDir = $this->findPluginDirectory($relativeDir, $entry['pluginInfo']['unique_key']);
+            /**
+             * The joined fragment is checked, not the directory and loadFile
+             * separately, to avoid traversal on concatenation.
+             */
+            if ($pluginDir === null || !$this->isPluginRelativePath($relativeDir . $entry['loadFile'])) {
+                $this->debugList[] = 'loading init_script - ' . $entry['loadFile'] . ' - REFUSED';
+                return;
+            }
+            $actualDir = $pluginDir;
         }
-        if (file_exists($actualDir . 'overrides/' . $entry['loadFile'])) {
+        if (is_file($actualDir . 'overrides/' . $entry['loadFile'])) {
             $actualDir .= 'overrides/';
         }
-        $this->actionList[] = ['type' => 'require', 'filePath' => $actualDir . $entry['loadFile'], 'forceLoad' => $entry['forceLoad']];
-        $this->debugList[] = 'loading init_script - ' . $actualDir . $entry['loadFile'];
 
+        /**
+         * Missing core files fail fast here.
+         * But for plugins missing classes are only warned about here, to avoid crashing during bootstrapping.
+         *
+         * Uses is_file() because file_exists() accepts a directory which would fail on require.
+         */
+        $filePath = $actualDir . $entry['loadFile'];
+        if ($isPluginEntry && !is_file($filePath)) {
+            trigger_error('Autoloader: init_script "' . $filePath . '" was not found; skipping.', E_USER_WARNING);
+            $this->debugList[] = 'loading init_script - ' . $filePath . ' - FAILED';
+            return;
+        }
+        $this->actionList[] = ['type' => 'require', 'filePath' => $filePath, 'forceLoad' => $entry['forceLoad']];
+        $this->debugList[] = 'loading init_script - ' . $filePath . ' - SUCCESS';
     }
 
     /**
@@ -331,11 +367,59 @@ class InitSystem
     /**
      * @since ZC v1.5.7
      */
-    protected function findPluginDirectory(string $filePath, string $pluginName): string
+    /**
+     * The plugin directory $filePath names, or null if it does not name one.
+     *
+     * Null rather than a fallback directory: substituting the plugin's context root
+     * would leave the caller free to find some other file of the same name sitting
+     * there and load that instead, which is the silent-wrong-file behaviour this is
+     * meant to prevent. A refused entry loads nothing.
+     *
+     * @since ZC v1.5.7
+     */
+    protected function findPluginDirectory(string $filePath, string $pluginName): ?string
     {
-        $relDir = $this->fileSystem->getRelativeDir($filePath);
         $pluginDir = $this->pluginManager->getPluginVersionDirectory($pluginName, $this->installedPlugins);
-        $actualDir = $pluginDir . $this->context . '/' . $relDir;
-        return $actualDir;
+        if ($pluginDir === null) {
+            $this->debugList[] = 'rejected plugin path - no installed directory for plugin - ' . $pluginName;
+            return null;
+        }
+        if (!$this->isPluginRelativePath($filePath)) {
+            $this->debugList[] = 'rejected plugin path - not relative to the plugin - ' . $filePath;
+            return null;
+        }
+        return $pluginDir . $this->context . '/' . $filePath;
+    }
+
+    /**
+     * Whether $path may be appended to a plugin's own directory.
+     *
+     * An auto_loader addresses files inside its own plugin, in whichever context is
+     * loading it, so its classPath is a plain relative fragment.
+     * An absolute path cannot be honoured. The plugin's tree is the only thing it may name.
+     *
+     * Both path-separator conventions are rejected regardless of platform.
+     * A validator can afford to be conservative where a path comparison cannot:
+     * there is no legitimate auto_loader path that this turns away,
+     * and being wrong about which convention applies would be the only way to let one through.
+     *
+     * To reach files outside its own tree a plugin should use the PSR-4 namespaces
+     * registered for it at bootstrap: Zencart\Plugins\Admin\<Key> and
+     * Zencart\Plugins\Catalog\<Key> are both available from either context.
+     *
+     * @since ZC v3.0.0
+     */
+    protected function isPluginRelativePath(string $path): bool
+    {
+        if ($path === '') {
+            return true;
+        }
+        if (str_starts_with($path, '/') || str_starts_with($path, '\\')) {
+            return false;
+        }
+        if (preg_match('#^[A-Za-z]:[/\\\\]#', $path) === 1) {
+            return false; // Windows drive-rooted, e.g. C:\store or C:/store
+        }
+        return preg_match('#(^|[/\\\\])\.\.([/\\\\]|$)#', $path) !== 1;
     }
 }
