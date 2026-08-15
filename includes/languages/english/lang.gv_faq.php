@@ -12,20 +12,20 @@ $define = [
     'SUB_HEADING_TITLE_1' => 'Purchasing ' . TEXT_GV_NAMES,
     'SUB_HEADING_TEXT_1' => TEXT_GV_NAMES . ' are purchased just like any other item in our store. You can
   pay for them using the store\'s standard payment method(s).
-  Once purchased the value of the ' . TEXT_GV_NAME . ' will be added to your own personal
+  Once purchased, the value of the ' . TEXT_GV_NAME . ' will be added to your own personal
    ' . TEXT_GV_NAME . ' Balance. If you have funds in your ' . TEXT_GV_NAME . ' Balance, you will
-  notice that the amount now shows in the My Account page, and also provides a
-  link to a page where you can send the ' . TEXT_GV_NAME . ' to someone via email.',
+  notice that the amount shows in your My Account page, along with a
+  link to a page where you can send the ' . TEXT_GV_NAME . ' to someone via email.  You will also see your ' . TEXT_GV_NAME . ' balance as a payment option at checkout.',
     'SUB_HEADING_TITLE_2' => 'How to Send ' . TEXT_GV_NAMES,
-    'SUB_HEADING_TEXT_2' => 'You may send a ' . TEXT_GV_NAME . ' from the My Account page.
-  When you send a ' . TEXT_GV_NAME . ' you need to specify the following:
-  The name of the person to whom you are sending the ' . TEXT_GV_NAME . ';
-  The email address of the person to whom you are sending the ' . TEXT_GV_NAME . ';
-  The amount you want to send (Note you don\'t have to send the full amount that
-  is in your ' . TEXT_GV_NAME . ' Balance.,
-  An optional short message which will appear in the email;
-  Please ensure that you have entered all of the information correctly, although
-  you will be given the opportunity to change this as much as you want before
+    'SUB_HEADING_TEXT_2' => 'You may send a ' . TEXT_GV_NAME . ' if you have a positive balance. <br> 
+  When you send a ' . TEXT_GV_NAME . ' you need to specify the following:<br>
+  <ul>
+  <li>The name of the person to whom you are sending the ' . TEXT_GV_NAME . '</li>
+  <li>The email address of the person to whom you are sending the ' . TEXT_GV_NAME . '</li>
+  <li>The amount you want to send</li>
+  <li>An optional short message which will appear in the email</li>
+  </ul>
+  You will be given the opportunity to change this as much as you want before
   the email is actually sent.',
     'SUB_HEADING_TITLE_3' => 'Buying with ' . TEXT_GV_NAMES,
     'SUB_HEADING_TEXT_3' => 'If you have funds in your ' . TEXT_GV_NAME . ' Balance, you can use those funds to
