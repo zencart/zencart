@@ -239,7 +239,20 @@ class Search extends \base
         // Notifier Point
         $this->notify('NOTIFY_SEARCH_COLUMNLIST_STRING', $select_column_list, $select_column_list);
 
-        $select_str = "SELECT DISTINCT " . $select_column_list .
+        // -----
+        // The listing's sort-order (see includes/modules/listing_display_order.php) can reference
+        // product columns that aren't part of the display column-list, e.g. products_date_added.
+        // Since this query uses SELECT DISTINCT, MySQL requires every ORDER BY column to also appear
+        // in the select-list, so add any that are missing to avoid a 3065 error.
+        //
+        $sort_column_list = '';
+        foreach (['p.products_date_added', 'p.products_model', 'p.products_weight'] as $sort_column) {
+            if (!str_contains($select_column_list, $sort_column)) {
+                $sort_column_list .= $sort_column . ', ';
+            }
+        }
+
+        $select_str = "SELECT DISTINCT " . $select_column_list . $sort_column_list .
             " p.products_sort_order, m.manufacturers_id, p.products_id, pd.products_name,
             p.products_price, p.products_tax_class_id, p.products_price_sorter,
             p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
