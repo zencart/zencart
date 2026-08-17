@@ -240,15 +240,19 @@ class Search extends \base
         $this->notify('NOTIFY_SEARCH_COLUMNLIST_STRING', $select_column_list, $select_column_list);
 
         // -----
-        // The listing's sort-order (see includes/modules/listing_display_order.php) can reference
-        // product columns that aren't part of the display column-list, e.g. products_date_added.
+        // The customer-chosen sort-order (see includes/modules/listing_display_order.php) can
+        // reference product columns that aren't part of the display column-list, e.g. products_date_added.
         // Since this query uses SELECT DISTINCT, MySQL requires every ORDER BY column to also appear
-        // in the select-list, so add any that are missing to avoid a 3065 error.
+        // in the select-list, so add any that the chosen sort-order actually uses and the
+        // column-list doesn't already supply, to avoid a 3065 error.
         //
         $sort_column_list = '';
-        foreach (['p.products_date_added', 'p.products_model', 'p.products_weight'] as $sort_column) {
-            if (!str_contains($select_column_list, $sort_column)) {
-                $sort_column_list .= $sort_column . ', ';
+        if ($this->searchOptions->disp_order_default_set === false && isset($this->searchOptions->disp_order)) {
+            global $order_by;   //- Set in modules/listing_display_order.php
+            foreach (['p.products_date_added', 'p.products_model'] as $sort_column) {
+                if (str_contains($order_by ?? '', $sort_column) && !str_contains($select_column_list, $sort_column)) {
+                    $sort_column_list .= $sort_column . ', ';
+                }
             }
         }
 
