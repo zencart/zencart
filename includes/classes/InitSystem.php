@@ -157,15 +157,21 @@ class InitSystem
     }
 
     /**
+     * Loads a file named in full by the auto_loader entry.
+     *
+     * Unlike the class and init_script types, loadFile requires a path that is usable
+     * as-is: core entries pass DIR_FS_CATALOG . DIR_WS_INCLUDES . '...' from the admin
+     * and a working-directory-relative path from the storefront. A plugin wanting a
+     * file from its own tree should use the class or init_script types, which do
+     * resolve, or autoload it through the Zencart\Plugins namespaces registered for
+     * every installed plugin at bootstrap, or psr4Autoload.
+     *
      * @since ZC v1.5.7
      */
     protected function processAutoTypeRequire(array $entry): void
     {
         $filePath = $entry['loadFile'];
         $this->debugList[] = 'processing require - ' . $entry['loadFile'];
-        if ($entry['loaderType'] === 'plugin') {
-
-        }
         $result = 'FAILED';
         if (file_exists($filePath)) {
             $result = 'SUCCESS';
@@ -175,15 +181,17 @@ class InitSystem
     }
 
     /**
+     * Loads a file named in full by the auto_loader entry.
+     *
+     * The same contract as processAutoTypeRequire(): loadFile is used as written and
+     * is not resolved against the plugin's directory.
+     *
      * @since ZC v1.5.7
      */
     protected function processAutoTypeInclude(array $entry): void
     {
         $filePath = $entry['loadFile'];
         $this->debugList[] = 'processing include - ' . $entry['loadFile'];
-        if ($entry['loaderType'] === 'plugin') {
-
-        }
         $result = 'FAILED';
         if (file_exists($filePath)) {
             $result = 'SUCCESS';
