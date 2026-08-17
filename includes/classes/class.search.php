@@ -239,7 +239,24 @@ class Search extends \base
         // Notifier Point
         $this->notify('NOTIFY_SEARCH_COLUMNLIST_STRING', $select_column_list, $select_column_list);
 
-        $select_str = "SELECT DISTINCT " . $select_column_list .
+        // -----
+        // The customer-chosen sort-order (see includes/modules/listing_display_order.php) can
+        // reference product columns that aren't part of the display column-list, e.g. products_date_added.
+        // Since this query uses SELECT DISTINCT, MySQL requires every ORDER BY column to also appear
+        // in the select-list, so add any that the chosen sort-order actually uses and the
+        // column-list doesn't already supply, to avoid a 3065 error.
+        //
+        $sort_column_list = '';
+        if ($this->searchOptions->disp_order_default_set === false && isset($this->searchOptions->disp_order)) {
+            global $order_by;   //- Set in modules/listing_display_order.php
+            foreach (['p.products_date_added', 'p.products_model'] as $sort_column) {
+                if (str_contains($order_by ?? '', $sort_column) && !str_contains($select_column_list, $sort_column)) {
+                    $sort_column_list .= $sort_column . ', ';
+                }
+            }
+        }
+
+        $select_str = "SELECT DISTINCT " . $select_column_list . $sort_column_list .
             " p.products_sort_order, m.manufacturers_id, p.products_id, pd.products_name,
             p.products_price, p.products_tax_class_id, p.products_price_sorter,
             p.products_qty_box_status, p.master_categories_id, p.product_is_call ";
@@ -249,7 +266,12 @@ class Search extends \base
             $select_str .= ", tr2.tax_rate ";
         }
 
+        // -----
         // Notifier Point
+        //
+        // This is where an observer adds any field that it needs to sort on; see the
+        // note at NOTIFY_SEARCH_REAL_ORDERBY_STRING, below.
+        //
         $this->notify('NOTIFY_SEARCH_SELECT_STRING', $select_str, $select_str);
 
         $from_str = "FROM (" . TABLE_PRODUCTS . " p
@@ -474,6 +496,16 @@ class Search extends \base
                 }
             }
         }
+
+        // -----
+        // Notifier Point
+        //
+        // Since the query uses SELECT DISTINCT, MySQL rejects (error 3065) any 'ORDER BY' field
+        // that isn't also in the 'SELECT' list. An observer that adds a field to the ordering here
+        // is responsible for adding that same field to the select-list, via the
+        // NOTIFY_SEARCH_SELECT_STRING notifier above. That responsibility applies equally to any
+        // change made to $order_str via NOTIFY_SEARCH_LISTING_QUERY_STRING, below.
+        //
         $this->notify('NOTIFY_SEARCH_REAL_ORDERBY_STRING', $order_str, $order_str);
 
         $listing_sql = $select_str . $from_str;
