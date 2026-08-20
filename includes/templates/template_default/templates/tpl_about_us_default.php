@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Page Template
  *
@@ -11,20 +13,14 @@
  */
 ?>
 <div class="centerColumn" id="aboutUs">
-    <h1 id="aboutUsHeading" class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
-
+    <h1 id="aboutUsHeading" class="pageHeading"><?= HEADING_TITLE ?></h1>
     <div id="aboutUsContent" class="content">
-
-
         <?php
         /**
          * require the html_define for the about_us page
          */
-        if (!empty($define_page)) require($define_page);
+        require $define_page;
         ?>
-
-
     </div>
-
-    <div class="buttonRow back"><?php echo zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>'; ?></div>
+    <div class="buttonRow back"><?= zen_back_link() . zen_image_button(BUTTON_IMAGE_BACK, BUTTON_BACK_ALT) . '</a>' ?></div>
 </div>
