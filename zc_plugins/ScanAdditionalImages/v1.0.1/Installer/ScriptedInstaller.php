@@ -4,6 +4,8 @@ use Zencart\PluginSupport\ScriptedInstaller as ScriptedInstallBase;
 
 class ScriptedInstaller extends ScriptedInstallBase
 {
+    public const NEW_INDEX_NAME = 'idx_pid_img';
+
     protected function executeInstall()
     {
         zen_deregister_admin_pages(['toolsScanForImages']);
@@ -43,16 +45,35 @@ class ScriptedInstaller extends ScriptedInstallBase
 //        ) ENGINE=InnoDB";
 //        $this->executeInstallerSql($sql);
 
+        // Remove main product images from products_additional_images table if it exists
+        $this->cleanUpMainProductsImages();
+
+        // Update index if table exists
+        $this->updateIndexes();
+
         // create products_additional_images table
         $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (
-            id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            products_id INT(11) NOT NULL,
-            additional_image VARCHAR(255) NOT NULL,
-            sort_order INT(11) DEFAULT 0,
+            id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            products_id INT NOT NULL,
+            additional_image VARCHAR(191) NOT NULL,
+            sort_order INT DEFAULT 0,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_products_id (products_id)
+            UNIQUE KEY " . self::NEW_INDEX_NAME . " (products_id, additional_image)
         ) ENGINE=MyISAM";
         $this->executeInstallerSql($sql);
+
+        parent::executeInstall();
+    }
+
+    protected function executeUpgrade($oldVersion)
+    {
+        // Remove main product images from products_additional_images table if it exists
+        $this->cleanUpMainProductsImages();
+
+        // Update index if table exists
+        $this->updateIndexes();
+
+        parent::executeUpgrade($oldVersion);
     }
 
     protected function executeUninstall()
@@ -61,5 +82,57 @@ class ScriptedInstaller extends ScriptedInstallBase
 
         // also clean up using old name for the tool
         zen_deregister_admin_pages(['toolsAidba']);
+
+        parent::executeUninstall();
+    }
+
+    protected function cleanUpMainProductsImages()
+    {
+        global $sniffer;
+        
+        if ($sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
+            $sql = "DELETE t1
+                FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " t1
+                INNER JOIN " . TABLE_PRODUCTS . " t2 ON t1.additional_image = t2.products_image";
+            $this->executeInstallerSql($sql);
+        }
+    }
+
+    protected function updateIndexes()
+    {
+        global $sniffer;
+        
+        if ($sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
+            $oldIndexQuery = '';
+            $addIndexQuery = ", ADD UNIQUE INDEX " . self::NEW_INDEX_NAME . " (products_id, additional_image)";
+            
+            $tableIndexes = $this->executeInstallerSelectSql("SHOW INDEX FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES);
+            foreach ($tableIndexes as $idx) {
+                if ($oldIndexQuery === '' && $idx['Key_name'] === 'idx_products_id') {
+                    $oldIndexQuery = ', DROP INDEX idx_products_id';
+                    continue;
+                }
+                if ($addIndexQuery !== '' && ($idx['Key_name'] === self::NEW_INDEX_NAME || $idx['Key_name'] === self::NEW_INDEX_NAME . '_zen')) {
+                    $addIndexQuery = '';
+                }
+            }
+
+            $sql = "ALTER TABLE  " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
+                MODIFY COLUMN additional_image VARCHAR(191)
+                " . $oldIndexQuery . $addIndexQuery;
+            $this->executeInstallerSql($sql);
+        }
+    }
+
+    protected function executeInstallerSelectSql(string $sql)
+    {
+        $this->dbConn->dieOnErrors = false;
+        $result = $this->dbConn->Execute($sql);
+        if ($this->dbConn->error_number !== 0) {
+            $this->errorContainer->addError(0, $this->dbConn->error_text, true, PLUGIN_INSTALL_SQL_FAILURE);
+            return false;
+        }
+        $this->dbConn->dieOnErrors = true;
+        return $result;
     }
 }
