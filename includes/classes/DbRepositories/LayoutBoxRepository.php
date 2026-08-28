@@ -85,6 +85,17 @@ class LayoutBoxRepository
     }
 
     /**
+     * @since ZC v3.0.0
+     */
+    public function deleteByTemplate(string $template): void
+    {
+        $this->db->Execute(
+            "DELETE FROM " . TABLE_LAYOUT_BOXES .
+            " WHERE layout_template = '" . $this->db->prepare_input($template) . "'"
+        );
+    }
+
+    /**
      * @since ZC v2.2.0
      */
     public function getByTemplate(string $template): array
