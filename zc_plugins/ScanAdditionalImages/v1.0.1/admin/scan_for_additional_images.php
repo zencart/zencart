@@ -260,7 +260,7 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
         let cancelRequested = false;
 
         $(function () {
-            $('#totalVal').text(totalProducts | '-');
+            $('#totalVal').text(totalProducts || '-');
 
             $('#btnStart').on('click', onStart);
             $('#btnCancel').on('click', function () {
@@ -332,7 +332,7 @@ $totalProducts = ($products_query->EOF) ? 0 : (int)$products_query->fields['tota
 
                     if (terminate === true) {
                         if (errorMessage) {
-                            appendLog('<?= TEXT_ERROR ?>' + escapeHtml(String(errorMessage)));
+                            appendLog('<?= TEXT_ERROR ?>' + String(errorMessage));
                         } else {
                             appendLog('<?= TEXT_SERVER_ENDED ?>');
                         }
