@@ -93,7 +93,8 @@ class ScriptedInstaller extends ScriptedInstallBase
         if ($sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
             $sql = "DELETE t1
                 FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " t1
-                INNER JOIN " . TABLE_PRODUCTS . " t2 ON t1.additional_image = t2.products_image";
+                INNER JOIN " . TABLE_PRODUCTS . " t2 ON t1.additional_image = t2.products_image
+                WHERE t1.products_id = t2.products_id";
             $this->executeInstallerSql($sql);
         }
     }
