@@ -184,7 +184,7 @@ class zcAjaxScanAdditionalImages
                         "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
                         VALUES ($products_id, '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
                     );
-                    $inserted += mysqli_affected_rows($result->link);
+                    $inserted += $db->affectedRows();
                 }
             }
 
@@ -204,7 +204,8 @@ class zcAjaxScanAdditionalImages
         $sql .= " FROM " . TABLE_PRODUCTS . "
                 WHERE products_image IS NOT NULL
                 AND products_image != ''
-                AND products_image != '" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) . "'";
+                AND products_image != '" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'
+                ORDER BY products_id";
 
         if ($batch_size < 1) {
             return $sql;
@@ -213,7 +214,7 @@ class zcAjaxScanAdditionalImages
         $sql .= " LIMIT " . $batch_size;
 
         // add starting offset (start_at)
-        if ($start_at > 1) {
+        if ($start_at > 0) {
             $sql .= " OFFSET " . $start_at;
         }
 
