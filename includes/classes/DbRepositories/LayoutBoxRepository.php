@@ -13,6 +13,10 @@ use queryFactory;
 /**
  * @since ZC v2.2.0
  */
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
 class LayoutBoxRepository
 {
     public function __construct(private queryFactory $db) {}
@@ -55,6 +59,10 @@ class LayoutBoxRepository
      */
     public function insert(array $insertValues): int
     {
+        if (IS_ADMIN_FLAG !== true) {
+            return -1;
+        }
+
         $this->db->perform(TABLE_LAYOUT_BOXES, $this->buildSqlDataArray($insertValues));
         return (int)$this->db->insert_ID();
     }
@@ -64,12 +72,14 @@ class LayoutBoxRepository
      */
     public function updateByLayoutId(int $layoutId, array $values): void
     {
-        $this->db->perform(
-            TABLE_LAYOUT_BOXES,
-            $this->buildSqlDataArray($values),
-            'UPDATE',
-            "layout_id = " . (int)$layoutId
-        );
+        if (IS_ADMIN_FLAG === true) {
+            $this->db->perform(
+                TABLE_LAYOUT_BOXES,
+                $this->buildSqlDataArray($values),
+                'UPDATE',
+                "layout_id = " . (int)$layoutId
+            );
+        }
     }
 
     /**
@@ -77,11 +87,13 @@ class LayoutBoxRepository
      */
     public function deleteByLayoutIdAndName(int $layoutId, string $boxName): void
     {
-        $this->db->Execute(
-            "DELETE FROM " . TABLE_LAYOUT_BOXES .
-            " WHERE layout_id = " . (int)$layoutId .
-            " AND layout_box_name = '" . $this->db->prepare_input($boxName) . "'"
-        );
+        if (IS_ADMIN_FLAG === true) {
+            $this->db->Execute(
+                "DELETE FROM " . TABLE_LAYOUT_BOXES .
+                " WHERE layout_id = " . (int)$layoutId .
+                " AND layout_box_name = '" . $this->db->prepare_input($boxName) . "'"
+            );
+        }
     }
 
     /**
@@ -89,10 +101,12 @@ class LayoutBoxRepository
      */
     public function deleteByTemplate(string $template): void
     {
-        $this->db->Execute(
-            "DELETE FROM " . TABLE_LAYOUT_BOXES .
-            " WHERE layout_template = '" . $this->db->prepare_input($template) . "'"
-        );
+        if (IS_ADMIN_FLAG === true) {
+            $this->db->Execute(
+                "DELETE FROM " . TABLE_LAYOUT_BOXES .
+                " WHERE layout_template = '" . $this->db->prepare_input($template) . "'"
+            );
+        }
     }
 
     /**
@@ -111,13 +125,15 @@ class LayoutBoxRepository
      */
     public function updateByTemplateAndBoxName(string $template, string $boxName, array $values): void
     {
-        $this->db->perform(
-            TABLE_LAYOUT_BOXES,
-            $this->buildSqlDataArray($values),
-            'UPDATE',
-            "layout_template = '" . $this->db->prepare_input($template) . "'" .
-            " AND layout_box_name = '" . $this->db->prepare_input($boxName) . "'"
-        );
+        if (IS_ADMIN_FLAG === true) {
+            $this->db->perform(
+                TABLE_LAYOUT_BOXES,
+                $this->buildSqlDataArray($values),
+                'UPDATE',
+                "layout_template = '" . $this->db->prepare_input($template) . "'" .
+                " AND layout_box_name = '" . $this->db->prepare_input($boxName) . "'"
+            );
+        }
     }
 
     /**
@@ -153,11 +169,13 @@ class LayoutBoxRepository
      */
     public function updatePluginDetailsByPrefix(string $pluginKey, string $version): void
     {
-        $this->db->Execute(
-            "UPDATE " . TABLE_LAYOUT_BOXES .
-            " SET plugin_details = '" . $this->db->prepare_input($pluginKey . '/' . $version) . "'" .
-            " WHERE plugin_details LIKE '" . $this->db->prepare_input($pluginKey . '/%') . "'"
-        );
+        if (IS_ADMIN_FLAG === true) {
+            $this->db->Execute(
+                "UPDATE " . TABLE_LAYOUT_BOXES .
+                " SET plugin_details = '" . $this->db->prepare_input($pluginKey . '/' . $version) . "'" .
+                " WHERE plugin_details LIKE '" . $this->db->prepare_input($pluginKey . '/%') . "'"
+            );
+        }
     }
 
     /**
@@ -165,10 +183,12 @@ class LayoutBoxRepository
      */
     public function deleteByPluginDetailsPrefix(string $pluginKey): void
     {
-        $this->db->Execute(
-            "DELETE FROM " . TABLE_LAYOUT_BOXES .
-            " WHERE plugin_details LIKE '" . $this->db->prepare_input($pluginKey . '/%') . "'"
-        );
+        if (IS_ADMIN_FLAG === true) {
+            $this->db->Execute(
+                "DELETE FROM " . TABLE_LAYOUT_BOXES .
+                " WHERE plugin_details LIKE '" . $this->db->prepare_input($pluginKey . '/%') . "'"
+            );
+        }
     }
 
     /**
