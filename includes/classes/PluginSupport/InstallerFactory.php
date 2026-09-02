@@ -38,7 +38,7 @@ class InstallerFactory
             throw new PluginInstallerException('NO PLUGIN VERSION DIRECTORY');
         }
 
-        if (new PluginManifest()->exists($plugin, $version) === null) {
+        if ((new PluginManifest())->exists($plugin, $version) === null) {
             throw new PluginInstallerException('NO VERSION MANIFEST');
         }
 
