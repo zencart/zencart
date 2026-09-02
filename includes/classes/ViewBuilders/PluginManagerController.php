@@ -186,7 +186,7 @@ class PluginManagerController extends BaseController
         foreach ($this->templateSelect->getAllActiveTemplates() as $selectedTemplate) {
             if (($selectedTemplate['template_dir'] ?? null) === $template) {
                 $this->setBoxContent(
-                    zen_black_line() .
+                    \zen_black_line() .
                     sprintf(WARNING_TEMPLATE_IS_ACTIVE, zen_href_link(FILENAME_TEMPLATE_SELECT), BOX_TOOLS_TEMPLATE_SELECT)
                 );
                 return true;
@@ -203,7 +203,7 @@ class PluginManagerController extends BaseController
         $this->templateSelect ??= new \Zencart\Templates\TemplateSelect();
         if ($this->templateSelect->isActiveParentTemplate($template) === true) {
             $this->setBoxContent(
-                zen_black_line() .
+                \zen_black_line() .
                 sprintf(WARNING_TEMPLATE_IS_ACTIVE_PARENT, zen_href_link(FILENAME_TEMPLATE_SELECT), BOX_TOOLS_TEMPLATE_SELECT)
             );
             return true;
