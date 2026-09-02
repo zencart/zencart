@@ -1818,7 +1818,6 @@ class paypalr extends \base
 
                     case '0500':    //- Card refused
                     case '1330':    //- Card not valid
-                    case '1380':    //- Invalid expiration
                     case '5100':    //- Generic decline
                     case '5140':    //- Card closed
                     case '5180':    //- Luhn check failed; don't use card
