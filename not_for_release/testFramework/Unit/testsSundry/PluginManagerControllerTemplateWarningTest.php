@@ -31,6 +31,10 @@ namespace {
             ],
         ];
     }
+    function zen_get_template_inheritance_chain(string $templateKey, bool $includeTemplateDefault = true): array
+    {
+        return [];
+    }
 }
 
 namespace Tests\Unit\testsSundry {
