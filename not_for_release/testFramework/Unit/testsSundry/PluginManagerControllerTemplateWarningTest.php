@@ -17,6 +17,10 @@ namespace Zencart\ViewBuilders {
 }
 
 namespace {
+    function zen_black_line(): string
+    {
+        return '';
+    }
     function zen_get_catalog_template_directories(): array
     {
         return [
