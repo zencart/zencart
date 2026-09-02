@@ -13,6 +13,7 @@ use Zencart\DbRepositories\PluginControlRepository;
 use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\PageLoader\PageLoader;
 use Zencart\PluginManager\PluginManager;
+use Zencart\PluginSupport\PluginManifest;
 
 /**
  * @since ZC v2.1.0
@@ -59,7 +60,7 @@ trait InteractsWithPlugins
         $this->zcPluginContext = $matches[2]; // 'admin' or 'catalog' or 'Installer'
 
         $this->zcPluginPath = str_replace('//', '/', DIR_FS_CATALOG . '/zc_plugins/' . $this->zcPluginDirName . '/' . $this->zcPluginVersionDir . '/');
-        $this->isAZcPlugin = \file_exists($this->zcPluginPath . 'manifest.php');
+        $this->isAZcPlugin = (new PluginManifest()->exists($this->zcPluginDirName, $this->zcPluginVersionDir) !== null);
 
         global $db;
         $plugin_manager = new PluginManager(new PluginControlRepository($db), new PluginControlVersionRepository($db));

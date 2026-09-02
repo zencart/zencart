@@ -12,8 +12,10 @@ namespace Zencart\ViewBuilders;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
+use Zencart\PluginSupport\PluginManifest;
 use Zencart\PluginSupport\PluginStatus;
 use Zencart\ResourceLoaders;
+use Zencart\Templates\TemplateSelect;
 
 /**
  * @since ZC v1.5.8
@@ -22,7 +24,8 @@ class PluginManagerController extends BaseController
 {
     protected PluginManager $pluginManager;
     protected InstallerFactory $installerFactory;
-    protected array $manifests;
+    protected PluginManifest $pluginManifest;
+    protected TemplateSelect $templateSelect;
 
     /**
      * @since ZC v1.5.8
@@ -31,6 +34,8 @@ class PluginManagerController extends BaseController
     {
         $this->pluginManager = $pluginManager;
         $this->installerFactory = $installerFactory;
+
+        $this->pluginManifest = new PluginManifest();
     }
 
     /**
@@ -38,16 +43,7 @@ class PluginManagerController extends BaseController
      */
     protected function getManifest(string $unique_key, string $version): ?array
     {
-        if (isset($this->manifests[$unique_key][$version])) {
-            return $this->manifests[$unique_key][$version];
-        }
-        $manifest_file = DIR_FS_CATALOG . "zc_plugins/$unique_key/$version/manifest.php";
-        if (!file_exists($manifest_file)) {
-            return null;
-        }
-        $manifest = require $manifest_file;
-        $this->manifests[$unique_key][$version] = $manifest;
-        return $manifest;
+        return $this->pluginManifest->get($unique_key, $version);
     }
 
     /**
@@ -55,8 +51,7 @@ class PluginManagerController extends BaseController
      */
     protected function removesUnencapsulatedVersion(string $unique_key, string $version): bool
     {
-        $manifest = $this->getManifest($unique_key, $version);
-        return !empty($manifest['removesUnencapsulatedVersion']);
+        return $this->pluginManifest->removesUnencapsulatedVersion($unique_key, $version);
     }
 
     /**
@@ -64,8 +59,7 @@ class PluginManagerController extends BaseController
      */
     protected function isSelectableTemplate(string $unique_key, string $version): bool
     {
-        $manifest = $this->getManifest($unique_key, $version);
-        return !empty($manifest['template']);
+        return $this->pluginManifest->isSelectableTemplate($unique_key, $version);
     }
 
     /**
@@ -73,8 +67,7 @@ class PluginManagerController extends BaseController
      */
     protected function getSelectableTemplateKey(string $unique_key, string $version): ?string
     {
-        $manifest = $this->getManifest($unique_key, $version);
-        return $manifest['template']['key'] ?? null;
+        return $this->pluginManifest->getSelectableTemplateKey($unique_key, $version);
     }
 
     /**
@@ -131,11 +124,11 @@ class PluginManagerController extends BaseController
         }
 
         if ($status === PluginStatus::ENABLED) {
-            // -----
-            // Template packages have a 'template' array within their manifest and
-            // are enabled/disabled via the "Template Selection" tool, so the 'Disable'
-            // action isn't displayed by the "Plugin Manager".
-            //
+            /**
+             * Template packages have a 'template' array within their manifest and
+             * are enabled/disabled via the "Template Selection" tool, so the 'Disable'
+             * action isn't displayed by the "Plugin Manager".
+             */
             if (!$this->isSelectableTemplate($unique_key, $version)) {
                 $this->setBoxContent(
                     '<a href="' . zen_href_link(
@@ -157,20 +150,11 @@ class PluginManagerController extends BaseController
             if ($this->isSelectableTemplate($unique_key, $version)) {
                 $plugin_template_key = $this->getSelectableTemplateKey($unique_key, $version);
                 if ($plugin_template_key !== null) {
-                    $templateSelect = new \Zencart\Templates\TemplateSelect();
-                    $isAssignedTemplate = false;
-                    foreach ($templateSelect->getAllActiveTemplates() as $selectedTemplate) {
-                        if (($selectedTemplate['template_dir'] ?? null) === $plugin_template_key) {
-                            $isAssignedTemplate = true;
-                            break;
-                        }
-                    }
-
-                    if ($isAssignedTemplate) {
+                    if ($this->setActiveTemplateWarning($plugin_template_key) === true) {
                         $btn_type = 'warning';
-                        $this->setBoxContent(
-                            sprintf(WARNING_TEMPLATE_IS_ACTIVE, zen_href_link(FILENAME_TEMPLATE_SELECT), BOX_TOOLS_TEMPLATE_SELECT)
-                        );
+                    }
+                    if ($this->setParentTemplateWarning($plugin_template_key) === true) {
+                        $btn_type = 'warning';
                     }
                 }
             }
@@ -191,6 +175,40 @@ class PluginManagerController extends BaseController
                 ) . '" class="btn btn-primary" role="button">' . TEXT_CLEANUP . '</a>'
             );
         }
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function setActiveTemplateWarning(string $template): bool
+    {
+        $this->templateSelect ??= new \Zencart\Templates\TemplateSelect();
+        foreach ($this->templateSelect->getAllActiveTemplates() as $selectedTemplate) {
+            if (($selectedTemplate['template_dir'] ?? null) === $template) {
+                $this->setBoxContent(
+                    zen_black_line() .
+                    sprintf(WARNING_TEMPLATE_IS_ACTIVE, zen_href_link(FILENAME_TEMPLATE_SELECT), BOX_TOOLS_TEMPLATE_SELECT)
+                );
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    protected function setParentTemplateWarning(string $template): bool
+    {
+        $this->templateSelect ??= new \Zencart\Templates\TemplateSelect();
+        if ($this->templateSelect->isActiveParentTemplate($template) === true) {
+            $this->setBoxContent(
+                zen_black_line() .
+                sprintf(WARNING_TEMPLATE_IS_ACTIVE_PARENT, zen_href_link(FILENAME_TEMPLATE_SELECT), BOX_TOOLS_TEMPLATE_SELECT)
+            );
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -303,6 +321,14 @@ class PluginManagerController extends BaseController
         $additional_content = $installer->processPreUninstall($unique_key, $version);
         foreach ($additional_content as $content) {
             $this->setBoxContent($content);
+        }
+
+        if ($this->isSelectableTemplate($unique_key, $version)) {
+            $plugin_template_key = $this->getSelectableTemplateKey($unique_key, $version);
+            if ($plugin_template_key !== null) {
+                $this->setActiveTemplateWarning($plugin_template_key);
+                $this->setParentTemplateWarning($plugin_template_key);
+            }
         }
 
         $this->setBoxContent(

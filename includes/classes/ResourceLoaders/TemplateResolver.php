@@ -11,6 +11,7 @@ namespace Zencart\ResourceLoaders;
 use Zencart\DbRepositories\PluginControlRepository;
 use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\PluginManager\PluginManager;
+use Zencart\PluginSupport\PluginManifest;
 use Zencart\Templates\TemplateDto;
 
 /**
@@ -274,16 +275,14 @@ class TemplateResolver
             return $templates;
         }
 
+        $pluginManifest = new PluginManifest();
         $installedPlugins = $this->getInstalledPlugins();
         foreach ($installedPlugins as $unique_key => $plugin_info) {
             $version = $plugin_info['version'];
             $versionPath = $this->pluginsRoot . '/' . $unique_key . '/' . $version;
-            $manifestFile = $versionPath . '/manifest.php';
-            if (!is_file($manifestFile)) {
-                continue;
-            }
-            $manifest = require $manifestFile;
-            if (!self::isSelectableTemplateManifest($manifest)) {
+
+            $manifest = $pluginManifest->get($unique_key, $version);
+            if ($manifest === null || !$pluginManifest->isSelectableTemplate($unique_key, $version)) {
                 continue;
             }
 
@@ -311,18 +310,6 @@ class TemplateResolver
         }
 
         return [];
-    }
-
-    /**
-     * @since ZC v3.0.0
-     */
-    private static function isSelectableTemplateManifest(mixed $manifest): bool
-    {
-        if (!is_array($manifest) || empty($manifest['template']) || !is_array($manifest['template'])) {
-            return false;
-        }
-
-        return !empty($manifest['template']['key']);
     }
 
     /**
