@@ -282,7 +282,7 @@ class TemplateSelect
          * includes the requested template as its first element. That's discarded prior to the assignment.
          */
         if (!isset(self::$parentTemplates[$template_dir])) {
-            $inheritance_chain = zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
+            $inheritance_chain = \zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
             array_shift($inheritance_chain);
             self::$parentTemplates[$template_dir] = $inheritance_chain;
         }
@@ -316,7 +316,7 @@ class TemplateSelect
          * includes the requested template as its first element. That's discarded prior to the assignment.
          */
         if (!isset(self::$parentTemplates[$template_dir])) {
-            $inheritance_chain = zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
+            $inheritance_chain = \zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
             array_shift($inheritance_chain);
             self::$parentTemplates[$template_dir] = $inheritance_chain;
         }
