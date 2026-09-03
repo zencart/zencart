@@ -171,18 +171,11 @@ class zcAjaxScanAdditionalImages
 
             // Insert matches into products_additional_images table
             foreach ($matches as $sort_order => $additional_image) {
-                // Check if already exists
-                $exists_query = $db->Execute(
-                    "SELECT IF(
-                        EXISTS(SELECT 1 FROM " . TABLE_PRODUCTS . " WHERE products_id = $products_id AND products_image = '" . zen_db_input($subdir . $additional_image) . "') OR
-                        EXISTS(SELECT 1 FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = $products_id AND additional_image = '" . zen_db_input($subdir . $additional_image) . "'),
-                        1, 0
-                    ) AS id_exists"
-                    );
-                if ((int)$exists_query->fields['id_exists'] === 0) {
-                    $result = $db->Execute(
+                $full_image = $subdir . $additional_image;
+                if ($products_image !== $full_image) {
+                    $db->Execute(
                         "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
-                        VALUES ($products_id, '" . zen_db_input($subdir . $additional_image) . "', " . (int)$sort_order . ")"
+                        VALUES ($products_id, '" . zen_db_input($full_image) . "', " . (int)$sort_order . ")"
                     );
                     $inserted += $db->affectedRows();
                 }
@@ -204,7 +197,7 @@ class zcAjaxScanAdditionalImages
         $sql .= " FROM " . TABLE_PRODUCTS . "
                 WHERE products_image IS NOT NULL
                 AND products_image != ''
-                AND products_image != '" . zen_db_input(PRODUCTS_IMAGE_NO_IMAGE) . "'
+                AND products_image != '" . zen_db_input(zen_config('PRODUCTS_IMAGE_NO_IMAGE', 'no_picture.gif')) . "'
                 ORDER BY products_id";
 
         if ($batch_size < 1) {

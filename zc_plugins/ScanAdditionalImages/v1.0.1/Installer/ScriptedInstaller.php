@@ -108,13 +108,15 @@ class ScriptedInstaller extends ScriptedInstallBase
             $addIndexQuery = ", ADD UNIQUE INDEX " . self::NEW_INDEX_NAME . " (products_id, additional_image)";
             
             $tableIndexes = $this->executeInstallerSelectSql("SHOW INDEX FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES);
-            foreach ($tableIndexes as $idx) {
-                if ($oldIndexQuery === '' && $idx['Key_name'] === 'idx_products_id') {
-                    $oldIndexQuery = ', DROP INDEX idx_products_id';
-                    continue;
-                }
-                if ($addIndexQuery !== '' && ($idx['Key_name'] === self::NEW_INDEX_NAME || $idx['Key_name'] === self::NEW_INDEX_NAME . '_zen')) {
-                    $addIndexQuery = '';
+            if (!$tableIndexes->EOF) {
+                foreach ($tableIndexes as $idx) {
+                    if ($oldIndexQuery === '' && $idx['Key_name'] === 'idx_products_id') {
+                        $oldIndexQuery = ', DROP INDEX idx_products_id';
+                        continue;
+                    }
+                    if ($addIndexQuery !== '' && ($idx['Key_name'] === self::NEW_INDEX_NAME || $idx['Key_name'] === self::NEW_INDEX_NAME . '_zen')) {
+                        $addIndexQuery = '';
+                    }
                 }
             }
 
