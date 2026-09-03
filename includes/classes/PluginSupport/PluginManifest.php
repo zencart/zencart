@@ -17,6 +17,19 @@ if (!defined('IS_ADMIN_FLAG')) {
 class PluginManifest
 {
     protected array $manifest_info;
+    protected string $pluginsRoot;  //- Note: No ending DIRECTORY_SEPARATOR!
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function __construct(?string $pluginsRoot = null)
+    {
+        if ($pluginsRoot === null) {
+            $pluginsRoot = DIR_FS_CATALOG . 'zc_plugins';
+        }
+
+        $this->pluginsRoot = rtrim($pluginsRoot, '/\\');
+    }
 
     /**
      * Returns the array of information returned by the requested plugin
@@ -55,7 +68,7 @@ class PluginManifest
      */
     public function exists(string $plugin_key, string $version): ?string
     {
-        $manifest_filename = DIR_FS_CATALOG . "zc_plugins/$plugin_key/$version/manifest.php";
+        $manifest_filename = $this->pluginsRoot . "/$plugin_key/$version/manifest.php";
         if (isset($this->manifest_info[$plugin_key][$version]) || is_file($manifest_filename)) {
             return $manifest_filename;
         }

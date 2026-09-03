@@ -587,7 +587,7 @@ class TemplateSelect
             "DELETE FROM " . TABLE_TEMPLATE_SELECT . "
               WHERE template_dir = :template_dir:
                 AND template_language != 0";
-        $sql = self::$db->bindVars($sql, ':template_dir:', 'string');
+        $sql = self::$db->bindVars($sql, ':template_dir:', $template_dir, 'string');
         self::$db->Execute($sql);
 
         foreach (self::$dbTemplates as $template_id => $template_info) {

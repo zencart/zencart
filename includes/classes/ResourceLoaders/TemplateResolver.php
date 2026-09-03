@@ -275,7 +275,7 @@ class TemplateResolver
             return $templates;
         }
 
-        $pluginManifest = new PluginManifest();
+        $pluginManifest = new PluginManifest($this->pluginsRoot);
         $installedPlugins = $this->getInstalledPlugins();
         foreach ($installedPlugins as $unique_key => $plugin_info) {
             $version = $plugin_info['version'];
