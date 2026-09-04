@@ -214,7 +214,7 @@ if ($is_read_only) {
             echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, true));
         } else {
             foreach ($_POST[$key] as $val) {
-                echo zen_draw_hidden_field($key.'[]', htmlspecialchars(stripslashes($val), ENT_COMPAT, CHARSET, TRUE));
+                echo zen_draw_hidden_field($key . '[]', htmlspecialchars(stripslashes($val), ENT_COMPAT, CHARSET, true));
             }
         }
     }
