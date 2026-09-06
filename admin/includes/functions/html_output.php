@@ -227,7 +227,7 @@ $iconMap = [
     'fa-solid fa-circle fa-stack-1x txt-linked',
     'fa-regular fa-circle fa-stack-1x txt-black'
   ],
-  'status-upgrade' => 'fa-circle-up fa-2x txt-blue',
+  'status-upgrade' => 'fa-circle-up fa-2x text-primary',
   'status-red' => [
     'fa-solid fa-circle fa-stack-1x txt-status-off',
     'fa-regular fa-circle fa-stack-1x txt-black'
