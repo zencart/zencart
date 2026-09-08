@@ -2914,7 +2914,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // now run the insert
 
     // this isn't the best way to get fname/lname but it will get the majority of cases
-    list($fname, $lname) = explode(' ', $address_question_arr['name']);
+    [$fname, $lname] = explode(' ', $address_question_arr['name']);
 
     $sql_data_array= array(array('fieldName'=>'entry_firstname', 'value'=>$fname, 'type'=>'string'),
                            array('fieldName'=>'entry_lastname', 'value'=>$lname, 'type'=>'string'),

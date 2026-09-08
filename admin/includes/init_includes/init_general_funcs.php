@@ -71,7 +71,7 @@ if (SSLPWSTATUSCHECK == '') {
   $db->Execute($sql);
   die('<meta http-equiv="Refresh" content="0">One-time auto-configuration completed. Please refresh the page.');
 }
-list($a, $c) = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $c = (int)$c;
+[$a, $c] = explode(':', SSLPWSTATUSCHECK); $a = (int)$a; $c = (int)$c;
 if ($a == 0) {
   if ($c == 0 && $e == 1) { // was nonSSL but now is SSL, so need to exp pwds
     $sql = "UPDATE " . TABLE_CONFIGURATION . " set configuration_value = '1:" . $e . "', last_modified = now() where configuration_key = 'SSLPWSTATUSCHECK'";

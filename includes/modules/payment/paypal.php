@@ -407,7 +407,7 @@ class paypal extends base {
    */
   function before_process() {
     global $order_total_modules;
-    list($this->transaction_amount, $this->transaction_currency) = $_SESSION['paypal_transaction_info'];
+    [$this->transaction_amount, $this->transaction_currency] = $_SESSION['paypal_transaction_info'];
     unset($_SESSION['paypal_transaction_info']);
     if (isset($_GET['referer']) && $_GET['referer'] == 'paypal') {
       $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE', $_GET);
@@ -650,7 +650,7 @@ class paypal extends base {
     $this->pdtData = array();
     for ($i=1; $i<count($lines);$i++){
       if (!strstr($lines[$i], "=")) continue;
-      list($key,$val) = explode("=", $lines[$i]);
+      [$key,$val] = explode("=", $lines[$i]);
       $this->pdtData[urldecode($key)] = urldecode($val);
     }
 

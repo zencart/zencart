@@ -218,7 +218,7 @@ function zen_image($src, $title = '', $width = '', $height = '', $parameters = '
     // hook for handle_image() function such as Image Handler etc
     if (function_exists('handle_image')) {
         $newimg = handle_image($src, $title, $width, $height, $parameters);
-        list($src, $title, $width, $height, $parameters) = $newimg;
+        [$src, $title, $width, $height, $parameters] = $newimg;
         $zco_notifier->notify('NOTIFY_HANDLE_IMAGE', [$newimg]);
     }
 

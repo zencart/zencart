@@ -60,7 +60,7 @@ if ($downloadsOnThisOrder) {
   // Now get all downloadable products in that order
   $downloads_query = "select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day,
                              opd.download_maxdays, op.products_name, opd.orders_products_download_id,
-                             opd.orders_products_filename, opd.download_count 
+                             opd.orders_products_filename, opd.download_count
                         from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
                         where o.orders_id = '" . (int)$last_order . "'
                         and (o.orders_status >= '" . DOWNLOADS_CONTROLLER_ORDERS_STATUS . "'
@@ -74,7 +74,7 @@ if ($downloadsOnThisOrder) {
   foreach($result as $data) {
     $data['service'] = 'local';
     $data['filename'] = $data['orders_products_filename'];
-    list($dt_year, $dt_month, $dt_day) = explode('-', $data['date_purchased_day']);
+    [$dt_year, $dt_month, $dt_day] = explode('-', $data['date_purchased_day']);
     $data['expiry_timestamp'] = mktime(23, 59, 59, $dt_month, $dt_day + (int)$data['download_maxdays'], $dt_year);
     $data['expiry'] = date('Y-m-d H:i:s', $data['expiry_timestamp']);
     $data['downloads_remaining'] = (int)$data['download_count'];
