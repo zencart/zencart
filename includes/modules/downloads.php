@@ -74,7 +74,7 @@ if ($downloadsOnThisOrder) {
   foreach($result as $data) {
     $data['service'] = 'local';
     $data['filename'] = $data['orders_products_filename'];
-    list($dt_year, $dt_month, $dt_day) = explode('-', $data['date_purchased_day']);
+    [$dt_year, $dt_month, $dt_day] = explode('-', $data['date_purchased_day']);
     $data['expiry_timestamp'] = mktime(23, 59, 59, $dt_month, $dt_day + (int)$data['download_maxdays'], $dt_year);
     $data['expiry'] = date('Y-m-d H:i:s', $data['expiry_timestamp']);
     $data['downloads_remaining'] = (int)$data['download_count'];

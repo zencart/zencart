@@ -121,7 +121,7 @@ class zcObserverDownloadsViaRedirect extends base {
       if (!is_dir($dir . $subdir) || $subdir == '.' || $subdir == '..') continue;
       // Loop and unlink files in subdirectory
       if ($h2 = opendir($dir . $subdir)) {
-          list($fn, $exptime) = explode('-', $subdir);
+          [$fn, $exptime] = explode('-', $subdir);
           if ($exptime + $this->gc_cleanup_time > time()) continue;
           while ($file = readdir($h2)) {
               if ($file == '.' || $file == '..') continue;
