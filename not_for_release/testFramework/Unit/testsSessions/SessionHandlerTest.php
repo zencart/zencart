@@ -111,10 +111,12 @@ class SessionHandlerTest extends zcUnitTestCase
         $this->assertMatchesRegularExpression('/^DELETE FROM ' . TABLE_SESSIONS . ' WHERE expiry < \\d+$/', $database->queries[0]);
     }
 
-    public function testGcReturnsFalseWhenTheDatabaseDoesNotReportAffectedRows(): void
+    public function testGcReturnsFalseWhenTheDeleteFails(): void
     {
-        $database = new SessionHandlerDatabaseDouble($this->queryResult(resource: true));
-        $database->affectedRows = null;
+        // queryFactory::affectedRows() is typed int on v3 (master), so a failed DELETE
+        // (resource === false) is the path by which gc() reports failure on every branch.
+        $database = new SessionHandlerDatabaseDouble($this->queryResult(resource: false));
+        $database->affectedRows = 3;
         $GLOBALS['db'] = $database;
 
         $this->assertFalse((new SessionHandler())->gc(1440));
