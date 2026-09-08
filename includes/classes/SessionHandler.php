@@ -2,17 +2,20 @@
 /**
  * Zen Cart Database Session Handler
  *
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @version $Id: DrByte  Modified in v2.3.0 $
  */
 
 namespace Zencart;
 
+use RuntimeException;
+use SessionHandlerInterface;
+
 /**
  * @since ZC v2.0.0
  */
-class SessionHandler implements \SessionHandlerInterface
+class SessionHandler implements SessionHandlerInterface
 {
 
     /**
@@ -106,5 +109,48 @@ class SessionHandler implements \SessionHandlerInterface
         $result = $db->Execute($sql);
 
         return !empty($result->resource);
+    }
+
+    /**
+     * Create a new session ID.
+     * When session.use_strict_mode is turned on (which it always should be, and is default since PHP 8.6),
+     * if a session id provided by the client doesn't exist on the server, create_sid() is called
+     * to generate a new session id.
+     *
+     * Deliberately does NOT write a record for the new id: PHP validates a freshly created id
+     * via validateId() to detect collisions (e.g. in session_regenerate_id()), so a pre-written
+     * row would be reported as a collision and PHP would retry, leaving orphaned rows behind.
+     * The record is persisted by write() at the end of the request.
+     *
+     * @since ZC v2.3.0
+     */
+    public function create_sid(): string
+    {
+        return session_create_id() ?: throw new RuntimeException('Unable to create a session ID.');
+    }
+
+    /**
+     * Validates session ID when session.use_strict_mode is on,
+     * by determining whether the session record actually does exist.
+     *
+     * @link https://www.php.net/manual/sessionupdatetimestamphandlerinterface.validateid
+     *
+     * @since ZC v2.3.0
+     */
+    public function validateId(string $id): bool
+    {
+        global $db;
+        if (!is_object($db)) {
+            return false;
+        }
+
+        $sql = "SELECT sesskey
+                FROM " . TABLE_SESSIONS . "
+                WHERE sesskey = '" . zen_db_input($id) . "'
+                AND expiry > '" . time() . "'";
+
+        $result = $db->Execute($sql);
+
+        return !$result->EOF;
     }
 }

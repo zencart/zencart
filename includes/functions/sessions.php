@@ -2,10 +2,10 @@
 /**
  * Session functions
  *
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Sep 18 Modified in v2.2.0 $
+ * @version $Id: DrByte  Modified in v2.3.0 $
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -43,6 +43,8 @@ function zen_session_start(): bool
     @ini_set('session.gc_maxlifetime', $SESS_LIFE);
     @ini_set('session.gc_probability', 1);
     @ini_set('session.gc_divisor', 2);
+
+    @ini_set('session.use_strict_mode', 1);
 
     if (preg_replace('/[a-zA-Z0-9,-]/', '', session_id()) !== '') {
         zen_session_id(\bin2hex(\random_bytes(16)));
