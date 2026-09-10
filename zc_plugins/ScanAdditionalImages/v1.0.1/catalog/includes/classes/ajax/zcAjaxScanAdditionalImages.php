@@ -174,7 +174,7 @@ class zcAjaxScanAdditionalImages
                 $full_image = $subdir . $additional_image;
                 if ($products_image !== $full_image) {
                     $db->Execute(
-                        "INSERT INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                        "INSERT IGNORE INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
                         VALUES ($products_id, '" . zen_db_input($full_image) . "', " . (int)$sort_order . ")"
                     );
                     $inserted += $db->affectedRows();
