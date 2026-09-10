@@ -32,6 +32,9 @@ use Zencart\PluginSupport\PluginStatus;
  *
  * @since ZC v3.0.0
  */
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
 class TemplateSelect
 {
     public const int TEMPLATE_BASE_LANGUAGE = -1;
@@ -53,10 +56,10 @@ class TemplateSelect
 
     public function __construct()
     {
-        // -----
-        // If the class 'copy' of the $db object is already set, the class has already
-        // initialized and all its static properties can be reused.
-        //
+        /**
+         * If the class 'copy' of the $db object is already set, the class has already
+         * initialized and all its static properties can be reused.
+         */
         if (isset(self::$db) || !defined('IS_ADMIN_FLAG')) {
             return;
         }
@@ -64,9 +67,9 @@ class TemplateSelect
         global $db;
         self::$db = $db;
 
-        // -----
-        // Start by gathering the current results from the database's `template_select` table.
-        //
+        /**
+         * Start by gathering the current results from the database's `template_select` table.
+         */
         $result = self::$db->Execute(
             "SELECT *
                FROM " . TABLE_TEMPLATE_SELECT
@@ -80,10 +83,10 @@ class TemplateSelect
             }
         }
 
-        // -----
-        // Determine if there's an active template directory (i.e. chosen for
-        // the current language) and, if so, save that for cross-class use.
-        //
+        /**
+         * Determine if there's an active template directory (i.e. chosen for
+         * the current language) and, if so, save that for cross-class use.
+         */
         $active_template_dir = $this->getActiveTemplateDir();
         if ($active_template_dir !== null) {
             TemplateDto::getInstance()->updateTemplate($active_template_dir, ['is_active' => true]);
@@ -105,10 +108,10 @@ class TemplateSelect
      */
     protected function resolveTemplates(): void
     {
-        // -----
-        // Determine which encapsulated plugins are currently installed,
-        // whether enabled or disabled.
-        //
+        /**
+         * Determine which encapsulated plugins are currently installed,
+         * whether enabled or disabled.
+         */
         $installedPluginKeys = [];
         foreach ((new PluginControlRepository(self::$db))->getAll() as $plugin) {
             if (($plugin['status'] ?? PluginStatus::NOT_INSTALLED) !== PluginStatus::NOT_INSTALLED) {
@@ -116,14 +119,14 @@ class TemplateSelect
             }
         }
 
-        // -----
-        // Retrieve the template-related information for all template
-        // directories. This can include encapsulated template packages
-        // that aren't currently installed.
-        //
-        // Then, filter out any records that are associated with template packages
-        // that aren't installed.
-        //
+        /**
+         * Retrieve the template-related information for all template
+         * directories. This can include encapsulated template packages
+         * that aren't currently installed.
+         *
+         * Then, filter out any records that are associated with template packages
+         * that aren't installed.
+         */
         self::$selectableTemplates = array_filter(
             \zen_get_catalog_template_directories(),
             static function (array $template) use ($installedPluginKeys): bool {
@@ -134,11 +137,11 @@ class TemplateSelect
             }
         );
 
-        // -----
-        // Synchronize the database's `template_select` table with the selectable
-        // templates found in the file-system, adding a record with a template_language
-        // of -1 to indicate that this is the 'base' record for the template.
-        //
+        /**
+         * Synchronize the database's `template_select` table with the selectable
+         * templates found in the file-system, adding a record with a template_language
+         * of -1 to indicate that this is the 'base' record for the template.
+         */
         foreach (self::$selectableTemplates as $template_dir => $selected_info) {
             $default_entry_found = false;
             foreach (self::$dbTemplates as $id => $db_info) {
@@ -209,6 +212,21 @@ class TemplateSelect
     /**
      * @since ZC v3.0.0
      */
+    public function isActiveParentTemplate(string $parent_template_dir): bool
+    {
+        foreach (self::$activeTemplates as $lang => $info) {
+            foreach ($this->getParentTemplates($info['template_dir']) as $next_parent_dir) {
+                if ($next_parent_dir === $parent_template_dir) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
     public function getActiveTemplateDir(): ?string
     {
         return $this->getActiveTemplateField('template_dir');
@@ -258,22 +276,22 @@ class TemplateSelect
      */
     public function getInheritedSetting(string $template_dir, string $setting_key, string $default): string
     {
-        // -----
-        // Save the requested template's parents' settings statically, so they don't need to be determined on
-        // every call to this method. zen_get_template_inheritance_chain's returned array (numerically indexed)
-        // includes the requested template as its first element. That's discarded prior to the assignment.
-        //
+        /**
+         * Save the requested template's parents' settings statically, so they don't need to be determined on
+         * every call to this method. zen_get_template_inheritance_chain's returned array (numerically indexed)
+         * includes the requested template as its first element. That's discarded prior to the assignment.
+         */
         if (!isset(self::$parentTemplates[$template_dir])) {
-            $inheritance_chain = zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
+            $inheritance_chain = \zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
             array_shift($inheritance_chain);
             self::$parentTemplates[$template_dir] = $inheritance_chain;
         }
 
-        // -----
-        // Loop through the template's parents, looking for the requested setting and returning the
-        // first parent-value found. If no setting exists for the parent, return the supplied default.
-        //
-        foreach (self::$parentTemplates[$template_dir] as $parent_dir) {
+        /**
+         * Loop through the template's parents, looking for the requested setting and returning the
+         * first parent-value found. If no setting exists for the parent, return the supplied default.
+         */
+        foreach ($this->getParentTemplates($template_dir) as $parent_dir) {
             $parent_settings = $this->getTemplateSettings($parent_dir);
             if ($parent_settings === null) {
                 continue;
@@ -283,6 +301,26 @@ class TemplateSelect
             }
         }
         return $default;
+    }
+
+    /**
+     * Returns the array of template parents for the specified template.
+     *
+     * @since ZC v3.0.0
+     */
+    protected function getParentTemplates($template_dir): array
+    {
+        /**
+         * Save the requested template's parents' settings statically, so they don't need to be determined on
+         * every call to this method. zen_get_template_inheritance_chain's returned array (numerically indexed)
+         * includes the requested template as its first element. That's discarded prior to the assignment.
+         */
+        if (!isset(self::$parentTemplates[$template_dir])) {
+            $inheritance_chain = \zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
+            array_shift($inheritance_chain);
+            self::$parentTemplates[$template_dir] = $inheritance_chain;
+        }
+        return self::$parentTemplates[$template_dir];
     }
 
     /**
@@ -328,13 +366,13 @@ class TemplateSelect
             $current_settings = [];
         }
 
-        // -----
-        // Remove any settings (based on the $settings_keys supplied) from the template's
-        // current `template_settings` and merge the supplied settings into
-        // that array.
-        //
-        // This handling enables a setting to be removed as a template-specific one.
-        //
+        /**
+         * Remove any settings (based on the $settings_keys supplied) from the template's
+         * current `template_settings` and merge the supplied settings into
+         * that array.
+         *
+         * This handling enables a setting to be removed as a template-specific one.
+         */
         $updated_settings = array_diff_key($current_settings, array_flip($settings_keys));
         $updated_settings = array_merge($updated_settings, $template_settings);
 
@@ -372,7 +410,7 @@ class TemplateSelect
      */
     protected function updateDbTemplateSettings(int $id, ?array $template_settings): int
     {
-        if (!isset(self::$dbTemplates[$id]) || (int)self::$dbTemplates[$id]['template_language'] !== self::TEMPLATE_BASE_LANGUAGE) {
+        if (IS_ADMIN_FLAG !== true || !isset(self::$dbTemplates[$id]) || (int)self::$dbTemplates[$id]['template_language'] !== self::TEMPLATE_BASE_LANGUAGE) {
             return self::SETTINGS_NO_UPDATE;
         }
 
@@ -397,10 +435,10 @@ class TemplateSelect
         $sql = self::$db->bindVars($sql, ':id:', $id, 'integer');
         self::$db->Execute($sql, 1);
 
-        // -----
-        // Update the local cache of database settings (with the json_encoded version of the settings)
-        // and the templateSettings cache (which contains the null|array values).
-        //
+        /**
+         * Update the local cache of database settings (with the json_encoded version of the settings)
+         * and the templateSettings cache (which contains the null|array values).
+         */
         self::$dbTemplates[$id]['template_settings'] = $template_settings;
         self::$templateSettings[self::$dbTemplates[$id]['template_dir']] = $raw_template_settings;
 
@@ -418,7 +456,7 @@ class TemplateSelect
      */
     public function registerNewTemplate(string $template_dir, int $language_id): false|int
     {
-        if ($template_dir === '' || $language_id < 1 || isset(self::$activeTemplates[$language_id])) {
+        if (IS_ADMIN_FLAG !== true || $template_dir === '' || $language_id < 1 || isset(self::$activeTemplates[$language_id])) {
             return false;
         }
 
@@ -430,6 +468,10 @@ class TemplateSelect
      */
     protected function addTemplateToDb(string $template_dir, int $language_id): int
     {
+        if (IS_ADMIN_FLAG !== true) {
+            return -1;
+        }
+
         $sql =
             "INSERT INTO " . TABLE_TEMPLATE_SELECT . "
                 (template_dir, template_language)
@@ -462,7 +504,7 @@ class TemplateSelect
      */
     public function updateTemplateNameForId(int $id, string $template_dir): int
     {
-        if ($template_dir === '' || $id < 0) {
+        if (IS_ADMIN_FLAG !== true || $template_dir === '' || $id < 0) {
             return self::SETTINGS_BAD_INPUTS;
         }
 
@@ -479,13 +521,13 @@ class TemplateSelect
         $sql = self::$db->bindVars($sql, ':id:', $id, 'integer');
         self::$db->Execute($sql, 1);
 
-        // -----
-        // affectedRows() only counts rows whose stored value actually changed,
-        // so a no-op save (submitting the same template_dir that's already set)
-        // would report 0 here even though the row was matched and the desired state is
-        // already in place. Existence against the row was already confirmed above,
-        // so that's not treated as a failure.
-        //
+        /**
+         * affectedRows() only counts rows whose stored value actually changed,
+         * so a no-op save (submitting the same template_dir that's already set)
+         * would report 0 here even though the row was matched and the desired state is
+         * already in place. Existence against the row was already confirmed above,
+         * so that's not treated as a failure.
+         */
         foreach (self::$activeTemplates as $language_id => $template_info) {
             if ($id === (int)$template_info['template_id']) {
                 self::$activeTemplates[$language_id]['template_dir'] = $template_dir;
@@ -505,7 +547,7 @@ class TemplateSelect
      */
     public function deregisterTemplateId(int $id): bool
     {
-        if ($id <= 0) {
+        if (IS_ADMIN_FLAG !== true || $id <= 0) {
             return false;
         }
 
@@ -527,6 +569,41 @@ class TemplateSelect
             }
         }
         return false;
+    }
+
+    /**
+     * Removes the specified template (and its associated settings) from
+     * the database and the class-based arrays.
+     *
+     * @since ZC v3.0.0
+     */
+    public function removeTemplateDir(string $template_dir): bool
+    {
+        if (IS_ADMIN_FLAG !== true || $template_dir === '') {
+            return false;
+        }
+
+        $sql =
+            "DELETE FROM " . TABLE_TEMPLATE_SELECT . "
+              WHERE template_dir = :template_dir:
+                AND template_language != 0";
+        $sql = self::$db->bindVars($sql, ':template_dir:', $template_dir, 'string');
+        self::$db->Execute($sql);
+
+        foreach (self::$dbTemplates as $template_id => $template_info) {
+            if ($template_dir === $template_info['template_dir']) {
+                unset(
+                    self::$activeTemplates[(int)$template_info['template_language']],
+                    self::$dbTemplates[(int)$template_id],
+                    self::$parentTemplates[$template_dir],
+                    self::$templateSettings[$template_dir]
+                );
+                if (isset(self::$selectableTemplates)) {
+                    unset(self::$selectableTemplates[$template_dir]);
+                }
+            }
+        }
+        return true;
     }
 
     /**
