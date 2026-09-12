@@ -59,13 +59,25 @@ $tableDefinition = [
         'status' => [
             'title' => TABLE_HEADING_STATUS,
             'derivedItem' => [
-                'type' => 'local',
-                'method' => 'arrayReplace',
-                'params' => [
-                    (string)PluginStatus::NOT_INSTALLED => zen_icon('status-red'),
-                    (string)PluginStatus::ENABLED => zen_icon('status-green'),
-                    (string)PluginStatus::DISABLED => zen_icon('status-yellow'),
-                ],
+                'type' => 'closure',
+                'method' => static function(
+                    $tableRow,
+                    string $colName,
+                    array $_columnInfo
+                ) use ($pluginManager): string {
+                    if ($pluginManager->isUpgradeAvailable(
+                        (string)$tableRow['unique_key'],
+                        (string)$tableRow['version']
+                    )) {
+                        return zen_icon('status-upgrade', TEXT_UPGRADE_AVAILABLE);
+                    }
+
+                    return match ($tableRow[$colName]) {
+                        PluginStatus::ENABLED => zen_icon('status-green'),
+                        PluginStatus::DISABLED => zen_icon('status-yellow'),
+                        default => zen_icon('status-red'),
+                    };
+                },
             ],
             'class' => static function($value) {
                 return match ($value) {
