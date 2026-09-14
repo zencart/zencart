@@ -277,17 +277,6 @@ class TemplateSelect
     public function getInheritedSetting(string $template_dir, string $setting_key, string $default): string
     {
         /**
-         * Save the requested template's parents' settings statically, so they don't need to be determined on
-         * every call to this method. zen_get_template_inheritance_chain's returned array (numerically indexed)
-         * includes the requested template as its first element. That's discarded prior to the assignment.
-         */
-        if (!isset(self::$parentTemplates[$template_dir])) {
-            $inheritance_chain = \zen_get_template_inheritance_chain($template_dir, includeTemplateDefault: false);
-            array_shift($inheritance_chain);
-            self::$parentTemplates[$template_dir] = $inheritance_chain;
-        }
-
-        /**
          * Loop through the template's parents, looking for the requested setting and returning the
          * first parent-value found. If no setting exists for the parent, return the supplied default.
          */
@@ -575,6 +564,9 @@ class TemplateSelect
      * Removes the specified template (and its associated settings) from
      * the database and the class-based arrays.
      *
+     * Note: The record for the default (template_language = 0) template is
+     * always maintained, even if the associated template_dir is removed!
+     *
      * @since ZC v3.0.0
      */
     public function removeTemplateDir(string $template_dir): bool
@@ -592,9 +584,13 @@ class TemplateSelect
 
         foreach (self::$dbTemplates as $template_id => $template_info) {
             if ($template_dir === $template_info['template_dir']) {
+                if ((int)$template_info['template_language'] !== 0) {
+                    unset(
+                        self::$dbTemplates[(int)$template_id],
+                        self::$activeTemplates[(int)$template_info['template_language']],
+                    );
+                }
                 unset(
-                    self::$activeTemplates[(int)$template_info['template_language']],
-                    self::$dbTemplates[(int)$template_id],
                     self::$parentTemplates[$template_dir],
                     self::$templateSettings[$template_dir]
                 );
