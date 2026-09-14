@@ -15,13 +15,13 @@
 
 <?php if ($current_page != FILENAME_CHECKOUT_SUCCESS) { ?>
 <h2 id="orderHistoryDetailedOrder"><?php echo HEADING_TITLE . ORDER_HEADING_DIVIDER . sprintf(HEADING_ORDER_NUMBER, zen_output_string_protected($_GET['order_id'])); ?></h2>
-
 <?php }
+
+$zco_notifier->insertContent('CONTENT_ACCOUNT_HISTORY_INFO_INTRO', $order);
 
 $extra_headings = [];
 $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order, $extra_headings);
 ?>
-
 <table id="orderHistoryHeading">
     <tr class="tableHeading">
         <th scope="col" id="myAccountQuantity"><?php echo HEADING_QUANTITY; ?></th>
@@ -104,6 +104,10 @@ $zco_notifier->notify('NOTIFY_ACCOUNT_HISTORY_INFO_EXTRA_COLUMN_HEADING', $order
 ?>
 
 </div>
+
+<?php
+$zco_notifier->insertContent('CONTENT_ACCOUNT_HISTORY_INFO_POST_ORDER', $order);
+?>
 
 <?php
 /**
@@ -217,4 +221,7 @@ if (!empty($order->statuses)) {
 <div><?php echo $order->info['payment_method']; ?></div>
 </div>
 <br class="clearBoth">
+<?php
+$zco_notifier->insertContent('CONTENT_ACCOUNT_HISTORY_INFO_EXTRO', $order);
+?>
 </div>
