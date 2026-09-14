@@ -27,6 +27,9 @@ class TemplateSelectSettingsPersistenceTest extends zcUnitTestCase
 
     public function setUp(): void
     {
+        if (!defined('IS_ADMIN_FLAG')) {
+            define('IS_ADMIN_FLAG', true);
+        }
         parent::setUp();
 
         require_once DIR_FS_CATALOG . 'includes/classes/class.base.php';

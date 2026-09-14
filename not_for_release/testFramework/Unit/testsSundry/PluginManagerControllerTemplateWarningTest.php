@@ -17,6 +17,10 @@ namespace Zencart\ViewBuilders {
 }
 
 namespace {
+    function zen_black_line(): string
+    {
+        return '';
+    }
     function zen_get_catalog_template_directories(): array
     {
         return [
@@ -26,6 +30,10 @@ namespace {
                 'plugin_key' => 'ResponsiveClassicPlugin',
             ],
         ];
+    }
+    function zen_get_template_inheritance_chain(string $templateKey, bool $includeTemplateDefault = true): array
+    {
+        return [];
     }
 }
 
