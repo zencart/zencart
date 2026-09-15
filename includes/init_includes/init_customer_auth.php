@@ -16,9 +16,8 @@ if (!defined('IS_ADMIN_FLAG')) {
  * an administrator has deleted the customer (managing spam etc) so we'll log them out.
  */
 if (zen_is_logged_in()) {
-    $sql = "select customers_id from " . TABLE_CUSTOMERS . " where customers_id = " . (int)$_SESSION['customer_id'];
-    $result = $db->Execute($sql);
-    if ($result->RecordCount() == 0) {
+    $customer = new Customer($_SESSION['customer_id']);
+    if ($customer->getData('customers_id') === null) {
         $_SESSION['cart']->reset(true);
         zen_session_destroy();
         zen_redirect(zen_href_link(FILENAME_TIME_OUT));
@@ -28,9 +27,6 @@ if (zen_is_logged_in()) {
         global $messageStack, $customer;
 
         $_SESSION['cart']->reset(false);
-        if (!isset($customer) || !is_a($customer, Customer::class)) {
-            $customer = new Customer($_SESSION['customer_id']);
-        }
         $customer->forceLogout();
         unset(
             $_SESSION['customer_password_hash'],
@@ -71,21 +67,20 @@ if (zen_config('DOWN_FOR_MAINTENANCE') === 'true' && !zen_is_whitelisted_admin_i
 }
 
 /**
- * recheck customer status for authorization
+ * recheck customer status for authorization. Note that $customer class
+ * was instantiated above and, at this point, the customers_id is known to
+ * be valid.
  */
 if (zen_is_logged_in()) {
-    $check_customer_query = "select customers_id, customers_authorization
-                             from " . TABLE_CUSTOMERS . "
-                             where customers_id = " . (int)$_SESSION['customer_id'];
-    $check_customer = $db->Execute($check_customer_query);
-    $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
-
-    if ((int)$_SESSION['customers_authorization'] === 4) {
+    if ($customer->isBanned()) {
         // this account is banned
         $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
         zen_session_destroy();
         zen_redirect(zen_href_link(FILENAME_LOGIN));
     }
+
+    //- Backward compatibility, session value's a string.
+    $_SESSION['customers_authorization'] = (string)$customer->getData('customers_authorization');
     if ((int)$_SESSION['customers_authorization'] !== 0 && in_array($_GET['main_page'], [FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION])) {
         // this account is not valid for checkout
         global $messageStack;
@@ -206,14 +201,14 @@ switch (true) {
         */
         break;
 
-    case (isset($_SESSION['customers_authorization']) && ((zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && $_SESSION['customers_authorization'] !== '0') || (int)$_SESSION['customers_authorization'] === 1)):
+    case (isset($_SESSION['customers_authorization']) && ((zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && (int)$_SESSION['customers_authorization'] !== 0) || (int)$_SESSION['customers_authorization'] === 1)):
         /**
          * customer is pending approval
          * customer must be logged in to browse
          * customer is logged in and changed to must be authorized to browse
          */
         if (!in_array($_GET['main_page'], [FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY])) {
-            if ($_GET['main_page'] != zen_config('CUSTOMERS_AUTHORIZATION_FILENAME')) {
+            if ($_GET['main_page'] !== zen_config('CUSTOMERS_AUTHORIZATION_FILENAME')) {
                 zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''))));
             }
         }
