@@ -5,7 +5,7 @@ zen_define_default('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
 
 class zcAjaxScanAdditionalImages
 {
-    public const array ALLOWED_METHODS = ['doBatch'];
+    public const ALLOWED_METHODS = ['doBatch'];
 
     public function doBatch(): array
     {
@@ -17,7 +17,7 @@ class zcAjaxScanAdditionalImages
         if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
             return [
                 'batchRecordsFound' => 0,
-                'errorMessage' => SYNC_TEXT_NOTHING_TO_PROCESS,
+                'errorMessage' => 'Not permitted.', // literal: admin language constants are not loaded when reached via the storefront ajax.php
                 'imagesInserted' => 0,
                 'next_batch' => 0,
                 'next_start' => 0,
@@ -137,9 +137,15 @@ class zcAjaxScanAdditionalImages
                 continue;
             }
 
-            // Get base filename without extension
-            $image_extension = substr($products_image, strrpos($products_image, '.'));
-            $image_base = basename($products_image, $image_extension);
+            // Get base filename (with the '_' suffix rule applied) and extension, using the same
+            // rules the storefront uses in Filename-Matching mode, so the scan records exactly
+            // what that mode would have displayed. (Ignore the returned directory: it is
+            // web-relative, and we need the filesystem path below.)
+            [$image_base, $image_extension] = zen_get_image_lookup_filename_components(
+                $products_image,
+                false,
+                zen_config('ADDITIONAL_IMAGES_MODE', 'strict') !== 'legacy'
+            );
 
             // Detect subdirectory
             $subdir = '';
@@ -148,18 +154,15 @@ class zcAjaxScanAdditionalImages
             }
             $image_dir = DIR_FS_CATALOG_IMAGES . $subdir;
 
-            // Use '_' suffix unless legacy mode
-            if (zen_config('ADDITIONAL_IMAGES_MODE', 'strict') !== 'legacy' && !str_ends_with($image_base, '_')) {
-                $image_base .= '_';
-            }
-
             $matches = [];
             // Scan directory for matching files using glob iterator, which sorts alphabetically (so sort_order is retained)
             $images = zen_get_files_in_directory($image_dir, $image_extension);
             foreach ($images as $file) {
+                // glob() returns absolute paths; reduce to the bare filename within $image_dir
                 $file = preg_replace('/^' . preg_quote($image_dir, '/') . '/i', '', $file);
                 if (!is_dir($image_dir . $file)) {
-                    if (preg_match('/' . preg_quote($image_base, '/') . '/i', $file) === 1 && $file !== $products_image) {
+                    // Must start with the base name (as the storefront requires), and must not be the main image itself
+                    if (str_starts_with($file, $image_base) && $subdir . $file !== $products_image) {
                         $matches[] = $file;
                     }
                 }
@@ -172,13 +175,12 @@ class zcAjaxScanAdditionalImages
             // Insert matches into products_additional_images table
             foreach ($matches as $sort_order => $additional_image) {
                 $full_image = $subdir . $additional_image;
-                if ($products_image !== $full_image) {
-                    $db->Execute(
-                        "INSERT IGNORE INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
-                        VALUES ($products_id, '" . zen_db_input($full_image) . "', " . (int)$sort_order . ")"
-                    );
-                    $inserted += $db->affectedRows();
-                }
+                // Duplicates are rejected by the table's unique (products_id, additional_image) index
+                $db->Execute(
+                    "INSERT IGNORE INTO " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (products_id, additional_image, sort_order)
+                    VALUES ($products_id, '" . zen_db_input($full_image) . "', " . (int)$sort_order . ")"
+                );
+                $inserted += $db->affectedRows();
             }
 
             $counter++;
