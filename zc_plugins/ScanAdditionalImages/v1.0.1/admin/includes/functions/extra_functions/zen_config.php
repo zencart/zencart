@@ -1,7 +1,7 @@
 <?php
 /**
  * Compatibility bridge: zen_config() was introduced in Zen Cart v3.0.0.
- * This plugin is also installable on v2.2.x, where the function does not exist,
+ * This plugin is also installable on v2.2.0+, where the function does not exist,
  * so provide a minimal fallback that reads the already-defined configuration constant.
  *
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
