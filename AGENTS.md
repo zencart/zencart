@@ -40,14 +40,14 @@ Key developer workflows (commands & examples)
   - Example: composer install
 - Run tests (uses composer scripts)
   - Composer shortcuts defined in `composer.json`:
-    - composer run-script unit-tests
-    - composer run-script feature-tests
+    - composer run-script tests-unit
+    - composer run-script tests-feature
   - PHPUnit bootstrap uses `vendor/autoload.php` and phpunit.xml sets APP_ENV=testing
 - Quick local smoke test (builtin PHP server)
   - Example (from project root): php -S 127.0.0.1:8000 -t .
-  - Note: The app expects `includes/configure.php` to exist; use `includes/dist-configure.php` as template and adjust `DIR_FS_CATALOG`. Same for `/admin/includes/configure.php`.
+  - Note: The app expects `includes/configure.php` to exist; use `includes/dist-configure.php` as template and adjust `DIR_FS_CATALOG`. The admin reads that same file: since v3.0.0 there is no separate admin configure.php (a leftover `admin/includes/configure.php` from an older install is still honoured if present, but should be deleted).
 - DB and install
-  - Copy `includes/dist-configure.php` and `admin/includes/dist-configure.php` to `configure.php` (in those same folders) and make the files writable. Fill DB constants (see `includes/configure.php` example in repo).
+  - Copy `includes/dist-configure.php` to `includes/configure.php` and make it writable. Fill DB constants. One file serves both catalog and admin.
   - Make `cache/` and `logs/` writable.
 
 Code review guidance
@@ -130,7 +130,7 @@ Two distinct mechanisms read configuration values; pick based on what's being re
 Integration points and external dependencies
 -------------------------------------------
 - Plugins: `zc_plugins/` is the place for third-party extensions and versioned code; new automations should inspect existing plugins for common structure. For very deep code inspection, reference `PluginManager` and `FileSystem` usage in `includes/application_top.php`.
-- Composer-managed dev deps: phpunit, symfony components, guzzle. No production PHP libraries are required in composer.json aside from PHP extensions. (The app uses its own autoloading for core classes and modules, and plugins manage their own dependencies if needed.) 
+- Composer-managed dev deps: phpunit, symfony components, guzzle, vfsstream, phpstan, php-cs-fixer. No production PHP libraries are required in composer.json aside from PHP extensions. (The app uses its own autoloading for core classes and modules, and plugins manage their own dependencies if needed.) 
 - (There are some 3rd-party libraries included directly in `includes/classes/vendors/` that are not managed by composer; these are bundled directly to avoid end-users needing to use composer.)
 - Payment/webhook listeners at repo root: The following PayPal-related listeners are processor-specific: `ipn_main_handler.php`, `ppr_listener.php`, `ppr_webhook.php`.
 
@@ -162,7 +162,7 @@ Short Summary:
 - PSR-4: Namespaced plugin classes are assigned at runtime: PSR-4 namespace prefixes are added in `application_top.php` using `$psr4Autoloader->addPrefix()` for `Zencart\Plugins\Catalog\<UniqueKey>` and `Zencart\Plugins\Admin\<UniqueKey>`.
 - Additional PSR-4 autoloading that's not auto-detected can be provided via a `psr4Autoload.php` file in the plugin root that registers additional namespaces or includes the plugin's composer autoloader if using composer for dependencies (composer example code shown below).
 - Installer Scripts: To run installation scripts, create a `zc_plugins/<unique_key>/<version>/Installer/` folder and build your installer instructions there (see dev docs). Installer scripts should be idempotent, ie: self-upgrading across missing updates from prior versions.
-- If a plugin needs to load a stylesheet or javascript on storefront pages, an observer can attach to `NOTIFY_HTML_HEAD_END` and use `linkCatalogStylesheet()` from `InteractsWithPlugins` trait, to output the `<link>` tag for the plugin's CSS file. The observer constructor must call `$this->detectZcPluginDetails(__DIR__)` before `linkCatalogStylesheet()` will work. CSS file goes in `catalog/includes/templates/template_default/css/`.
+- If a plugin needs to load a stylesheet or javascript on storefront pages, an observer can attach to `NOTIFY_HTML_HEAD_END` and use `linkCatalogStylesheet()` from `InteractsWithPlugins` trait, to output the `<link>` tag for the plugin's CSS file. The observer constructor must call `$this->detectZcPluginDetails(__DIR__)` before `linkCatalogStylesheet()` will work. CSS file goes in `catalog/includes/templates/default/css/` (`PageLoader::getTemplatePluginDir()` searches every directory under the plugin's `catalog/includes/templates/`; `default` is the convention, a storefront template's name also works).
 - When creating a new plugin, ideally the `unique_key` should be Capitalized.
 - When creating or converting a plugin, any filename constants that were previously in "extra_datafiles" should go into a `filenames.php` file in the plugin root. And any database tablename constants that were previously in "extra_datafiles" should go into a `database_tables.php` file in the plugin root.
 - If you create an admin page which requires a custom `.js` file, name it the same name as your PHP file name to make it automatically load. For example `admin/rewards.php`, will load `admin/includes/javascript/rewards.js` and also `admin/includes/javascript/rewards_*.js` as additional files, if present.
@@ -301,6 +301,9 @@ Actionable examples for agents
 - Static Analysis
   - phpstan:admin
   - phpstan:catalog
+- Docs vs code consistency (also runs in CI on every push; see `.claude/commands/doc-drift.md` for the full procedure):
+  - composer run-script docs-check
+  - After changing, moving, or deleting anything that this file, `CONVENTIONS.md`, or `README.md` mentions, re-run it and fix the doc lines it reports. Every path, script name, class, function, constant, and config value in these docs is verified against the tree by `not_for_release/dev_tools/doc-drift-check.php`.
 
 
 NOTE: the app doesn't have any intended CLI entrypoints. 
@@ -338,7 +341,7 @@ Files to inspect next (for humans and automated extractors)
 ```
 Admin follows similar patterns under the `admin/` subdirectory, for example:
 ```
-- admin/includes/configure.php (or in dev, look for admin/includes/local/configure.php if it exists, which can override settings for local development)
+- (no admin-specific configure.php: admin reads includes/configure.php; in dev, admin/includes/local/configure.php or includes/local/configure.php, if present, override it for local development)
 - admin/includes/application_top.php and application_bootstrap.php (expect to never edit these files though)
 - admin/includes/extra_configures/
 - admin/includes/defined_paths.php (also, this file should never be edited directly; use extra_configures if you need to define new DIR_FS_* or DIR_WS_* constants)

@@ -21,7 +21,9 @@ Formatting basics are already enforced by `.editorconfig` (4 spaces, LF line end
 final newline, no trailing whitespace) — configure your editor to respect it.
 Beyond `.editorconfig`, follow PSR-12 for brace placement, spacing, and structure.
 
-There is currently no automated PHPCS enforcement. Conventions are maintained by code review and AI tooling guidance.
+There is no CI-enforced style check. A `.php-cs-fixer.dist.php` config is available for local use
+(`vendor/bin/php-cs-fixer fix --dry-run --diff <path>` after `composer install`); conventions are
+otherwise maintained by code review and AI tooling guidance.
 
 ### One PSR-12 rule that is stricter here: no colon/endkeyword syntax
 
@@ -92,7 +94,7 @@ $result = doSomethingNonObvious();
 | Classes, interfaces, traits | StudlyCaps | `PluginManager`, `ScriptedInstaller` |
 | Methods | camelCase | `getProductName()` |
 | Properties | camelCase | `$orderTotal` |
-| Constants | UPPER_SNAKE_CASE | `TABLE_ORDERS`, `FILENAME_INDEX` |
+| Constants | UPPER_SNAKE_CASE | `TABLE_ORDERS`, `FILENAME_DEFAULT` |
 | Procedural functions | snake_case | `zen_get_products_name()` |
 
 ### `declare(strict_types=1)`
@@ -123,7 +125,7 @@ these files unless a deliberate refactor has been scoped and agreed upon by core
 | `includes/classes/http_client.php` | no method visibility, no strict_types | Known tech debt; stable; do not modify; mostly deprecated anyway |
 | `includes/classes/split_page_results.php` | lowercase + splitCase hybrid | Legacy; stable |
 | Various legacy observers in `includes/classes/observers/` | lowercase class names | Legacy pattern for observer auto-loading |
-| `includes/modules/`, `includes/init_includes/`, `includes/extra_configures/` | closing `?>` tag present in ~71 files | Procedural include files; correct only when already editing the file |
+| `includes/modules/`, `includes/extra_configures/` | closing `?>` tag still present in a few dozen procedural include files | Correct only when already editing the file |
 
 ---
 
