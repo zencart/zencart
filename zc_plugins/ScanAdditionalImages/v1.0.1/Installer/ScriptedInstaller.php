@@ -1,10 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 use Zencart\PluginSupport\ScriptedInstaller as ScriptedInstallBase;
 
 class ScriptedInstaller extends ScriptedInstallBase
 {
-    public const NEW_INDEX_NAME = 'idx_pid_img';
+    // Name of the unique index on (products_id, additional_image). Matches the name core uses
+    // in zc_install/sql/install/mysql_zencart.sql so plugin-created and core-created tables agree.
+    public const NEW_INDEX_NAME = 'idx_pid_img_zen';
+
+    // Indexes created by earlier builds of this plugin, superseded by NEW_INDEX_NAME:
+    // 'idx_products_id' (non-unique, v1.0.0) and 'idx_pid_img' (unique, pre-release v1.0.1).
+    protected const OLD_INDEX_NAMES = ['idx_products_id', 'idx_pid_img'];
 
     protected function executeInstall()
     {
@@ -45,13 +53,7 @@ class ScriptedInstaller extends ScriptedInstallBase
 //        ) ENGINE=InnoDB";
 //        $this->executeInstallerSql($sql);
 
-        // Remove main product images from products_additional_images table if it exists
-        $this->cleanUpMainProductsImages();
-
-        // Update index if table exists
-        $this->updateIndexes();
-
-        // create products_additional_images table
+        // create products_additional_images table (no-op on cores that already ship it; definition matches core's)
         $sql = "CREATE TABLE IF NOT EXISTS " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " (
             id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             products_id INT NOT NULL,
@@ -60,20 +62,18 @@ class ScriptedInstaller extends ScriptedInstallBase
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE KEY " . self::NEW_INDEX_NAME . " (products_id, additional_image)
         ) ENGINE=MyISAM";
-        $this->executeInstallerSql($sql);
+        $ok = $this->executeInstallerSql($sql);
 
-        parent::executeInstall();
+        $ok = $this->migrateTable() && $ok;
+
+        return parent::executeInstall() && $ok;
     }
 
     protected function executeUpgrade($oldVersion)
     {
-        // Remove main product images from products_additional_images table if it exists
-        $this->cleanUpMainProductsImages();
+        $ok = $this->migrateTable();
 
-        // Update index if table exists
-        $this->updateIndexes();
-
-        parent::executeUpgrade($oldVersion);
+        return parent::executeUpgrade($oldVersion) && $ok;
     }
 
     protected function executeUninstall()
@@ -83,59 +83,85 @@ class ScriptedInstaller extends ScriptedInstallBase
         // also clean up using old name for the tool
         zen_deregister_admin_pages(['toolsAidba']);
 
-        parent::executeUninstall();
+        return parent::executeUninstall();
     }
 
-    protected function cleanUpMainProductsImages()
+    /**
+     * Bring a table created by this plugin's v1.0.0 installer up to core's definition,
+     * and remove rows that earlier scans should never have inserted.
+     * Every step is skipped when it is already in the desired state, so this is safe to re-run.
+     */
+    protected function migrateTable(): bool
     {
         global $sniffer;
-        
-        if ($sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
-            $sql = "DELETE t1
-                FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " t1
-                INNER JOIN " . TABLE_PRODUCTS . " t2 ON t1.additional_image = t2.products_image
-                WHERE t1.products_id = t2.products_id";
-            $this->executeInstallerSql($sql);
+
+        if (!$sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
+            return true;
         }
+
+        $ok = $this->cleanUpMainProductsImages();
+
+        return $this->updateIndexes() && $ok;
     }
 
-    protected function updateIndexes()
+    /**
+     * Remove any rows where a product's main image was recorded as one of its own additional images.
+     */
+    protected function cleanUpMainProductsImages(): bool
+    {
+        $sql = "DELETE t1
+            FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " t1
+            INNER JOIN " . TABLE_PRODUCTS . " t2 ON t1.additional_image = t2.products_image
+            WHERE t1.products_id = t2.products_id";
+
+        return $this->executeInstallerSql($sql);
+    }
+
+    /**
+     * Replace v1.0.0's non-unique index with the unique (products_id, additional_image) index
+     * that core defines, and narrow the column to core's width. Only issues an ALTER when
+     * something actually differs, since ALTER on MyISAM rewrites the whole table.
+     */
+    protected function updateIndexes(): bool
     {
         global $sniffer;
-        
-        if ($sniffer->table_exists(TABLE_PRODUCTS_ADDITIONAL_IMAGES)) {
-            $oldIndexQuery = '';
-            $addIndexQuery = ", ADD UNIQUE INDEX " . self::NEW_INDEX_NAME . " (products_id, additional_image)";
-            
-            $tableIndexes = $this->executeInstallerSelectSql("SHOW INDEX FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES);
-            if (!$tableIndexes->EOF) {
-                foreach ($tableIndexes as $idx) {
-                    if ($oldIndexQuery === '' && $idx['Key_name'] === 'idx_products_id') {
-                        $oldIndexQuery = ', DROP INDEX idx_products_id';
-                        continue;
-                    }
-                    if ($addIndexQuery !== '' && ($idx['Key_name'] === self::NEW_INDEX_NAME || $idx['Key_name'] === self::NEW_INDEX_NAME . '_zen')) {
-                        $addIndexQuery = '';
-                    }
-                }
+
+        $table = TABLE_PRODUCTS_ADDITIONAL_IMAGES;
+        $clauses = [];
+
+        if ($sniffer->field_type($table, 'additional_image', 'varchar(191)') !== true) {
+            $clauses[] = "MODIFY COLUMN additional_image VARCHAR(191) NOT NULL";
+        }
+
+        foreach (self::OLD_INDEX_NAMES as $old_index) {
+            if ($sniffer->indexExists($table, $old_index)) {
+                $clauses[] = "DROP INDEX " . $old_index;
+            }
+        }
+
+        if (!$sniffer->indexExists($table, self::NEW_INDEX_NAME)) {
+            // A table without the unique index may hold duplicate pairs (the v1.0.0 scanner and
+            // the core product-edit page both inserted without one), which would make ADD UNIQUE fail.
+            // Keep the lowest id of each pair.
+            $sql = "DELETE t1
+                FROM " . $table . " t1
+                INNER JOIN " . $table . " t2
+                    ON t1.products_id = t2.products_id
+                    AND t1.additional_image = t2.additional_image
+                    AND t1.id > t2.id";
+            if (!$this->executeInstallerSql($sql)) {
+                return false;
             }
 
-            $sql = "ALTER TABLE  " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . "
-                MODIFY COLUMN additional_image VARCHAR(191)
-                " . $oldIndexQuery . $addIndexQuery;
-            $this->executeInstallerSql($sql);
+            $clauses[] = "ADD UNIQUE INDEX " . self::NEW_INDEX_NAME . " (products_id, additional_image)";
         }
-    }
 
-    protected function executeInstallerSelectSql(string $sql)
-    {
-        $this->dbConn->dieOnErrors = false;
-        $result = $this->dbConn->Execute($sql);
-        if ($this->dbConn->error_number !== 0) {
-            $this->errorContainer->addError(0, $this->dbConn->error_text, true, PLUGIN_INSTALL_SQL_FAILURE);
-            return false;
+        if ($clauses === []) {
+            return true;
         }
-        $this->dbConn->dieOnErrors = true;
-        return $result;
+
+        $sql = "ALTER TABLE " . $table . " " . implode(', ', $clauses);
+
+        return $this->executeInstallerSql($sql);
     }
 }
