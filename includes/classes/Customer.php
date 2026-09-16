@@ -933,6 +933,68 @@ class Customer extends base
     }
 
     /**
+     * Credit a gift-voucher coupon's amount to a customer's GV balance.
+     *
+     * @since ZC v2.3.0
+     */
+    public static function addCouponToGvBalance(int $customer_id, int $gv_id): bool
+    {
+        global $db;
+
+        if (empty($customer_id) || empty($gv_id)) {
+            return false;
+        }
+
+        $sql = "SELECT coupon_amount
+                FROM " . TABLE_COUPONS . "
+                WHERE coupon_id = " . (int)$gv_id;
+        $coupon_gv = $db->Execute($sql, 1);
+        if ($coupon_gv->EOF) {
+            return false;
+        }
+
+        $sql = "SELECT amount
+                FROM " . TABLE_COUPON_GV_CUSTOMER . "
+                WHERE customer_id = " . (int)$customer_id;
+        $customer_gv = $db->Execute($sql, 1);
+
+        if (!$customer_gv->EOF) {
+            $new_gv_amount = $customer_gv->fields['amount'] + $coupon_gv->fields['coupon_amount'];
+            $sql = "UPDATE " . TABLE_COUPON_GV_CUSTOMER . "
+                    SET amount = '" . $db->prepare_input($new_gv_amount) . "'
+                    WHERE customer_id = " . (int)$customer_id;
+        } else {
+            $sql = "INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount)
+                    VALUES (" . (int)$customer_id . ", '" . $db->prepare_input($coupon_gv->fields['coupon_amount']) . "')";
+        }
+        $db->Execute($sql);
+
+        return true;
+    }
+
+    /**
+     * Re-read this customer's GV balance from the database into the cached data, so a
+     * long-lived instance reflects a balance change made during the same request.
+     *
+     * @since ZC v2.3.0
+     */
+    public function refreshGvBalance(): void
+    {
+        global $db;
+
+        if (empty($this->customer_id) || empty($this->data)) {
+            return;
+        }
+
+        $sql = "SELECT amount
+                FROM " . TABLE_COUPON_GV_CUSTOMER . "
+                WHERE customer_id = " . (int)$this->customer_id;
+        $result = $db->Execute($sql, 1);
+
+        $this->data['gv_balance'] = $result->EOF ? null : $result->fields['amount'];
+    }
+
+    /**
      * @since ZC v1.5.8
      */
     public function getAddressBookEntries(?int $customer_id = null): queryFactoryResult|array
