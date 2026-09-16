@@ -21,14 +21,19 @@ class Customer extends base
     protected bool $is_logged_in = false;
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
+    protected bool $addresses_loaded = false;
 
     /**
      * @param int|string|null $customer_id
      * @param bool $load_order_statistics Admin-only: set false to skip the order-count/lifetime-value
      *                                    queries when only the base customer record is needed,
      *                                    such as when building a customer listing.
+     * @param bool $load_addresses Set false (use a named argument) to defer the address-book
+     *                             lookup until address data is first requested via getData();
+     *                             callers that only need the base customer record avoid two
+     *                             joins and the default-address self-heal on every request.
      */
-    public function __construct($customer_id = null, protected bool $load_order_statistics = true)
+    public function __construct($customer_id = null, protected bool $load_order_statistics = true, protected bool $load_addresses = true)
     {
         $this->is_logged_in = $this->someoneIsLoggedIn();
         $this->is_in_guest_checkout = $this->isInGuestCheckout();
@@ -215,6 +220,14 @@ class Customer extends base
      */
     public function getData(?string $element = null)
     {
+        // Address data is loaded on demand when the constructor was told to skip it.
+        if (!$this->addresses_loaded && !empty($this->customer_id) && !empty($this->data)
+            && (empty($element) || $element === 'addresses' || !isset($this->data[$element]))
+        ) {
+            $this->loadAddresses();
+            $this->convertDataToInts();
+        }
+
         if (empty($element)) {
             return $this->data;
         }
@@ -324,6 +337,10 @@ class Customer extends base
         $this->load($customer_id);
         if (empty($this->data)) {
             return false;
+        }
+        if (!$this->addresses_loaded) {
+            $this->loadAddresses();
+            $this->convertDataToInts();
         }
 
         // @TODO - delete this if we collapse the Info table
@@ -601,37 +618,15 @@ class Customer extends base
             return false;
         }
 
+        $this->addresses_loaded = false;
         $data_ok = $this->loadBaseCustomerInfo($customer_id);
         if ($data_ok === false) {
             return false;
         }
 
-        // load address info, while also correcting for missing default address_book id
-        $addresses = $this->getFormattedAddressBookList($customer_id);
-        $found_default_address_id = false;
-        $first_address = null;
-
-        foreach ($addresses as $address) {
-            if (empty($first_address)) {
-                $first_address = $address['address_book_id'];
-            }
-            if ($address['address_book_id'] == $this->data['customers_default_address_id']) {
-                $this->data += $address['address'];
-                $found_default_address_id = true;
-                break;
-            }
+        if ($this->load_addresses) {
+            $this->loadAddresses();
         }
-        if (!$found_default_address_id && !empty($first_address)) {
-            $this->setDefaultAddressBookId($first_address);
-            foreach ($addresses as $address) {
-                if ($address['address_book_id'] === $first_address) {
-                    $this->data += $address['address'];
-                    break;
-                }
-            }
-        }
-        // keep this info so we don't have to query it again
-        $this->data['addresses'] = $addresses;
 
         $sql =
             "SELECT COUNT(*) AS number_of_reviews
@@ -667,6 +662,50 @@ class Customer extends base
         $this->convertDataToInts();
 
         return true;
+    }
+
+    /**
+     * Load the customer's address-book entries into $this->data['addresses'] and merge the
+     * default address's fields into $this->data, correcting a customers_default_address_id
+     * that no longer points at one of the customer's addresses.
+     *
+     * Runs from load() by default, or on demand from getData() when the constructor was
+     * called with $load_addresses = false.
+     *
+     * @since ZC v2.3.0
+     */
+    protected function loadAddresses(): void
+    {
+        $this->addresses_loaded = true;
+        if (empty($this->customer_id) || empty($this->data)) {
+            return;
+        }
+
+        $addresses = $this->getFormattedAddressBookList($this->customer_id);
+        $found_default_address_id = false;
+        $first_address = null;
+
+        foreach ($addresses as $address) {
+            if (empty($first_address)) {
+                $first_address = $address['address_book_id'];
+            }
+            if ($address['address_book_id'] == $this->data['customers_default_address_id']) {
+                $this->data += $address['address'];
+                $found_default_address_id = true;
+                break;
+            }
+        }
+        if (!$found_default_address_id && !empty($first_address)) {
+            $this->setDefaultAddressBookId($first_address);
+            foreach ($addresses as $address) {
+                if ($address['address_book_id'] === $first_address) {
+                    $this->data += $address['address'];
+                    break;
+                }
+            }
+        }
+        // keep this info so we don't have to query it again
+        $this->data['addresses'] = $addresses;
     }
 
     /**
