@@ -62,4 +62,3 @@ if ($paypalec_enabled) {
 </div>
 <?php
 }
-?>
