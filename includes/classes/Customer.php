@@ -914,7 +914,19 @@ class Customer extends base
 
             // @TODO - kill actual session from sessionhandler too? (eg: really boot them out)
 
-            unset($_SESSION['customer_id']);
+            // Remove everything login() registered, so a forced logout leaves the same
+            // session state regardless of which caller triggered it.
+            unset(
+                $_SESSION['customer_id'],
+                $_SESSION['customers_email_address'],
+                $_SESSION['customer_first_name'],
+                $_SESSION['customer_last_name'],
+                $_SESSION['customer_default_address_id'],
+                $_SESSION['customer_country_id'],
+                $_SESSION['customer_zone_id'],
+                $_SESSION['customers_authorization'],
+                $_SESSION['customer_password_hash']
+            );
             return true;
         }
         return false;
