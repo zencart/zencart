@@ -125,7 +125,7 @@ these files unless a deliberate refactor has been scoped and agreed upon by core
 | `includes/classes/http_client.php` | no method visibility, no strict_types | Known tech debt; stable; do not modify; mostly deprecated anyway |
 | `includes/classes/split_page_results.php` | lowercase + splitCase hybrid | Legacy; stable |
 | Various legacy observers in `includes/classes/observers/` | lowercase class names | Legacy pattern for observer auto-loading |
-| Procedural include files under `includes/`, `admin/includes/extra_*/`, `includes/templates/template_default/`, plus three root-level redirect stubs | closing `?>` tag still present in 43 PHP-only files (as of 2026-09-16) | Correct only when already editing the file. Mixed HTML/PHP pages and templates that end in `?>` are not violations |
+| Procedural include files under `includes/`, `admin/includes/extra_*/`, `includes/templates/template_default/`, plus three root-level redirect stubs | closing `?>` tag still present in some PHP-only files | Correct only when already editing the file. Mixed HTML/PHP pages and templates that end in `?>` are not violations |
 
 ---
 
