@@ -161,8 +161,10 @@ class zcAjaxScanAdditionalImages
                 // glob() returns absolute paths; reduce to the bare filename within $image_dir
                 $file = preg_replace('/^' . preg_quote($image_dir, '/') . '/i', '', $file);
                 if (!is_dir($image_dir . $file)) {
-                    // Must start with the base name (as the storefront requires), and must not be the main image itself
-                    if (str_starts_with($file, $image_base) && $subdir . $file !== $products_image) {
+                    // Must start with the base name (as the storefront requires), and must not be the main image itself.
+                    // The main-image comparison is case-insensitive: on case-insensitive filesystems the name glob()
+                    // returns can differ in case from the one stored in products_image.
+                    if (str_starts_with($file, $image_base) && strcasecmp($subdir . $file, $products_image) !== 0) {
                         $matches[] = $file;
                     }
                 }
