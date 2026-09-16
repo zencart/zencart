@@ -24,6 +24,9 @@ jobs:
           php-version: '8.4'
           tools: none
 
+      - name: Check generated copies of .ai/ are in sync
+        run: php not_for_release/dev_tools/sync-agent-docs.php --check
+
       - name: Check doc claims against the code
         run: php not_for_release/dev_tools/doc-drift-check.php --github --quiet
 

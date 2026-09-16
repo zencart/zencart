@@ -1,7 +1,10 @@
 # GitHub Copilot Instructions — Zen Cart
 
 Read `CONVENTIONS.md` for the full coding standards reference.
-Read `AGENTS.md` for architecture, bootstrapping, and codebase orientation.
+Read `AGENTS.md` for architecture, bootstrapping, and codebase orientation; its index lists the
+topic guides under `.ai/`. Path-specific instructions in `.github/instructions/` and skills in
+`.agents/skills/` are generated stubs pointing at those `.ai/` files: edit the source and run
+`composer docs-sync`.
 The following is a summary of the most important points for code review.
 
 ---

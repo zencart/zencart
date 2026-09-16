@@ -3,7 +3,7 @@
  * doc-drift-check.php - find claims in the agent/developer docs that the code no longer backs up.
  *
  * The prose files that steer humans and AI agents (AGENTS.md, CONVENTIONS.md, CLAUDE.md,
- * README.md, copilot-instructions.md, .claude/commands/*.md) are full of concrete claims:
+ * README.md, copilot-instructions.md, .ai/rules/<topic>.md, .ai/skills/<name>/SKILL.md) are full of concrete claims:
  * "copy admin/includes/dist-configure.php", "run composer run-script unit-tests",
  * "tests extend Tests\Support\zcUnitTestCase", "phpunit.xml sets APP_ENV=testing".
  * Every one of those is a fact about some other file, and nothing re-reads the doc when
@@ -77,9 +77,10 @@ chdir($root);
 if ($docs === []) {
     $docs = array_values(array_filter([
         'AGENTS.md', 'CONVENTIONS.md', 'CLAUDE.md', 'README.md', 'CONTRIBUTING.md',
-        '.github/copilot-instructions.md',
+        '.github/copilot-instructions.md', '.ai/README.md',
+        ...glob('.ai/rules/*.md') ?: [],
+        ...glob('.ai/skills/*/SKILL.md') ?: [],
         ...glob('.claude/commands/*.md') ?: [],
-        ...glob('.claude/skills/*/SKILL.md') ?: [],
     ], 'is_file'));
 }
 
@@ -104,7 +105,8 @@ function sh(string $cmd): string
 // Build the code index once: tracked files, basenames, classes, functions, constants
 // ---------------------------------------------------------------------------------------
 
-$tracked = array_flip(array_filter(explode("\n", sh('git ls-files'))));
+// Tracked plus untracked-but-not-ignored, so a doc can reference files added in the same change.
+$tracked = array_flip(array_filter(explode("\n", sh('git ls-files --cached --others --exclude-standard'))));
 $trackedDirs = [];
 $basenames = [];
 $dirBasenames = [];
@@ -249,7 +251,8 @@ function checkPath(string $doc, int $ln, string $token, bool $exampleLine): void
         if (isset($basenames[$p]) || is_file($p) || isset($dirBasenames[$p]) || is_dir($p)) {
             return;
         }
-        if (sh('git check-ignore -q ' . escapeshellarg($p) . '; echo $?') === '0') {
+        // A directory pattern such as `/tmp/` only matches when git is asked about a directory, so keep the slash.
+        if (sh('git check-ignore -q ' . escapeshellarg($isDir ? $p . '/' : $p) . '; echo $?') === '0') {
             finding('INFO', $doc, $ln, 'paths', "`$token` is gitignored/runtime-generated (not verifiable, ensure its generator still exists)");
             return;
         }
@@ -263,7 +266,7 @@ function checkPath(string $doc, int $ln, string $token, bool $exampleLine): void
         }
         return;
     }
-    if (sh('git check-ignore -q ' . escapeshellarg($p) . '; echo $?') === '0') {
+    if (sh('git check-ignore -q ' . escapeshellarg($isDir ? $p . '/' : $p) . '; echo $?') === '0') {
         finding('INFO', $doc, $ln, 'paths', "`$token` is gitignored/runtime-generated (not verifiable, ensure its generator still exists)");
         return;
     }
