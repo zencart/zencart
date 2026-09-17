@@ -116,7 +116,7 @@ class paypal extends base {
       $this->title = MODULE_PAYMENT_PAYPAL_TEXT_CATALOG_TITLE; // Payment Module title in Catalog
     }
 
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     $this->description = MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION;
     if ((int)zen_config('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') > 0) {

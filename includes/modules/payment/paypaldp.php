@@ -285,7 +285,7 @@ class paypaldp extends base {
 
     $this->sort_order = zen_config('MODULE_PAYMENT_PAYPALDP_SORT_ORDER');
 
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     if ((!defined('PAYPAL_OVERRIDE_CURL_WARNING') || (defined('PAYPAL_OVERRIDE_CURL_WARNING') && PAYPAL_OVERRIDE_CURL_WARNING != 'True')) && !function_exists('curl_init')) $this->enabled = false;
 

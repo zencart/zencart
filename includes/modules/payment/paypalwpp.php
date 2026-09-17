@@ -183,7 +183,7 @@ class paypalwpp extends base {
 
       $this->sort_order = zen_config('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER');
 
-      if (null === $this->sort_order) return false;
+      if (null === $this->sort_order) return;
 
       if ($this->enabled) {
         if ( (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'PayPal' && (empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD'))))

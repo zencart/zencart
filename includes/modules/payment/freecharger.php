@@ -60,7 +60,7 @@
       $this->sort_order = zen_config('MODULE_PAYMENT_FREECHARGER_SORT_ORDER');
       $this->enabled = (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') === 'True');
 
-      if (null === $this->sort_order) return false;
+      if (null === $this->sort_order) return;
 
       if ((int)zen_config('MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID') > 0) {
         $this->order_status = (int)zen_config('MODULE_PAYMENT_FREECHARGER_ORDER_STATUS_ID');
