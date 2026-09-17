@@ -15,6 +15,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Support\zcUnitTestCase;
 use VersionServer;
 
+// Data providers are declared both as @dataProvider docblocks (PHPUnit 9.6, this branch's
+// composer.lock) and as #[DataProvider] attributes (PHPUnit 10+, master); each version ignores
+// the form it does not understand, so the file ports between branches unchanged.
 class VersionServerPluginIdsTest extends zcUnitTestCase
 {
     public function setUp(): void
@@ -58,6 +61,9 @@ class VersionServerPluginIdsTest extends zcUnitTestCase
         ];
     }
 
+    /**
+     * @dataProvider pluginIdInputProvider
+     */
     #[DataProvider('pluginIdInputProvider')]
     public function testNormalizePluginIds(string $input, array $expectedIds, string $expectedType): void
     {
@@ -72,6 +78,8 @@ class VersionServerPluginIdsTest extends zcUnitTestCase
      * getZcVersioninfo()) when nothing valid remains after normalization. If it did not, this
      * test would error on the undefined zen_get_system_information() long before any request
      * was made.
+     *
+     * @dataProvider nothingToQueryProvider
      */
     #[DataProvider('nothingToQueryProvider')]
     public function testGetPluginVersionReturnsFalseWhenNoValidIdRemains(mixed $input): void
