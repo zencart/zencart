@@ -77,7 +77,7 @@ class ot_group_pricing {
     $this->title = MODULE_ORDER_TOTAL_GROUP_PRICING_TITLE;
     $this->description = MODULE_ORDER_TOTAL_GROUP_PRICING_DESCRIPTION;
     $this->sort_order = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER');
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     $this->include_shipping = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING');
     $this->include_tax = zen_config('MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX');
