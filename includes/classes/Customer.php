@@ -22,6 +22,7 @@ class Customer extends base
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
     protected bool $addresses_loaded = false;
+    protected ?int $loaded_customer_id = null;
 
     /**
      * @param int|string|null $customer_id
@@ -221,7 +222,7 @@ class Customer extends base
     public function getData(?string $element = null)
     {
         // Address data is loaded on demand when the constructor was told to skip it.
-        if (!$this->addresses_loaded && !empty($this->customer_id) && !empty($this->data)
+        if (!$this->addresses_loaded && !empty($this->loaded_customer_id) && !empty($this->data)
             && (empty($element) || $element === 'addresses' || !isset($this->data[$element]))
         ) {
             $this->loadAddresses();
@@ -619,10 +620,12 @@ class Customer extends base
         }
 
         $this->addresses_loaded = false;
+        $this->loaded_customer_id = null;
         $data_ok = $this->loadBaseCustomerInfo($customer_id);
         if ($data_ok === false) {
             return false;
         }
+        $this->loaded_customer_id = $customer_id;
 
         if ($this->load_addresses) {
             $this->loadAddresses();
@@ -677,11 +680,11 @@ class Customer extends base
     protected function loadAddresses(): void
     {
         $this->addresses_loaded = true;
-        if (empty($this->customer_id) || empty($this->data)) {
+        if (empty($this->loaded_customer_id) || empty($this->data)) {
             return;
         }
 
-        $addresses = $this->getFormattedAddressBookList($this->customer_id);
+        $addresses = $this->getFormattedAddressBookList($this->loaded_customer_id);
         $found_default_address_id = false;
         $first_address = null;
 
@@ -866,7 +869,7 @@ class Customer extends base
         $sql =
             "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_default_address_id = " . (int)$id . "
-              WHERE customers_id = " . (int)$this->customer_id;
+              WHERE customers_id = " . (int)($this->loaded_customer_id ?? $this->customer_id);
         $db->Execute($sql);
         $this->data['customers_default_address_id'] = (int)$id;
     }

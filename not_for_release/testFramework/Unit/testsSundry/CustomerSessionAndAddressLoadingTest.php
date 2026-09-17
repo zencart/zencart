@@ -98,6 +98,21 @@ class CustomerSessionAndAddressLoadingTest extends zcUnitTestCase
         $this->assertSame(1, $customer->addressLoads, 'subsequent requests reuse the loaded data');
     }
 
+    public function testAddressesLoadForTheCustomerPassedToLoadNotTheInstanceId(): void
+    {
+        // login/header_php.php does `new Customer()` and then `login($id)`: the instance has no
+        // customer_id of its own, so the address load has to follow the id given to load().
+        $_SESSION = [];
+        $customer = new StubLoadedCustomer();
+        $this->assertSame(0, $customer->addressLoads);
+
+        $customer->loadForTest(42);
+        $this->assertSame(1, $customer->addressLoads);
+        $this->assertSame(42, $customer->addressLoadedFor);
+        $this->assertSame([], $customer->getData('addresses'));
+        $this->assertSame(1, $customer->addressLoads, 'a loaded address list must not be fetched again');
+    }
+
     public function testDeferredLoadingIsSafeWhenThereIsNoCustomerRecord(): void
     {
         $_SESSION = [];
@@ -116,14 +131,22 @@ class CustomerSessionAndAddressLoadingTest extends zcUnitTestCase
 class StubLoadedCustomer extends Customer
 {
     public int $addressLoads = 0;
+    public ?int $addressLoadedFor = null;
+
+    public function loadForTest(int $customer_id): bool
+    {
+        return $this->load($customer_id);
+    }
 
     protected function load(?int $customer_id = null): bool
     {
         $this->addresses_loaded = false;
+        $this->loaded_customer_id = null;
         $this->data = [
             'customers_id' => $customer_id,
             'customers_default_address_id' => 7,
         ];
+        $this->loaded_customer_id = $customer_id;
         if ($this->load_addresses) {
             $this->loadAddresses();
         }
@@ -132,8 +155,12 @@ class StubLoadedCustomer extends Customer
 
     protected function loadAddresses(): void
     {
-        $this->addressLoads++;
         $this->addresses_loaded = true;
+        if (empty($this->loaded_customer_id) || empty($this->data)) {
+            return;
+        }
+        $this->addressLoads++;
+        $this->addressLoadedFor = $this->loaded_customer_id;
         $this->data['addresses'] = [];
     }
 }
