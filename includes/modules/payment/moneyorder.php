@@ -73,7 +73,7 @@ class moneyorder extends base
             $this->enabled = (defined('MODULE_PAYMENT_MONEYORDER_STATUS') && MODULE_PAYMENT_MONEYORDER_STATUS == 'True');
 
             if (null === $this->sort_order) {
-                return false;
+                return;
             }
 
             if (IS_ADMIN_FLAG === true && (MODULE_PAYMENT_MONEYORDER_PAYTO == 'the Store Owner/Website Name' || MODULE_PAYMENT_MONEYORDER_PAYTO == '')) {

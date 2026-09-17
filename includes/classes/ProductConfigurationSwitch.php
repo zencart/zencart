@@ -30,7 +30,7 @@ class ProductConfigurationSwitch extends base
         $type_lookup = $db->Execute($sql, 1);
   
         if ($type_lookup->RecordCount() == 0) {
-          return false;
+          return;
         }
 
         $this->products_type = $type_lookup->fields['products_type']; 

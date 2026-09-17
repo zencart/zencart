@@ -51,7 +51,7 @@ class ot_shipping extends base
         $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
         $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') ? (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : null;
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
         $this->output = [];
     }

@@ -58,7 +58,7 @@
       $this->description = MODULE_ORDER_TOTAL_COD_DESCRIPTION;
       $this->enabled = (defined('MODULE_ORDER_TOTAL_COD_STATUS') && MODULE_ORDER_TOTAL_COD_STATUS == 'true');
       $this->sort_order = defined('MODULE_ORDER_TOTAL_COD_SORT_ORDER') ? MODULE_ORDER_TOTAL_COD_SORT_ORDER : null;
-      if (null === $this->sort_order) return false;
+      if (null === $this->sort_order) return;
 
       $this->output = array();
     }

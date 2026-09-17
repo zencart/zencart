@@ -55,7 +55,7 @@ class ot_loworderfee
         $this->description = MODULE_ORDER_TOTAL_LOWORDERFEE_DESCRIPTION;
         $this->enabled = $this->isEnabled();
         $this->sort_order = defined('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER') ? MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER : null;
-        if (null === $this->sort_order) return false;
+        if (null === $this->sort_order) return;
     }
 
     /**
