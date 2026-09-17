@@ -129,7 +129,7 @@ class authorizenet_aim extends base {
     $this->description = MODULE_PAYMENT_AUTHORIZENET_AIM_TEXT_DESCRIPTION; // Descriptive Info about module in Admin
     $this->sort_order = defined('MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_AIM_SORT_ORDER : null; // Sort Order of this payment option on the customer payment page
 
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     $this->form_action_url = zen_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false); // Page to go to upon submitting page info
     $this->order_status = (int)DEFAULT_ORDERS_STATUS_ID;

@@ -114,7 +114,7 @@ class ot_coupon extends base
         $valid = true;
         $this->notify('NOTIFY_OT_COUPON_START', true, $valid);
         if (!$valid) {
-            return false;
+            return;
         }
         $this->code = 'ot_coupon';
         $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
@@ -123,7 +123,7 @@ class ot_coupon extends base
         $this->credit_class = true;
         $this->user_prompt = '';
         $this->sort_order = defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER') ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : null;
-        if (null === $this->sort_order) return false;
+        if (null === $this->sort_order) return;
 
         $this->include_shipping = MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
         $this->include_tax = MODULE_ORDER_TOTAL_COUPON_INC_TAX;

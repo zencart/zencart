@@ -58,7 +58,7 @@ class cod
       $this->description = MODULE_PAYMENT_COD_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_COD_SORT_ORDER') ? MODULE_PAYMENT_COD_SORT_ORDER : null;
       $this->enabled = (defined('MODULE_PAYMENT_COD_STATUS') && MODULE_PAYMENT_COD_STATUS == 'True');
-      if (null === $this->sort_order) return false;
+      if (null === $this->sort_order) return;
       if (defined('MODULE_PAYMENT_COD_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
       }

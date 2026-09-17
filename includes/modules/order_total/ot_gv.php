@@ -112,7 +112,7 @@ class ot_gv {
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
     $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
     $this->sort_order = defined('MODULE_ORDER_TOTAL_GV_SORT_ORDER') ? MODULE_ORDER_TOTAL_GV_SORT_ORDER : null;
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->include_shipping = MODULE_ORDER_TOTAL_GV_INC_SHIPPING;

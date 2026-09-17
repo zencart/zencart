@@ -52,7 +52,7 @@ class ot_tax
             $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;
             $this->sort_order = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') ? MODULE_ORDER_TOTAL_TAX_SORT_ORDER : null;
             if (null === $this->sort_order) {
-                return false;
+                return;
             }
 
             $this->output = [];

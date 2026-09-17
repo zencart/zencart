@@ -77,7 +77,7 @@ class ot_group_pricing {
     $this->title = MODULE_ORDER_TOTAL_GROUP_PRICING_TITLE;
     $this->description = MODULE_ORDER_TOTAL_GROUP_PRICING_DESCRIPTION;
     $this->sort_order = defined('MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER') ? MODULE_ORDER_TOTAL_GROUP_PRICING_SORT_ORDER : null;
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     $this->include_shipping = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_SHIPPING;
     $this->include_tax = MODULE_ORDER_TOTAL_GROUP_PRICING_INC_TAX;

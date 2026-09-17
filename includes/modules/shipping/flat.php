@@ -18,7 +18,7 @@ class flat extends ZenShipping
         $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
         $this->sort_order = defined('MODULE_SHIPPING_FLAT_SORT_ORDER') ? MODULE_SHIPPING_FLAT_SORT_ORDER : null;
         if (null === $this->sort_order) {
-            return false;
+            return;
         }
 
         $this->icon = '';
