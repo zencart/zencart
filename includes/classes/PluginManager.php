@@ -5,7 +5,7 @@ declare(strict_types=1);
  *
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2026 Mar 05 Modified in v2.2.1 $
+ * @version $Id: DrByte 2026 Sep 16 Modified in v2.3.0 $
  */
 
 namespace Zencart\PluginManager;
@@ -106,13 +106,17 @@ class PluginManager
         // new array for reverse-lookup after getting results back
         $pluginsById = [];
 
-        $ids_csv = '';
+        $ids = [];
         foreach ($plugins as $plugin) {
-            $pluginsById[$plugin['zc_contrib_id']] = $plugin;
-            $ids_csv .= (int)trim($plugin['zc_contrib_id']) . ',';
+            $id = (int)$plugin['zc_contrib_id'];
+            if ($id === 0) {
+                continue; // no plugin-library id, so there is nothing to look up online
+            }
+            $pluginsById[$id] = $plugin;
+            $ids[] = $id;
         }
 
-        $results = $this->getLatestPluginVersionsOnline($ids_csv);
+        $results = $this->getLatestPluginVersionsOnline(implode(',', $ids));
 
         // if no results or invalid format, abort
         // @TODO - is this the right return type? or should we return the unaltered $plugins array?
