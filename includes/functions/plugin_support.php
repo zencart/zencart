@@ -6,7 +6,7 @@
  *
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2026 Mar 17 Modified in v2.2.1 $
+ * @version $Id: DrByte 2026 Sep 17 Modified in v2.3.0 $
  *
  * @since ZC v1.5.3
  */
@@ -33,7 +33,8 @@ if (!defined('LOG_PLUGIN_VERSIONCHECK_FAILURES')) {
  * @var int|string $plugin_file_id = the fileid number for the plugin as hosted on the zen-cart.com plugins library
  * @var string $version_string_to_compare = the version that I have now on my own server (will be checked against the one on the ZC server)
  * @var bool $strict_zc_version_compare = whether to do a strict comparison of ZC versions (default is false, which ignores non-numeric characters)
- * If the "version string" passed to this function evaluates (see strcmp) to a value less-then-or-equal-to the one on the ZC server, FALSE will be returned.
+ * Both version strings are reduced to their first run of dot-separated digits before being compared with version_compare(), so a leading "v" (or other decoration) on either side is ignored.
+ * If the "version string" passed to this function evaluates to a value less-than-or-equal-to the one on the ZC server, FALSE will be returned.
  * If the "version string" on the ZC server is greater than the version string passed to this function, this function will return an array with up-to-date information. The [link] value is the plugin page at zen-cart.com
  * If no plugin_file_id is passed, or if no result is found, then FALSE will be returned.
  *
@@ -79,7 +80,23 @@ function plugin_version_check_for_updates(mixed $plugin_file_id = 0, string $ver
         return false;
     }
 
-    if (strcmp($data[0]['latest_plugin_version'], $version_string_to_compare) > 0) {
+    /**
+     * Only the first run of dot-separated digits on each side takes part in the comparison.
+     * The installed side is the plugin's version directory name (usually "v1.0.1", sometimes "1.0.1")
+     * and the library side is whatever the contributor typed when publishing ("1.0.1", "v1.0.1",
+     * "Version 1.0", ...); a prefix on only one side makes both strcmp() and a raw version_compare()
+     * misjudge the pair, so "v1.0.1", "Version 1.0.1" and "1.0.1" all compare as "1.0.1".
+     * Letter suffixes are dropped deliberately: version_compare() reads "1.5.8a" as an alpha release
+     * that predates "1.5.8", the opposite of the Zen Cart convention, so treating the two as equal
+     * (no notice) is the safer outcome. A string with no digits at all becomes "0".
+     * Kept inline (rather than as a separate function) so that plugins which carry a copy of this
+     * function behind a function_exists() gate can keep it self-contained.
+     */
+    $comparable = static function (string $version): string {
+        return preg_match('/\d+(?:\.\d+)*/', $version, $matches) === 1 ? $matches[0] : '0';
+    };
+    $latest_version = $comparable((string)($data[0]['latest_plugin_version'] ?? ''));
+    if (version_compare($latest_version, $comparable($version_string_to_compare), '>')) {
         $new_version_available = true;
     }
     // check whether present ZC version is compatible with the latest available plugin version
