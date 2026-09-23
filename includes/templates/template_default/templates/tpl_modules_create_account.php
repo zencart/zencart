@@ -87,22 +87,35 @@
 <?php
   if (zen_config('ACCOUNT_STATE') === 'true') {
     if ($flag_show_pulldown_states == true) {
+        if (!empty(zen_get_country_zones($selected_country))) {
 ?>
 <label class="inputLabel" for="stateZone" id="zoneLabel"><?php echo ENTRY_STATE; ?></label>
 <?php
-      echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $zone_id, 'id="stateZone"');
-      echo '<span class="alert">' . ((!empty(ENTRY_STATE_TEXT) && (int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0) ? ENTRY_STATE_TEXT : '') . '</span>';
-    }
+            echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $zone_id, 'id="stateZone"');
+            echo '<span class="alert">' . ((!empty(ENTRY_STATE_TEXT) && (int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0) ? ENTRY_STATE_TEXT : '') . '</span>';
 ?>
-
-<?php if ($flag_show_pulldown_states == true) { ?>
-<br class="clearBoth" id="stBreak">
-<?php } ?>
+<div class="clearfix"></div>
+<label class="inputLabel" for="state" id="stateLabel" style="display: none;"><?php echo ENTRY_STATE; ?></label>
+<?php
+            echo zen_draw_input_field('state', '', zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state" style="display: none;"' . ((int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0 ? ' placeholder="' . ENTRY_STATE_TEXT . '"' : ''));
+        } else {
+?>
+<label class="inputLabel" for="stateZone" id="zoneLabel" style="display: none;"><?php echo ENTRY_STATE; ?></label>
+<?php
+            echo zen_draw_pull_down_menu('zone_id', zen_prepare_country_zones_pull_down($selected_country), $zone_id, 'id="stateZone" style="display: none;"');
+            echo '<span class="alert" style="display: none;">' . ((!empty(ENTRY_STATE_TEXT) && (int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0) ? ENTRY_STATE_TEXT : '') . '</span>';
+?>
+<div class="clearfix"></div>
+<label class="inputLabel" for="state" id="stateLabel"><?php echo ENTRY_STATE; ?></label>
+<?php
+            echo zen_draw_input_field('state', '', zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"' . ((int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0 ? ' placeholder="' . ENTRY_STATE_TEXT . '"' : ''));
+        }
+    } else {
+?>
 <label class="inputLabel" for="state" id="stateLabel"><?php echo $state_field_label; ?></label>
 <?php
-    echo zen_draw_input_field('state', '', zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"' . ((int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0 ? ' placeholder="' . ENTRY_STATE_TEXT . '"' : ''));
-    if ($flag_show_pulldown_states == false) {
-      echo zen_draw_hidden_field('zone_id', $zone_name, ' ');
+        echo zen_draw_input_field('state', '', zen_set_field_length(TABLE_ADDRESS_BOOK, 'entry_state', '40') . ' id="state"' . ((int)zen_config('ENTRY_STATE_MIN_LENGTH') > 0 ? ' placeholder="' . ENTRY_STATE_TEXT . '"' : ''));
+        echo zen_draw_hidden_field('zone_id', $zone_name, ' ');
     }
 ?>
 <br class="clearBoth">
