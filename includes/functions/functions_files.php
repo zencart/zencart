@@ -259,8 +259,40 @@ function zen_get_admin_module_from_directory(int $product_type, string $filename
 {
     $dir = DIR_WS_MODULES;
     $product_type_foldername = zen_get_handler_from_type($product_type);
-    if (file_exists(DIR_WS_MODULES . $product_type_foldername . '/' . $filename_to_check)) {
-        $dir = DIR_WS_MODULES . $product_type_foldername . '/';
+    $coreTypeDir = DIR_WS_MODULES . $product_type_foldername . '/';
+
+    if (is_dir($coreTypeDir)) {
+        // Core ships this directory for every product type it recognizes, even ones with
+        // no per-type overrides yet -- e.g. admin/includes/modules/product/ ships empty on
+        // purpose, see HOW_OVERRIDES_WORK_HERE.txt in that directory. Its mere existence
+        // means core already owns this type, so a plugin isn't offered a fallback here even
+        // when this specific file is missing from it.
+        if (file_exists($coreTypeDir . $filename_to_check)) {
+            $dir = $coreTypeDir;
+        }
+    } else {
+        // No admin/includes/modules/ directory at all for this type -- core has never
+        // shipped anything for it, so it must be a new product type a plugin registered.
+        // Check installed plugins for an admin/includes/modules/<type_handler>/ directory
+        // of their own, so that plugin doesn't need its admin module files physically
+        // copied into DIR_WS_MODULES. Mirrors Zencart\FileSystem\FileSystem::findPluginAdminPage().
+        global $installedPlugins;
+        foreach ($installedPlugins ?? [] as $plugin) {
+            $pluginDir = DIR_FS_CATALOG . 'zc_plugins/' . $plugin['unique_key'] . '/' . $plugin['version'];
+            $resolvedPluginDir = realpath($pluginDir);
+            if ($resolvedPluginDir === false) {
+                continue;
+            }
+
+            $moduleDir = $pluginDir . '/admin/includes/modules/' . $product_type_foldername . '/';
+            $realModuleFile = realpath($moduleDir . $filename_to_check);
+            if ($realModuleFile === false || strpos($realModuleFile, $resolvedPluginDir) !== 0) {
+                continue;
+            }
+
+            $dir = $moduleDir;
+            break;
+        }
     }
 
     // As of v2.0.0 $dir_only is not currently used by core code, but is here for the convenience of plugins.
