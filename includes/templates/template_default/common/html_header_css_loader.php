@@ -2,7 +2,8 @@
 /**
  * Common Template
  *
- * Outputs the html header's CSS files.
+ * Outputs the html header's CSS files. CSS files are loaded parent-first, with the active template's
+ * version of the file being loaded last (and, thus, taking precedence in a page's styling).
  *
  * @copyright Copyright 2003-2025 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
@@ -14,11 +15,10 @@ if (!defined('IS_ADMIN_FLAG')) {
 }
 
 /**
- * load all template-specific stylesheets, named like "style*.css", alphabetically
+ * load all template-specific stylesheets, named like "style*.css", alphabetically.
  */
-$directory_array = $template->get_template_part($template->get_template_dir('^style.*\.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.css');
-foreach ($directory_array as $value) {
-    echo '<link rel="stylesheet" href="' . zen_add_filemtime($template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value) . '">' . "\n";
+foreach ($template->getTemplateFilesWithDir('^style.*\.css', $current_page_base, 'css') as $next_css_file) {
+    echo '<link rel="stylesheet" href="' . zen_add_filemtime($next_css_file) . '">' . "\n";
 }
 
 /**
@@ -31,20 +31,19 @@ if ($current_page_base === 'page' && isset($ezpage_id)) {
     $tmp_pagename = $current_page_base . (int)$ezpage_id;
 }
 $sheets_array = [
-    '/' . $_SESSION['language'] . '_stylesheet',
-    '/' . $tmp_pagename,
-    '/' . $_SESSION['language'] . '_' . $tmp_pagename,
-    '/c_' . $cPath,
-    '/' . $_SESSION['language'] . '_c_' . $cPath,
-    '/m_' . $manufacturers_id,
-    '/' . $_SESSION['language'] . '_m_' . (int)$manufacturers_id,
-    '/p_' . $tmp_products_id,
-    '/' . $_SESSION['language'] . '_p_' . $tmp_products_id,
+    $_SESSION['language'] . '_stylesheet',
+    $tmp_pagename,
+    $_SESSION['language'] . '_' . $tmp_pagename,
+    'c_' . $cPath,
+    $_SESSION['language'] . '_c_' . $cPath,
+    'm_' . $manufacturers_id,
+    $_SESSION['language'] . '_m_' . (int)$manufacturers_id,
+    'p_' . $tmp_products_id,
+    $_SESSION['language'] . '_p_' . $tmp_products_id,
 ];
 foreach ($sheets_array as $value) {
-    $perpagefile = $template->get_template_dir('^' . $value . '.css', DIR_WS_TEMPLATE, $current_page_base, 'css') . $value . '.css';
-    if (file_exists($perpagefile)) {
-        echo '<link rel="stylesheet" href="' . zen_add_filemtime($perpagefile) . '">' . "\n";
+    foreach ($template->getTemplateFilesWithDir('^' . $value . '\.css', $current_page_base, 'css') as $next_css_file) {
+        echo '<link rel="stylesheet" href="' . zen_add_filemtime($next_css_file) . '">' . "\n";
     }
 }
 
@@ -55,37 +54,35 @@ $tmp_cats = explode('_', $cPath);
 $value = '';
 foreach ($tmp_cats as $val) {
     $value .= $val;
-    $ppfile = 'c_' . $value . '_children.css';
-    $perpagefile = $template->get_template_dir('^' . $ppfile, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $ppfile;
-    if (file_exists($perpagefile)) {
-        echo '<link rel="stylesheet" href="' . zen_add_filemtime($perpagefile) . '">' . "\n";
+
+    $ppfile = 'c_' . $value . '_children';
+    foreach ($template->getTemplateFilesWithDir('^' . $ppfile . '\.css', $current_page_base, 'css') as $next_css_file) {
+        echo '<link rel="stylesheet" href="' . zen_add_filemtime($next_css_file) . '">' . "\n";
     }
-    $ppfile = $_SESSION['language'] . '_c_' . $value . '_children.css';
-    $perpagefile = $template->get_template_dir('^' . $ppfile, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $ppfile;
-    if (file_exists($perpagefile)) {
-        echo '<link rel="stylesheet" href="' . zen_add_filemtime($perpagefile) . '">' . "\n";
+
+    $ppfile = $_SESSION['language'] . '_' . $ppfile;
+    foreach ($template->getTemplateFilesWithDir('^' . $ppfile . '\.css', $current_page_base, 'css') as $next_css_file) {
+        echo '<link rel="stylesheet" href="' . zen_add_filemtime($next_css_file) . '">' . "\n";
     }
+
     $value .= '_';
 }
 
 /**
  * load printer-friendly stylesheets -- named like "print*.css", alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('^print.*\.css', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^print/', '.css');
-foreach ($directory_array as $value) {
-    echo '<link rel="stylesheet" media="print" href="' . zen_add_filemtime($template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value) . '">' . "\n";
+foreach ($template->getTemplateFilesWithDir('^print.*\.css', $current_page_base, 'css') as $next_css_file) {
+    echo '<link rel="stylesheet" media="print" href="' . zen_add_filemtime($next_css_file) . '">' . "\n";
 }
 
 /**
  * load all DYNAMIC template-specific stylesheets, named like "style*.php", alphabetically
  */
-$directory_array = $template->get_template_part($template->get_template_dir('^style.*\.php', DIR_WS_TEMPLATE, $current_page_base, 'css'), '/^style/', '.php');
-foreach ($directory_array as $value) {
-    require $template->get_template_dir('^' . $value, DIR_WS_TEMPLATE, $current_page_base, 'css') . '/' . $value;
+foreach ($template->getTemplateFilesWithDir('^style.*\.php', $current_page_base, 'css') as $next_css_file) {
+    require $next_css_file;
 }
 
 // User defined styles come last
-$user_styles = $template->get_template_dir('^site_specific_styles.php', DIR_WS_TEMPLATE, $current_page_base, 'css') . '/site_specific_styles.php';
-if (file_exists($user_styles)) {
-    require $user_styles;
+foreach ($template->getTemplateFilesWithDir('^site_specific_styles\.php', $current_page_base, 'css') as $next_user_style) {
+    require $next_user_style;
 }
