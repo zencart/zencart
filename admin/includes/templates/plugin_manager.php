@@ -40,6 +40,7 @@ use Zencart\PluginSupport\PluginStatus;
                                     $colnumb <= 1 => ' w-10',
                                     $colnumb <= 2 => ' w-15',
                                     $colnumb <= 3 => ' w-20',
+                                    $colnumb === 4 => ' w-10 text-center',  //- 'status' column
                                     default => ' w-10',
                                 };
                                 ?>
@@ -66,7 +67,7 @@ use Zencart\PluginSupport\PluginStatus;
                         <tbody>
                         <?php
                         foreach ($formatter->getTableData() as $tableData) {
-                            if ($tableData["status"]["original"] === $i) {
+                            if ($tableData['status']['original'] === $i) {
                                 if ($formatter->isRowSelected($tableData)) { ?>
                                     <tr id="defaultSelected" class="dataTableRowSelected" onclick="document.location.href='<?= $formatter->getSelectedRowLink($tableData) ?>'">
                                     <?php
@@ -74,8 +75,14 @@ use Zencart\PluginSupport\PluginStatus;
                                     <tr class="dataTableRow" onclick="document.location.href='<?= $formatter->getNotSelectedRowLink($tableData) ?>'">
                                     <?php
                                 }
-                                foreach ($tableData as $column) { ?>
-                                    <td <?= empty($column['class']) ? '' : 'class="' . $column['class'] . '"' ?>><?= $column['value'] ?></td>
+                                foreach ($tableData as $name => $column) {
+                                    $class = $column['class'] ?? '';
+                                    if ($name === 'status') {
+                                        $class .= ' text-center';
+                                    }
+                                    $class = ($class !== '') ? 'class="' . $class . '"' : '';
+                                    ?>
+                                    <td <?= $class ?>><?= $column['value'] ?></td>
                                     <?php
                                 }
                                 require DIR_WS_TEMPLATES . 'partials/tableview_rowactions.php'; ?>
