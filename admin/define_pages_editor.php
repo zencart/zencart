@@ -131,6 +131,7 @@ switch ($action) {
         ?>
         <?php
         if ($_SESSION['language'] && $_GET['filename']) {
+            $file = DIR_FS_CATALOG . $file;
             if (file_exists($file)) {
                 $file_contents = file_get_contents($file);
 
