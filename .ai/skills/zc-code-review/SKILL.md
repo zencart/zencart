@@ -13,6 +13,7 @@ Use `CONVENTIONS.md` as the baseline:
 - Apply PSR-12, naming, `declare(strict_types=1)`, and no-colon-syntax rules to new code and to files already being modified, while respecting the documented legacy exceptions.
 - Flag direct edits to bootstrap/path files listed as "should never be directly edited"; prefer `extra_configures`, `init_includes`, plugin hooks, or other established extension points.
 - Do not flag template files for outputting a closing form tag via PHP (`<?= '</form>' ?>`); it pairs with `zen_draw_form()` intentionally.
+- Do not flag `declare(strict_types=1)` placement. Both `<?php` followed directly by the declare and `<?php` followed by a blank line then the declare are accepted house style. Older files that place it below the file docblock are accepted where they already exist.
 
 Security-sensitive changes:
 

@@ -99,9 +99,35 @@ $result = doSomethingNonObvious();
 
 ### `declare(strict_types=1)`
 
-Add `declare(strict_types=1)` to all **new** class files, placed after the opening `<?php` tag
-and the file's docblock comment, before the namespace declaration.
-Do not add it retroactively to existing files unless they are being substantially rewritten.
+Add `declare(strict_types=1)` to all **new** class files, on its own line immediately after the
+opening `<?php` tag — *above* the file docblock, not below it — and before the namespace declaration.
+
+```php
+<?php
+declare(strict_types=1);
+
+/**
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ */
+
+namespace Zencart\Example;
+```
+
+A blank line between the opening tag and the declare is equally acceptable:
+
+```php
+<?php
+
+declare(strict_types=1);
+```
+
+**Both forms are correct.** Neither is a review finding. Do not normalize existing files from one form to the other.
+
+A small number of older files place the declare *below* the file docblock. That ordering is
+accepted where it already exists — do not churn those files — but do not use it in new ones.
+
+Do not add it retroactively to existing files unless they are being substantially rewritten and the change is tested.
 Do add it to new class files that have been copied or patterned from an existing file that lacks it.
 
 ---
