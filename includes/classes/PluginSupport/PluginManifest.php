@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 /**
- * @copyright Copyright 2003-2025 Zen Cart Development Team
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: lat9 2025 Sep 27 New in v3.0.0 $
+ * @version $Id: lat9 2026 Sep 15 New in v3.0.0 $
  *
  * @since ZC v3.0.0
  */
@@ -16,7 +16,7 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class PluginManifest
 {
-    protected array $manifest_info;
+    protected array $manifest_info = [];
     protected string $pluginsRoot;  //- Note: No ending DIRECTORY_SEPARATOR!
 
     /**
@@ -54,10 +54,19 @@ class PluginManifest
             return null;
         }
 
+        /**
+         * A template package must supply a non-empty string as its template key;
+         * anything else is treated as "not a selectable template".
+         */
+        $template_key = $manifest['template']['key'] ?? null;
+        if (!is_string($template_key) || $template_key === '') {
+            $template_key = null;
+        }
+
         $this->manifest_info[$plugin_key][$version] = [
             'contents' => $manifest,
-            'template_key' => $manifest['template']['key'] ?? null,
-            'removes_uncapsulated_version' => !empty($manifest['removesUnencapsulatedVersion']),
+            'template_key' => $template_key,
+            'removes_unencapsulated_version' => !empty($manifest['removesUnencapsulatedVersion']),
         ];
 
         return $manifest;
@@ -94,7 +103,7 @@ class PluginManifest
         if ($this->get($plugin_key, $version) === null) {
             return false;
         }
-        return $this->manifest_info[$plugin_key][$version]['removes_uncapsulated_version'];
+        return $this->manifest_info[$plugin_key][$version]['removes_unencapsulated_version'];
     }
 
     /**

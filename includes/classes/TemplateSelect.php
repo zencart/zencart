@@ -12,6 +12,10 @@ namespace Zencart\Templates;
 use Zencart\DbRepositories\PluginControlRepository;
 use Zencart\PluginSupport\PluginStatus;
 
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
 /**
  * A class that manages the `template_select` database table and provides "helper"
  * functions to the admin's tool of the same name.
@@ -32,9 +36,6 @@ use Zencart\PluginSupport\PluginStatus;
  *
  * @since ZC v3.0.0
  */
-if (!defined('IS_ADMIN_FLAG')) {
-    die('Illegal Access');
-}
 class TemplateSelect
 {
     public const int TEMPLATE_BASE_LANGUAGE = -1;
@@ -60,7 +61,7 @@ class TemplateSelect
          * If the class 'copy' of the $db object is already set, the class has already
          * initialized and all its static properties can be reused.
          */
-        if (isset(self::$db) || !defined('IS_ADMIN_FLAG')) {
+        if (isset(self::$db)) {
             return;
         }
 
@@ -297,10 +298,10 @@ class TemplateSelect
      *
      * @since ZC v3.0.0
      */
-    protected function getParentTemplates($template_dir): array
+    protected function getParentTemplates(string $template_dir): array
     {
         /**
-         * Save the requested template's parents' settings statically, so they don't need to be determined on
+         * Save the requested template's parent list statically, so it doesn't need to be determined on
          * every call to this method. zen_get_template_inheritance_chain's returned array (numerically indexed)
          * includes the requested template as its first element. That's discarded prior to the assignment.
          */

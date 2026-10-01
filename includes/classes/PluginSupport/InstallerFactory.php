@@ -11,7 +11,6 @@ namespace Zencart\PluginSupport;
 
 use queryFactory;
 use Zencart\Exceptions\PluginInstallerException;
-use Zencart\PluginSupport\PluginManifest;
 
 /**
  * @since ZC v1.5.7

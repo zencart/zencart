@@ -182,7 +182,7 @@ class PluginManagerController extends BaseController
      */
     protected function setActiveTemplateWarning(string $template): bool
     {
-        $this->templateSelect ??= new \Zencart\Templates\TemplateSelect();
+        $this->templateSelect ??= new TemplateSelect();
         foreach ($this->templateSelect->getAllActiveTemplates() as $selectedTemplate) {
             if (($selectedTemplate['template_dir'] ?? null) === $template) {
                 $this->setBoxContent(
@@ -200,7 +200,7 @@ class PluginManagerController extends BaseController
      */
     protected function setParentTemplateWarning(string $template): bool
     {
-        $this->templateSelect ??= new \Zencart\Templates\TemplateSelect();
+        $this->templateSelect ??= new TemplateSelect();
         if ($this->templateSelect->isActiveParentTemplate($template) === true) {
             $this->setBoxContent(
                 \zen_black_line() .

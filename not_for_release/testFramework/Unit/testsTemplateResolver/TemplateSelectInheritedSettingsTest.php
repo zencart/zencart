@@ -309,6 +309,36 @@ class TemplateSelectInheritedSettingsTest extends zcUnitTestCase
         $this->assertFalse($templateSelect->isActiveTemplate('not_a_real_template'));
     }
 
+    /**
+     * With zz_test_grandchild assigned to language 0, both of its ancestors are "active
+     * parents"; the assigned template itself is not its own parent, and template_default
+     * is excluded from the chain that getParentTemplates() walks.
+     */
+    public function testIsActiveParentTemplateReportsAncestorsOfAssignedTemplates(): void
+    {
+        $templateSelect = new TemplateSelect();
+
+        $this->assertTrue($templateSelect->isActiveParentTemplate(self::CHILD_DIR));
+        $this->assertTrue($templateSelect->isActiveParentTemplate(self::PARENT_DIR));
+        $this->assertFalse($templateSelect->isActiveParentTemplate(self::GRANDCHILD_DIR));
+        $this->assertFalse($templateSelect->isActiveParentTemplate('template_default'));
+        $this->assertFalse($templateSelect->isActiveParentTemplate('not_a_real_template'));
+    }
+
+    public function testIsActiveParentTemplateIsFalseWhenTheAssignedTemplateHasNoParents(): void
+    {
+        $this->seedRows([
+            ['template_dir' => self::PARENT_DIR, 'template_language' => '0', 'template_settings' => null],
+            ['template_dir' => self::PARENT_DIR, 'template_language' => '-1', 'template_settings' => null],
+        ]);
+        $GLOBALS['db'] = $this->makeMockDb();
+
+        $templateSelect = new TemplateSelect();
+
+        $this->assertFalse($templateSelect->isActiveParentTemplate(self::PARENT_DIR));
+        $this->assertFalse($templateSelect->isActiveParentTemplate(self::CHILD_DIR));
+    }
+
     private function createTemplateFixture(string $templateDir, ?string $baseTemplate): void
     {
         $path = DIR_FS_CATALOG . 'includes/templates/' . $templateDir;

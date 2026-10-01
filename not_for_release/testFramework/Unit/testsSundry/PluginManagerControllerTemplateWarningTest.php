@@ -31,9 +31,14 @@ namespace {
             ],
         ];
     }
+    /**
+     * Mirrors the real function's contract: the chain starts with the requested template
+     * itself, followed by its parents. Tests describe the chains they need via
+     * $GLOBALS['zc_test_template_inheritance_chains']; anything undescribed has no parents.
+     */
     function zen_get_template_inheritance_chain(string $templateKey, bool $includeTemplateDefault = true): array
     {
-        return [];
+        return $GLOBALS['zc_test_template_inheritance_chains'][$templateKey] ?? [$templateKey];
     }
 }
 
@@ -49,12 +54,67 @@ use Zencart\ViewBuilders\TableViewDefinition;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\InstallerFactory;
 
+/**
+ * The Plugin Manager's default (info-box) action warns when the selected plugin is a
+ * template package whose template is either currently assigned to a language by the
+ * Template Selection tool, or is a parent of a template that is. Both conditions also
+ * turn the "Uninstall" button into a warning-styled one.
+ *
+ * The ResponsiveClassicPlugin fixture under zc_plugins/ provides the manifest that
+ * makes the plugin a template package with the key 'responsive_classic_plugin'.
+ */
 #[AllowMockObjectsWithoutExpectations]
 #[RunTestsInSeparateProcesses]
 class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
 {
+    private const ACTIVE_WARNING = 'Assigned via <a href="template_select">Template Selection</a>';
+    private const PARENT_WARNING = 'Parent of a template assigned via <a href="template_select">Template Selection</a>';
 
     public function testTemplatePluginAssignedToOtherLanguageShowsUninstallWarning(): void
+    {
+        $content = $this->renderDefaultAction([
+            $this->templateRow(1, 'template_default', '0'),
+            $this->templateRow(2, 'responsive_classic_plugin', '999'),
+        ]);
+
+        $this->assertStringContainsString(self::ACTIVE_WARNING, $content);
+        $this->assertStringNotContainsString(self::PARENT_WARNING, $content);
+        $this->assertStringContainsString('class="btn btn-warning"', $content);
+    }
+
+    public function testTemplatePluginThatIsAParentOfAnAssignedTemplateShowsUninstallWarning(): void
+    {
+        $GLOBALS['zc_test_template_inheritance_chains'] = [
+            'child_of_plugin_template' => ['child_of_plugin_template', 'responsive_classic_plugin'],
+        ];
+
+        $content = $this->renderDefaultAction([
+            $this->templateRow(1, 'template_default', '0'),
+            $this->templateRow(2, 'child_of_plugin_template', '999'),
+        ]);
+
+        $this->assertStringContainsString(self::PARENT_WARNING, $content);
+        $this->assertStringNotContainsString(self::ACTIVE_WARNING, $content);
+        $this->assertStringContainsString('class="btn btn-warning"', $content);
+    }
+
+    public function testTemplatePluginThatIsNeitherAssignedNorAParentShowsNoWarning(): void
+    {
+        $content = $this->renderDefaultAction([
+            $this->templateRow(1, 'template_default', '0'),
+        ]);
+
+        $this->assertStringNotContainsString(self::ACTIVE_WARNING, $content);
+        $this->assertStringNotContainsString(self::PARENT_WARNING, $content);
+        $this->assertStringNotContainsString('class="btn btn-warning"', $content);
+        $this->assertStringContainsString('action=uninstall" class="btn btn-primary"', $content);
+    }
+
+    /**
+     * Runs the controller's default action for the ResponsiveClassicPlugin against the
+     * supplied `template_select` rows and returns the rendered info-box content.
+     */
+    private function renderDefaultAction(array $templateRows): string
     {
         $this->defineControllerConstants();
         $_SESSION['languages_id'] = 0;
@@ -71,20 +131,6 @@ class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
                 'version' => 'v1.0.0',
             ],
         ];
-        $templateRows = [
-            [
-                'template_id' => '1',
-                'template_dir' => 'template_default',
-                'template_language' => '0',
-                'template_settings' => null,
-            ],
-            [
-                'template_id' => '2',
-                'template_dir' => 'responsive_classic_plugin',
-                'template_language' => '999',
-                'template_settings' => null,
-            ],
-        ];
 
         $GLOBALS['db'] = $this->getMockBuilder('queryFactory')
             ->disableOriginalConstructor()
@@ -94,17 +140,14 @@ class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
                 $result = $this->getMockBuilder('queryFactoryResult')
                     ->disableOriginalConstructor()
                     ->getMock();
-
                 if (str_contains($sql, TABLE_PLUGIN_CONTROL)) {
                     $result->fields = $pluginRows[0];
                     return $this->mockIterator($result, $pluginRows);
                 }
-
                 if (str_contains($sql, TABLE_TEMPLATE_SELECT)) {
                     $result->fields = $templateRows[0];
                     return $this->mockIterator($result, $templateRows);
                 }
-
                 $result->fields = [];
                 return $this->mockIterator($result, []);
             }
@@ -154,6 +197,7 @@ class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
         $pluginManager->method('hasPluginVersionsToClean')->willReturn(0);
 
         $installerFactory = $this->createMock(InstallerFactory::class);
+
         $messageStack = new class {
             public function add_session(string $message, string $type): void
             {
@@ -164,15 +208,23 @@ class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
         $controller->init($pluginManager, $installerFactory);
         $controller->processRequest();
 
-        $content = implode(
+        return implode(
             "\n",
             array_map(
                 static fn(array $entry): string => (string) ($entry['text'] ?? ''),
                 $controller->getBoxContent()
             )
         );
+    }
 
-        $this->assertStringContainsString('Assigned via <a href="template_select">Template Selection</a>', $content);
+    private function templateRow(int $id, string $templateDir, string $language): array
+    {
+        return [
+            'template_id' => (string) $id,
+            'template_dir' => $templateDir,
+            'template_language' => $language,
+            'template_settings' => null,
+        ];
     }
 
     private function defineControllerConstants(): void
@@ -191,6 +243,7 @@ class PluginManagerControllerTemplateWarningTest extends zcUnitTestCase
         defined('TEXT_ENABLE') || define('TEXT_ENABLE', 'Enable');
         defined('TEXT_UNINSTALL') || define('TEXT_UNINSTALL', 'Uninstall');
         defined('WARNING_TEMPLATE_IS_ACTIVE') || define('WARNING_TEMPLATE_IS_ACTIVE', 'Assigned via <a href="%1$s">%2$s</a>');
+        defined('WARNING_TEMPLATE_IS_ACTIVE_PARENT') || define('WARNING_TEMPLATE_IS_ACTIVE_PARENT', 'Parent of a template assigned via <a href="%1$s">%2$s</a>');
     }
 }
 }
