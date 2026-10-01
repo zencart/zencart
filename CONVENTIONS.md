@@ -21,7 +21,9 @@ Formatting basics are already enforced by `.editorconfig` (4 spaces, LF line end
 final newline, no trailing whitespace) — configure your editor to respect it.
 Beyond `.editorconfig`, follow PSR-12 for brace placement, spacing, and structure.
 
-There is currently no automated PHPCS enforcement. Conventions are maintained by code review and AI tooling guidance.
+There is no CI-enforced style check. A `.php-cs-fixer.dist.php` config is available for local use
+(`vendor/bin/php-cs-fixer fix --dry-run --diff <path>` after `composer install`); conventions are
+otherwise maintained by code review and AI tooling guidance.
 
 ### One PSR-12 rule that is stricter here: no colon/endkeyword syntax
 
@@ -92,14 +94,40 @@ $result = doSomethingNonObvious();
 | Classes, interfaces, traits | StudlyCaps | `PluginManager`, `ScriptedInstaller` |
 | Methods | camelCase | `getProductName()` |
 | Properties | camelCase | `$orderTotal` |
-| Constants | UPPER_SNAKE_CASE | `TABLE_ORDERS`, `FILENAME_INDEX` |
+| Constants | UPPER_SNAKE_CASE | `TABLE_ORDERS`, `FILENAME_DEFAULT` |
 | Procedural functions | snake_case | `zen_get_products_name()` |
 
 ### `declare(strict_types=1)`
 
-Add `declare(strict_types=1)` to all **new** class files, placed after the opening `<?php` tag
-and the file's docblock comment, before the namespace declaration.
-Do not add it retroactively to existing files unless they are being substantially rewritten.
+Add `declare(strict_types=1)` to all **new** class files, on its own line immediately after the
+opening `<?php` tag — *above* the file docblock, not below it — and before the namespace declaration.
+
+```php
+<?php
+declare(strict_types=1);
+
+/**
+ * @copyright Copyright 2003-2026 Zen Cart Development Team
+ * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+ */
+
+namespace Zencart\Example;
+```
+
+A blank line between the opening tag and the declare is equally acceptable:
+
+```php
+<?php
+
+declare(strict_types=1);
+```
+
+**Both forms are correct.** Neither is a review finding. Do not normalize existing files from one form to the other.
+
+A small number of older files place the declare *below* the file docblock. That ordering is
+accepted where it already exists — do not churn those files — but do not use it in new ones.
+
+Do not add it retroactively to existing files unless they are being substantially rewritten and the change is tested.
 Do add it to new class files that have been copied or patterned from an existing file that lacks it.
 
 ---
@@ -123,7 +151,7 @@ these files unless a deliberate refactor has been scoped and agreed upon by core
 | `includes/classes/http_client.php` | no method visibility, no strict_types | Known tech debt; stable; do not modify; mostly deprecated anyway |
 | `includes/classes/split_page_results.php` | lowercase + splitCase hybrid | Legacy; stable |
 | Various legacy observers in `includes/classes/observers/` | lowercase class names | Legacy pattern for observer auto-loading |
-| `includes/modules/`, `includes/init_includes/`, `includes/extra_configures/` | closing `?>` tag present in ~71 files | Procedural include files; correct only when already editing the file |
+| Procedural include files under `includes/`, `admin/includes/extra_*/`, `includes/templates/template_default/`, plus three root-level redirect stubs | closing `?>` tag still present in some PHP-only files | Correct only when already editing the file. Mixed HTML/PHP pages and templates that end in `?>` are not violations |
 
 ---
 
@@ -171,34 +199,11 @@ Do not flag this pattern as an unnecessary echo or malformed HTML.
 
 ## Template settings: choosing `zen_config()` vs `$tplSetting->`
 
-See `AGENTS.md` → "Configuration: `zen_config()` vs `$tplSetting` (TemplateSettings)" for how the
-two mechanisms work and where `$tplSetting` is (and isn't) available. This section covers which
-keys are appropriate to convert from `zen_config()` to `$tplSetting->`.
-
-`$tplSetting->KEY` is appropriate only for **display/layout/template-presentation** settings —
-things a template should reasonably be able to override (box widths, separators, show/hide a
-sidebox section, image-size defaults, and similar).
-
-Keep using `zen_config()` for:
-- Core/site-wide settings not specific to template presentation: `STORE_NAME`, `STORE_OWNER_*`,
-  `CONTACT_US*`, `DEFAULT_LANGUAGE`, `DEFAULT_CURRENCY`.
-- Security/session-sensitive and registration-field settings: `SESSION_*`, `ENTRY_*_LENGTH`,
-  `ACCOUNT_*` fields governing required registration fields.
-- Business-logic/checkout-flow settings: `STOCK_CHECK`, `STOCK_ALLOW_CHECKOUT`,
-  `DISABLED_PRODUCTS*`, `CUSTOMERS_APPROVAL*`, `CUSTOMERS_REFERRAL_STATUS`,
-  `CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS`, `CUSTOMERS_ACTIVATION_REQUIRED`.
-- Any `MODULE_*` setting (payment/shipping/order-total module configuration).
-- Any key currently called with a meaningful default-value second argument
-  (`zen_config('KEY', $default)`) — `$tplSetting->KEY` has no equivalent default-parameter
-  support, so converting would silently drop that fallback behavior.
-- Settings actually backed by a different repository/table than `configuration`
-  (e.g. `SHOW_*_ATTRIBUTES`, sourced from `product_type_layout`) — these require
-  `zen_config()`'s repository-aware lookup.
-- `*_FILENAME` constants and other non-display identifiers.
-
-When in doubt, check the setting's `configuration_group_id`/title/description in
-`zc_install/sql/install/mysql_zencart.sql` to judge whether it reads as a template/display
-concern or a core/business one.
+Which configuration keys may be read through `$tplSetting->` instead of `zen_config()`, and
+where `$tplSetting` is available, is specified in `.ai/rules/templates.md` (loaded automatically
+when working under `includes/templates/` or `includes/modules/`). Short version: only
+display/layout/template-presentation settings; never business-logic, security, `MODULE_*`,
+or keys called with a default value.
 
 ---
 

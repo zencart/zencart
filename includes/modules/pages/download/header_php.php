@@ -79,7 +79,7 @@ $file_exists = zen_download_filename_within_basedir($origin_filename, $source_di
 $downloadFilesize = $file_exists ? (int)@filesize($source_directory . $origin_filename) : 0;
 
 // calculate days
-list($dt_year, $dt_month, $dt_day) = explode('-', $downloads->fields['date_purchased_day']);
+[$dt_year, $dt_month, $dt_day] = explode('-', $downloads->fields['date_purchased_day']);
 $download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + (int)$downloads->fields['download_maxdays'], $dt_year);
 // determine limits
 $unlimited = (int)$downloads->fields['download_maxdays'] == 0;

@@ -73,7 +73,7 @@ class moneyorder extends base
             $this->enabled = (zen_config('MODULE_PAYMENT_MONEYORDER_STATUS') === 'True');
 
             if (null === $this->sort_order) {
-                return false;
+                return;
             }
 
             if (IS_ADMIN_FLAG === true && (zen_config('MODULE_PAYMENT_MONEYORDER_PAYTO') === 'the Store Owner/Website Name' || zen_config('MODULE_PAYMENT_MONEYORDER_PAYTO') === '')) {

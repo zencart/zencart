@@ -241,6 +241,7 @@ switch ($action) {
     } // filename
     ?>
     <!-- body_text_eof //-->
+    <?php $zco_notifier->notify('NOTIFY_ADMIN_DEFINE_PAGES_EDITOR_EXTRA_CONTENT'); ?>
 </div>
 <!-- body_eof //-->
 <script>

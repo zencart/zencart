@@ -714,7 +714,7 @@ class paypal_curl extends base {
    * @since ZC v1.3.7
    */
   function _getMicroseconds() {
-    list($ms, $s) = explode(' ', microtime());
+    [$ms, $s] = explode(' ', microtime());
     return floor($ms * 1000) + 1000 * $s;
   }
 

@@ -1,0 +1,38 @@
+.ppr-table caption {
+    background-color: #f2f1ee;
+    border: 1px solid #d7d6cc;
+    margin: 0.5vh 0;
+}
+.ppr-table caption small {
+    font-size: 50%;
+}
+tr.ppr-payments {
+    font-weight: bold;
+}
+.ppr-modal .form-group {
+    margin-bottom: 0;
+}
+.ppr-modal collapse.in {
+    display: inline-block;
+}
+.ppr-button-row {
+    padding-top: 1vh;
+}
+.ppr-pr-0 {
+    padding-right: 0;
+}
+.ppr-modal textarea {
+    margin: 0.5vh 0;
+}
+#detailsModal .control-label {
+    padding-top: 0;
+}
+#detailsModal p.form-control-static {
+    min-height: auto;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+#pt-caption::after {
+    content: "\a";
+    white-space: pre;
+}

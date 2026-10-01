@@ -28,7 +28,7 @@ if (isset($_POST['action']) && $_POST['action'] != '') {
       $message = ERROR_WRONG_LOGIN;
       zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_ADMIN_LOGIN_WITHOUT_USERNAME, 'warning');
     } else {
-      list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $admin_pass);
+      [$error, $expired, $message, $redirect] = zen_validate_user_login($admin_name, $admin_pass);
       if ($redirect != '') {
         zen_redirect($redirect);
       }
@@ -48,7 +48,7 @@ if (isset($_POST['action']) && $_POST['action'] != '') {
       }
     } else {
       $message = SUCCESS_PASSWORD_UPDATED;
-      list($error, $expired, $message, $redirect) = zen_validate_user_login($admin_name, $adm_new_pwd);
+      [$error, $expired, $message, $redirect] = zen_validate_user_login($admin_name, $adm_new_pwd);
       if ($redirect != '') {
         zen_redirect($redirect);
       }

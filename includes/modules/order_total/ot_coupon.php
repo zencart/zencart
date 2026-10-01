@@ -104,7 +104,7 @@ class ot_coupon extends base
         $valid = true;
         $this->notify('NOTIFY_OT_COUPON_START', true, $valid);
         if (!$valid) {
-            return false;
+            return;
         }
         $this->code = 'ot_coupon';
         $this->header = MODULE_ORDER_TOTAL_COUPON_HEADER;
@@ -113,7 +113,7 @@ class ot_coupon extends base
         $this->credit_class = true;
         $this->user_prompt = '';
         $this->sort_order = zen_config('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER');
-        if (null === $this->sort_order) return false;
+        if (null === $this->sort_order) return;
 
         $this->include_shipping = zen_config('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING');
         $this->include_tax = zen_config('MODULE_ORDER_TOTAL_COUPON_INC_TAX');

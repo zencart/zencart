@@ -93,7 +93,12 @@
         "tests-report-feature-groups": "bash not_for_release/testFramework/report-feature-test-groups.sh",
         "tests-report-feature-groups-strict": "bash not_for_release/testFramework/report-feature-test-groups.sh --fail-on-untagged --summary-only",
         "tests-runtime-describe": "php not_for_release/testFramework/describe-worker-runtime.php",
-        "tests-unit": "bash not_for_release/testFramework/run-parallel-unit-tests.sh"
+        "tests-unit": "bash not_for_release/testFramework/run-parallel-unit-tests.sh",
+        "docs-check": [
+            "php not_for_release/dev_tools/sync-agent-docs.php --check",
+            "php not_for_release/dev_tools/doc-drift-check.php"
+        ],
+        "docs-sync": "php not_for_release/dev_tools/sync-agent-docs.php"
     },
     "minimum-stability": "dev",
     "prefer-stable": true

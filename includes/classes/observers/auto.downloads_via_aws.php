@@ -53,7 +53,7 @@ class zcObserverDownloadsViaAws extends base {
     if ($this->aws_secret === 'MY_AMAZON_S3_SECRET_XXXXXXXXX' && defined('AMAZON_S3_ACCESS_SECRET')) $this->aws_secret = AMAZON_S3_ACCESS_SECRET;
 
     // if not configured, then don't activate
-    if ($this->aws_key === 'MY_AMAZON_S3_ACCESS_KEY' || $this->aws_key === '' || $this->aws_secret === '' || $this->aws_secret === 'MY_AMAZON_S3_SECRET_XXXXXXXXX') return false;
+    if ($this->aws_key === 'MY_AMAZON_S3_ACCESS_KEY' || $this->aws_key === '' || $this->aws_secret === '' || $this->aws_secret === 'MY_AMAZON_S3_SECRET_XXXXXXXXX') return;
 
     // attach listener
     $this->attach($this, array('NOTIFY_CHECK_DOWNLOAD_HANDLER', 'NOTIFY_DOWNLOAD_READY_TO_START', 'NOTIFY_MODULE_DOWNLOAD_TEMPLATE_DETAILS', 'NOTIFY_TEST_DOWNLOADABLE_FILE_EXISTS'));

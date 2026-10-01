@@ -8,12 +8,14 @@
 /crowdin.yml      export-ignore
 /.aiignore        export-ignore
 /AGENTS.md        export-ignore
+/.ai              export-ignore
+/.agents          export-ignore
+/.claude          export-ignore
 /CLAUDE.md        export-ignore
 /CLAUDE.local.md  export-ignore
 /CLAUDE.local.md.example export-ignore
 /CONVENTIONS.md   export-ignore
 /phpstan*         export-ignore
-/.claude          export-ignore
 /docs/*.md        export-ignore
 
 # Auto detect text files and perform LF normalization

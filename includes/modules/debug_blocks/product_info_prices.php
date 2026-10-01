@@ -41,4 +41,3 @@ echo 'Sale Maker Discount Type ' . zen_get_products_sale_discount_type((int)$_GE
 echo 'Discount Calc ' . zen_get_discount_calc((int)$_GET['products_id']) . '<br>';
 echo 'Discount Calc Attr $100 $75 $50 $25 ' . zen_get_discount_calc((int)$_GET['products_id'], true, 100) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 75) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 50) . ' | ' . zen_get_discount_calc((int)$_GET['products_id'], true, 25) . '<br>';
 }
-?>

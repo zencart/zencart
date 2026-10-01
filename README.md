@@ -41,7 +41,7 @@ Installation is simple:
 3. Unzip the downloaded zip file 
 4. Everything inside the folder you unzipped needs to be uploaded to your webserver … for example, into your `public_html` or `www` or `html` folder (the folder will already exist on your webserver)
 5. In your browser, enter the address to your site, such as: `www.example.com` (or if you uploaded it into another subdirectory such as `foldername` use `www.example.com/foldername`)
-6. Rename the `/includes/dist-configure.php` and `/admin/includes/dist-configure.php` files to "`configure.php`" and make the files writable (so the install process can write your configuration information into them after you answer a few questions in the following steps).
+6. Rename the `/includes/dist-configure.php` file to "`configure.php`" and make the file writable (so the install process can write your configuration information into it after you answer a few questions in the following steps). One configure.php serves both the storefront and the admin.
 7. Also make the `/cache` and `/logs` folders writable. (You will be prompted about making other folders writable during installation)
 8. Follow the instructions that appear in your browser for installation. 
 
