@@ -27,62 +27,29 @@ otherwise maintained by code review and AI tooling guidance.
 
 ### One PSR-12 rule that is stricter here: no colon/endkeyword syntax
 
-PSR-12 does not prohibit the alternative colon syntax for control structures. This project does.
-
-**Always use curly-brace syntax:**
-```php
-// Correct
-if ($condition) {
-    // ...
-}
-
-foreach ($items as $item) {
-    // ...
-}
-```
-
-**Never use colon/endkeyword syntax — not even in templates:**
-```php
-// Wrong — do not use
-if ($condition):
-    // ...
-endif;
-
-foreach ($items as $item):
-    // ...
-endforeach;
-```
+PSR-12 permits the alternative colon syntax for control structures. This project does not: always
+use curly braces, including in templates. No `if (): … endif;`, `foreach (): … endforeach;`,
+`while (): … endwhile;`, or `switch (): … endswitch;`. The `no_alternative_syntax` rule in
+`.php-cs-fixer.dist.php` catches it locally.
 
 ---
 
 ## Comment style for new code
 
 - Single-line comments: `//` is fine.
-- Multi-line comments: use `/** */` docblock style, not a run of `//` lines — even when the
-  comment isn't above a class/method/property declaration (e.g. explaining a block of logic
-  mid-method). PHPStorm renders `/**` as a doc-comment regardless of what follows, and some
-  tooling (minifiers, AI code-stripping passes) targets `//` line comments more aggressively,
-  so doc-style blocks are more reliably preserved across multiple lines.
+- Multi-line comments: use `/** */` docblock style, not a run of `//` lines — even mid-method,
+  where the comment isn't above a class/method/property declaration. PHPStorm renders `/**` as a
+  doc-comment regardless of what follows, and some tooling (minifiers, AI code-stripping passes)
+  targets `//` line comments more aggressively, so doc blocks survive more reliably.
 
 ```php
-// Correct — single line
-$total = $price * $qty; // apply quantity
-
 /**
- * Correct — multi-line, documents the code immediately below.
- */
-class Foo
-{
-}
-
-/**
- * Correct — also fine mid-method, documenting the next statement.
+ * Correct — a docblock reads as one comment, mid-method or above a declaration.
  */
 $result = doSomethingNonObvious();
 
-// Wrong — multi-line using //
-// Explain the non-obvious reason here.
-// across multiple lines like this.
+// Wrong — a run of // lines for one multi-line thought.
+// Tooling is more likely to strip these.
 ```
 
 ---
@@ -99,59 +66,40 @@ $result = doSomethingNonObvious();
 
 ### `declare(strict_types=1)`
 
-Add `declare(strict_types=1)` to all **new** class files, on its own line immediately after the
-opening `<?php` tag — *above* the file docblock, not below it — and before the namespace declaration.
+Add it to all **new** class files, on its own line immediately after the opening `<?php` tag —
+*above* the file docblock, not below it — and before the namespace declaration:
 
 ```php
 <?php
 declare(strict_types=1);
-
-/**
- * @copyright Copyright 2003-2026 Zen Cart Development Team
- * @license https://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- */
 
 namespace Zencart\Example;
 ```
 
-A blank line between the opening tag and the declare is equally acceptable:
+A blank line between the opening tag and the declare is equally correct. Neither form is a review
+finding, and no tooling here rewrites one into the other, so do not normalize existing files either
+way. A few older files place the declare *below* the file docblock: accepted where it already
+exists, but do not do it in new files.
 
-```php
-<?php
-
-declare(strict_types=1);
-```
-
-**Both forms are correct.** Neither is a review finding. Do not normalize existing files from one form to the other.
-
-A small number of older files place the declare *below* the file docblock. That ordering is
-accepted where it already exists — do not churn those files — but do not use it in new ones.
-
-Do not add it retroactively to existing files unless they are being substantially rewritten and the change is tested.
-Do add it to new class files that have been copied or patterned from an existing file that lacks it.
+Do not add it retroactively to existing files unless they are being substantially rewritten and the
+change is tested. Do add it to new class files that have been copied or patterned from an existing
+file that lacks it.
 
 ---
 
 ## Accepted legacy exceptions (do not "fix" these)
 
-The following patterns exist in stable legacy code and predate PSR adoption.
-They are known, accepted deviations. Do not rename, restructure, or reformat
-these files unless a deliberate refactor has been scoped and agreed upon by core developers.
+Stable legacy code that predates PSR adoption contains known, accepted deviations. Do not rename,
+restructure, or reformat it unless a deliberate refactor has been scoped and agreed upon by core
+developers.
 
-| File / Pattern | Deviation | Notes |
-|---|---|---|
-| `includes/classes/order.php` | lowercase class name `order` | Core class; renaming is a major BC break |
-| `includes/classes/category_tree.php` | lowercase + snake `category_tree` | Same |
-| `includes/classes/class.notifier.php` | lowercase `notifier` | Same |
-| `includes/classes/template_func.php` | lowercase + snake `template_func` | Same |
-| `includes/classes/products.php` | lowercase `products` | This class is deprecated; should not be used anyway. |
-| `includes/classes/breadcrumb.php` | lowercase `breadcrumb` | Same |
-| `includes/classes/language.php` | lowercase `language` | Same |
-| `includes/classes/currencies.php` | lowercase `currencies` | Same |
-| `includes/classes/http_client.php` | no method visibility, no strict_types | Known tech debt; stable; do not modify; mostly deprecated anyway |
-| `includes/classes/split_page_results.php` | lowercase + splitCase hybrid | Legacy; stable |
-| Various legacy observers in `includes/classes/observers/` | lowercase class names | Legacy pattern for observer auto-loading |
-| Procedural include files under `includes/`, `admin/includes/extra_*/`, `includes/templates/template_default/`, plus three root-level redirect stubs | closing `?>` tag still present in some PHP-only files | Correct only when already editing the file. Mixed HTML/PHP pages and templates that end in `?>` are not violations |
+- Lowercase class names and filename/class-case mismatches throughout `includes/classes/`
+  (`order`, `currencies`, `splitPageResults`, and others). Per-file detail is in
+  `.ai/rules/legacy-exceptions.md`, which loads automatically when working under that directory.
+- A closing `?>` tag still present in some PHP-only procedural includes under `includes/`,
+  `admin/includes/extra_*/`, `includes/templates/template_default/`, and three root-level redirect
+  stubs. Removing one is correct only when already editing the file; mixed HTML/PHP pages and
+  templates that end in `?>` are not violations.
 
 ---
 
@@ -209,14 +157,10 @@ or keys called with a default value.
 
 ## Files that should never be directly edited
 
-| File | Reason |
-|---|---|
-| `includes/application_top.php` | Bootstrap core; use `extra_configures` and `init_includes` hooks instead |
-| `admin/includes/application_top.php` | Same |
-| `includes/defined_paths.php` | Use `extra_configures` to define new `DIR_FS_*` / `DIR_WS_*` constants |
-| `admin/includes/defined_paths.php` | Same |
-
-More are listed in AGENTS.md
+`includes/application_top.php`, `admin/includes/application_top.php`, `includes/defined_paths.php`,
+`admin/includes/defined_paths.php`. Use `extra_configures` for new `DIR_FS_*` / `DIR_WS_*`
+constants and `init_includes` for init hooks. AGENTS.md states the same list, and
+`.ai/rules/admin.md` adds `admin/includes/application_bootstrap.php`.
 
 ---
 
@@ -229,7 +173,6 @@ for the full directory layout, PSR-4 namespace mapping, and installer patterns.
 
 ## References
 
-- [PSR-12 Extended Coding Style](https://www.php-fig.org/psr/psr-12/)
-- [Zen Cart Developer Docs](https://docs.zen-cart.com/dev/)
-- `AGENTS.md` — architecture, bootstrapping, test commands, workflow
-- `.editorconfig` — formatting rules enforced at editor level
+- [PSR-12](https://www.php-fig.org/psr/psr-12/) — the standard new code follows.
+- `.editorconfig` — formatting basics enforced at editor level.
+- `AGENTS.md` — architecture, bootstrapping, test commands, and the external developer-doc links.

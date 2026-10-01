@@ -90,6 +90,7 @@ Topic guides and skills live under `.ai/` (see `.ai/README.md`). Tools that auto
 | Read when working on | Guide |
 |---|---|
 | `admin/**` | `.ai/rules/admin.md` (Admin (`admin/`)) |
+| `includes/classes/**` | `.ai/rules/legacy-exceptions.md` (Legacy exceptions in `includes/classes/`) |
 | `zc_plugins/**` | `.ai/rules/plugins.md` (Plugins (`zc_plugins/`)) |
 | `includes/templates/**`, `includes/modules/pages/**` | `.ai/rules/templates.md` (Storefront templates, pages and page modules) |
 | `not_for_release/testFramework/**`, `phpunit.xml`, `composer.json` | `.ai/rules/testing.md` (Test suite) |
