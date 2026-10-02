@@ -58,6 +58,18 @@ class PluginCommandDiscoveryTest extends TestCase
         $this->assertSame([], $discovery->getErrors());
     }
 
+    public function testIgnoresVersionDirectoriesWithoutAManifest(): void
+    {
+        unlink($this->catalogPath . '/zc_plugins/zenTestPlugin/v1.0.0/manifest.php');
+
+        $discovery = new PluginCommandDiscovery($this->catalogPath . '/zc_plugins', $this->autoloader);
+
+        $commands = $discovery->discover();
+
+        $this->assertSame([], $commands);
+        $this->assertSame([], $discovery->getErrors());
+    }
+
     public function testIgnoresPluginsThatAreNotInTrustedAllowlist(): void
     {
         $discovery = new PluginCommandDiscovery(
