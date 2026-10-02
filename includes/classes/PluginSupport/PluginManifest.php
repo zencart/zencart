@@ -16,6 +16,12 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 class PluginManifest
 {
+    /**
+     * Manifests already loaded during this request, shared by every instance so
+     * that a manifest.php is required at most once per request. Keyed by the
+     * plugins root first, since instances can be created against different roots
+     * (e.g. TemplateResolver and the test-suite use throw-away roots).
+     */
     protected static array $manifestInfo = [];
     protected string $pluginsRoot;  //- Note: No ending DIRECTORY_SEPARATOR!
 
@@ -40,8 +46,8 @@ class PluginManifest
      */
     public function get(string $plugin_key, string $version): ?array
     {
-        if (isset(self::$manifestInfo[$plugin_key][$version])) {
-            return self::$manifestInfo[$plugin_key][$version]['contents'];
+        if (isset(self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version])) {
+            return self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]['contents'];
         }
 
         $manifest_filename = $this->exists($plugin_key, $version);
@@ -63,7 +69,7 @@ class PluginManifest
             $template_key = null;
         }
 
-        self::$manifestInfo[$plugin_key][$version] = [
+        self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version] = [
             'contents' => $manifest,
             'template_key' => $template_key,
             'removes_unencapsulated_version' => !empty($manifest['removesUnencapsulatedVersion']),
@@ -78,7 +84,7 @@ class PluginManifest
     public function exists(string $plugin_key, string $version): ?string
     {
         $manifest_filename = $this->pluginsRoot . "/$plugin_key/$version/manifest.php";
-        if (isset(self::$manifestInfo[$plugin_key][$version]) || is_file($manifest_filename)) {
+        if (isset(self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]) || is_file($manifest_filename)) {
             return $manifest_filename;
         }
         return null;
@@ -92,7 +98,7 @@ class PluginManifest
         if ($this->get($plugin_key, $version) === null) {
             return false;
         }
-        return self::$manifestInfo[$plugin_key][$version]['template_key'] !== null;
+        return self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]['template_key'] !== null;
     }
 
     /**
@@ -103,7 +109,7 @@ class PluginManifest
         if ($this->get($plugin_key, $version) === null) {
             return false;
         }
-        return self::$manifestInfo[$plugin_key][$version]['removes_unencapsulated_version'];
+        return self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]['removes_unencapsulated_version'];
     }
 
     /**
@@ -114,6 +120,6 @@ class PluginManifest
         if ($this->get($plugin_key, $version) === null) {
             return null;
         }
-        return self::$manifestInfo[$plugin_key][$version]['template_key'];
+        return self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]['template_key'];
     }
 }

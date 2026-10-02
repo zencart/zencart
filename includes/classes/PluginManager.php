@@ -232,19 +232,11 @@ class PluginManager
             }
 
             /**
-             * Determine the plugin's key and version (the last two subdirectories
-             * in the plugin's full physical directory path). Start by removing the
-             * physical zc_plugins portion of the directory and convert any backslashes
-             * to forward-slashes.
+             * The plugin's key and version are the names of the two directories
+             * being iterated: $parent is the zc_plugins/<key> entry and $fileinfo
+             * is its <version> sub-directory.
              */
-            $plugin_key_version = str_replace([DIR_FS_CATALOG . 'zc_plugins', '\\'], ['', '/'], $fileinfo->getPathname());
-            $key_version_info = explode('/', trim($plugin_key_version, '/'));
-            if (count($key_version_info) !== 2) {
-                continue;
-            }
-            [$pluginKey, $pluginVersion] = $key_version_info;
-
-            $manifest = $pluginManifest->get($pluginKey, $pluginVersion);
+            $manifest = $pluginManifest->get($parent->getFilename(), $fileinfo->getFilename());
             if ($manifest === null) {
                 continue;
             }

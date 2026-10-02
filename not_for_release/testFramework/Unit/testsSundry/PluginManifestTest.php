@@ -122,6 +122,31 @@ class PluginManifestTest extends zcUnitTestCase
         );
     }
 
+    /**
+     * The cache is shared by all instances (it's static), so it must distinguish
+     * between plugins roots: the same plugin key and version can exist under
+     * different roots with different contents.
+     */
+    public function testTheSharedCacheIsKeyedByPluginsRoot(): void
+    {
+        $this->writeManifest('Sample', 'v1.0.0', "<?php\nreturn ['pluginName' => 'first root'];\n");
+
+        $otherRoot = $this->pluginsRoot . '_other';
+        mkdir($otherRoot . '/Sample/v1.0.0', 0777, true);
+        file_put_contents($otherRoot . '/Sample/v1.0.0/manifest.php', "<?php\nreturn ['pluginName' => 'second root'];\n");
+
+        try {
+            $first = new PluginManifest($this->pluginsRoot);
+            $second = new PluginManifest($otherRoot);
+
+            $this->assertSame(['pluginName' => 'first root'], $first->get('Sample', 'v1.0.0'));
+            $this->assertSame(['pluginName' => 'second root'], $second->get('Sample', 'v1.0.0'));
+            $this->assertSame(['pluginName' => 'first root'], $first->get('Sample', 'v1.0.0'));
+        } finally {
+            $this->removeDirectory($otherRoot);
+        }
+    }
+
     public function testATemplatePackageIsRecognisedByItsTemplateKey(): void
     {
         $this->writeManifest(
