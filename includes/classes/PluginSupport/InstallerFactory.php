@@ -36,7 +36,8 @@ class InstallerFactory
         if (!is_dir($versionDir)) {
             throw new PluginInstallerException('NO PLUGIN VERSION DIRECTORY');
         }
-        if (!file_exists($versionDir . 'manifest.php')) {
+
+        if ((new PluginManifest())->exists($plugin, $version) === null) {
             throw new PluginInstallerException('NO VERSION MANIFEST');
         }
 
