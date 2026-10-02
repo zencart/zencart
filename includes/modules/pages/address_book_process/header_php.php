@@ -18,10 +18,35 @@ if (!zen_is_logged_in()) {
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 /**
+ * The primary address is looked up from the database rather than the session copy, which can
+ * be stale (e.g. a second browser tab changed the primary after this page was opened).
+ */
+$sql = "SELECT customers_default_address_id
+        FROM " . TABLE_CUSTOMERS . "
+        WHERE customers_id = :customersID";
+$sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
+$result = $db->Execute($sql, 1);
+$primary_address_id = ($result->EOF) ? 0 : (int)$result->fields['customers_default_address_id'];
+$sql = "SELECT COUNT(*) AS total
+        FROM " . TABLE_ADDRESS_BOOK . "
+        WHERE customers_id = :customersID";
+$sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
+$address_book_count = (int)$db->Execute($sql)->fields['total'];
+
+/**
  * Process deletes
  */
 if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete']))
 {
+  if ((int)$_POST['delete'] === $primary_address_id) {
+    $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+  }
+  if ($address_book_count <= 1) {
+    $messageStack->add_session('addressbook', WARNING_LAST_ADDRESS_DELETION, 'warning');
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+  }
+
   $sql = "DELETE FROM " . TABLE_ADDRESS_BOOK . "
           WHERE  address_book_id = :delete
           AND    customers_id = :customersID";
@@ -225,8 +250,8 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       $zco_notifier->notify('NOTIFY_MODULE_ADDRESS_BOOK_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $new_address_book_id), $sql_data_array));
 
 
-      // register session variables
-      if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
+      // register session variables; the first address a customer has is always the primary one
+      if ((isset($_POST['primary']) && ($_POST['primary'] == 'on')) || $address_book_count === 0) {
         $_SESSION['customer_first_name'] = $firstname;
         $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customer_country_id'] = $country;
@@ -273,8 +298,12 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
   if (!isset($zone_id) || (int)$zone_id == 0) $zone_id = $entry->fields['entry_zone_id'];
 
 } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-  if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
+  if ((int)$_GET['delete'] === $primary_address_id) {
     $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+  } elseif ($address_book_count <= 1) {
+    $messageStack->add_session('addressbook', WARNING_LAST_ADDRESS_DELETION, 'warning');
 
     zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
   } else {
@@ -303,6 +332,9 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
   $entry_query = $db->bindVars($entry_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $entry = $db->Execute($entry_query);
 
+  if ($entry->EOF) {
+    $entry->fields['entry_country_id'] = SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY;
+  }
   $entry->fields['entry_gender'] = 'm';
   $entry->fields['entry_firstname'] = '';
   $entry->fields['entry_lastname'] = '';
