@@ -147,6 +147,19 @@ switch ($_GET['action']) {
     zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN));
     break;
 
+  case 'update_preview':
+    // A browser back/refresh re-requests the preview URL without the form's POST. Rendering
+    // the preview from an empty $_POST shows every field blank, logs a warning per field, and
+    // offers a Confirm button that update_confirm would write to the database unvalidated.
+    // Send the admin back to the edit form instead. The normal flow never reaches this case:
+    // case 'update' rewrites $_GET['action'] after validating, and the switch has already
+    // matched 'update' by then.
+    if (empty($_POST['coupon_name']) && empty($_POST['coupon_amount'])) {
+      $preview_cid = (int)($_GET['cid'] ?? 0);
+      zen_redirect(zen_href_link(FILENAME_COUPON_ADMIN, $preview_cid > 0 ? 'action=voucheredit&cid=' . $preview_cid . (isset($_GET['page']) ? '&page=' . (int)$_GET['page'] : '') : ''));
+    }
+    break;
+
   case 'confirmdelete':
     // do not allow change if set to welcome coupon
     if ($_GET['cid'] == zen_config('NEW_SIGNUP_DISCOUNT_COUPON')) {
