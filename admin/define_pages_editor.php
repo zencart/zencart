@@ -65,13 +65,14 @@ switch ($action) {
                     @unlink($bak_file);
                 }
                 @rename($file, $bak_file);
+                $file_contents = $_POST['file_contents'] ?? '';
                 $fp = fopen($file, 'w');
                 if ($fp !== false) {
-                    $file_contents = $_POST['file_contents'] ?? '';
                     $written = fwrite($fp, $file_contents);
                     $closed = fclose($fp);
                 }
-                if ($fp === false || $written === false || $closed === false) {
+                // A short write (e.g. disk full) returns a positive count, so compare the bytes written.
+                if ($fp === false || $written !== strlen($file_contents) || $closed === false) {
                     $messageStack->add_session(sprintf(ERROR_FILE_NOT_WRITEABLE, $relative_file), 'error');
                 } else {
                     zen_record_admin_activity('Define-Page-Editor was used to save changes to file ' . $relative_file, 'info');
