@@ -33,34 +33,41 @@ $file = '';
 
 // Build dropdown for define pages.
 $htmlIncludesFinder = new HtmlIncludesFinder(new FileSystem(), $installedPlugins, $_SESSION['language'], $template_dir);
-$directories = $htmlIncludesFinder->findAll();
+$define_file_names = $htmlIncludesFinder->findAll();
 
 $check_directory = [];
 $za_lookup = [];
 $za_lookup[-1] = ['id' => -1, 'text' => TEXT_INFO_SELECT_FILE];
-$filenames = array_keys($directories);
+$filenames = array_keys($define_file_names);
 sort($filenames);
-for ($i = 0, $n = count($directories); $i < $n; $i++) {
-    $za_lookup[$i] = ['id' => $i, 'text' => $filenames[$i]];
+$i = 0;
+foreach ($filenames as $next_file) {
+    if (str_starts_with($next_file, 'bak')) {
+        continue;
+    }
+    $za_lookup[$i] = ['id' => $i, 'text' => $next_file];
+    $i++;
 }
 
 switch ($action) {
     case 'set_editor':
         // Reset will be done by init_html_editor.php. Here we simply redirect to refresh the page properly.
-        $action = '';
         zen_redirect(zen_href_link(FILENAME_DEFINE_PAGES_EDITOR));
         break;
     case 'save':
-        if ($_GET['lngdir'] && $_GET['filename']) {
+        if (!empty($_GET['lngdir']) && !empty($_GET['filename'])) {
             $file = zen_get_file_directory(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/html_includes/', $_GET['filename'] ?? '', 'false');
-            if (file_exists($file)) {
-                if (file_exists('bak' . $file)) {
-                    @unlink('bak' . $file);
+            $file = DIR_FS_CATALOG . $file;
+            if (is_file($file)) {
+                $file_parts = pathinfo($file);
+                $bak_file = $file_parts['dirname'] . '/bak' . $file_parts['basename'];
+                if (is_file($bak_file)) {
+                    @unlink($bak_file);
                 }
-                @rename($file, 'bak' . $file);
+                @rename($file, $bak_file);
                 $new_file = fopen($file, 'w');
                 $file_contents = $_POST['file_contents'] ?? '';
-                $written = fwrite($new_file, $file_contents, strlen($file_contents));
+                $written = fwrite($new_file, $file_contents);
                 $closed = fclose($new_file);
                 if (!$written || !$closed) {
                     $messageStack->add_session(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
@@ -74,7 +81,7 @@ switch ($action) {
         }
         break;
     case 'edit':
-            if (!isset($za_lookup[$selected_page])) {
+            if ($selected_page === -1 || !isset($za_lookup[$selected_page])) {
                 $action = '';
             } else {
                 $_GET['filename'] = $za_lookup[$selected_page]['text'];
@@ -90,7 +97,7 @@ switch ($action) {
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <?php
     if ($editor_handler !== '') {
-        include($editor_handler);
+        include $editor_handler;
     }
     ?>
 </head>
@@ -101,12 +108,12 @@ switch ($action) {
 
 <!-- body //-->
 <div class="container-fluid">
-    <h1><?= HEADING_TITLE . '&nbsp;' . $_SESSION['language'] ?></h1>
+    <h1><?= HEADING_TITLE . '&nbsp;' . $_SESSION['language'] . '&nbsp;/&nbsp;' . $template_dir ?></h1>
     <div class="row">
         <div class="col-sm-4 col-md-4">
             <?php
             echo zen_draw_form('choose_file', FILENAME_DEFINE_PAGES_EDITOR, '', 'get');
-            echo zen_draw_pull_down_menu('define_it', $za_lookup, (string)$selected_page, 'onChange="this.form.submit();" class="form-control"');
+            echo zen_draw_pull_down_menu('define_it', $za_lookup, (string)$selected_page, 'onchange="this.form.submit();" class="form-control"');
             echo zen_hide_session_id();
             echo zen_draw_hidden_field('action', 'edit');
             echo '</form>';
@@ -132,7 +139,7 @@ switch ($action) {
         <?php
         if ($_SESSION['language'] && $_GET['filename']) {
             $file = DIR_FS_CATALOG . $file;
-            if (file_exists($file)) {
+            if (is_file($file)) {
                 $file_contents = file_get_contents($file);
 
                 $file_writeable = true;
