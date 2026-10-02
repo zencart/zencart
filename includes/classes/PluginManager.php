@@ -12,6 +12,7 @@ namespace Zencart\PluginManager;
 
 use Zencart\DbRepositories\PluginControlRepository;
 use Zencart\DbRepositories\PluginControlVersionRepository;
+use Zencart\PluginSupport\PluginManifest;
 use Zencart\PluginSupport\PluginStatus;
 
 /**
@@ -222,16 +223,31 @@ class PluginManager
      */
     protected function getPluginVersionDirectories(\DirectoryIterator $parent): array
     {
+        $pluginManifest = new PluginManifest();
         $versionList = [];
         $dir = new \DirectoryIterator($parent->getPathName());
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDot() || !$fileinfo->isDir()) {
                 continue;
             }
-            if (!file_exists($fileinfo->getPathname() . '/manifest.php')) {
-                continue; //@todo consider throwing exception/trigger_error here
+
+            /**
+             * Determine the plugin's key and version (the last two subdirectories
+             * in the plugin's full physical directory path). Start by removing the
+             * physical zc_plugins portion of the directory and convert any backslashes
+             * to forward-slashes.
+             */
+            $plugin_key_version = str_replace([DIR_FS_CATALOG . 'zc_plugins', '\\'], ['', '/'], $fileinfo->getPathname());
+            $key_version_info = explode('/', trim($plugin_key_version, '/'));
+            if (count($key_version_info) !== 2) {
+                continue;
             }
-            $manifest = require $fileinfo->getPathname() . '/manifest.php';
+            [$pluginKey, $pluginVersion] = $key_version_info;
+
+            $manifest = $pluginManifest->get($pluginKey, $pluginVersion);
+            if ($manifest === null) {
+                continue;
+            }
             $versionList[$fileinfo->getFilename()] = $manifest;
             if ($_SESSION['languages_code'] !== 'en') {
                 $this->loadPluginLanguageConstants($fileinfo->getPathname());
