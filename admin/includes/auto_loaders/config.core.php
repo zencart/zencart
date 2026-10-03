@@ -185,11 +185,16 @@ $autoLoadConfig[40][] = [
  * Breakpoint 50.
  *
  * require 'includes/init_includes/init_cache_key_check.php';
+ * require 'includes/init_includes/init_sidebox_cache_invalidation.php';
  *
  */
 $autoLoadConfig[50][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_cache_key_check.php',
+];
+$autoLoadConfig[50][] = [
+    'autoType' => 'init_script',
+    'loadFile' => 'init_sidebox_cache_invalidation.php',
 ];
 /**
  * Breakpoint 60.
