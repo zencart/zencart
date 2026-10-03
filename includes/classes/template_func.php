@@ -23,7 +23,7 @@ class template_func
     private string $templateKey;
 
     /**
-     * @since ZC 3.0.0
+     * @since ZC v3.0.0
      */
     public function __construct(string $templateKey)
     {

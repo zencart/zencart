@@ -182,7 +182,7 @@ class PageLoader
     }
 
     /**
-     * @since ZC 3.0.0
+     * @since ZC v3.0.0
      */
     public function getTemplateFilesWithDir(string $templateKey, string $templatePart, string $currentPage, string $templateSubDir): array
     {
