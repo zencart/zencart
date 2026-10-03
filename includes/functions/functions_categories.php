@@ -50,6 +50,152 @@ function zen_get_path($current_category_id = null): string
 
 
 /**
+ * Build, once per request, the category structure maps that the category
+ * counting and tree helpers need.
+ *
+ * Two set-based queries replace what used to be two queries per category per
+ * call: walking a 60-category tree for the categories sidebox cost 140 queries,
+ * of which only one was ever cacheable.
+ *
+ * Neither map depends on the language, the cPath, or the customer, so one copy
+ * serves every page of the store, and the cached copy needs no per-URL key.
+ * Both maps intentionally include categories whose categories_status is 0,
+ * matching the behavior of the recursive walk they replace.
+ *
+ * Returns:
+ *   'children' => [parent_id => [child_id, ...]]
+ *   'counts'   => [category_id => ['all' => int, 'active' => int]]
+ *
+ * @param bool $refresh discard the in-request copy and rebuild from the database
+ * @since ZC v2.3.0
+ */
+function zen_get_category_maps(bool $refresh = false): array
+{
+    global $db;
+
+    static $maps = null;
+
+    if ($maps !== null && !$refresh) {
+        return $maps;
+    }
+
+    /**
+     * The admin clears this cache explicitly whenever it changes a category,
+     * product or manufacturer, so the lifetime is not what bounds staleness
+     * after an edit. It is the safety net for changes made outside the admin --
+     * direct SQL, feed importers, cron jobs, plugin code writing to the tables
+     * directly -- which no hook can see. Hence an hour rather than minutes:
+     * under crawler load the hit rate matters more than catching those early.
+     * Importers that want immediacy should call zen_clear_category_map_cache().
+     */
+    $ttl = (int)(defined('CATEGORY_MAPS_CACHE_SECONDS') ? CATEGORY_MAPS_CACHE_SECONDS : 3600);
+
+    if (!$refresh) {
+        $cached = zen_file_cache_read('catmaps', $ttl);
+        if (isset($cached['children'], $cached['counts'])) {
+            $maps = $cached;
+            return $maps;
+        }
+    }
+
+    $children = [];
+    $sql = "SELECT categories_id, parent_id
+            FROM " . TABLE_CATEGORIES;
+    foreach ($db->Execute($sql) as $category) {
+        $children[(int)$category['parent_id']][] = (int)$category['categories_id'];
+    }
+
+    /**
+     * One pass over the join yields both totals: COUNT(*) is the include_inactive
+     * total, and SUM(products_status = 1) is the active-only total.
+     *
+     * The join must be an inner one. The per-category queries this replaced
+     * filtered on "p2c.categories_id = <id>", which never matches a product that
+     * has no products_to_categories row; an outer join instead groups those
+     * products under a NULL category id, which casts to 0 in PHP and would
+     * silently add every uncategorised product to the topmost-category count
+     * that admin's copy_product and move_product read.
+     */
+    $counts = [];
+    $sql = "SELECT p2c.categories_id AS categories_id,
+                   COUNT(*) AS total_all,
+                   SUM(p.products_status = 1) AS total_active
+            FROM " . TABLE_PRODUCTS . " p
+            INNER JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p2c.products_id = p.products_id
+            GROUP BY p2c.categories_id";
+    foreach ($db->Execute($sql) as $row) {
+        // belt and braces: never let a NULL group become category 0
+        if (!isset($row['categories_id'])) {
+            continue;
+        }
+        $counts[(int)$row['categories_id']] = [
+            'all' => (int)$row['total_all'],
+            'active' => (int)$row['total_active'],
+        ];
+    }
+
+    $maps = ['children' => $children, 'counts' => $counts];
+
+    /**
+     * A failed write is not worth reporting: rebuilding costs two queries, so a
+     * read-only cache directory just means every request pays those two.
+     * For the same reason no lock is needed around expiry -- a thundering herd
+     * of rebuilds is cheap now.
+     *
+     * A lifetime of zero turns the on-disk half off completely, keeping only the
+     * two-query rebuild and the per-request memo, so do not write in that case.
+     */
+    if ($ttl > 0) {
+        zen_file_cache_write('catmaps', $maps);
+    }
+
+    return $maps;
+}
+
+/**
+ * Discard the cached category maps so the next storefront request rebuilds them.
+ *
+ * Called at the end of every admin request, so that category and product edits
+ * show on the storefront without waiting out the cache lifetime.
+ *
+ * This deliberately does not rebuild: it must run after the admin page has
+ * committed its changes, and rebuilding here from a request that is about to
+ * end would only risk writing pre-edit data back under a fresh timestamp.
+ *
+ * @since ZC v2.3.0
+ */
+function zen_clear_category_map_cache(): void
+{
+    zen_file_cache_clear('catmaps');
+}
+
+/**
+ * Sum a category's product count with those of everything beneath it.
+ *
+ * @param string $which 'all' or 'active'
+ * @param array $seen category ids already on the path from the starting node,
+ *                    which stops a cyclic parent_id chain from recursing forever
+ * @since ZC v2.3.0
+ */
+function zen_rollup_category_product_count(int $category_id, array $maps, string $which, array $seen = []): int
+{
+    if (isset($seen[$category_id])) {
+        return 0;
+    }
+    $seen[$category_id] = true;
+
+    $total = isset($maps['counts'][$category_id][$which]) ? (int)$maps['counts'][$category_id][$which] : 0;
+
+    if (!empty($maps['children'][$category_id])) {
+        foreach ($maps['children'][$category_id] as $child_id) {
+            $total += zen_rollup_category_product_count((int)$child_id, $maps, $which, $seen);
+        }
+    }
+
+    return $total;
+}
+
+/**
  * Return the number of products in a category
  * @param int $category_id
  * @param bool $include_inactive
@@ -64,32 +210,11 @@ function zen_count_products_in_category($category_id, bool $include_inactive = f
         return zen_count_distinct_products_in_category($category_id, $include_inactive);
     }
 
-    global $db;
-    $products_count = 0;
-
-    $sql = "SELECT count(*) as total
-            FROM " . TABLE_PRODUCTS . " p
-            LEFT JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c USING (products_id)
-            WHERE p2c.categories_id = " . (int)$category_id;
-
-    if (!$include_inactive) {
-        $sql .= " AND p.products_status = 1";
-
-    }
-    $products = $db->Execute($sql);
-    $products_count += $products->fields['total'];
-
-    $sql = "SELECT categories_id
-            FROM " . TABLE_CATEGORIES . "
-            WHERE parent_id = " . (int)$category_id;
-
-    $child_categories = $db->Execute($sql);
-
-    foreach ($child_categories as $result) {
-        $products_count += zen_count_products_in_category($result['categories_id'], $include_inactive);
-    }
-
-    return $products_count;
+    return zen_rollup_category_product_count(
+        (int)$category_id,
+        zen_get_category_maps(),
+        $include_inactive ? 'all' : 'active'
+    );
 }
 
 /**
@@ -123,14 +248,9 @@ function zen_count_distinct_products_in_category($category_id, bool $include_ina
  */
 function zen_has_category_subcategories($category_id): bool
 {
-    global $db;
-    $sql = "SELECT count(*) as count
-            FROM " . TABLE_CATEGORIES . "
-            WHERE parent_id = " . (int)$category_id;
+    $maps = zen_get_category_maps();
 
-    $result = $db->Execute($sql);
-
-    return ($result->RecordCount() && $result->fields['count'] > 0);
+    return !empty($maps['children'][(int)$category_id]);
 }
 
 /**
@@ -190,17 +310,34 @@ function zen_get_categories(array $categories_array = [], $parent_id = TOPMOST_C
  */
 function zen_get_subcategories(array &$subcategories_array, $parent_id = TOPMOST_CATEGORY_PARENT_ID): void
 {
-    global $db;
-    $subcategories_query = "SELECT categories_id
-                            FROM " . TABLE_CATEGORIES . "
-                            WHERE parent_id = " . (int)$parent_id;
+    $maps = zen_get_category_maps();
 
-    $subcategories = $db->Execute($subcategories_query);
+    zen_collect_subcategories($subcategories_array, (int)$parent_id, $maps);
+}
 
-    foreach ($subcategories as $result) {
-        $subcategories_array[] = $result['categories_id'];
-        if ($result['categories_id'] != $parent_id) {
-            zen_get_subcategories($subcategories_array, $result['categories_id']);
+/**
+ * Append every descendant of $parent_id to $subcategories_array, depth first.
+ *
+ * Ids are appended as integers. The query-per-level version this replaced
+ * appended whatever strings the database driver returned, mixed with the
+ * caller's own integer starting id.
+ *
+ * @param array $seen ids already on the path from the starting node, which stops
+ *                    a cyclic parent_id chain from recursing forever
+ * @since ZC v2.3.0
+ */
+function zen_collect_subcategories(array &$subcategories_array, int $parent_id, array $maps, array $seen = []): void
+{
+    if (isset($seen[$parent_id]) || empty($maps['children'][$parent_id])) {
+        return;
+    }
+    $seen[$parent_id] = true;
+
+    foreach ($maps['children'][$parent_id] as $child_id) {
+        $child_id = (int)$child_id;
+        $subcategories_array[] = $child_id;
+        if ($child_id !== $parent_id) {
+            zen_collect_subcategories($subcategories_array, $child_id, $maps, $seen);
         }
     }
 }

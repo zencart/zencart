@@ -7,24 +7,56 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: piloujp 2025 May 16 Modified in v2.2.0 $
  */
-// only check products if requested - this may slow down the processing of the manufacturers sidebox
-if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
-    $manufacturer_sidebox_query =
-        "SELECT DISTINCT m.manufacturers_id, m.manufacturers_name
-                    FROM " . TABLE_MANUFACTURERS . " m
-                            LEFT JOIN " . TABLE_PRODUCTS . " p ON m.manufacturers_id = p.manufacturers_id
-                   WHERE p.products_status = 1
-                   ORDER BY manufacturers_name";
-} else {
-    $manufacturer_sidebox_query =
-        "SELECT m.manufacturers_id, m.manufacturers_name
-           FROM " . TABLE_MANUFACTURERS . " m
-           ORDER BY manufacturers_name";
+/**
+ * Serve the list from the cache when it is fresh, so crawler traffic stops
+ * re-running this query on every page. The key is derived in one place, by
+ * zen_manufacturers_box_cache_key(), so that the admin can invalidate it.
+ *
+ * A read-only cache directory just means falling back to the query, as before.
+ */
+$manufacturer_cache_ttl = (int)(defined('MANUFACTURERS_SIDEBOX_CACHE_SECONDS') ? MANUFACTURERS_SIDEBOX_CACHE_SECONDS : 3600);
+
+$manufacturer_sidebox_rows = zen_file_cache_read(zen_manufacturers_box_cache_key(), $manufacturer_cache_ttl);
+
+if ($manufacturer_sidebox_rows === null) {
+    // only check products if requested - this may slow down the processing of the manufacturers sidebox
+    if ((int)PRODUCTS_MANUFACTURERS_STATUS === 1) {
+        /**
+         * EXISTS stops at the first enabled product per manufacturer. The
+         * SELECT DISTINCT ... LEFT JOIN form this replaced built a temporary
+         * table and filesorted it, which is what made the box expensive on a
+         * large catalog.
+         */
+        $manufacturer_sidebox_query =
+            "SELECT m.manufacturers_id, m.manufacturers_name
+               FROM " . TABLE_MANUFACTURERS . " m
+              WHERE EXISTS (SELECT 1
+                              FROM " . TABLE_PRODUCTS . " p
+                             WHERE p.manufacturers_id = m.manufacturers_id
+                               AND p.products_status = 1)
+              ORDER BY m.manufacturers_name";
+    } else {
+        $manufacturer_sidebox_query =
+            "SELECT m.manufacturers_id, m.manufacturers_name
+               FROM " . TABLE_MANUFACTURERS . " m
+               ORDER BY manufacturers_name";
+    }
+
+    $manufacturer_sidebox_rows = [];
+    foreach ($db->Execute($manufacturer_sidebox_query) as $sidebox_element) {
+        $manufacturer_sidebox_rows[] = [
+            'manufacturers_id' => (int)$sidebox_element['manufacturers_id'],
+            'manufacturers_name' => $sidebox_element['manufacturers_name'],
+        ];
+    }
+
+    // a lifetime of zero turns the cache off; keep the query rewrite only
+    if ($manufacturer_cache_ttl > 0) {
+        zen_file_cache_write(zen_manufacturers_box_cache_key(), $manufacturer_sidebox_rows);
+    }
 }
 
-$manufacturer_sidebox = $db->Execute($manufacturer_sidebox_query);
-
-if (!$manufacturer_sidebox->EOF) {
+if (!empty($manufacturer_sidebox_rows)) {
     // -----
     // Display a list, noting that the empty ('') selection will not be enabled (via jQuery)
     // if this is the initial display without a previous selection.
@@ -39,7 +71,7 @@ if (!$manufacturer_sidebox->EOF) {
         $manufacturer_sidebox_array[] = ['id' => '', 'text' => PULL_DOWN_MANUFACTURERS];
     }
 
-    foreach ($manufacturer_sidebox as $sidebox_element) {
+    foreach ($manufacturer_sidebox_rows as $sidebox_element) {
         $manufacturer_sidebox_name = $sidebox_element['manufacturers_name'];
         if (mb_strlen($manufacturer_sidebox_name) > (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) {
             $manufacturer_sidebox_name = mb_substr($manufacturer_sidebox_name, 0, (int)MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..';
