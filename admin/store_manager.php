@@ -153,8 +153,7 @@
     break;
 
     case ('clear_sidebox_caches'):
-        zen_clear_category_map_cache();
-        zen_clear_manufacturers_box_cache();
+        zen_clear_sidebox_caches();
         $messageStack->add_session(SUCCESS_CLEAR_SIDEBOX_CACHES, 'success');
         zen_record_admin_activity('Store Manager executed [clear sidebox caches]', 'info');
         $action = '';
