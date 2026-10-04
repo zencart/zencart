@@ -3,7 +3,7 @@
 // Part of the "Products' Options' Stock Manager" plugin by Cindy Merkin (lat9)
 // Copyright (c) 2014-2026, Vinos de Frutas Tropicales
 //
-// Last updated: POSM v6.1.2
+// Last updated: POSM v6.2.0
 //
 // Uses the AJAX infrastructure provided initially by Zen Cart v1.5.4 and updated in Zen Cart 1.5.5b
 //
