@@ -337,10 +337,10 @@ if ($processing_message != '') {
       <tr>
         <td colspan="2"><table>
           <tr>
-            <td class="main"><?php echo TEXT_INFO_CLEAR_SIDEBOX_CACHES; ?></td>
-            <td class="main"><?php echo zen_draw_form('clear_sidebox_caches', FILENAME_STORE_MANAGER, 'action=clear_sidebox_caches', 'post'); ?>
-                <input class="btn btn-default btn-sm" type="submit" value="<?php echo IMAGE_RESET; ?>">
-                <?php echo '</form>'; ?>
+            <td class="main"><?= TEXT_INFO_CLEAR_SIDEBOX_CACHES ?></td>
+            <td class="main"><?= zen_draw_form('clear_sidebox_caches', FILENAME_STORE_MANAGER, 'action=clear_sidebox_caches', 'post') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_RESET ?>">
+                <?= '</form>' ?>
             </td>
           </tr>
         </table></td>
