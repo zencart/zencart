@@ -9,6 +9,9 @@
 //
 class zcAjaxOptionsStockDependencies extends base
 {
+    /** @var string[] */
+    public const ALLOWED_METHODS = ['availableOptionValues'];
+
     // -----
     // This class variable, normally set to false, can be set to (boolean) true to enable interface errors to be logged/reported.
     //
