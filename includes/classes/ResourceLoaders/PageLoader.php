@@ -247,14 +247,13 @@ class PageLoader
     }
 
     /**
-     * Returns an array with potential template-related directories to
-     * be searched for a file.
+     * Returns an array with potential template-related directories to be searched for a file.
      *
-     * File locations' returned in this array/precedence order:
+     * File locations are returned in this array/precedence order:
      *
      * 1. $templateKey's directory / $currentPage, e.g. includes/templates/responsive_classic/popup_image/
      * 2(*). zc_plugins default / $currentPage (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/popup_image/
-     * 3. template_default / $currentPage, e.g. includes/templates/template_default/popup_image/
+     * 3(*). template_default / $currentPage, e.g. includes/templates/template_default/popup_image/
      * 4. $templateKey's directory / $templateSubDir, e.g. includes/templates/responsive_classic/common/
      * 5(*). zc_plugins default / $templateSubDir (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/common/
      * 6(*). template_default / $templateSubDir, e.g. includes/templates/template_default/common/
