@@ -64,11 +64,10 @@ class PageLoader
         return false;
     }
 
-    // -----
-    // This method locates **all** files matching a given pattern from the 'base'
-    // module-page directory and any module-page directories found in zc_plugins.
-    //
     /**
+     * This method locates **all** files matching a given pattern from the 'base'
+     * module-page directory and any module-page directories found in zc_plugins.
+     *
      * @since ZC v2.2.0
      */
     public function listModulePagesFiles(string $nameStartsWith, string $fileExtension = '.php', string $context = 'catalog'): array
@@ -231,14 +230,14 @@ class PageLoader
      */
     public function getBodyCode(): string
     {
-        // -----
-        // Determine where, if anywhere, the current-page's main_template_vars.php
-        // file resides.
-        //
-        // listModulePagesFiles returns all locations and the first-found file is used. That'll
-        // be the file in /includes/modules/pages/{current_page} or (searching all active
-        // plugins alphanumerically) the first-found in any zc_plugins.
-        //
+        /**
+         * Determine where, if anywhere, the current-page's main_template_vars.php
+         * file resides.
+         *
+         * listModulePagesFiles returns all locations and the first-found file is used. That'll
+         * be the file in /includes/modules/pages/{current_page} or (searching all active
+         * plugins alphanumerically) the first-found in any zc_plugins.
+         */
         $template_vars_locations = $this->listModulePagesFiles('main_template_vars');
         if (count($template_vars_locations) !== 0) {
             return $template_vars_locations[0];
@@ -247,16 +246,19 @@ class PageLoader
     }
 
     /**
-     * Returns an array with potential template-related directories to be searched for a file.
+     * Returns an array with potential template-related directories to
+     * be searched for a file.
      *
-     * File locations are returned in this array/precedence order:
+     * File locations' returned in this array/precedence order:
      *
-     * 1. $templateKey's directory / $currentPage, e.g. includes/templates/responsive_classic/popup_image/
-     * 2(*). zc_plugins default / $currentPage (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/popup_image/
-     * 3(*). template_default / $currentPage, e.g. includes/templates/template_default/popup_image/
-     * 4. $templateKey's directory / $templateSubDir, e.g. includes/templates/responsive_classic/common/
-     * 5(*). zc_plugins default / $templateSubDir (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/common/
-     * 6(*). template_default / $templateSubDir, e.g. includes/templates/template_default/common/
+     * 1. For each template in the chain: <template> / $currentPage, e.g. includes/templates/responsive_classic/popup_image/
+     * 2.   then any zc_plugins overlay targeting <template> / $currentPage, e.g. zc_plugins/k/v2/catalog/includes/templates/responsive_classic/popup_image/
+     * 3(*). zc_plugins default / $currentPage (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/popup_image/
+     * 4(*). template_default / $currentPage, e.g. includes/templates/template_default/popup_image/
+     * 5. For each template in the chain: <template> / $templateSubDir, e.g. includes/templates/responsive_classic/common/
+     * 6.   then any zc_plugins overlay targeting <template> / $templateSubDir
+     * 7(*). zc_plugins default / $templateSubDir (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/common/
+     * 8(*). template_default / $templateSubDir, e.g. includes/templates/template_default/common/
      *
      * (*) Not included if $includeDefaultDirs is (bool)false.
      *

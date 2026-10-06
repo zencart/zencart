@@ -52,11 +52,19 @@ class template_func
     }
 
     /**
-     * Returns an array of **all** files (including directories) matching $template_part (a regex string) from
-     * the inheritance-chain for the currently-active template's $templateSubDir. Unlike the get_template_part method,
-     * this method unconditionally doesn't include any files from the default/template_default templates' subdirectories.
+     * Returns every file matching $template_part from the active template's inheritance chain,
+     * each as a path that includes the directory it was found in. get_template_part, by contrast,
+     * returns bare filenames and leaves the caller to resolve a directory for each.
      *
-     * For example, getTemplateFilesWithDir('^style.*\.css', 'index', 'css') could return an array containing
+     * $template_part is a regex fragment with no delimiters, anchored at the end of the filename:
+     * '^style.*\.css' matches stylesheet.css but not stylesheet.css.bak.
+     *
+     * Every match in the chain is returned, not just the first — parent templates first, and
+     * alphabetically within each directory, so the active template's copy of a stylesheet is
+     * loaded last and wins. $current_page's directories are searched ahead of $templateSubDir's.
+     * The default and template_default templates' subdirectories are never searched.
+     *
+     * For example, getTemplateFilesWithDir('^style.*\.css', 'index', 'css') could return
      *  - zc_plugins/ResponsiveClassicPlugin/v1.0.0/catalog/includes/templates/responsive_classic_plugin/css/stylesheet.css
      *  - zc_plugins/ResponsiveClassicChild/v1.0.0/catalog/includes/templates/responsive_classic_child/css/stylesheet.css
      *
