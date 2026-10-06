@@ -1,42 +1,54 @@
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=$CHARSET"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<base href="$BASE_HREF"/>
-
-<style>
-$EMAIL_COMMON_CSS
-</style>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=$CHARSET"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="$BASE_HREF"/>
+    <style>
+        $EMAIL_COMMON_CSS
+    </style>
 </head>
 
-<body id="newsletters">
-<div class="holder">
-
-  <!-- Header Section -->
-  <div class="header">
-    <img src="$EMAIL_LOGO_FILE" alt="$EMAIL_LOGO_ALT_TEXT" title="$EMAIL_LOGO_ALT_TEXT" width="$EMAIL_LOGO_WIDTH" height="$EMAIL_LOGO_HEIGHT" border="0"/>
-    $EXTRA_HEADER_INFO
-  </div>
-
-
-  <!-- Content Section -->
-  <div class="content">
-    <div>$EMAIL_SALUTATION $EMAIL_FIRST_NAME $EMAIL_LAST_NAME,</div>
-    <div>$EMAIL_MESSAGE_HTML</div>
-  </div>
-
-
-  <!-- Footer Section -->
-  <div class="footer">
-    <div class="unsubscribe">$UNSUBSCRIBE_LINK</div>
-    <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
-  </div>
-
-</div>
-<div class="disclaimer">
-  <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
-  <div class="disclaimer2">$EMAIL_SPAM_DISCLAIMER</div>
-</div>
+<body id="newsletters" style="margin: 0; padding: 0; background-color: #f4f4f7;">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#f4f4f7">
+    <tr>
+        <td align="center" style="padding: 20px 10px;">
+            <table role="presentation" class="holder" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); max-width: 600px; width: 100%;">
+                <tr>
+                    <td class="header" align="center">
+                        <a href="$BASE_HREF">
+                            <img src="$EMAIL_LOGO_FILE" alt="$EMAIL_LOGO_ALT_TEXT" title="$EMAIL_LOGO_ALT_TEXT" width="$EMAIL_LOGO_WIDTH" height="$EMAIL_LOGO_HEIGHT" border="0" style="display: block; max-width: 100%; height: auto;" />
+                        </a>
+                        $EXTRA_HEADER_INFO
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content">
+                        <div class="content-line greeting">
+                            <p><strong>$EMAIL_SALUTATION $EMAIL_FIRST_NAME $EMAIL_LAST_NAME,</strong></p>
+                        </div>
+                        <div class="content-line">
+                            $EMAIL_MESSAGE_HTML
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer">
+                        <div class="unsubscribe" style="margin-bottom: 15px;">$UNSUBSCRIBE_LINK</div>
+                        <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
+                    </td>
+                </tr>
+            </table>
+            <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                <tr>
+                    <td class="disclaimer">
+                        <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
+                        <div class="disclaimer2" style="margin-top: 8px;">$EMAIL_SPAM_DISCLAIMER</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
