@@ -127,6 +127,14 @@ if (($_GET['action'] ?? '') === 'process') {
                 zen_redirect(zen_href_link(CUSTOMERS_AUTHORIZATION_FILENAME, '', 'SSL'));
             }
 
+            // An account with no address-book entry cannot check out or even build a cart
+            // (see #7983); send the customer to add one before continuing.
+            if (empty($customer->getData('addresses'))) {
+                $_SESSION['navigation']->clear_snapshot();
+                $messageStack->add_session('addressbook', TEXT_LOGIN_NO_ADDRESS_BOOK_ENTRY, 'caution');
+                zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'));
+            }
+
             if (count($_SESSION['navigation']->snapshot) > 0) {
                 //    $back = sizeof($_SESSION['navigation']->path)-2;
                 $origin_href = zen_href_link($_SESSION['navigation']->snapshot['page'], zen_array_to_string($_SESSION['navigation']->snapshot['get'], [zen_session_name()]), $_SESSION['navigation']->snapshot['mode']);
