@@ -199,6 +199,10 @@ $iconMap = [
   ],
   'line-chart' => 'fa-line-chart txt-black',
   'calendar-days' => 'fa-regular fa-calendar-days',
+  'status-gray' => [
+    'fa-solid fa-circle fa-stack-1x txt-gray',
+    'fa-regular fa-circle fa-stack-1x txt-black'
+  ],
   'status-green' => [
     'fa-solid fa-circle fa-stack-1x txt-status-on',
     'fa-regular fa-circle fa-stack-1x txt-black'
