@@ -890,6 +890,9 @@ input.faint {
 .txt-gold {
   color: gold;
 }
+.txt-gray {
+  color: #C5C6D0;
+}
 .star-shadow {
   text-shadow: 1px 1px 2px grey;
 }
