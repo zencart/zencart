@@ -50,6 +50,8 @@ if ($templateRecord === null) {
 }
 $template_dir = $templateRecord['template_key'];
 
+$template = new template_func($template_dir);
+
 /**
  * Now that we've established which template to use, initialize all its components
  */

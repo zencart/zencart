@@ -206,15 +206,8 @@ $autoLoadConfig[96][] = [
  * Breakpoint 100.
  *
  * if (!$_SESSION['navigaton']) $_SESSION['navigation'] = new navigationHistory();
- * $template = new template_func();
  *
  */
-//- template_func class loaded via psr4Autoload.php
-$autoLoadConfig[100][] = [
-    'autoType' => 'classInstantiate',
-    'className' => 'template_func',
-    'objectName' => 'template',
-];
 //- navigationHistory class loaded via psr4Autoload.php
 $autoLoadConfig[100][] = [
     'autoType' => 'classInstantiate',

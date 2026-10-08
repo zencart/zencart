@@ -148,22 +148,6 @@ $autoLoadConfig[96][] = [
     'loadFile' => 'init_sanitize.php',
 ];
 /**
- * Breakpoint 100.
- *
- */
-//- template_func class loaded via psr4Autoload.php; reloading
-//- here for older versions of Zen Cart that don't load the
-//- class via an autoloader.
-$autoLoadConfig[100][] = [
-    'autoType' => 'class',
-    'loadFile' => 'template_func.php',
-];
-$autoLoadConfig[100][] = [
-    'autoType' => 'classInstantiate',
-    'className' => 'template_func',
-    'objectName' => 'template',
-];
-/**
  * Breakpoint 110.
  *
  */
