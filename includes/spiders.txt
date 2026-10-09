@@ -29,6 +29,7 @@ analyz
 ananzi
 answerbus
 anthill
+anthropic
 appie
 arach
 arale
@@ -68,12 +69,15 @@ ccubee
 cf-uc
 changedetection
 charlotte
+chatgpt
 check_http
 cherrypicker
 churl
 cienciaficcion.net
 cireu
+claude
 coccoc
+cohere-ai
 comagent
 combine
 computingsite robi
@@ -144,6 +148,7 @@ ichiro
 iconsurf
 iltrovatore-setaccio
 imagelock
+img2dataset
 incywincy
 indexer
 informant
@@ -161,6 +166,7 @@ jobo
 jumpstation
 katipo
 kilroy
+kimi
 kit-fireball
 knowledge
 kretrieve
@@ -182,10 +188,12 @@ mediapartners
 mega
 mercator
 merzscope
+meta-external
 metacarta
 metauri
 mff
 minirank
+mistralai
 miva
 mixnodecache
 moget
@@ -216,6 +224,7 @@ nymesis
 nzexplorer
 occam
 ocelli
+omgili
 omni
 onetszukaj
 openfind
@@ -230,6 +239,7 @@ parasite
 patric
 pegasus
 peregrinator
+perplexity
 phantom
 phpdig
 pico
@@ -356,6 +366,7 @@ webstolperer
 webvac
 webwatch
 webzinger
+webzio
 wesee
 wget
 whizbang

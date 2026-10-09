@@ -95,13 +95,23 @@ if (zen_config('SESSION_FORCE_COOKIE_USE') === 'True') {
     }
     $spider_flag = false;
     if (!empty($user_agent)) {
-        $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
-        for ($i = 0, $n = count($spiders); $i < $n; $i++) {
-            if (!empty($spiders[$i]) && !str_starts_with($spiders[$i], '$Id:')) {
-                if (is_int(strpos($user_agent, trim($spiders[$i])))) {
-                    $spider_flag = true;
-                    break;
-                }
+        $spiders = file(DIR_WS_INCLUDES . 'spiders.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($spiders as $spider) {
+            $spider = trim($spider);
+            /**
+             * Ignore blank lines, comments and the version stamp.
+             * The length test is not cosmetic: an empty pattern reaching str_contains()
+             * would match every user agent, so a single blank or whitespace-only line
+             * in spiders.txt would classify every visitor as a spider and leave the
+             * whole store without sessions. Three is the shortest real pattern in the
+             * file ('bot', 'lwp', 'mff'), so nothing shorter can be legitimate.
+             */
+            if (strlen($spider) < 3 || $spider[0] === '#' || str_starts_with($spider, '$Id:')) {
+                continue;
+            }
+            if (str_contains($user_agent, $spider)) {
+                $spider_flag = true;
+                break;
             }
         }
     }
