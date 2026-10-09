@@ -13,6 +13,8 @@ if (!defined('IS_ADMIN_FLAG')) {
 require DIR_WS_FUNCTIONS . 'database.php';
 require DIR_WS_FUNCTIONS . 'functions_general.php';
 require DIR_WS_FUNCTIONS . 'functions_general_shared.php';
+require DIR_WS_FUNCTIONS . 'functions_filecache.php';
+require DIR_WS_FUNCTIONS . 'functions_manufacturers.php';
 require DIR_WS_FUNCTIONS . 'functions_attributes.php';
 require DIR_WS_FUNCTIONS . 'functions_templates.php';
 require DIR_WS_FUNCTIONS . 'functions_files.php';

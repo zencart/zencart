@@ -31,6 +31,8 @@ $define = [
     'SUCCESS_DB_OPTIMIZE' => 'Database Optimization - Tables Processed: ',
     'TEXT_INFO_PURGE_DEBUG_LOG_FILES' => '<strong>Cleanup Debug Log Files</strong><br><strong>CAUTION: </strong>Zen Cart records PHP error messages for debugging purposes, and many payment modules can be set to log debug data to diagnose communication problems. <br>Clicking this purge option will *permanently* remove *ALL* debug logs associated with PHP errors and payment modules from the /logs/ folder.',
     'SUCCESS_CLEAN_DEBUG_FILES' => 'Debug Log Files Purged',
+    'TEXT_INFO_CLEAR_SIDEBOX_CACHES' => '<strong>Clear Sidebox Caches</strong><br>The categories and manufacturers sideboxes cache the category tree, the product counts and the manufacturer list in the /cache/ folder, so that crawler traffic does not rebuild them on every page.<br>The admin clears these automatically whenever you add, edit, move or delete a category, product or manufacturer. Use this only after changing the catalog outside the admin, such as a direct database edit or a feed import. Otherwise they refresh on their own within an hour.',
+    'SUCCESS_CLEAR_SIDEBOX_CACHES' => '<strong>Successful</strong> - sidebox caches cleared; they will rebuild on the next storefront page view',
 ];
 
 return $define;
