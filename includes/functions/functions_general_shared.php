@@ -283,6 +283,39 @@ function zen_field_length(string $table_name, string $field_name): int
 }
 
 /**
+ * Check submitted values against the width of the database column each will be stored in.
+ *
+ * Only char/varchar columns are enforced; other column types are skipped. Use this before
+ * inserting user input so an over-long value produces a form error rather than an SQL error
+ * part-way through a multi-table insert.
+ *
+ * @param array $fields One entry per value: [table_name, column_name, value, label]
+ * @return array One [label, max_length] entry for each value that is too long, in input order
+ * @since ZC v2.3.0
+ */
+function zen_get_field_length_violations(array $fields): array
+{
+    global $db;
+
+    $violations = [];
+    $columns_by_table = [];
+    foreach ($fields as [$table_name, $column_name, $value, $label]) {
+        if ($value === null || $value === '') {
+            continue;
+        }
+        $columns_by_table[$table_name] ??= $db->metaColumns($table_name);
+        $meta = $columns_by_table[$table_name][strtoupper($column_name)] ?? null;
+        if ($meta === null || !in_array($meta->type, ['char', 'varchar'], true) || $meta->max_length < 1) {
+            continue;
+        }
+        if (mb_strlen((string)$value) > $meta->max_length) {
+            $violations[] = [$label, $meta->max_length];
+        }
+    }
+    return $violations;
+}
+
+/**
  * Generate HTML FORM attributes for size="foo" maxlength="bar" based on maximum size (default 50)
  * example: zen_set_field_length(TABLE_CATEGORIES_DESCRIPTION, 'categories_name')
  * @since ZC v1.0.3
