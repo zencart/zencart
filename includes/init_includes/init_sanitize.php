@@ -290,12 +290,19 @@ foreach ($_GET as $key => $value) {
 if (isset($_GET['products_id']) && (!isset($_SESSION['check_valid_prod']) || $_SESSION['check_valid_prod'] !== false)) {
     $check_valid = zen_products_id_valid($_GET['products_id']) && !empty($_GET['main_page']);
     if (!$check_valid) {
-        $_GET['main_page'] = zen_get_info_page($_GET['products_id']);
+        $info_page = zen_get_info_page($_GET['products_id']);
         /**
-         * do not recheck redirect
+         * Only redirect when it would land somewhere other than the page already requested;
+         * otherwise fall through and let the page send its own 404.
          */
-        $_SESSION['check_valid_prod'] = false;
-        zen_redirect(zen_href_link($_GET['main_page'], 'products_id=' . $_GET['products_id']));
+        if ($info_page !== ($_GET['main_page'] ?? '')) {
+            $_GET['main_page'] = $info_page;
+            /**
+             * do not recheck redirect
+             */
+            $_SESSION['check_valid_prod'] = false;
+            zen_redirect(zen_href_link($_GET['main_page'], 'products_id=' . $_GET['products_id']));
+        }
     }
 }
 $_SESSION['check_valid_prod'] = true;
