@@ -19,8 +19,17 @@ class Customer extends base
     protected bool $is_logged_in = false;
     protected bool $is_in_guest_checkout = false;
     protected array $data = [];
+    protected bool $addresses_loaded = false;
+    protected ?int $loaded_customer_id = null;
 
-    public function __construct($customer_id = null)
+    /**
+     * @param int|string|null $customer_id
+     * @param bool $load_addresses Set false (use a named argument) to defer the address-book
+     *                             lookup until address data is first requested via getData();
+     *                             callers that only need the base customer record avoid two
+     *                             joins and the default-address self-heal on every request.
+     */
+    public function __construct($customer_id = null, protected bool $load_addresses = true)
     {
         $this->is_logged_in = $this->someoneIsLoggedIn();
         $this->is_in_guest_checkout = $this->isInGuestCheckout();
@@ -207,6 +216,14 @@ class Customer extends base
      */
     public function getData(?string $element = null)
     {
+        // Address data is loaded on demand when the constructor was told to skip it.
+        if (!$this->addresses_loaded && !empty($this->loaded_customer_id) && !empty($this->data)
+            && (empty($element) || $element === 'addresses' || !isset($this->data[$element]))
+        ) {
+            $this->loadAddresses();
+            $this->convertDataToInts();
+        }
+
         if (empty($element)) {
             return $this->data;
         }
@@ -316,6 +333,10 @@ class Customer extends base
         $this->load($customer_id);
         if (empty($this->data)) {
             return false;
+        }
+        if (!$this->addresses_loaded) {
+            $this->loadAddresses();
+            $this->convertDataToInts();
         }
 
         // @TODO - delete this if we collapse the Info table
@@ -573,37 +594,17 @@ class Customer extends base
             return false;
         }
 
+        $this->addresses_loaded = false;
+        $this->loaded_customer_id = null;
         $data_ok = $this->loadBaseCustomerInfo($customer_id);
         if ($data_ok === false) {
             return false;
         }
+        $this->loaded_customer_id = $customer_id;
 
-        // load address info, while also correcting for missing default address_book id
-        $addresses = $this->getFormattedAddressBookList($customer_id);
-        $found_default_address_id = false;
-        $first_address = null;
-
-        foreach ($addresses as $address) {
-            if (empty($first_address)) {
-                $first_address = $address['address_book_id'];
-            }
-            if ($address['address_book_id'] == $this->data['customers_default_address_id']) {
-                $this->data += $address['address'];
-                $found_default_address_id = true;
-                break;
-            }
+        if ($this->load_addresses) {
+            $this->loadAddresses();
         }
-        if (!$found_default_address_id && !empty($first_address)) {
-            $this->setDefaultAddressBookId($first_address);
-            foreach ($addresses as $address) {
-                if ($address['address_book_id'] === $first_address) {
-                    $this->data += $address['address'];
-                    break;
-                }
-            }
-        }
-        // keep this info so we don't have to query it again
-        $this->data['addresses'] = $addresses;
 
         $sql =
             "SELECT COUNT(*) AS number_of_reviews
@@ -630,6 +631,50 @@ class Customer extends base
         $this->convertDataToInts();
 
         return true;
+    }
+
+    /**
+     * Load the customer's address-book entries into $this->data['addresses'] and merge the
+     * default address's fields into $this->data, correcting a customers_default_address_id
+     * that no longer points at one of the customer's addresses.
+     *
+     * Runs from load() by default, or on demand from getData() when the constructor was
+     * called with $load_addresses = false.
+     *
+     * @since ZC v2.3.0
+     */
+    protected function loadAddresses(): void
+    {
+        $this->addresses_loaded = true;
+        if (empty($this->loaded_customer_id) || empty($this->data)) {
+            return;
+        }
+
+        $addresses = $this->getFormattedAddressBookList($this->loaded_customer_id);
+        $found_default_address_id = false;
+        $first_address = null;
+
+        foreach ($addresses as $address) {
+            if (empty($first_address)) {
+                $first_address = $address['address_book_id'];
+            }
+            if ($address['address_book_id'] == $this->data['customers_default_address_id']) {
+                $this->data += $address['address'];
+                $found_default_address_id = true;
+                break;
+            }
+        }
+        if (!$found_default_address_id && !empty($first_address)) {
+            $this->setDefaultAddressBookId($first_address);
+            foreach ($addresses as $address) {
+                if ($address['address_book_id'] === $first_address) {
+                    $this->data += $address['address'];
+                    break;
+                }
+            }
+        }
+        // keep this info so we don't have to query it again
+        $this->data['addresses'] = $addresses;
     }
 
     /**
@@ -786,7 +831,7 @@ class Customer extends base
         $sql =
             "UPDATE " . TABLE_CUSTOMERS . "
                 SET customers_default_address_id = " . (int)$id . "
-              WHERE customers_id = " . (int)$this->customer_id;
+              WHERE customers_id = " . (int)($this->loaded_customer_id ?? $this->customer_id);
         $db->Execute($sql);
         $this->data['customers_default_address_id'] = (int)$id;
     }
@@ -914,10 +959,84 @@ class Customer extends base
 
             // @TODO - kill actual session from sessionhandler too? (eg: really boot them out)
 
-            unset($_SESSION['customer_id']);
+            // Remove everything login() registered, so a forced logout leaves the same
+            // session state regardless of which caller triggered it.
+            unset(
+                $_SESSION['customer_id'],
+                $_SESSION['customers_email_address'],
+                $_SESSION['customer_first_name'],
+                $_SESSION['customer_last_name'],
+                $_SESSION['customer_default_address_id'],
+                $_SESSION['customer_country_id'],
+                $_SESSION['customer_zone_id'],
+                $_SESSION['customers_authorization'],
+                $_SESSION['customer_password_hash']
+            );
             return true;
         }
         return false;
+    }
+
+    /**
+     * Credit a gift-voucher coupon's amount to a customer's GV balance.
+     *
+     * @since ZC v2.3.0
+     */
+    public static function addCouponToGvBalance(int $customer_id, int $gv_id): bool
+    {
+        global $db;
+
+        if (empty($customer_id) || empty($gv_id)) {
+            return false;
+        }
+
+        $sql = "SELECT coupon_amount
+                FROM " . TABLE_COUPONS . "
+                WHERE coupon_id = " . (int)$gv_id;
+        $coupon_gv = $db->Execute($sql, 1);
+        if ($coupon_gv->EOF) {
+            return false;
+        }
+
+        $sql = "SELECT amount
+                FROM " . TABLE_COUPON_GV_CUSTOMER . "
+                WHERE customer_id = " . (int)$customer_id;
+        $customer_gv = $db->Execute($sql, 1);
+
+        if (!$customer_gv->EOF) {
+            $new_gv_amount = $customer_gv->fields['amount'] + $coupon_gv->fields['coupon_amount'];
+            $sql = "UPDATE " . TABLE_COUPON_GV_CUSTOMER . "
+                    SET amount = '" . $db->prepare_input($new_gv_amount) . "'
+                    WHERE customer_id = " . (int)$customer_id;
+        } else {
+            $sql = "INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount)
+                    VALUES (" . (int)$customer_id . ", '" . $db->prepare_input($coupon_gv->fields['coupon_amount']) . "')";
+        }
+        $db->Execute($sql);
+
+        return true;
+    }
+
+    /**
+     * Re-read this customer's GV balance from the database into the cached data, so a
+     * long-lived instance reflects a balance change made during the same request.
+     *
+     * @since ZC v2.3.0
+     */
+    public function refreshGvBalance(): void
+    {
+        global $db;
+
+        if (empty($this->customer_id) || empty($this->data)) {
+            return;
+        }
+
+        $sql = "SELECT amount
+                FROM " . TABLE_COUPON_GV_CUSTOMER . "
+                WHERE customer_id = " . (int)$this->customer_id;
+        $result = $db->Execute($sql, 1);
+
+        $this->data['gv_balance'] = $result->EOF ? null : $result->fields['amount'];
     }
 
     /**

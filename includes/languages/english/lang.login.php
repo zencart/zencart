@@ -15,6 +15,7 @@ $define = [
     'TEXT_VISITORS_CART' => '<strong>Note:</strong> If you have shopped with us before and left something in your cart, for your convenience, the contents will be merged if you log back in. <a href="javascript:session_win();">[More Info]</a>',
     'ERROR_SECURITY_ERROR' => 'There was a security error when trying to login.',
     'TEXT_LOGIN_BANNED' => 'Error: Access denied.',
+    'TEXT_LOGIN_NO_ADDRESS_BOOK_ENTRY' => 'Your account has no address on file. Please add your address to continue.',
 ];
 
 return $define;
