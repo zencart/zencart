@@ -1,1 +1,1 @@
-document.loginForm.email_address.focus();
+if (document.loginForm && document.loginForm.email_address) { document.loginForm.email_address.focus({preventScroll: true}); }
