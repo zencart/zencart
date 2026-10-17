@@ -1,4 +1,4 @@
-<?php
+paypaldp.php <?php
 /**
  * paypaldp.php payment module class for Paypal Payments Pro (aka Website Payments Pro)
  *
@@ -250,6 +250,12 @@ class paypaldp extends base {
      * availability can be registered.
      */
      protected ?string $merchant_country;
+    /**
+     * Flag indicating if module is retired
+     * @var boolean
+     */
+     public $retired = false;
+
   /**
    * class constructor
    */
@@ -261,6 +267,7 @@ class paypaldp extends base {
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
     $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'Retired'));
+    $this->retired = (zen_config('MODULE_PAYMENT_PAYPALDP_STATUS') === 'Retired');
     $this->merchant_country = zen_config('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY');
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
