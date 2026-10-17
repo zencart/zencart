@@ -61,12 +61,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'update') {
         $result = $emailResult;
     }
 
-
-    if ($error === false && $result->fields['lockout_expires'] != 0) {
+    if ($error === false && (int)$result->fields['lockout_expires'] > time()) {
         header('HTTP/1.1 406 Not Acceptable');
         exit(0);
     }
-
 
   // BEGIN SLAM PREVENTION
   if (empty($_POST['admin_email'])) {
