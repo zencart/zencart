@@ -1968,7 +1968,7 @@ class shoppingCart extends base
                 //
                 foreach ($_POST['id'] as $key => $value) {
                     if (zen_get_attributes_valid($_POST['products_id'], $key, $value) === false) {
-                        if (str_starts_with($key, zen_config('TEXT_PREFIX', '')) === true && $value === '') {
+                        if (is_string($key) && str_starts_with($key, zen_config('TEXT_PREFIX', '')) === true && $value === '') {
                             $selection_text = '';
                             $value_text = ' ' . ltrim(TEXT_INVALID_USER_INPUT, ' ');
                         } else {
