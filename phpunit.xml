@@ -10,6 +10,11 @@
     <testsuite name="FeatureAdmin">
       <directory suffix="Test.php">./not_for_release/testFramework/FeatureAdmin/</directory>
     </testsuite>
+    <testsuite name="Infection">
+      <directory suffix="Test.php">./not_for_release/testFramework/Unit/testsTemplateResolver/</directory>
+      <directory suffix="Test.php">./not_for_release/testFramework/Unit/testsPasswordHash/</directory>
+      <directory suffix="Test.php">./not_for_release/testFramework/Unit/testsSessions/</directory>
+    </testsuite>
   </testsuites>
   <php>
     <server name="APP_ENV" value="testing"/>

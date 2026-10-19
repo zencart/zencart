@@ -41,6 +41,7 @@
         "ext-pdo": "*",
         "friendsofphp/php-cs-fixer": "^3.95",
         "guzzlehttp/guzzle": "^7.7",
+        "infection/infection": "^0.35",
         "mikey179/vfsstream": "^1.6",
         "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^12.0",
@@ -69,9 +70,14 @@
     "config": {
         "bin-dir": "vendor/bin",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     },
     "scripts": {
+        "infection": "vendor/bin/infection --threads=4 --show-mutations --only-covering-test-cases",
+        "infection-fast": "vendor/bin/infection --threads=4 --show-mutations --only-covering-test-cases --git-diff-lines --git-diff-base=master",
         "phpstan": [
             "@phpstan:catalog",
             "@phpstan:admin"
