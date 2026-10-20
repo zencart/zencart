@@ -130,7 +130,9 @@ trait NotifierManager
         if (defined('NOTIFIER_TRACE_EVENTS') && is_array(NOTIFIER_TRACE_EVENTS) && !in_array($eventID, NOTIFIER_TRACE_EVENTS)) {
             return;
         }
+
         global $zcDate;
+        $zcDate ??= new \zcDate();
 
         $file = DIR_FS_LOGS . '/notifier_trace.log';
         $paramArray = (is_array($param1) && count($param1) === 0) ? [] : ['param1' => $param1];
