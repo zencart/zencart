@@ -32,6 +32,15 @@ composer run-script phpstan:admin
 composer run-script phpstan:catalog
 ```
 
+Mutation testing (Infection, Unit suite only, run inside DDEV with PCOV or Xdebug coverage available):
+
+```
+composer run-script infection
+composer run-script infection-fast
+```
+
+`infection.json5` mutates only an allow-list of files under `includes/classes` (the regex in `source.excludes`) and runs only the `Infection` suite in `phpunit.xml` with `--process-isolation`, because the full Unit suite cannot share one process. To widen coverage, add the file or directory to the allow-list regex and its test directory to the `Infection` suite. Infection fetches the PHPUnit XSD from schema.phpunit.de, so a run fails if that site is down. Reports go to `tmp/infection/`. Infection is a local developer aid for finding test gaps and is not run in CI.
+
 Prefer the `-parallel` variants when failures come from clashing `require` statements or duplicate function declarations.
 
 ## Traps

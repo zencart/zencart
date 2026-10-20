@@ -136,7 +136,7 @@ class PasswordHashTest extends zcUnitTestCase
             }
             $passwordList [$password] = $password;
         }
-        // @TODO - add an assertion here, instead of just watching for a failure.
+        $this->assertCount($loopCount, $passwordList);
     }
 
 
