@@ -36,6 +36,13 @@ class CategoryTreeTest extends zcUnitTestCase
         define('CATEGORIES_SUBCATEGORIES_INDENT', '--');
         define('CATEGORIES_SEPARATOR_SUBS', '>');
         define('SHOW_COUNTS', 'false');
+        /**
+         * The category maps are cached on disk under DIR_FS_SQL_CACHE, which here
+         * resolves to the repository's own /cache/ folder. A zero lifetime keeps
+         * this test from reading a file an earlier run left behind, and from
+         * writing one of its own.
+         */
+        define('CATEGORY_MAPS_CACHE_SECONDS', 0);
 
         $_SESSION['languages_id'] = 1;
         $GLOBALS['cPath'] = '';
@@ -57,9 +64,18 @@ class CategoryTreeTest extends zcUnitTestCase
             $this->categoryRow(111, 'Internal', 11, ''),
         ]);
 
-        $this->respondTo('/count\(\*\) as count\s+FROM \S+\s+WHERE parent_id = 1\b/', [['count' => 2]]);
-        $this->respondTo('/count\(\*\) as count\s+FROM \S+\s+WHERE parent_id = 11\b/', [['count' => 1]]);
-        $this->respondTo('/count\(\*\) as count/', [['count' => 0]]);
+        /**
+         * zen_has_category_subcategories() reads the parent/child map rather than
+         * issuing a count per category, so the whole edge list is scripted once.
+         */
+        $this->respondTo('/SELECT categories_id, parent_id\s+FROM/', [
+            ['categories_id' => 1, 'parent_id' => 0],
+            ['categories_id' => 2, 'parent_id' => 0],
+            ['categories_id' => 3, 'parent_id' => 0],
+            ['categories_id' => 11, 'parent_id' => 1],
+            ['categories_id' => 12, 'parent_id' => 1],
+            ['categories_id' => 111, 'parent_id' => 11],
+        ]);
     }
 
     public function testTopLevelCategoriesAreListedInOrderWithTheirDetails(): void
@@ -322,14 +338,21 @@ class CategoryTreeTest extends zcUnitTestCase
     private function respondToCounts(): void
     {
         // Specific categories first: the first matching pattern wins.
+        /**
+         * Direct per-category totals, grouped in one query. zen_count_products_in_category()
+         * rolls these up over the edge map scripted in setUp(), so Hardware reports
+         * 4 of its own plus Drives' 2, and Books reports its own 3.
+         */
         $this->queryResponses = array_merge(
             [
-                ['pattern' => '/count\(\*\) as total.*p2c\.categories_id = 1\b/s', 'rows' => [['total' => 4]]],
-                ['pattern' => '/count\(\*\) as total.*p2c\.categories_id = 11\b/s', 'rows' => [['total' => 2]]],
-                ['pattern' => '/count\(\*\) as total.*p2c\.categories_id = 3\b/s', 'rows' => [['total' => 3]]],
-                ['pattern' => '/SELECT categories_id\s+FROM \S+\s+WHERE parent_id = 1\b/', 'rows' => [['categories_id' => 11]]],
-                ['pattern' => '/count\(\*\) as total/', 'rows' => [['total' => 0]]],
-                ['pattern' => '/SELECT categories_id\s+FROM \S+\s+WHERE parent_id = \d+/', 'rows' => []],
+                [
+                    'pattern' => '/SUM\(p\.products_status = 1\) AS total_active/',
+                    'rows' => [
+                        ['categories_id' => 1, 'total_all' => 4, 'total_active' => 4],
+                        ['categories_id' => 11, 'total_all' => 2, 'total_active' => 2],
+                        ['categories_id' => 3, 'total_all' => 3, 'total_active' => 3],
+                    ],
+                ],
             ],
             $this->queryResponses
         );

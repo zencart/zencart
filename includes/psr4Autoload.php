@@ -16,6 +16,7 @@ $psr4Autoloader->addPrefix('Zencart\LanguageLoader', DIR_FS_CATALOG . DIR_WS_CLA
 $psr4Autoloader->addPrefix('Zencart\ResourceLoaders', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ResourceLoaders');
 $psr4Autoloader->addPrefix('Zencart\PageLoader', DIR_FS_CATALOG . DIR_WS_CLASSES . 'ResourceLoaders');
 $psr4Autoloader->addPrefix('Zencart\Events', DIR_FS_CATALOG . DIR_WS_CLASSES );
+$psr4Autoloader->addPrefix('Zencart\Cache', DIR_FS_CATALOG . DIR_WS_CLASSES . 'Cache');
 $psr4Autoloader->addPrefix('Zencart\Templates', DIR_FS_CATALOG . DIR_WS_CLASSES );
 
 $psr4Autoloader->addPrefix('Zencart\DbRepositories', DIR_FS_CATALOG . DIR_WS_CLASSES . 'DbRepositories');
