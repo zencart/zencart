@@ -1,53 +1,94 @@
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=$CHARSET"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<base href="$BASE_HREF"/>
-
-<style>
-$EMAIL_COMMON_CSS
-</style>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=$CHARSET"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="$BASE_HREF"/>
+    <style>
+        $EMAIL_COMMON_CSS
+    </style>
 </head>
 
-<body>
-<div class="holder" id="gv_send">
+<body id="gv_send" style="margin: 0; padding: 0; background-color: #f4f4f7;">
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#f4f4f7">
+    <tr>
+        <td align="center" style="padding: 20px 10px;">
+            <table role="presentation" class="holder" border="0" cellpadding="0" cellspacing="0" width="600" align="center" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); max-width: 600px; width: 100%;">
+                <tr>
+                    <td class="header" align="center">
+                        <a href="$BASE_HREF">
+                            <img src="$EMAIL_LOGO_FILE" alt="$EMAIL_LOGO_ALT_TEXT" title="$EMAIL_LOGO_ALT_TITLE_TEXT" width="$EMAIL_LOGO_WIDTH" height="$EMAIL_LOGO_HEIGHT" border="0" style="display: block; max-width: 100%; height: auto;" />
+                        </a>
+                        $EXTRA_HEADER_INFO
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content">
 
-  <!-- Header Section -->
-  <div class="header">
-    <img src="$EMAIL_LOGO_FILE" alt="$EMAIL_LOGO_ALT_TEXT" title="$EMAIL_LOGO_ALT_TITLE_TEXT" width="$EMAIL_LOGO_WIDTH" height="$EMAIL_LOGO_HEIGHT" border="0"/>
-    $EXTRA_HEADER_INFO
-  </div>
+                        <div class="gv-block">
+                            <img src="email/gv.gif" width="100" height="80" alt="" style="display: inline-block; vertical-align: middle; margin-right: 15px;" />
+                            <span class="gv-amount" style="font-size: 20px; vertical-align: middle;">$EMAIL_GV_AMOUNT</span>
+                            <span style="font-size: 20px; vertical-align: middle;"> - </span>
+                            <span class="gv-code" style="vertical-align: middle;">$GV_REDEEM_CODE</span>
+                        </div>
 
+                        <div class="section-title" style="text-align: center; border-bottom: none; margin-top: 20px;">
+                            $EMAIL_STORE_NAME
+                        </div>
 
-  <!-- Content Section -->
-  <div class="content">
-    <div><img src="email/gv.gif" width="100" height="80"><span class="gv-amount">$EMAIL_GV_AMOUNT</span> - <span class="gv-code">$GV_REDEEM_CODE</span></div>
-    <div class="store-name">$EMAIL_STORE_NAME</div>
-    <div class="content-line">$EMAIL_GV_TEXT_HEADER $EMAIL_GV_AMOUNT</div>
-    <div class="content-line">$EMAIL_GV_FROM $EMAIL_GV_MESSAGE</div>
+                        <div class="content-line" style="margin-top: 20px;">
+                            <strong>$EMAIL_GV_TEXT_HEADER</strong> <span class="gv-amount">$EMAIL_GV_AMOUNT</span>
+                        </div>
 
-    <div class="content-line"><tt>$EMAIL_GV_SEND_TO</tt></div>
-    <div class="content-line"><tt>$EMAIL_MESSAGE_HTML</tt></div>
-   <hr/>
-    <div class="content-line">$GV_REDEEM_HOW<br>$GV_REDEEM_URL</div>
-    <div class="content-line">$EMAIL_GV_FIXED_FOOTER</div>
-    <div class="content-line">$EMAIL_GV_SHOP_FOOTER</div>
-  </div>
+                        <div class="comments">
+                            <strong>$EMAIL_GV_FROM</strong> $EMAIL_GV_MESSAGE
+                        </div>
 
+                        <!-- Recipient & Message Card -->
+                        <div class="address-block" style="background-color: #f8f9fa; padding: 20px; border-radius: 6px; margin: 25px 0;">
+                            <div class="content-line-title" style="margin-top: 0; font-size: 14px; color: #555555;">
+                                $EMAIL_GV_SEND_TO
+                            </div>
+                            <div style="margin-top: 15px; color: #555555; line-height: 1.6;">
+                                <tt>$EMAIL_MESSAGE_HTML</tt>
+                            </div>
+                        </div>
 
-  <!-- Footer Section -->
-  <div class="footer">
-    <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
-  </div>
+                        <div class="content-line" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eeeeee;">
+                            <p><strong>$GV_REDEEM_HOW</strong></p>
+                            <div style="margin-top: 15px;">
+                                $GV_REDEEM_URL
+                            </div>
+                        </div>
 
-</div>
-<div class="disclaimer">
-  <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
-  <div class="disclaimer2">$EMAIL_SPAM_DISCLAIMER</div>
-</div>
-<div class="extra-info">
-$EXTRA_INFO
-</div>
+                        <div class="order_message text-muted" style="margin-top: 30px; font-size: 13px;">
+                            $EMAIL_GV_FIXED_FOOTER<br><br>
+                            $EMAIL_GV_SHOP_FOOTER
+                        </div>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer">
+                        <div class="copyright">$EMAIL_FOOTER_COPYRIGHT</div>
+                    </td>
+                </tr>
+            </table>
+            <table role="presentation" align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 600px; width: 100%;">
+                <tr>
+                    <td class="disclaimer">
+                        <div class="disclaimer1">$EMAIL_DISCLAIMER</div>
+                        <div class="disclaimer2" style="margin-top: 8px;">$EMAIL_SPAM_DISCLAIMER</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="extra-info-container">
+                        <div class="extra-info">$EXTRA_INFO</div>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
