@@ -152,6 +152,12 @@ class paypalwpp extends base {
   protected array $country_state;
 
   /**
+   * Flag indicating if module is retired
+   * @var boolean
+   */
+  public $retired = false;
+
+  /**
    * class constructor
    */
   function __construct() {
@@ -160,6 +166,7 @@ class paypalwpp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.5.8';
     $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'Retired'));
+    $this->retired = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'Retired');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');

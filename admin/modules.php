@@ -192,6 +192,7 @@ foreach ($modules_found as $module_name => $module_file_dir) {
     // check if module passes the "check()" test (ie: enabled and valid, determined by each module individually)
     $check = $module->check();
     $modules_for_display[$class]['status'] = $check;
+    $modules_for_display[$class]['retired'] = $module->retired ?? false;
     $modules_for_display[$class]['code'] = $module->code ?? '';
     $modules_for_display[$class]['title'] = $module->title ?? '**BROKEN**';
     $modules_for_display[$class]['module'] = $module;
@@ -324,6 +325,7 @@ if ($set === 'payment') {
 
         // show current status
             echo match (true) {
+                !empty($detail['retired']) && $detail['retired'] === true => zen_icon('status-gray'),
                 !empty($detail['enabled']) && is_numeric($detail['sort_order']) => zen_icon('status-green'),
                 empty($detail['enabled']) && is_numeric($detail['sort_order']) => zen_icon('status-yellow'),
                 default => zen_icon('status-red')
