@@ -260,6 +260,32 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
         $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
     }
 
+    // -----
+    // Reject any value wider than its database column. Without this, a value that passes the
+    // minimum-length checks above but exceeds the column width fails on INSERT under a strict
+    // sql_mode; when that happens on the address_book insert the customers row has already been
+    // written, leaving an account with no address (see #7983).
+    //
+    $field_length_checks = [
+        [TABLE_CUSTOMERS, 'customers_firstname', $firstname, ENTRY_FIRST_NAME],
+        [TABLE_CUSTOMERS, 'customers_lastname', $lastname, ENTRY_LAST_NAME],
+        [TABLE_CUSTOMERS, 'customers_email_address', $email_address, ENTRY_EMAIL_ADDRESS],
+        [TABLE_CUSTOMERS, 'customers_nick', $nick, ENTRY_NICK],
+        [TABLE_CUSTOMERS, 'customers_telephone', $telephone, ENTRY_TELEPHONE_NUMBER],
+        [TABLE_CUSTOMERS, 'customers_fax', $fax, ENTRY_FAX_NUMBER],
+        [TABLE_CUSTOMERS, 'customers_referral', $customers_referral, ENTRY_CUSTOMERS_REFERRAL],
+        [TABLE_ADDRESS_BOOK, 'entry_company', $company, ENTRY_COMPANY],
+        [TABLE_ADDRESS_BOOK, 'entry_street_address', $street_address, ENTRY_STREET_ADDRESS],
+        [TABLE_ADDRESS_BOOK, 'entry_suburb', $suburb, ENTRY_SUBURB],
+        [TABLE_ADDRESS_BOOK, 'entry_city', $city, ENTRY_CITY],
+        [TABLE_ADDRESS_BOOK, 'entry_state', $state, ENTRY_STATE],
+        [TABLE_ADDRESS_BOOK, 'entry_postcode', $postcode, ENTRY_POST_CODE],
+    ];
+    foreach (zen_get_field_length_violations($field_length_checks) as [$field_label, $max_length]) {
+        $error = true;
+        $messageStack->add('create_account', sprintf(ENTRY_FIELD_TOO_LONG_ERROR, rtrim($field_label, ':'), $max_length));
+    }
+
     $zco_notifier->notify('NOTIFY_CREATE_ACCOUNT_VALIDATION_CHECK', [], $error, $send_welcome_email);
 
     if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
