@@ -12,6 +12,7 @@ if (typeof zcJS == "undefined" || !zcJS) {
 
 zcJS.ajax = function (options) {
     const csrfToken = '<?= $_SESSION['securityToken'] ?>';
+    const hasSession = <?= session_status() === PHP_SESSION_ACTIVE ? 'true' : 'false' ?>;
     options.url = options.url.replace("&amp;", "&");
 <?php
     // -----
@@ -79,6 +80,26 @@ zcJS.ajax = function (options) {
         d.done(settings.success);
         d.fail(settings.error);
         d.done(settings.complete);
+<?php
+    // -----
+    // No session was started for this page (e.g. a spider, when SESSION_BLOCK_SPIDERS
+    // is 'True'), so the POST can't pass init_sanitize.php's CSRF check; it would be
+    // answered with a 418 and the visitor sent to the time_out page. Don't send it;
+    // reject the request instead, so that the caller's error/fail handlers still run.
+    //
+?>
+        if (!hasSession) {
+            const noSessionXHR = {
+                readyState: 0,
+                status: 0,
+                statusText: 'nosession',
+                responseText: '',
+                getResponseHeader: function () { return null; },
+                getAllResponseHeaders: function () { return ''; }
+            };
+            d.reject(noSessionXHR, 'nosession', 'No session');
+            return;
+        }
         const jqXHRSettings = jQuery.extend(true, {}, settings, {
             success: function (response, textStatus, jqXHR) {
                 d.resolve(response, textStatus, jqXHR);
