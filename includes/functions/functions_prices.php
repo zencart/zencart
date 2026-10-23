@@ -1273,7 +1273,15 @@ function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected =
 
     // normal attributes price discounted by sales/specials or not discounted if neither a sale nor a special
     if ($price_prefix === '-') {
-        $attributes_price_final -= zen_get_discount_calc($products_id, $products_attributes_id, ($prod_priced_by_attr ? $products_price_without_attributes : 0) + ($prod_priced_by_attr ? -1 : 1) * $options_values_price);
+        // -----
+        // For a priced-by-attributes product, this is the discounted (base - option) price; the
+        // base price is removed on return, mirroring the '+' calculation below.
+        //
+        if ($prod_priced_by_attr) {
+            $attributes_price_final += zen_get_discount_calc($products_id, $products_attributes_id, $products_price_without_attributes - $options_values_price);
+        } else {
+            $attributes_price_final -= zen_get_discount_calc($products_id, $products_attributes_id, $options_values_price);
+        }
     } else {
         $attributes_price_final += zen_get_discount_calc($products_id, $products_attributes_id, ($prod_priced_by_attr ? $products_price_without_attributes : 0) + $options_values_price);
     }
