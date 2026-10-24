@@ -334,83 +334,108 @@ function zen_read_user(string $name): bool|array
 
 /**
  * Verify login according to security requirements
+ *
+ * Note: ADMIN_LOGIN_LOCKOUT_TIMER and ADMIN_LOGIN_LOCKOUT_LIMIT are defined in
+ * init_includes/init_pci_settings.php
+ *
  * @since ZC v1.5.0
  */
 function zen_validate_user_login(string $admin_name, string $admin_pass): array
 {
     global $db;
     $camefrom = $_GET['camefrom'] ?? FILENAME_DEFAULT;
-    $error = $expired = false;
-    $message = $redirect = '';
-    $expired_token = 0;
+    $error = false;
+    $expired = false;
+    $message = '';
+    $redirect = '';
+
+    // While checking the admin_name seems redundant, the check
+    // will consider Admin !== admin (which could be returned for
+    // case-insensitive, _ci, collations).
     $result = zen_read_user($admin_name);
-    if (empty($result) || $admin_name !== $result['admin_name']) {
+    if ($result === false || $admin_name !== $result['admin_name']) {
         // invalid login
         $error = true;
         $message = ERROR_WRONG_LOGIN;
         zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
     } else {
-        if ($result['lockout_expires'] > time()) {
-            // account locked
-            $error = true;
-            $message = ERROR_SECURITY_ERROR; // account locked. Simply give generic error, since otherwise we alert that the account name is correct
-            zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_TO_LOG_IN_TO_LOCKED_ACCOUNT . ' ' . $admin_name, 'warning');
+        // A previously-recorded login-lockout was recorded ...
+        if ((int)$result['lockout_expires'] !== 0) {
+            // ... if it hasn't expired, no login offered.
+            if ($result['lockout_expires'] > time()) {
+                // account locked
+                $error = true;
+                $message = ERROR_SECURITY_ERROR; // account locked. Simply give generic error, since otherwise we alert that the account name is correct
+                zen_record_admin_activity(TEXT_ERROR_ATTEMPTED_TO_LOG_IN_TO_LOCKED_ACCOUNT . ' ' . $admin_name, 'warning');
+            // ... if the lockout **has** expired, reset it in both the database and session
+            } else {
+                // Reset the lockout_expires and failed_logins fields, since the previous lockout has
+                // expired. Also reset the session-based invalid-login-attempt counter
+                $sql =
+                    "UPDATE " . TABLE_ADMIN . "
+                        SET lockout_expires = 0,
+                            failed_logins = 0
+                      WHERE admin_name = :adminname: ";
+                $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
+                $db->Execute($sql, 1);
+
+                $result['lockout_expires'] = 0;
+                $result['failed_logins'] = 0;
+                $_SESSION['login_attempt'] = 0;
+            }
         }
-        if ($result['reset_token'] !== '') {
+
+        /**
+         * Note: Resetting of the 'reset_token' is handled by zen_validate_pwd_reset_request.
+         */
+        if ($error === false && $result['reset_token'] !== '') {
             [$token_expires_at, $token] = explode('}', $result['reset_token']);
-            if ($token_expires_at > 0) {
-                if ($token_expires_at <= time() && $result['admin_pass'] !== '') {
-                    // reset the reset_token field to blank, since token has expired
-                    $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
-                    $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-                    $db->Execute($sql);
-                    $expired = false;
+            if ($token_expires_at > time() || $result['admin_pass'] === '') {
+                if (!zen_validate_password($admin_pass, $token)) {
+                    $error = true;
+                    $message = ERROR_WRONG_LOGIN;
+                    zen_record_admin_activity(sprintf(TEXT_ERROR_INCORRECT_PASSWORD_DURING_RESET_FOR_USER) . ' ' . $admin_name, 'warning');
                 } else {
-                    if (!zen_validate_password($admin_pass, $token)) {
-                        $error = true;
-                        $message = ERROR_WRONG_LOGIN;
-                        zen_record_admin_activity(sprintf(TEXT_ERROR_INCORRECT_PASSWORD_DURING_RESET_FOR_USER) . ' ' . $admin_name, 'warning');
-                    } else {
-                        $error = true;
-                        $expired = true;
-                        $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
-                    }
+                    $expired = true;
+                    $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
                 }
             }
         }
+
         if (empty($result['admin_pass'])) {
-            $error = true;
             $expired = true;
             $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
-        } else {
+        } elseif ($error === false && $expired === false) {
             $token = $result['admin_pass'];
             if (!zen_validate_password($admin_pass, $token)) {
                 $error = true;
-                if (!$expired) {
-                    $message = ERROR_WRONG_LOGIN;
-                    zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
-                }
-            } else {
-                $error = false;
+                $message = ERROR_WRONG_LOGIN;
+                zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
             }
         }
+
         // BEGIN 2-factor authentication
         if ($error === false && defined('ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE') && ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE !== '') {
             if (function_exists(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE)) {
-                $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, ['admin_id' => $result['admin_id'], 'email' => $result['admin_email'], 'admin_name' => $result['admin_name'], 'mfa' => $result['mfa']]);
+                $response = zen_call_function(ZC_ADMIN_TWO_FACTOR_AUTHENTICATION_SERVICE, [
+                    'admin_id' => $result['admin_id'],
+                    'email' => $result['admin_email'],
+                    'admin_name' => $result['admin_name'],
+                    'mfa' => $result['mfa']
+                ]);
                 if ($response !== true) {
                     $error = true;
                     $message = TEXT_MFA_ERROR;
                     zen_record_admin_activity('TFA Failure - Two-factor authentication failed', 'warning');
                 } else {
-                    zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'warning');
+                    zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'info');
                 }
             }
         }
     }
 
     // BEGIN LOGIN SLAM PREVENTION
-    if ($error) {
+    if ($error && !$expired) {
         if (!isset($_SESSION['login_attempt'])) {
             $_SESSION['login_attempt'] = 0;
         }
@@ -418,34 +443,56 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = failed_logins + 1, last_failed_attempt = now(), last_failed_ip = :ip: WHERE admin_name = :adminname: ";
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
-        $db->Execute($sql);
-        if (!empty($result) && ($_SESSION['login_attempt'] > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD || $result['failed_logins'] > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD) && !empty($result['admin_email']) && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS == 'Yes') {
+        $db->Execute($sql, 1);
+
+        $admin_login_lockout_timer = (int)ADMIN_LOGIN_LOCKOUT_TIMER;
+        $admin_login_lockout_limit = (int)ADMIN_LOGIN_LOCKOUT_LIMIT;
+        if (
+            !empty($result)
+            && ($_SESSION['login_attempt'] > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD || $result['failed_logins'] > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD)
+            && !empty($result['admin_email'])
+            && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS === 'Yes'
+        ) {
+            $multiple_login_failure_message = sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $admin_login_lockout_limit, $admin_login_lockout_timer / 60, $_SERVER['REMOTE_ADDR']);
+
             $html_msg['EMAIL_CUSTOMERS_NAME'] = $result['admin_name'];
-            $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']);
-            zen_record_admin_activity(sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), 'warning');
-            zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, sprintf(TEXT_EMAIL_MULTIPLE_LOGIN_FAILURES, $_SERVER['REMOTE_ADDR']), STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
+            $html_msg['EMAIL_MESSAGE_HTML'] = $multiple_login_failure_message;
+            zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, $multiple_login_failure_message, STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
+
+            zen_record_admin_activity($multiple_login_failure_message, 'warning');
         }
-        if ($expired_token < 10000) {
-            if ($_SESSION['login_attempt'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT || (!empty($result) && $result['failed_logins'] > (int)ADMIN_LOGIN_LOCKOUT_LIMIT)) {
-                $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + ADMIN_LOGIN_LOCKOUT_TIMER) . " WHERE admin_name = :adminname: ";
-                $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-                $db->Execute($sql);
-                zen_session_destroy();
-                zen_record_admin_activity('Too many login failures. Account locked for ' . ADMIN_LOGIN_LOCKOUT_TIMER / 60 . ' minutes', 'warning');
-                sleep(15);
-                $redirect = zen_href_link(FILENAME_DEFAULT, '', 'SSL');
-                return [$error, $expired, $message, $redirect];
-            } else {
-                sleep(4);
-            }
+
+        if ($_SESSION['login_attempt'] > $admin_login_lockout_limit || (!empty($result) && $result['failed_logins'] > $admin_login_lockout_limit)) {
+            $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + $admin_login_lockout_timer) . " WHERE admin_name = :adminname: ";
+            $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
+            $db->Execute($sql, 1);
+
+            /**
+             * Destroy and then restart the session so that the session-based copy of
+             * the login-attempt counter remains.  That value is also used by the
+             * password_forgotten.php script.
+             */
+            $login_attempts = (int)max($_SESSION['login_attempt'], ($result['failed_logins'] ?? 0));
+            zen_session_destroy();
+            zen_session_start();
+            $_SESSION['login_attempt'] = $login_attempts;
+
+            zen_record_admin_activity('Too many login failures. Account locked for ' . $admin_login_lockout_timer / 60 . ' minutes', 'warning');
+            sleep(15);
+            $redirect = zen_href_link(FILENAME_LOGIN, '', 'SSL');
+            return [$error, $expired, $message, $redirect];
+        } else {
+            sleep(4);
         }
     } // END LOGIN SLAM PREVENTION
+
     // deal with expireds for SSL change
     if (PADSS_PWD_EXPIRY_ENFORCED == 1 && $error === false && $result['pwd_last_change_date'] === '1990-01-01 14:02:22') {
         $expired = true;
         $error = true;
         $message = ($message === '' ? '' : $message . '<br><br>') . EXPIRED_DUE_TO_SSL;
     }
+
     // deal with expireds for PA-DSS
     if ($error === false && PADSS_PWD_EXPIRY_ENFORCED == 1 && $result['pwd_last_change_date'] < date('Y-m-d H:i:s', ADMIN_PASSWORD_EXPIRES_INTERVAL)) {
         $expired = true;
@@ -462,12 +509,18 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $message = (string)$message;
     }
 
-    if ($error === false) {
+    if ((bool)$error === false) {
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
             $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
         }
         unset($_SESSION['login_attempt']);
-        $sql = "UPDATE " . TABLE_ADMIN . " SET failed_logins = 0, lockout_expires = 0, last_login_date = now(), last_login_ip = :ip: WHERE admin_name = :adminname: ";
+        $sql =
+            "UPDATE " . TABLE_ADMIN . "
+                SET failed_logins = 0,
+                    lockout_expires = 0,
+                    last_login_date = now(),
+                    last_login_ip = :ip:
+              WHERE admin_name = :adminname: ";
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
         $sql = $db->bindVars($sql, ':ip:', $_SERVER['REMOTE_ADDR'], 'string');
         $db->Execute($sql);
@@ -475,7 +528,9 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         if (SESSION_RECREATE === 'True') {
             zen_session_recreate();
         }
-        $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+        if ($expired === false) {
+            $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+        }
     }
     return [$error, $expired, $message, $redirect];
 }
@@ -548,6 +603,8 @@ function zen_check_for_expired_pwd($adminID): bool
 }
 
 /**
+ * Note: ADMIN_PASSWORD_MIN_LENGTH is defined in init_includes/init_pci_settings.php
+ *
  * @since ZC v1.5.0
  */
 function zen_reset_password($id, $password, $compare): array
@@ -567,14 +624,20 @@ function zen_reset_password($id, $password, $compare): array
     }
     if (empty($errors)) {
         $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "UPDATE " . TABLE_ADMIN . "
-                SET prev_pass3 = prev_pass2, prev_pass2 = prev_pass1, prev_pass1 = admin_pass, admin_pass = :newpwd:,
-                    failed_logins=0, lockout_expires = 0,
+        $sql =
+            "UPDATE " . TABLE_ADMIN . "
+                SET prev_pass3 = prev_pass2,
+                    prev_pass2 = prev_pass1,
+                    prev_pass1 = admin_pass,
+                    admin_pass = :newpwd:,
+                    failed_logins = 0,
+                    lockout_expires = 0,
+                    reset_token = '',
                     pwd_last_change_date = now()
-                WHERE admin_id = :adminID:";
+              WHERE admin_id = :adminID:";
         $sql = $db->bindVars($sql, ':adminID:', $id, 'integer');
         $sql = $db->bindVars($sql, ':newpwd:', $encryptedPassword, 'string');
-        $db->Execute($sql);
+        $db->Execute($sql, 1);
         if (isset($_SESSION['admin_id']) && (int)$_SESSION['admin_id'] === $id) {
             zen_session_recreate();
         }
@@ -620,9 +683,9 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
                             $errors = array_merge($errors, $moreErrors);
                         } else {
                             // password change was accepted, so reset token
-                            $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '', failed_logins = 0 WHERE admin_name = :adminname: ";
+                            $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
                             $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-                            $db->Execute($sql);
+                            $db->Execute($sql, 1);
                         }
                     }
                 }
@@ -637,7 +700,7 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
         } else {
             $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
             $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-            $db->Execute($sql);
+            $db->Execute($sql, 1);
         }
     }
     return $errors;
