@@ -52,44 +52,6 @@ if (zen_config('ACCOUNT_STATE_DRAW_INITIAL_DROPDOWN') === 'true') {
 jQuery(document).ready(function() {
     const country_zones = '<?php echo addslashes(json_encode($c2z)); ?>';
 <?php
-// -----
-// Notes:
-//
-// 1. The '#stBreak' <br> is also never needed/wanted since it will 'throw' the state-field input underneath
-// the state/zone label.
-//
-// 2. If the '#stateLabel' label is empty, hide it!  It will be when the site uses dropdown states and on
-// the 'shipping_estimator' page.
-//
-// 3. Initialize the display for the dropdown vs. hand-entry of the state fields.  If the initially-selected
-// country doesn't have zones, the dropdown will contain only 1 element ('Type a choice below ...').  In that
-// case, the dropdown and associated elements will be hidden and the hand-input 'state' field will be shown.
-//
-// 4. There can be unwanted whitespace, e.g. an &nbsp; prior to the (optional) <span class="alert"> following
-// the 'stateZone' dropdown.  In that case, when the <span> is hidden for unzoned countries, the state input
-// field is slightly offset from the other input fields.
-//
-?>
-    if (jQuery('#stateZone > option').length > 1) {
-        jQuery('#stateLabel').hide();
-        jQuery('#state').hide();
-        jQuery('#stateZone').show();
-        if (jQuery('#stateZone option:selected').val() == 0) {
-            jQuery('#zoneLabel').nextAll('span.alert').first().show();
-        } else {
-            jQuery('#zoneLabel').nextAll('span.alert').first().hide();
-        }
-    } else {
-        if (jQuery('#stateLabel').text().length === 0) {
-            jQuery('#stateLabel').text(jQuery('#zoneLabel').text());
-        }
-        jQuery('#state').show();
-        jQuery('#zoneLabel').hide();
-        jQuery('#stateZone').hide();
-        jQuery('#zoneLabel').nextAll('span.alert').first().hide();
-        jQuery('#stBreak').hide();
-    }
-<?php
     // -----
     // This function provides the processing needed when a country has been changed.  It makes
     // use of the country_zones (countries-to-zones) array, built above.  Normally invoked
@@ -120,7 +82,6 @@ jQuery(document).ready(function() {
             jQuery('#zoneLabel').show();
             jQuery('#stateZone').show();
             jQuery('#zoneLabel').nextAll('span.alert').first().show();
-            jQuery('#stBreak').show();
         } else {
             if (jQuery('#stateLabel').text().length === 0) {
                 jQuery('#stateLabel').text(jQuery('#zoneLabel').text());
@@ -130,7 +91,6 @@ jQuery(document).ready(function() {
             jQuery('#zoneLabel').hide();
             jQuery('#stateZone').hide();
             jQuery('#zoneLabel').nextAll('span.alert').first().hide();
-            jQuery('#stBreak').hide();
         }
     }
     $('#stateZone').on('change', function() {
