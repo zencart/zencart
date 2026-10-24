@@ -7,17 +7,21 @@
  */
 // reset-token is good for only 24 hours:
 define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
+zen_define_default('MAX_FORGOTTEN_PASSWORD_ATTEMPTS', 9);
 
 /////////
 require 'includes/application_top.php';
 if (isset($_POST['action']) && $_POST['action'] == 'login') {
   zen_redirect(zen_href_link(FILENAME_LOGIN));
 }
-// Slam prevention:
-if (isset($_SESSION['login_attempt']) && $_SESSION['login_attempt'] > 9) {
+
+// Slam prevention, limiting the number of times this page can be 'hit' erroneously
+// and also denying access if the session's login-attempts exceed their threshold
+if (($_SESSION['forgotten_password_attempt'] ?? 0) > (int)MAX_FORGOTTEN_PASSWORD_ATTEMPTS || ($_SESSION['login_attempt'] ?? 0) > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD) {
   header('HTTP/1.1 406 Not Acceptable');
   exit(0);
 }
+
 $error = false;
 $resetToken = '';
 $email_message = '';
@@ -67,14 +71,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'update') {
     }
 
   // BEGIN SLAM PREVENTION
-  if (empty($_POST['admin_email'])) {
-    if (!isset($_SESSION['login_attempt'])) {
-      $_SESSION['login_attempt'] = 0;
+  if ($error === true) {
+    if (!isset($_SESSION['forgotten_password_attempt'])) {
+      $_SESSION['forgotten_password_attempt'] = 0;
     }
-    $_SESSION['login_attempt']++;
+    $_SESSION['forgotten_password_attempt']++;
   } // END SLAM PREVENTION
 
   if ($error === false) {
+    unset($_SESSION['forgotten_password_attempt']);
     $new_password = zen_create_PADSS_password((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH);
     $resetToken = (time() + ADMIN_PWD_TOKEN_DURATION) . '}' . zen_encrypt_password($new_password);
     $sql = "UPDATE " . TABLE_ADMIN . "

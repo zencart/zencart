@@ -349,8 +349,11 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
     $message = '';
     $redirect = '';
 
+    // While checking the admin_name seems redundant, the check
+    // will consider Admin !== admin (which could be returned for
+    // case-insensitive, _ci, collations).
     $result = zen_read_user($admin_name);
-    if ($result === false) {
+    if ($result === false || $admin_name !== $result['admin_name']) {
         // invalid login
         $error = true;
         $message = ERROR_WRONG_LOGIN;
@@ -382,20 +385,17 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
             }
         }
 
-        if ($result['reset_token'] !== '') {
+        /**
+         * Note: Resetting of the 'reset_token' is handled by zen_validate_pwd_reset_request.
+         */
+        if ($error === false && $result['reset_token'] !== '') {
             [$token_expires_at, $token] = explode('}', $result['reset_token']);
-            if ($token_expires_at > 0) {
-                if ($token_expires_at <= time() && $result['admin_pass'] !== '') {
-                    // reset the reset_token field to blank, since token has expired
-                    $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
-                    $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-                    $db->Execute($sql, 1);
-                } elseif (!zen_validate_password($admin_pass, $token)) {
+            if ($token_expires_at > time() || $result['admin_pass'] === '') {
+                if (!zen_validate_password($admin_pass, $token)) {
                     $error = true;
                     $message = ERROR_WRONG_LOGIN;
                     zen_record_admin_activity(sprintf(TEXT_ERROR_INCORRECT_PASSWORD_DURING_RESET_FOR_USER) . ' ' . $admin_name, 'warning');
                 } else {
-                    $error = true;
                     $expired = true;
                     $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
                 }
@@ -403,17 +403,14 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         }
 
         if (empty($result['admin_pass'])) {
-            $error = true;
             $expired = true;
             $message = TEXT_TEMPORARY_PASSWORD_MUST_BE_CHANGED;
-        } else {
+        } elseif ($error === false && $expired === false) {
             $token = $result['admin_pass'];
             if (!zen_validate_password($admin_pass, $token)) {
                 $error = true;
-                if (!$expired) {
-                    $message = ERROR_WRONG_LOGIN;
-                    zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
-                }
+                $message = ERROR_WRONG_LOGIN;
+                zen_record_admin_activity(sprintf(TEXT_ERROR_FAILED_ADMIN_LOGIN_FOR_USER) . ' ' . $admin_name, 'warning');
             }
         }
 
@@ -431,7 +428,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
                     $message = TEXT_MFA_ERROR;
                     zen_record_admin_activity('TFA Failure - Two-factor authentication failed', 'warning');
                 } else {
-                    zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'warning');
+                    zen_record_admin_activity('TFA Passed - Two-factor authentication passed', 'info');
                 }
             }
         }
@@ -460,7 +457,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
 
             $html_msg['EMAIL_CUSTOMERS_NAME'] = $result['admin_name'];
             $html_msg['EMAIL_MESSAGE_HTML'] = $multiple_login_failure_message;
-            zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, $multiple_login_failure_message, zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'no_archive');
+            zen_mail($result['admin_name'], $result['admin_email'], TEXT_EMAIL_SUBJECT_LOGIN_FAILURES, $multiple_login_failure_message, STORE_NAME, EMAIL_FROM, $html_msg, 'no_archive');
 
             zen_record_admin_activity($multiple_login_failure_message, 'warning');
         }
@@ -469,10 +466,20 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
             $sql = "UPDATE " . TABLE_ADMIN . " SET lockout_expires = " . (time() + $admin_login_lockout_timer) . " WHERE admin_name = :adminname: ";
             $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
             $db->Execute($sql, 1);
+
+            /**
+             * Destroy and then restart the session so that the session-based copy of
+             * the login-attempt counter remains.  That value is also used by the
+             * password_forgotten.php script.
+             */
+            $login_attempts = (int)max($_SESSION['login_attempt'], ($result['failed_logins'] ?? 0));
             zen_session_destroy();
+            zen_session_start();
+            $_SESSION['login_attempt'] = $login_attempts;
+
             zen_record_admin_activity('Too many login failures. Account locked for ' . $admin_login_lockout_timer / 60 . ' minutes', 'warning');
             sleep(15);
-            $redirect = zen_href_link(FILENAME_DEFAULT, '', 'SSL');
+            $redirect = zen_href_link(FILENAME_LOGIN, '', 'SSL');
             return [$error, $expired, $message, $redirect];
         } else {
             sleep(4);
@@ -502,7 +509,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         $message = (string)$message;
     }
 
-    if ($error === false) {
+    if ((bool)$error === false) {
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
             $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
         }
@@ -512,7 +519,6 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
                 SET failed_logins = 0,
                     lockout_expires = 0,
                     last_login_date = now(),
-                    reset_token = '',
                     last_login_ip = :ip:
               WHERE admin_name = :adminname: ";
         $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
@@ -522,7 +528,9 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
         if (SESSION_RECREATE === 'True') {
             zen_session_recreate();
         }
-        $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+        if ($expired === false) {
+            $redirect = zen_href_link($camefrom, zen_get_all_get_params(['camefrom']), 'SSL');
+        }
     }
     return [$error, $expired, $message, $redirect];
 }
@@ -675,9 +683,9 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
                             $errors = array_merge($errors, $moreErrors);
                         } else {
                             // password change was accepted, so reset token
-                            $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '', failed_logins = 0 WHERE admin_name = :adminname: ";
+                            $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
                             $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-                            $db->Execute($sql);
+                            $db->Execute($sql, 1);
                         }
                     }
                 }
@@ -692,7 +700,7 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
         } else {
             $sql = "UPDATE " . TABLE_ADMIN . " SET reset_token = '' WHERE admin_name = :adminname: ";
             $sql = $db->bindVars($sql, ':adminname:', $admin_name, 'stringIgnoreNull');
-            $db->Execute($sql);
+            $db->Execute($sql, 1);
         }
     }
     return $errors;
