@@ -1311,6 +1311,18 @@ if ($show_orders_weights === true) {
                         <table id="orders-table" class="table table-hover">
                             <thead>
                                 <tr class="dataTableHeadingRow">
+                                    <?php
+                                    $leading_headings = false;
+                                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_LEADING_COLUMN_HEADING', [], $leading_headings);
+                                    if (is_array($leading_headings)) {
+                                        foreach ($leading_headings as $heading_info) {
+                                            $align = (isset($heading_info['align']) && in_array($heading_info['align'], ['left', 'right', 'center'], true))
+                                                ? ' text-' . $heading_info['align'] : '';
+                                            $class = isset($heading_info['class']) ? ' ' . preg_replace('/[^A-Za-z0-9_ -]/', '', $heading_info['class']) : '';
+                                            echo '<th class="dataTableHeadingContent' . $align . $class . '">' . $heading_info['text'] . '</th>';
+                                        }
+                                    }
+                                    ?>
                                     <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ORDERS_ID ?></th>
                                     <th class="dataTableHeadingContent"><?= TABLE_HEADING_PAYMENT_METHOD ?></th>
                                     <th class="dataTableHeadingContent"><?= TABLE_HEADING_CUSTOMERS ?></th>
@@ -1499,6 +1511,18 @@ if ($show_orders_weights === true) {
                                                 $product_details = rtrim($product_details);
                                                 $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
                                                 $product_details = nl2br($product_details, false);
+                                        }
+                                        ?>
+                                        <?php
+                                        $leading_data = false;
+                                        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_LEADING_COLUMN_DATA', [], $leading_data);
+                                        if (is_array($leading_data)) {
+                                            foreach ($leading_data as $heading_info) {
+                                                $align = (isset($heading_info['align']) && in_array($heading_info['align'], ['left', 'right', 'center'], true))
+                                                    ? ' text-' . $heading_info['align'] : '';
+                                                $class = isset($heading_info['class']) ? ' ' . preg_replace('/[^A-Za-z0-9_ -]/', '', $heading_info['class']) : '';
+                                                echo '<td class="dataTableContent' . $align . $class . '">' . $heading_info['text'] . '</td>';
+                                            }
                                         }
                                         ?>
                                 <td class="dataTableContent text-center"><?= $show_difference . $orders->fields['orders_id'] ?></td>
