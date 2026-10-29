@@ -1065,14 +1065,18 @@ class Customer extends base
     {
         global $db;
 
-        if (empty($this->customer_id) || empty($this->data)) {
+        $customer_id = $this->loaded_customer_id ?? $this->customer_id;
+        if (empty($customer_id) || empty($this->data)) {
             return;
         }
 
+        // ExecuteNoCache: addCouponToGvBalance() has just read this same row, and the
+        // per-request query cache would otherwise hand back that pre-credit result.
         $sql = "SELECT amount
                 FROM " . TABLE_COUPON_GV_CUSTOMER . "
-                WHERE customer_id = " . (int)$this->customer_id;
-        $result = $db->Execute($sql, 1);
+                WHERE customer_id = " . (int)$customer_id . "
+                LIMIT 1";
+        $result = $db->ExecuteNoCache($sql);
 
         $this->data['gv_balance'] = $result->EOF ? null : $result->fields['amount'];
     }
