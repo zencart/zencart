@@ -9,10 +9,21 @@
 if (typeof zcJS == "undefined" || !zcJS) {
     window.zcJS = {name: 'zcJS', version: '3.0'};
 }
+<?php
+    // -----
+    // Whether a session was started for this page request.
+    // It is 'false' for any visitor that got no session during bootstrapping.
+    //
+    // Callers can check zcJS.hasSession to skip work that depends on an ajax response;
+    // zcJS.ajax will not send a request when this is false, so a page-load call
+    // made anyway resolves to nothing but a rejected promise.
+    //
+?>
+zcJS.hasSession = <?= session_status() === PHP_SESSION_ACTIVE ? 'true' : 'false' ?>;
 
 zcJS.ajax = function (options) {
     const csrfToken = '<?= $_SESSION['securityToken'] ?>';
-    const hasSession = <?= session_status() === PHP_SESSION_ACTIVE ? 'true' : 'false' ?>;
+    const hasSession = zcJS.hasSession;
     options.url = options.url.replace("&amp;", "&");
 <?php
     // -----
@@ -77,6 +88,17 @@ zcJS.ajax = function (options) {
             console.log(JSON.stringify(settings));
         }
 
+<?php
+    // -----
+    // The caller's callbacks are wired to the deferred, not to jQuery.ajax:
+    // 'success' and 'complete' on resolve, 'error' on reject.
+    // Note that this means 'complete' runs only when the request succeeds;
+    // on every failure path, including the no-session case below, the caller's
+    // 'error' option and .fail() handlers run but 'complete' does not.
+    // Put teardowns that must always run in 'error' as well, or in a .always() handler
+    // on the returned promise.
+    //
+?>
         d.done(settings.success);
         d.fail(settings.error);
         d.done(settings.complete);
@@ -89,6 +111,9 @@ zcJS.ajax = function (options) {
     //
 ?>
         if (!hasSession) {
+            if (window.console && typeof(console.warn) === 'function') {
+                console.warn('zcJS.ajax: zcJS.hasSession is false (no session for this page), so the request was not sent: ' + settings.url);
+            }
             const noSessionXHR = {
                 readyState: 0,
                 status: 0,
