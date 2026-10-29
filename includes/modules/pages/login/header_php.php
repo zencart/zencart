@@ -111,8 +111,9 @@ if (($_GET['action'] ?? '') === 'process') {
                     $messageStack->add_session('header', WARNING_SHOPPING_CART_COMBINED, 'caution');
                 }
                 if (SHOW_SHOPPING_CART_COMBINED == 1) {
-                    // show warning and send to shopping cart for review
-                    if (!(isset($_GET['gv_no']))) {
+                    // show warning and send to shopping cart for review, unless this login still
+                    // has to redirect somewhere else (a voucher to redeem, or no address on file)
+                    if (!isset($_GET['gv_no']) && !empty($customer->getData('addresses'))) {
                         $messageStack->add_session('shopping_cart', WARNING_SHOPPING_CART_COMBINED, 'caution');
                         zen_redirect(zen_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
                     } else {
