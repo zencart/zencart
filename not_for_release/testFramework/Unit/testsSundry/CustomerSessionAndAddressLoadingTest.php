@@ -113,6 +113,49 @@ class CustomerSessionAndAddressLoadingTest extends zcUnitTestCase
         $this->assertSame(1, $customer->addressLoads, 'a loaded address list must not be fetched again');
     }
 
+    public function testRefreshGvBalanceUsesTheLoadedCustomerIdAndBypassesTheQueryCache(): void
+    {
+        // The supported `new Customer(); login($id)` shape leaves customer_id null, so the
+        // refresh has to follow the id the data was loaded for. It also has to bypass the
+        // per-request query cache: addCouponToGvBalance() reads this same row immediately
+        // before crediting it, and the UPDATE/INSERT does not invalidate that entry.
+        $_SESSION = [];
+        $customer = new StubLoadedCustomer();
+        $customer->loadForTest(42);
+        $this->assertNull($customer->getData('gv_balance'), 'precondition: no balance loaded yet');
+
+        $result = new \queryFactoryResult(null);
+        $result->EOF = false;
+        $result->fields = ['amount' => '25.0000'];
+
+        $db = $this->createMock(\queryFactory::class);
+        $db->expects($this->never())->method('Execute');
+        $db->expects($this->once())
+            ->method('ExecuteNoCache')
+            ->with($this->stringContains('customer_id = 42'))
+            ->willReturn($result);
+        $GLOBALS['db'] = $db;
+
+        $customer->refreshGvBalance();
+
+        $this->assertSame('25.0000', $customer->getData('gv_balance'));
+    }
+
+    public function testRefreshGvBalanceIsANoOpWhenNoCustomerIsLoaded(): void
+    {
+        $_SESSION = [];
+        $customer = new StubLoadedCustomer();
+
+        $db = $this->createMock(\queryFactory::class);
+        $db->expects($this->never())->method('ExecuteNoCache');
+        $db->expects($this->never())->method('Execute');
+        $GLOBALS['db'] = $db;
+
+        $customer->refreshGvBalance();
+
+        $this->assertNull($customer->getData('gv_balance'));
+    }
+
     public function testDeferredLoadingIsSafeWhenThereIsNoCustomerRecord(): void
     {
         $_SESSION = [];
