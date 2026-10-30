@@ -84,7 +84,7 @@ zcJS.ajax = function (options) {
             },
             settings = jQuery.extend(true, {}, defaults, options);
         settings.headers = jQuery.extend(true, {}, defaults.headers, options.headers);
-        if (typeof(console.log) == 'function') {
+        if (window.console && typeof(console.log) === 'function') {
             console.log(JSON.stringify(settings));
         }
 
