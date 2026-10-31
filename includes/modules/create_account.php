@@ -76,7 +76,7 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     $email_address = zen_db_prepare_input($_POST['email_address']);
     $street_address = zen_db_prepare_input($_POST['street_address']);
     if (ACCOUNT_SUBURB === 'true') {
-        $suburb = zen_db_prepare_input($_POST['suburb']);
+        $suburb = zen_db_prepare_input($_POST['suburb'] ?? '');
     }
     $postcode = zen_db_prepare_input($_POST['postcode']);
     $city = zen_db_prepare_input($_POST['city']);
