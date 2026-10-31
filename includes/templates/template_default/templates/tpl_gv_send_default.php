@@ -94,15 +94,15 @@ if ($action === 'doneprocess') {
             <legend><?php echo HEADING_TITLE; ?></legend>
 
             <label class="inputLabel" for="to-name"><?php echo ENTRY_RECIPIENT_NAME; ?></label>
-            <?php echo zen_draw_input_field('to_name', $to_name, 'size="40" id="to-name"') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+            <?php echo zen_draw_input_field('to_name', $to_name, 'size="40" id="to-name" required') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
             <br class="clearBoth">
 
             <label class="inputLabel" for="email-address"><?php echo ENTRY_EMAIL; ?></label>
-            <?php echo zen_draw_input_field('email', (!empty($_POST['email'])? $_POST['email'] : ''), 'size="40" id="email-address"', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+            <?php echo zen_draw_input_field('email', (!empty($_POST['email'])? $_POST['email'] : ''), 'size="40" id="email-address" required', 'email') . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
             <br class="clearBoth">
 
             <label class="inputLabel" for="amount"><?php echo ENTRY_AMOUNT; ?></label>
-            <?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'id="amount"', 'text', false) . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
+            <?php echo zen_draw_input_field('amount', (!empty($_POST['amount']) ? $_POST['amount'] : ''), 'id="amount" required', 'text', false) . '<span class="alert">' . ENTRY_REQUIRED_SYMBOL . '</span>'; ?>
             <br class="clearBoth">
 
             <label for="message-area"><?php echo ENTRY_MESSAGE; ?></label>
