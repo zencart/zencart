@@ -1147,10 +1147,10 @@ if ($show_orders_weights === true) {
                                         <td>
 <?php
                                                 if ($first) {
-                                                     echo nl2br(zen_output_string_protected($item['comments'] ?? ''), false);
+                                                     echo !preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $item['comments']) ? nl2br(zen_output_string_protected($item['comments'] ?? ''), false) : zen_output_string_protected($item['comments'] ?? '');
                                                      $first = false;
                                                 } else {
-                                                     echo nl2br($item['comments'] ?? '', false);
+                                                     echo !preg_match('/(<br|<p|<div|<dd|<li|<span)/i', $item['comments']) ? nl2br($item['comments'] ?? '', false) : ($item['comments'] ?? '');
                                                 }
 ?>
                                         </td>
