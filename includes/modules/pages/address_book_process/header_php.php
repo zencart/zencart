@@ -18,10 +18,29 @@ if (!zen_is_logged_in()) {
 require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
 
 /**
+ * The primary address and the address count come from the customer's loaded record, not from
+ * the session copy of customers_default_address_id, which can be stale (e.g. a second browser
+ * tab changed the primary after this page was opened). Reading the address list first also
+ * means customers_default_address_id reflects any correction load() made to a stored id that
+ * no longer points at one of the customer's addresses.
+ */
+$customer ??= new Customer($_SESSION['customer_id']);
+$address_book_count = count($customer->getData('addresses') ?? []);
+$primary_address_id = (int)$customer->getData('customers_default_address_id');
+
+/**
  * Process deletes
  */
-if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_POST['delete']) && is_numeric($_POST['delete']))
-{
+if (isset($_GET['action'], $_POST['delete']) && $_GET['action'] === 'deleteconfirm' && is_scalar($_POST['delete']) && ctype_digit((string)$_POST['delete'])) {
+  if ((int)$_POST['delete'] === $primary_address_id) {
+    $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK));
+  }
+  if ($address_book_count <= 1) {
+    $messageStack->add_session('addressbook', WARNING_LAST_ADDRESS_DELETION, 'warning');
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK));
+  }
+
   $sql = "DELETE FROM " . TABLE_ADDRESS_BOOK . "
           WHERE  address_book_id = :delete
           AND    customers_id = :customersID";
@@ -225,8 +244,8 @@ if (isset($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['acti
       $zco_notifier->notify('NOTIFY_MODULE_ADDRESS_BOOK_ADDED_ADDRESS_BOOK_RECORD', array_merge(array('address_id' => $new_address_book_id), $sql_data_array));
 
 
-      // register session variables
-      if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
+      // register session variables; the first address a customer has is always the primary one
+      if (($_POST['primary'] ?? '') === 'on' || $address_book_count === 0) {
         $_SESSION['customer_first_name'] = $firstname;
         $_SESSION['customer_last_name'] = $lastname;
         $_SESSION['customer_country_id'] = $country;
@@ -273,10 +292,14 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
   if (!isset($zone_id) || (int)$zone_id == 0) $zone_id = $entry->fields['entry_zone_id'];
 
 } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-  if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
+  if ((int)$_GET['delete'] === $primary_address_id) {
     $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
-    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK));
+  } elseif ($address_book_count <= 1) {
+    $messageStack->add_session('addressbook', WARNING_LAST_ADDRESS_DELETION, 'warning');
+
+    zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK));
   } else {
     $check_query = "SELECT count(*) AS total
                     FROM " . TABLE_ADDRESS_BOOK . "
@@ -303,6 +326,9 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
   $entry_query = $db->bindVars($entry_query, ':customersID', $_SESSION['customer_id'], 'integer');
   $entry = $db->Execute($entry_query);
 
+  if ($entry->EOF) {
+    $entry->fields['entry_country_id'] = zen_config('SHOW_CREATE_ACCOUNT_DEFAULT_COUNTRY');
+  }
   $entry->fields['entry_gender'] = 'm';
   $entry->fields['entry_firstname'] = '';
   $entry->fields['entry_lastname'] = '';
@@ -329,7 +355,7 @@ if (!isset($_GET['delete'])) {
   $state_field_label = ($flag_show_pulldown_states) ? '' : ENTRY_STATE;
 }
 
-if (!isset($_GET['delete']) && !isset($_GET['edit']) && count(zen_get_customer_address_book_entries($_SESSION['customer_id'])) >= zen_config('MAX_ADDRESS_BOOK_ENTRIES')) {
+if (!isset($_GET['delete']) && !isset($_GET['edit']) && $address_book_count >= zen_config('MAX_ADDRESS_BOOK_ENTRIES')) {
   $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
   zen_redirect(zen_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 }
