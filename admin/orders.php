@@ -1158,10 +1158,24 @@ if ($show_orders_weights === true) {
                                     </tr>
                                     <?php
                                 }
+                                $latest_status = end($orders_history);
+                                if ((int)$latest_status['orders_status_id'] !== (int)$order->info['orders_status']) {
+                                    $mismatch_colspan = 5 + (is_array($extra_headings) ? count($extra_headings) : 0);
+                                    ?>
+                                    <tr>
+                                        <td colspan="<?= $mismatch_colspan ?>" class="alertVersionNew">
+                                            <?= sprintf(TEXT_STATUS_HISTORY_MISMATCH, zen_output_string_protected($orders_status_array[$order->info['orders_status']] ?? (string)$order->info['orders_status'])) ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
                             } else {
+                                $mismatch_colspan = 5 + (is_array($extra_headings) ? count($extra_headings) : 0);
                                 ?>
                                 <tr>
-                                    <td colspan="4"><?= TEXT_NO_ORDER_HISTORY ?></td>
+                                    <td colspan="<?= $mismatch_colspan ?>" class="alertVersionNew">
+                                        <?= sprintf(TEXT_NO_STATUS_HISTORY_FOR_ORDER, zen_output_string_protected($orders_status_array[$order->info['orders_status']] ?? (string)$order->info['orders_status'])) ?>
+                                    </td>
                                 </tr>
                                 <?php
                             }
