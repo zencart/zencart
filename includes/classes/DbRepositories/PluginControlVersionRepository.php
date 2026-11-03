@@ -43,7 +43,7 @@ class PluginControlVersionRepository
      */
     private function getFieldLength(string $field_name): int
     {
-        $this->tableMetaColumns ??= $this->db->MetaColumns(TABLE_PLUGIN_CONTROL);
+        $this->tableMetaColumns ??= $this->db->MetaColumns(TABLE_PLUGIN_CONTROL_VERSIONS);
         return (int)($this->tableMetaColumns[strtoupper($field_name)]->max_length ?? 0);
     }
 
@@ -130,8 +130,8 @@ class PluginControlVersionRepository
 
             $author = (string)$row['author'];
             if (mb_strlen($author) > $this->pluginAuthorMaxLength) {
-                $author = substr($author, 0, $this->pluginAuthorMaxLength);
                 $message .= "The Plugin Author ($author) is longer than the maximum allowed ({$this->pluginAuthorMaxLength}) and will be truncated on update. ";
+                $author = mb_substr($author, 0, $this->pluginAuthorMaxLength);
             }
 
             $version = (string)$row['version'];
@@ -142,11 +142,14 @@ class PluginControlVersionRepository
 
             /**
              * If a field-overflow was detected, log the issue, once per
-             * admin session (so that the file-system doesn't get filled up).
+             * admin session/plugin (so that the file-system doesn't get filled up).
              */
             if ($message !== '') {
                 if (!isset($_SESSION['plugin_control_version_field_error'])) {
-                    $_SESSION['plugin_control_version_field_error'] = true;
+                    $_SESSION['plugin_control_version_field_error'] = [];
+                }
+                if (!in_array($unique_key, $_SESSION['plugin_control_version_field_error'])) {
+                    $_SESSION['plugin_control_version_field_error'][] = $unique_key;
                     if ($can_update === false) {
                         $message = "The plugin with a key of $unique_key was not updated. " . $message;
                     } else {

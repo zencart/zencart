@@ -160,14 +160,14 @@ class PluginControlRepository
 
             $name = (string)$row['name'];
             if (mb_strlen($name) > $this->pluginNameMaxLength) {
-                $name = substr($name, 0, $this->pluginNameMaxLength);
                 $message .= "The Plugin Name ($name) is longer than the maximum allowed({$this->pluginNameMaxLength}) and will be truncated on update. ";
+                $name = mb_substr($name, 0, $this->pluginNameMaxLength);
             }
 
             $author = (string)$row['author'];
             if (mb_strlen($author) > $this->pluginAuthorMaxLength) {
-                $author = substr($author, 0, $this->pluginAuthorMaxLength);
                 $message .= "The Plugin Author ($author) is longer than the maximum allowed ({$this->pluginAuthorMaxLength}) and will be truncated on update. ";
+                $author = mb_substr($author, 0, $this->pluginAuthorMaxLength);
             }
 
             $version = (string)$row['version'];
@@ -178,11 +178,14 @@ class PluginControlRepository
 
             /**
              * If a field-overflow was detected, log the issue, once per
-             * admin session (so that the file-system doesn't get filled up).
+             * admin session/plugin (so that the file-system doesn't get filled up).
              */
             if ($message !== '') {
                 if (!isset($_SESSION['plugin_control_field_error'])) {
-                    $_SESSION['plugin_control_field_error'] = true;
+                    $_SESSION['plugin_control_field_error'] = [];
+                }
+                if (!in_array($unique_key, $_SESSION['plugin_control_field_error'])) {
+                    $_SESSION['plugin_control_field_error'][] = $unique_key;
                     if ($can_update === false) {
                         $message = "The plugin with a key of $unique_key was not updated. " . $message;
                     } else {
