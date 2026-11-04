@@ -79,11 +79,13 @@ $esc = static function ($value): string {
           $output .= $esc($ipn->fields['payer_email'])."\n";
           $output .= '</td></tr>'."\n";
 
-          $output .= '<tr><td class="main">'."\n";
-          $output .= MODULE_PAYMENT_PAYPAL_ENTRY_EBAY_ID."\n";
-          $output .= '</td><td class="main">'."\n";
-          $output .= $esc($ipn->fields['ebay_address_id'])."\n";
-          $output .= '</td></tr>'."\n";
+          if (!empty($ipn->fields['ebay_address_id'])) {
+              $output .= '<tr><td class="main">'."\n";
+              $output .= MODULE_PAYMENT_PAYPAL_ENTRY_EBAY_ID."\n";
+              $output .= '</td><td class="main">'."\n";
+              $output .= $esc($ipn->fields['ebay_address_id'])."\n";
+              $output .= '</td></tr>'."\n";
+          }
 
           $output .= '<tr><td class="main">'."\n";
           $output .= MODULE_PAYMENT_PAYPAL_ENTRY_PAYER_ID."\n";
