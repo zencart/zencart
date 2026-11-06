@@ -11,19 +11,20 @@ namespace Zencart\DbRepositories;
 
 use queryFactory;
 
-/**
- * @since ZC v2.2.0
- */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+/**
+ * @since ZC v2.2.0
+ */
 class PluginControlRepository
 {
     private int $pluginKeyMaxLength;
     private int $pluginNameMaxLength;
     private int $pluginAuthorMaxLength;
     private int $pluginVersionMaxLength;
+    private ?array $tableMetaColumns = null;
 
     public function __construct(private ?queryFactory $db = null)
     {
@@ -44,10 +45,10 @@ class PluginControlRepository
      *
      * @since ZC v2.3.0
      */
-    private function getFieldLength($field_name): int
+    private function getFieldLength(string $field_name): int
     {
-        $query = $this->db->MetaColumns(TABLE_PLUGIN_CONTROL);
-        return (int)$query[strtoupper($field_name)]->max_length;
+        $this->tableMetaColumns ??= $this->db->MetaColumns(TABLE_PLUGIN_CONTROL);
+        return (int)($this->tableMetaColumns[strtoupper($field_name)]->max_length ?? 0);
     }
 
     /**
@@ -151,31 +152,52 @@ class PluginControlRepository
 
         foreach ($rows as $row) {
             $message = '';
+            $can_update = true;
 
             $unique_key = (string)$row['unique_key'];
             if (mb_strlen($unique_key) > $this->pluginKeyMaxLength) {
+                $can_update = false;
                 $message .= "The Plugin Key ($unique_key) is longer than the maximum allowed ({$this->pluginKeyMaxLength}). ";
             }
 
             $name = (string)$row['name'];
             if (mb_strlen($name) > $this->pluginNameMaxLength) {
-                $message .= "The Plugin Name ($name) is longer than the maximum allowed({$this->pluginNameMaxLength}). ";
+                $message .= "The Plugin Name ($name) is longer than the maximum allowed({$this->pluginNameMaxLength}) and will be truncated on update. ";
+                $name = mb_substr($name, 0, $this->pluginNameMaxLength);
             }
 
             $author = (string)$row['author'];
             if (mb_strlen($author) > $this->pluginAuthorMaxLength) {
-                $message .= "The Plugin Author ($author) is longer than the maximum allowed ({$this->pluginAuthorMaxLength}). ";
+                $message .= "The Plugin Author ($author) is longer than the maximum allowed ({$this->pluginAuthorMaxLength}) and will be truncated on update. ";
+                $author = mb_substr($author, 0, $this->pluginAuthorMaxLength);
             }
 
             $version = (string)$row['version'];
             if (mb_strlen($version) > $this->pluginVersionMaxLength) {
+                $can_update = false;
                 $message .= "The Plugin Version ($version) is longer than the maximum allowed({$this->pluginVersionMaxLength}). ";
             }
 
+            /**
+             * If a field-overflow was detected, log the issue, once per
+             * admin session/plugin (so that the file-system doesn't get filled up).
+             */
             if ($message !== '') {
-                $message = "The plugin with a key of $unique_key was not updated. " . $message;
-                zen_record_admin_activity($message, 'error');
-                continue;
+                if (!isset($_SESSION['plugin_control_field_error'])) {
+                    $_SESSION['plugin_control_field_error'] = [];
+                }
+                if (!in_array($unique_key, $_SESSION['plugin_control_field_error'])) {
+                    $_SESSION['plugin_control_field_error'][] = $unique_key;
+                    if ($can_update === false) {
+                        $message = "The plugin with a key of $unique_key was not updated. " . $message;
+                    } else {
+                        $message = "The plugin with a key of $unique_key has one or more fields that are too long. " . $message;
+                    }
+                    trigger_error($message, E_USER_WARNING);
+                }
+                if ($can_update === false) {
+                    continue;
+                }
             }
 
             $this->db->Execute(
