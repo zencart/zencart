@@ -18,12 +18,86 @@ use Zencart\PluginSupport\PluginStatus;
 /**
  * @since ZC v1.5.7
  */
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
 class PluginManager
 {
+    private int $pluginKeyMaxLength;
+    private int $pluginAuthorMaxLength;
+    private int $pluginVersionMaxLength;
+
     public function __construct(
         private PluginControlRepository $pluginControl,
         private PluginControlVersionRepository $pluginControlVersion
-    ) {}
+    )
+    {
+        /**
+         * This class acts as an arbiter for the like-named fields in the
+         * 'plugin_control' and 'plugin_control_versions' tables. The fields "should"
+         * have the same field-length in both tables; if not, create a once-per-admin-session
+         * warning log and use the minimum of the two tables' values for other
+         * uses.
+         */
+        $log_length_mismatch = IS_ADMIN_FLAG === true && empty($_SESSION['plugin_manager_warning_logged']);
+
+        $plugin_control_max_len = $pluginControl->getPluginKeyMaxLength();
+        $plugin_control_version_max_len = $pluginControlVersion->getPluginKeyMaxLength();
+        $this->pluginKeyMaxLength = (int)min($plugin_control_max_len, $plugin_control_version_max_len);
+        if ($log_length_mismatch === true && $plugin_control_max_len !== $plugin_control_version_max_len) {
+            $_SESSION['plugin_manager_warning_logged'] = true;
+            trigger_error('`unique_key` field length differs between plugin_control and plugin_control_version tables.', E_USER_WARNING);
+        }
+
+        $plugin_control_max_len = $pluginControl->getPluginAuthorMaxLength();
+        $plugin_control_version_max_len = $pluginControlVersion->getPluginAuthorMaxLength();
+        $this->pluginAuthorMaxLength = (int)min($plugin_control_max_len, $plugin_control_version_max_len);
+        if ($log_length_mismatch === true && $plugin_control_max_len !== $plugin_control_version_max_len) {
+            $_SESSION['plugin_manager_warning_logged'] = true;
+            trigger_error('`author` field length differs between plugin_control and plugin_control_version tables.', E_USER_WARNING);
+        }
+
+        $plugin_control_max_len = $pluginControl->getPluginVersionMaxLength();
+        $plugin_control_version_max_len = $pluginControlVersion->getPluginVersionMaxLength();
+        $this->pluginVersionMaxLength = (int)min($plugin_control_max_len, $plugin_control_version_max_len);
+        if ($log_length_mismatch === true && $plugin_control_max_len !== $plugin_control_version_max_len) {
+            $_SESSION['plugin_manager_warning_logged'] = true;
+            trigger_error('`version` field length differs between plugin_control and plugin_control_version tables.', E_USER_WARNING);
+        }
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getPluginKeyMaxLength(): int
+    {
+        return $this->pluginKeyMaxLength;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getPluginNameMaxLength(): int
+    {
+        return $this->pluginControl->getPluginNameMaxLength();
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getPluginAuthorMaxLength(): int
+    {
+        return $this->pluginAuthorMaxLength;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getPluginVersionMaxLength(): int
+    {
+        return $this->pluginVersionMaxLength;
+    }
 
     /**
      * @since ZC v1.5.7
@@ -40,6 +114,14 @@ class PluginManager
     public function getInstalledPlugins(): array
     {
         return $this->pluginControl->getInstalledPlugins(PluginStatus::ENABLED);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getAllPlugins(): array
+    {
+        return $this->pluginControl->getAll();
     }
 
     /**

@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace Zencart\FileSystem;
 
+if (!defined('IS_ADMIN_FLAG')) {
+    die('Illegal Access');
+}
+
 /**
  * @since ZC v1.5.7
  */
@@ -228,5 +232,70 @@ class FileSystem
         }
 
         return @rmdir($directory);
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function createDirectoryRecursive(string $rootDirectory, string $subDirectory): bool
+    {
+        $rootDirectory = rtrim($rootDirectory, '/\\') . '/';
+        if (empty($subDirectory) || str_contains($subDirectory, '..') || !is_dir($rootDirectory)) {
+            return false;
+        }
+
+        $subDirectory = trim($subDirectory, '/\\') . '/';
+        if (is_dir($rootDirectory . $subDirectory)) {
+            return true;
+        }
+
+        return mkdir($rootDirectory . $subDirectory, 0777, recursive: true);
+    }
+
+    /**
+     * Gathers and returns an array of all subdirectories found 'under' the supplied
+     * $rootDirectory. If $returnRelativeDir is false, each subdirectory is prefixed by
+     * the supplied $rootDirectory; otherwise, only the subdirectory 'chain' is returned.
+     *
+     * Note: Returned subdirectories do not end with a directory-separator!
+     *
+     * @since ZC v3.0.0
+     */
+    public function getSubdirectoriesRecursive(string $rootDirectory, bool $returnRelativeDir): array
+    {
+        if ($rootDirectory === '' || !is_dir($rootDirectory)) {
+            return [];
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($rootDirectory, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        $subdirectories = [];
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isDir()) {
+                $subdirectory = $this->realpath($fileInfo->getRealPath());
+                if ($returnRelativeDir === true) {
+                    $subdirectory = str_replace($rootDirectory, '', $subdirectory);
+                }
+                $subdirectories[] = $subdirectory;
+            }
+        }
+
+        return $subdirectories;
+    }
+
+    /**
+     * Validates the supplied string for use as the name of a subdirectory.
+     *
+     * The string must begin with an alphabetic character and contain only alphanumeric
+     * characters, underscores or dashes.
+     *
+     * @since ZC v3.0.0
+     */
+    public function validateSubDirectoryName(string $subDirectoryName): bool
+    {
+        return preg_match('/^[a-zA-Z][a-zA-Z0-9_\-]*$/', $subDirectoryName) === 1;
     }
 }
