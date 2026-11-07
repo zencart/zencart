@@ -25,8 +25,13 @@ class CouponValidation
      */
     public static function is_coupon_valid_for_sales(int $product_id, int $coupon_id): bool
     {
-        return true;
+        return !in_array($product_id, self::$productsNotValidForSales, true);
     }
+
+    /**
+     * Product IDs that a test wants treated as on-sale (not valid for the coupon)
+     */
+    public static array $productsNotValidForSales = [];
 
     /**
      * Check whether coupon ID is valid for the specified product

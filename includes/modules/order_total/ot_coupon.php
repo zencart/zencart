@@ -533,7 +533,7 @@ class ot_coupon extends base
                     $products = $_SESSION['cart']->get_products();
                     $coupon_product_count = 0;
                     foreach ($products as $product) {
-                        if (CouponValidation::is_product_valid((int)$product['id'], (int)$coupon_details['coupon_id'])) {
+                        if (CouponValidation::is_product_valid((int)$product['id'], (int)$coupon_details['coupon_id']) && CouponValidation::is_coupon_valid_for_sales((int)$product['id'], (int)$coupon_details['coupon_id'])) {
                             $coupon_product_count += $_SESSION['cart']->get_quantity($product['id']);
                         }
                     }
@@ -573,13 +573,13 @@ class ot_coupon extends base
                         break;
                     case 'F': // Fixed amount Off
 //                        $od_amount['total'] = zen_round($coupon_details['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
-                        $od_amount['total'] = zen_round(($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count, $currencyDecimalPlaces);
+                        $od_amount['total'] = zen_round(min($coupon_details['coupon_amount'] * $coupon_product_count, $orderTotalDetails['orderTotal']), $currencyDecimalPlaces);
 //                        $ratio = $od_amount['total']/$orderTotalDetails['orderTotal'];
                         $ratio = $od_amount['total'] / $orderAmountTotal;
                         break;
                     case 'O': // Both Fixed amount off & Free Shipping
 //                        $od_amount['total'] = zen_round($coupon_details['coupon_amount'] * ($orderTotalDetails['orderTotal']>0), $currencyDecimalPlaces);
-                        $od_amount['total'] = zen_round(($coupon_details['coupon_amount'] > $orderTotalDetails['orderTotal'] ? $orderTotalDetails['orderTotal'] : $coupon_details['coupon_amount']) * ($orderTotalDetails['orderTotal'] > 0) * $coupon_product_count, $currencyDecimalPlaces);
+                        $od_amount['total'] = zen_round(min($coupon_details['coupon_amount'] * $coupon_product_count, $orderTotalDetails['orderTotal']), $currencyDecimalPlaces);
                         //$od_amount['total'] = zen_round($coupon_details['coupon_amount'] * ($orderAmountTotal>0), $currencyDecimalPlaces);
                         // add in Free Shipping
                         $coupon_includes_free_shipping = true;
