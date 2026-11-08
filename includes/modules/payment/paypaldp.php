@@ -251,6 +251,12 @@ class paypaldp extends base {
      * availability can be registered.
      */
      protected ?string $merchant_country;
+    /**
+     * Flag indicating if module is retired
+     * @var boolean
+     */
+     public $retired = false;
+
   /**
    * class constructor
    */
@@ -261,6 +267,7 @@ class paypaldp extends base {
     $this->codeVersion = '1.5.8';
     $this->enableDirectPayment = true;
     $this->enabled = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && (MODULE_PAYMENT_PAYPALDP_STATUS === 'True' || (IS_ADMIN_FLAG === true && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired')));
+    $this->retired = (defined('MODULE_PAYMENT_PAYPALDP_STATUS') && MODULE_PAYMENT_PAYPALDP_STATUS === 'Retired');
     $this->merchant_country = (defined('MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY')) ? MODULE_PAYMENT_PAYPALDP_MERCHANT_COUNTRY : null;
     // Set the title & description text based on the mode we're in
     if (IS_ADMIN_FLAG === true) {
