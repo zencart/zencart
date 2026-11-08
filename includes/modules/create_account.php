@@ -269,6 +269,8 @@ if (isset($_POST['action']) && ($_POST['action'] === 'process') && !isset($login
     $field_length_checks = [
         [TABLE_CUSTOMERS, 'customers_firstname', $firstname, ENTRY_FIRST_NAME],
         [TABLE_CUSTOMERS, 'customers_lastname', $lastname, ENTRY_LAST_NAME],
+        [TABLE_ADDRESS_BOOK, 'entry_firstname', $firstname, ENTRY_FIRST_NAME],
+        [TABLE_ADDRESS_BOOK, 'entry_lastname', $lastname, ENTRY_LAST_NAME],
         [TABLE_CUSTOMERS, 'customers_email_address', $email_address, ENTRY_EMAIL_ADDRESS],
         [TABLE_CUSTOMERS, 'customers_nick', $nick, ENTRY_NICK],
         [TABLE_CUSTOMERS, 'customers_telephone', $telephone, ENTRY_TELEPHONE_NUMBER],
