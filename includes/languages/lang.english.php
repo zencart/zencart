@@ -131,6 +131,7 @@ $define = [
     'ENTRY_FAX_NUMBER' => 'Fax Number:',
     'ENTRY_FAX_NUMBER_TEXT' => '',
     'ENTRY_FIRST_NAME' => 'First Name:',
+    'ENTRY_FIELD_TOO_LONG_ERROR' => 'Your %1$s must contain no more than %2$d characters.',
     'ENTRY_FIRST_NAME_ERROR' => 'Is your first name correct? Our system requires a minimum of ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters. Please try again.',
     'ENTRY_FIRST_NAME_TEXT' => '*',
     'ENTRY_GENDER' => 'Salutation:',
