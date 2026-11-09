@@ -13,16 +13,17 @@ require 'includes/application_top.php';
 define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
 zen_define_default('MAX_FORGOTTEN_PASSWORD_ATTEMPTS', 9);
 
-if (isset($_POST['action']) && $_POST['action'] == 'login') {
-  zen_redirect(zen_href_link(FILENAME_LOGIN));
+if (($_POST['action'] ?? '') === 'login') {
+    zen_redirect(zen_href_link(FILENAME_LOGIN));
 }
 
 // Slam prevention, limiting the number of times this page can be 'hit' erroneously
 // and also denying access if the session's login-attempts exceed their threshold
 if (($_SESSION['forgotten_password_attempt'] ?? 0) > (int)MAX_FORGOTTEN_PASSWORD_ATTEMPTS || ($_SESSION['login_attempt'] ?? 0) > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD) {
-  header('HTTP/1.1 406 Not Acceptable');
-  exit(0);
+    header('HTTP/1.1 406 Not Acceptable');
+    exit(0);
 }
+
 $error = false;
 $resetToken = '';
 $email_message = '';
@@ -71,32 +72,54 @@ if (($_POST['action'] ?? '') === 'update') {
         exit(0);
     }
 
-  // BEGIN SLAM PREVENTION
-  if ($error === true) {
-    if (!isset($_SESSION['forgotten_password_attempt'])) {
-      $_SESSION['forgotten_password_attempt'] = 0;
-    }
-    $_SESSION['forgotten_password_attempt']++;
-  } // END SLAM PREVENTION
+    // BEGIN SLAM PREVENTION
+    if ($error === true) {
+        if (!isset($_SESSION['forgotten_password_attempt'])) {
+            $_SESSION['forgotten_password_attempt'] = 0;
+        }
+        $_SESSION['forgotten_password_attempt']++;
+    } // END SLAM PREVENTION
 
-  if ($error === false) {
-    unset($_SESSION['forgotten_password_attempt']);
-    $new_password = zen_create_PADSS_password((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH);
-    $resetToken = (time() + ADMIN_PWD_TOKEN_DURATION) . '}' . zen_encrypt_password($new_password);
-    $sql = "UPDATE " . TABLE_ADMIN . "
-            SET reset_token = :token:
-            WHERE admin_id = " . (int)$result->fields['admin_id'];
-    $sql = $db->bindVars($sql, ':token:', $resetToken, 'string');
-    $db->Execute($sql);
-    $html_msg['EMAIL_CUSTOMERS_NAME'] = $result->fields['admin_name'];
-    $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MESSAGE_PWD_RESET, $_SERVER['REMOTE_ADDR'], $new_password);
-    zen_mail($result->fields['admin_name'], $result->fields['admin_email'], TEXT_EMAIL_SUBJECT_PWD_RESET, sprintf(TEXT_EMAIL_MESSAGE_PWD_RESET, $_SERVER['REMOTE_ADDR'], $new_password), zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'password_forgotten_admin');
-    $email_message = MESSAGE_PASSWORD_SENT;
-  } else {
-    $html_msg['EMAIL_MESSAGE_HTML'] = sprintf(TEXT_EMAIL_MESSAGE_PWD_FAILED_RESET, $_SERVER['REMOTE_ADDR']);
-    zen_mail(zen_config('STORE_NAME'), zen_config('STORE_OWNER_EMAIL_ADDRESS'), TEXT_EMAIL_SUBJECT_PWD_FAILED_RESET, sprintf(TEXT_EMAIL_MESSAGE_PWD_FAILED_RESET, $_SERVER['REMOTE_ADDR']), zen_config('STORE_NAME'), zen_config('EMAIL_FROM'), $html_msg, 'password_forgotten_admin');
-    $email_message = MESSAGE_PASSWORD_SENT;
-  }
+    if ($error === false) {
+        unset($_SESSION['forgotten_password_attempt']);
+        $new_password = zen_create_PADSS_password((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH);
+        $resetToken = (time() + ADMIN_PWD_TOKEN_DURATION) . '}' . zen_encrypt_password($new_password);
+        $sql =
+            "UPDATE " . TABLE_ADMIN . "
+                SET reset_token = :token:
+              WHERE admin_id = " . (int)$result->fields['admin_id'];
+        $sql = $db->bindVars($sql, ':token:', $resetToken, 'string');
+        $db->Execute($sql, 1);
+
+        $text_msg = sprintf(TEXT_EMAIL_MESSAGE_PWD_RESET, $_SERVER['REMOTE_ADDR'], $new_password);
+        $html_msg['EMAIL_CUSTOMERS_NAME'] = $result->fields['admin_name'];
+        $html_msg['EMAIL_MESSAGE_HTML'] = $text_msg;
+        zen_mail(
+            $result->fields['admin_name'],
+            $result->fields['admin_email'],
+            TEXT_EMAIL_SUBJECT_PWD_RESET,
+            $text_msg,
+            zen_config('STORE_NAME'),
+            zen_config('EMAIL_FROM'),
+            $html_msg,
+            'password_forgotten_admin'
+        );
+        $email_message = MESSAGE_PASSWORD_SENT;
+    } else {
+        $text_msg = sprintf(TEXT_EMAIL_MESSAGE_PWD_FAILED_RESET, $_SERVER['REMOTE_ADDR']);
+        $html_msg['EMAIL_MESSAGE_HTML'] = $text_msg;
+        zen_mail(
+            zen_config('STORE_NAME'),
+            zen_config('STORE_OWNER_EMAIL_ADDRESS'),
+            TEXT_EMAIL_SUBJECT_PWD_FAILED_RESET,
+            $text_msg,
+            zen_config('STORE_NAME'),
+            zen_config('EMAIL_FROM'),
+            $html_msg,
+            'password_forgotten_admin'
+        );
+        $email_message = MESSAGE_PASSWORD_SENT;
+    }
 }
 
 $sql = "SELECT admin_email FROM " . TABLE_ADMIN . " GROUP BY admin_email HAVING COUNT(admin_email) > 1";
@@ -104,66 +127,65 @@ $result = $db->Execute($sql);
 $has_duplicate_admin_emails = ($result->RecordCount() > 0);
 ?>
 <!DOCTYPE html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?= HTML_PARAMS ?>>
   <head>
     <?php require DIR_WS_INCLUDES . 'admin_html_head.php'; ?>
     <meta name="robots" content="noindex, nofollow">
   </head>
   <body id="login">
-
-  <div class="login-card">
+    <div class="login-card">
       <div class="login-brand">
           <?php if (defined('HEADER_LOGO_IMAGE_HOME') && HEADER_LOGO_IMAGE_HOME !== '') { ?>
-              <?php echo zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE_HOME, HEADER_ALT_TEXT, '', '', 'class="img-responsive object-fit-contain"') . PHP_EOL; ?>
+              <?= zen_image(DIR_WS_IMAGES . HEADER_LOGO_IMAGE_HOME, HEADER_ALT_TEXT, '', '', 'class="img-responsive object-fit-contain"') . PHP_EOL ?>
           <?php } else { ?>
               <i class="fa fa-home text-primary"></i> <?php echo zen_config('STORE_NAME'); ?>
           <?php } ?>
       </div>
 
-      <?php echo zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, '', 'post', 'id="loginForm"', 'true') . PHP_EOL; ?>
+      <?= zen_draw_form('loginForm', FILENAME_PASSWORD_FORGOTTEN, '', 'post', 'id="loginForm"', 'true') . PHP_EOL ?>
 
-      <h2><?php echo HEADING_TITLE; ?></h2>
+      <h2><?= HEADING_TITLE ?></h2>
 
-      <?php if ($email_message) { ?>
-          <p class="login-alert-warning alert text-center"><?php echo $email_message; ?></p>
+      <?php if ($email_message !== '') { ?>
+          <p class="login-alert-warning alert text-center"><?= $email_message ?></p>
       <?php } ?>
 
-      <?php if ($resetToken == '') { ?>
+      <?php if ($resetToken === '') { ?>
           <div class="form-group">
               <div class="input-group">
                   <span class="input-group-addon"><i class="fa-solid fa-at"></i></span>
-                  <?php echo zen_draw_input_field('admin_email', '', 'class="form-control input-lg" id="admin_email" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus required placeholder="' . TEXT_ADMIN_EMAIL . '" aria-label="' . TEXT_ADMIN_EMAIL . '"', false, 'email') . PHP_EOL; ?>
+                  <?= zen_draw_input_field('admin_email', '', 'class="form-control input-lg" id="admin_email" autocapitalize="none" spellcheck="false" autocomplete="off" autofocus required placeholder="' . TEXT_ADMIN_EMAIL . '" aria-label="' . TEXT_ADMIN_EMAIL . '"', false, 'email') . PHP_EOL ?>
               </div>
           </div>
 
-          <?php if ($has_duplicate_admin_emails) { ?>
+          <?php if ($has_duplicate_admin_emails === true) { ?>
               <div class="form-group">
                   <div class="input-group">
                       <span class="input-group-addon"><i class="fa-solid fa-user"></i></span>
-                      <?php echo zen_draw_input_field('admin_username', '', 'class="form-control input-lg" id="admin_username" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_USERNAME . '" aria-label="' . TEXT_ADMIN_USERNAME . '"', false, 'text') . PHP_EOL; ?>
+                      <?= zen_draw_input_field('admin_username', '', 'class="form-control input-lg" id="admin_username" autocapitalize="none" spellcheck="false" autocomplete="off" placeholder="' . TEXT_ADMIN_USERNAME . '" aria-label="' . TEXT_ADMIN_USERNAME . '"', false, 'text') . PHP_EOL ?>
                   </div>
               </div>
           <?php } ?>
 
-          <?php echo zen_draw_hidden_field('action', 'update') . PHP_EOL; ?>
+          <?= zen_draw_hidden_field('action', 'update') . PHP_EOL ?>
 
-          <div class="form-group" style="margin-top: 25px;">
-              <button type="submit" class="btn btn-primary btn-lg btn-block"><?php echo TEXT_BUTTON_REQUEST_RESET; ?></button>
+          <div class="form-group mt-2">
+              <button type="submit" class="btn btn-primary btn-lg btn-block"><?= TEXT_BUTTON_REQUEST_RESET ?></button>
           </div>
 
           <div class="text-center">
-              <a href="<?php echo zen_href_link(FILENAME_LOGIN); ?>" class="login-forgot-link"><?php echo TEXT_BUTTON_CANCEL; ?></a>
+              <a href="<?= zen_href_link(FILENAME_LOGIN) ?>" class="login-forgot-link"><?= TEXT_BUTTON_CANCEL ?></a>
           </div>
 
       <?php } else { ?>
-          <?php echo zen_draw_hidden_field('action', 'login') . PHP_EOL; ?>
-          <div class="form-group" style="margin-top: 25px;">
-              <button type="submit" class="btn btn-primary btn-lg btn-block"><?php echo TEXT_BUTTON_LOGIN; ?></button>
+          <?= zen_draw_hidden_field('action', 'login') . PHP_EOL ?>
+          <div class="form-group mt-2">
+              <button type="submit" class="btn btn-primary btn-lg btn-block"><?= TEXT_BUTTON_LOGIN ?></button>
           </div>
       <?php } ?>
 
-      <?php echo '</form>' . PHP_EOL; ?>
-  </div>
+      <?= '</form>' . PHP_EOL ?>
+    </div>
 
   </body>
 </html>
