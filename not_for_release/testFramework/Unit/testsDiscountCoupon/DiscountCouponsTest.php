@@ -17,6 +17,7 @@ class DiscountCouponsTest extends zcDiscountCouponTest
     {
         parent::setUp();
         require_once TESTCWD . 'Support/StubCouponValidation.php';
+        CouponValidation::$productsNotValidForSales = [];
         require_once DIR_FS_CATALOG . DIR_WS_FUNCTIONS . 'functions_general_shared.php';
         require_once DIR_FS_CATALOG . 'includes/modules/order_total/ot_coupon.php';
         require_once DIR_FS_CATALOG . 'includes/classes/shopping_cart.php';
@@ -390,6 +391,156 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         $result = $this->coupon->output;
         $this->assertEquals(39.00, $result[0]['value']);
         $this->assertEquals(0, $GLOBALS['order']->info['total']);
+        $this->assertEquals(0, $GLOBALS['order']->info['shipping_cost']);
+    }
+
+    /**
+     * Replace the cart mock with one holding the given [id, final_price, quantity] rows
+     */
+    protected function setCartProducts(array $rows): void
+    {
+        $products = [];
+        $quantities = [];
+        foreach ($rows as [$id, $price, $qty]) {
+            $products[] = [
+                'id' => $id,
+                'final_price' => $price,
+                'quantity' => $qty,
+                'tax_class_id' => 0,
+            ];
+            $quantities[$id] = $qty;
+        }
+        $_SESSION['cart'] = $this->getMockBuilder('shoppingCart')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $_SESSION['cart']->method('get_products')->willReturn($products);
+        $_SESSION['cart']->method('get_quantity')->willReturnCallback(fn($id) => $quantities[$id] ?? 0);
+    }
+
+    /**
+     * Keep the coupon row for the coupon lookup; all other queries (tax rates/descriptions) return no rows
+     */
+    protected function useEmptyResultsForNonCouponQueries(): void
+    {
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_customers.php';
+        require_once DIR_FS_CATALOG . 'includes/functions/functions_taxes.php';
+        if (!defined('TEXT_UNKNOWN_TAX_RATE')) {
+            define('TEXT_UNKNOWN_TAX_RATE', 'Unknown Tax');
+        }
+        $couponResult = $GLOBALS['db']->Execute('');
+        $emptyResult = $this->getMockBuilder('queryFactoryResult')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $emptyResult->EOF = true;
+        $emptyResult->fields = [];
+        $emptyResult->method('RecordCount')->willReturn(0);
+        $GLOBALS['db'] = $this->getMockBuilder('queryFactory')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $GLOBALS['db']->method('execute')->willReturnCallback(
+            fn($sql) => str_contains((string)$sql, TABLE_COUPONS) ? $couponResult : $emptyResult
+        );
+    }
+
+    /**
+     * Fixed amount per product, coupon not valid for sale items:
+     * only the non-sale product counts towards the per-product discount
+     */
+    public function testFixedOffPerProductSkipsSaleItems(): void
+    {
+        $this->setCartProducts([[27, 20.00, 1], [28, 8.00, 10]]);
+        CouponValidation::$productsNotValidForSales = [28];
+        $GLOBALS['order']->info = [
+            'tax_groups' => [],
+            'tax' => 0,
+            'total' => 102.50,
+            'shipping_cost' => 2.50,
+            'shipping_tax' => 0,
+        ];
+        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        $this->instantiateQfr([
+            'coupon_id' => '1',
+            'coupon_code' => 'test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 5,
+            'coupon_type' => 'F',
+            'coupon_product_count' => 1,
+            'coupon_calc_base' => 0,
+        ]);
+        $this->useEmptyResultsForNonCouponQueries();
+        $this->coupon = new ot_coupon();
+        $this->coupon->include_shipping = 'false';
+        $this->coupon->process();
+        $result = $this->coupon->output;
+        $this->assertEquals(5.00, $result[0]['value']);
+        $this->assertEquals(97.50, round($GLOBALS['order']->info['total'], 4));
+    }
+
+    /**
+     * Fixed amount per product larger than the product price:
+     * the discount is capped at the qualifying products' value
+     */
+    public function testFixedOffPerProductCappedAtQualifyingTotal(): void
+    {
+        $this->setCartProducts([[27, 4.00, 3]]);
+        $GLOBALS['order']->info = [
+            'tax_groups' => [],
+            'tax' => 0,
+            'total' => 14.50,
+            'shipping_cost' => 2.50,
+            'shipping_tax' => 0,
+        ];
+        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        $this->instantiateQfr([
+            'coupon_id' => '1',
+            'coupon_code' => 'test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 5,
+            'coupon_type' => 'F',
+            'coupon_product_count' => 1,
+            'coupon_calc_base' => 0,
+        ]);
+        $this->coupon = new ot_coupon();
+        $this->coupon->include_shipping = 'false';
+        $this->coupon->process();
+        $result = $this->coupon->output;
+        $this->assertEquals(12.00, $result[0]['value']);
+        $this->assertEquals(2.50, round($GLOBALS['order']->info['total'], 4));
+    }
+
+    /**
+     * Fixed amount per product + Free Shipping, amount larger than the product price:
+     * the product part is capped at the qualifying products' value, shipping is added on top
+     */
+    public function testFixedOffFreeShippingPerProductCappedAtQualifyingTotal(): void
+    {
+        $this->setCartProducts([[27, 4.00, 3]]);
+        $GLOBALS['order']->info = [
+            'tax_groups' => [],
+            'tax' => 0,
+            'total' => 14.50,
+            'shipping_cost' => 2.50,
+            'shipping_tax' => 0,
+        ];
+        define('DISPLAY_PRICE_WITH_TAX', 'false');
+        $this->instantiateQfr([
+            'coupon_id' => '1',
+            'coupon_code' => 'test',
+            'coupon_total' => 0,
+            'coupon_minimum_order' => 0,
+            'coupon_amount' => 5,
+            'coupon_type' => 'O',
+            'coupon_product_count' => 1,
+            'coupon_calc_base' => 0,
+        ]);
+        $this->coupon = new ot_coupon();
+        $this->coupon->include_shipping = 'false';
+        $this->coupon->process();
+        $result = $this->coupon->output;
+        $this->assertEquals(14.50, $result[0]['value']);
+        $this->assertEquals(0, round($GLOBALS['order']->info['total'], 4));
         $this->assertEquals(0, $GLOBALS['order']->info['shipping_cost']);
     }
 }
