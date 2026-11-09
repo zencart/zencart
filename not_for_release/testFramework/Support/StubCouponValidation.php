@@ -3,6 +3,10 @@
 //namespace Tests\Support;
 class CouponValidation
 {
+    /**
+     * Product IDs that a test wants treated as on-sale (not valid for the coupon)
+     */
+    public static array $productsNotValidForSales = [];
 
     /**
      * Check whether the product is valid for the specified coupon, according to model/category/product restrictions assigned to the coupon
@@ -27,11 +31,6 @@ class CouponValidation
     {
         return !in_array($product_id, self::$productsNotValidForSales, true);
     }
-
-    /**
-     * Product IDs that a test wants treated as on-sale (not valid for the coupon)
-     */
-    public static array $productsNotValidForSales = [];
 
     /**
      * Check whether coupon ID is valid for the specified product
