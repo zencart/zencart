@@ -115,7 +115,7 @@ switch ($action) {
         if (!isset($_GET['tKey'])) {
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
         }
-        $parent_template_directory = $_GET['tKey'];
+        $parent_template_directory = (string)$_GET['tKey'];
         $template_child = new TemplateChild($pluginManager, $parent_template_directory);
         if ($template_child->canCreate() === false) {
             $messageStack->add_session(sprintf(ERROR_CANNOT_CREATE_CHILD, zen_output_string_protected($parent_template_directory)), 'error');
@@ -146,7 +146,7 @@ switch ($action) {
         if (!isset($_POST['tKey'])) {
             zen_redirect(zen_href_link(FILENAME_TEMPLATE_SELECT));
         }
-        $parent_template_directory = $_POST['tKey'];
+        $parent_template_directory = (string)$_POST['tKey'];
         $template_child = new TemplateChild($pluginManager, $parent_template_directory);
         if ($template_child->canCreate() === false) {
             $messageStack->add_session(sprintf(ERROR_CANNOT_CREATE_CHILD, zen_output_string_protected($parent_template_directory)), 'error');
