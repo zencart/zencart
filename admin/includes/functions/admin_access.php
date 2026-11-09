@@ -368,7 +368,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
             $db->Execute($sql, 1);
 
             if (
-                ($_SESSION['login_attempt'] > $admin_login_slamming_threshold || $admin_user_info['failed_logins'] > $admin_login_slamming_threshold)
+                ($_SESSION['login_attempt'] >= $admin_login_slamming_threshold || $admin_user_info['failed_logins'] >= $admin_login_slamming_threshold)
                 && !empty($admin_user_info['admin_email'])
                 && ADMIN_SWITCH_SEND_LOGIN_FAILURE_EMAILS === 'Yes'
             ) {
@@ -681,6 +681,7 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
     }
     if ($result['lockout_expires'] > time()) {
         $errors[] = ERROR_SECURITY_ERROR;
+        return $errors;
     }
     // if entered password doesn't match current password, check for reset token
     if (!zen_validate_password($adm_old_pwd, $result['admin_pass'])) {
