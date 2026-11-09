@@ -5,12 +5,14 @@
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License v2.0
  * @version $Id: ZenExpert 2026-04-06 Modified in v2.2.2 $
  */
+
+/////////
+require 'includes/application_top.php';
+
 // reset-token is good for only 24 hours:
 define('ADMIN_PWD_TOKEN_DURATION', (24 * 60 * 60));
 zen_define_default('MAX_FORGOTTEN_PASSWORD_ATTEMPTS', 9);
 
-/////////
-require 'includes/application_top.php';
 if (isset($_POST['action']) && $_POST['action'] == 'login') {
   zen_redirect(zen_href_link(FILENAME_LOGIN));
 }
