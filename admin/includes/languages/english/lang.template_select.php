@@ -62,7 +62,7 @@ $define = [
             <li>HTML tags are not allowed and will be removed if supplied.</li>
             <li>Length must be less than or equal to %2\$u.</li>
         </ol></li>
-        <li><b>Plugin Name</b><ol type="a">
+        <li><b>Template Name</b><ol type="a">
             <li>Cannot be blank.</li>
             <li>HTML tags are not allowed and will be removed if supplied.</li>
         </ol></li>

@@ -38,6 +38,9 @@ foreach ($templates as $template) {
            'author' => '',
            'description' => '',
            'screenshot' => '',
+           'base_template' => 'missing',
+           'template_key' => 'missing',
+           'is_plugin_template' => false,
            'missing' => true,
         ];
     }

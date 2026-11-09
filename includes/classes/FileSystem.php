@@ -249,7 +249,7 @@ class FileSystem
             return true;
         }
 
-        return mkdir($rootDirectory . $subDirectory, 0777, recursive: true);
+        return mkdir($rootDirectory . $subDirectory, 0755, recursive: true);
     }
 
     /**
@@ -273,13 +273,18 @@ class FileSystem
         );
 
         $subdirectories = [];
+        $real_root_directory = $this->realpath($rootDirectory);
         foreach ($iterator as $fileInfo) {
             if ($fileInfo->isDir()) {
                 $subdirectory = $this->realpath($fileInfo->getRealPath());
-                if ($returnRelativeDir === true) {
-                    $subdirectory = str_replace($rootDirectory, '', $subdirectory);
+                if ($subdirectory === null) {
+                    continue;
                 }
-                $subdirectories[] = $subdirectory;
+
+                if ($returnRelativeDir === true) {
+                    $subdirectory = str_replace($real_root_directory, '', $subdirectory);
+                }
+                $subdirectories[] = rtrim($subdirectory, '/\/');
             }
         }
 

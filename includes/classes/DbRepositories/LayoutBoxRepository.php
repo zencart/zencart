@@ -251,7 +251,7 @@ class LayoutBoxRepository
                 $update_fields = [
                     'plugin_details' => $copy_from['plugin_details'],
                 ];
-                $this->updateByTemplateAndBoxName($to_template, $layout_box_name);
+                $this->updateByTemplateAndBoxName($to_template, $layout_box_name, $update_fields);
             } else {
                 unset($copy_from['layout_id']);
                 $copy_from['layout_template'] = $to_template;

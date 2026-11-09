@@ -15,13 +15,13 @@ use Zencart\DbRepositories\PluginControlVersionRepository;
 use Zencart\PluginSupport\PluginManifest;
 use Zencart\PluginSupport\PluginStatus;
 
-/**
- * @since ZC v1.5.7
- */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+/**
+ * @since ZC v1.5.7
+ */
 class PluginManager
 {
     private int $pluginKeyMaxLength;

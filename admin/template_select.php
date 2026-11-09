@@ -277,7 +277,7 @@ switch ($action) {
                     $messageStack->add($message . ERROR_NO_TEMPLATE_INFO, 'error');
                     break;
                 case TemplateChild::ERROR_CREATING_SCREENSHOT:
-                    $messageStack->add($messasge . ERROR_CREATING_SCREENSHOT, 'error');
+                    $messageStack->add($message . ERROR_CREATING_SCREENSHOT, 'error');
                     break;
                 case TemplateChild::ERROR_CREATING_TEMPLATE_SETTINGS:
                     $messageStack->add($message . ERROR_CREATING_TEMPLATE_SETTINGS, 'error');
@@ -290,7 +290,7 @@ switch ($action) {
                     break;
             }
             $action = 'createchild';
-            $template_child->removeChildTemplateDirectory($template_key);
+            $template_child->removeChildTemplatePlugin($template_key);
             break;
         }
 
