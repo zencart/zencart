@@ -427,6 +427,11 @@ class DiscountCouponsTest extends zcDiscountCouponTest
         if (!defined('TEXT_UNKNOWN_TAX_RATE')) {
             define('TEXT_UNKNOWN_TAX_RATE', 'Unknown Tax');
         }
+        /**
+         * zen_get_tax_description() reads this unconditionally, so it has to be set before
+         * get_order_total() reaches a product the coupon does not apply to.
+         */
+        $_SESSION['languages_id'] = 1;
         $couponResult = $GLOBALS['db']->Execute('');
         $emptyResult = $this->getMockBuilder('queryFactoryResult')
             ->disableOriginalConstructor()
