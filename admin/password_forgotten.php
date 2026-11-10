@@ -19,7 +19,7 @@ if (($_POST['action'] ?? '') === 'login') {
 
 // Slam prevention, limiting the number of times this page can be 'hit' erroneously
 // and also denying access if the session's login-attempts exceed their threshold
-if (($_SESSION['forgotten_password_attempt'] ?? 0) > (int)MAX_FORGOTTEN_PASSWORD_ATTEMPTS || ($_SESSION['login_attempt'] ?? 0) > (int)ADMIN_LOGIN_SLAMMING_THRESHOLD) {
+if (($_SESSION['forgotten_password_attempt'] ?? 0) > (int)MAX_FORGOTTEN_PASSWORD_ATTEMPTS || ($_SESSION['login_attempt'] ?? 0) > (int)ADMIN_LOGIN_LOCKOUT_LIMIT) {
     header('HTTP/1.1 406 Not Acceptable');
     exit(0);
 }
