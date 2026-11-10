@@ -89,7 +89,10 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
 }
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
-if (empty($_SESSION['payment']) || strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
+$selected_payment_code = (isset($_SESSION['payment']) && is_string($_SESSION['payment'])
+    && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']]))
+    ? $GLOBALS[$_SESSION['payment']]->code : '';
+if ($selected_payment_code === '' || strpos($selected_payment_code, 'paypal') !== 0) {
     $order_totals = $order_total_modules->pre_confirmation_check();
 }
 
@@ -107,8 +110,23 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PROCESS');
 $order_totals = $order_total_modules->process();
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_TOTALS_PROCESS');
 
-if (!isset($_SESSION['payment']) && $credit_covers === false) {
-    zen_redirect(zen_href_link(FILENAME_DEFAULT));
+// -----
+// Ensure that a valid, enabled payment module was actually selected for this order.
+// $_SESSION['payment'] can hold an empty string or an arbitrary value (e.g. set by a
+// crafted request), and isset() alone is not sufficient validation.  Without this
+// check an order could be created with no payment method recorded.
+//
+$payment_module_selected = ($credit_covers === true);
+if ($payment_module_selected === false
+    && isset($_SESSION['payment']) && is_string($_SESSION['payment']) && $_SESSION['payment'] !== ''
+    && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])
+    && !empty($GLOBALS[$_SESSION['payment']]->enabled)) {
+    $payment_module_selected = true;
+}
+if ($payment_module_selected === false) {
+    $payment_modules->clear_payment();
+    unset($_SESSION['payment']);
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
 // load the before_process function from the payment modules
