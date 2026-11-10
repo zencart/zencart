@@ -583,7 +583,7 @@ function zen_validate_user_login(string $admin_name, string $admin_pass): array
 
     if ($error === false && $expired === false) {
         if (password_needs_rehash($token, PASSWORD_DEFAULT)) {
-            zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
+            $token = zcPassword::getInstance(PHP_VERSION)->updateNotLoggedInAdminPassword($admin_pass, $admin_name);
         }
         unset($_SESSION['login_attempt']);
         $sql =
