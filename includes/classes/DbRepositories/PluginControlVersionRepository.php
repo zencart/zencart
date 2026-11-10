@@ -29,6 +29,20 @@ class PluginControlVersionRepository
             global $db;
             $this->db = $db;
         }
+    }
+
+    /**
+     * Field lengths are read on first use rather than on construction, since this class is
+     * built on every storefront bootstrap and by plugins using the InteractsWithPlugins
+     * trait, where the lengths are never needed.
+     *
+     * @since ZC v2.3.0
+     */
+    private function loadFieldLengths(): void
+    {
+        if (isset($this->pluginKeyMaxLength)) {
+            return;
+        }
 
         $this->pluginKeyMaxLength = $this->getFieldLength('unique_key');
         $this->pluginAuthorMaxLength = $this->getFieldLength('author');
@@ -52,6 +66,7 @@ class PluginControlVersionRepository
      */
     public function getPluginKeyMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginKeyMaxLength;
     }
 
@@ -60,6 +75,7 @@ class PluginControlVersionRepository
      */
     public function getPluginAuthorMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginAuthorMaxLength;
     }
 
@@ -68,6 +84,7 @@ class PluginControlVersionRepository
      */
     public function getPluginVersionMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginVersionMaxLength;
     }
 
@@ -118,6 +135,8 @@ class PluginControlVersionRepository
             return;
         }
 
+        $this->loadFieldLengths();
+
         foreach ($rows as $row) {
             $message = '';
             $can_update = true;
@@ -137,7 +156,7 @@ class PluginControlVersionRepository
             $version = (string)$row['version'];
             if (mb_strlen($version) > $this->pluginVersionMaxLength) {
                 $can_update = false;
-                $message .= "The Plugin Version ($version) is longer than the maximum allowed({$this->pluginVersionMaxLength}). ";
+                $message .= "The Plugin Version ($version) is longer than the maximum allowed ({$this->pluginVersionMaxLength}). ";
             }
 
             /**

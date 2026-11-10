@@ -30,6 +30,20 @@ class PluginControlRepository
             global $db;
             $this->db = $db;
         }
+    }
+
+    /**
+     * Field lengths are read on first use rather than on construction, since this class is
+     * built on every storefront bootstrap and by plugins using the InteractsWithPlugins
+     * trait, where the lengths are never needed.
+     *
+     * @since ZC v2.3.0
+     */
+    private function loadFieldLengths(): void
+    {
+        if (isset($this->pluginKeyMaxLength)) {
+            return;
+        }
 
         $this->pluginKeyMaxLength = $this->getFieldLength('unique_key');
         $this->pluginNameMaxLength = $this->getFieldLength('name');
@@ -54,6 +68,7 @@ class PluginControlRepository
      */
     public function getPluginKeyMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginKeyMaxLength;
     }
 
@@ -62,6 +77,7 @@ class PluginControlRepository
      */
     public function getPluginNameMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginNameMaxLength;
     }
 
@@ -70,6 +86,7 @@ class PluginControlRepository
      */
     public function getPluginAuthorMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginAuthorMaxLength;
     }
 
@@ -78,6 +95,7 @@ class PluginControlRepository
      */
     public function getPluginVersionMaxLength(): int
     {
+        $this->loadFieldLengths();
         return $this->pluginVersionMaxLength;
     }
 
@@ -148,6 +166,8 @@ class PluginControlRepository
             return;
         }
 
+        $this->loadFieldLengths();
+
         foreach ($rows as $row) {
             $message = '';
             $can_update = true;
@@ -160,7 +180,7 @@ class PluginControlRepository
 
             $name = (string)$row['name'];
             if (mb_strlen($name) > $this->pluginNameMaxLength) {
-                $message .= "The Plugin Name ($name) is longer than the maximum allowed({$this->pluginNameMaxLength}) and will be truncated on update. ";
+                $message .= "The Plugin Name ($name) is longer than the maximum allowed ({$this->pluginNameMaxLength}) and will be truncated on update. ";
                 $name = mb_substr($name, 0, $this->pluginNameMaxLength);
             }
 
@@ -173,7 +193,7 @@ class PluginControlRepository
             $version = (string)$row['version'];
             if (mb_strlen($version) > $this->pluginVersionMaxLength) {
                 $can_update = false;
-                $message .= "The Plugin Version ($version) is longer than the maximum allowed({$this->pluginVersionMaxLength}). ";
+                $message .= "The Plugin Version ($version) is longer than the maximum allowed ({$this->pluginVersionMaxLength}). ";
             }
 
             /**
