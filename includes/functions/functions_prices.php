@@ -1274,13 +1274,16 @@ function zen_get_attributes_price_final($attribute_id, $qty = 1, $pre_selected =
     // normal attributes price discounted by sales/specials or not discounted if neither a sale nor a special
     if ($price_prefix === '-') {
         // -----
-        // For a priced-by-attributes product, this is the discounted (base - option) price; the
-        // base price is removed on return, mirroring the '+' calculation below.
+        // A '-' attribute is charged by the shopping cart as -discount(option), with no priced-by-attributes
+        // special case. For a priced-by-attributes product, the base price is removed on return, so add it here.
+        //
+        // Otherwise, the (float) cast keeps a zero-priced option ('0.0000') caught by zen_get_discount_calc's
+        // no-charge check, as before; see #8063.
         //
         if ($prod_priced_by_attr) {
-            $attributes_price_final += zen_get_discount_calc($products_id, $products_attributes_id, $products_price_without_attributes - $options_values_price);
+            $attributes_price_final += $products_price_without_attributes - zen_get_discount_calc($products_id, $products_attributes_id, $options_values_price);
         } else {
-            $attributes_price_final -= zen_get_discount_calc($products_id, $products_attributes_id, $options_values_price);
+            $attributes_price_final -= zen_get_discount_calc($products_id, $products_attributes_id, (float)$options_values_price);
         }
     } else {
         $attributes_price_final += zen_get_discount_calc($products_id, $products_attributes_id, ($prod_priced_by_attr ? $products_price_without_attributes : 0) + $options_values_price);
