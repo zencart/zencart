@@ -119,6 +119,8 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_TOTALS_PROCESS');
 $payment_module_selected = ($credit_covers === true);
 if ($payment_module_selected === false
     && isset($_SESSION['payment']) && is_string($_SESSION['payment']) && $_SESSION['payment'] !== ''
+    && $payment_modules->selected_module === $_SESSION['payment']
+    && in_array($_SESSION['payment'] . '.php', $payment_modules->modules, true)
     && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])
     && !empty($GLOBALS[$_SESSION['payment']]->enabled)) {
     $payment_module_selected = true;
