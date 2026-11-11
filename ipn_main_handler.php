@@ -140,7 +140,18 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
 
     require 'includes/application_top.php';
 
-    $extraDebug = (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS === 'All');
+    // Reject sandbox IPNs unless a PayPal module is actually configured for sandbox.
+    if (isset($_POST['test_ipn']) && (int)$_POST['test_ipn'] === 1) {
+        $sandboxConfigured = (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && MODULE_PAYMENT_PAYPAL_HANDLER === 'sandbox')
+            || (defined('MODULE_PAYMENT_PAYPALWPP_SERVER') && MODULE_PAYMENT_PAYPALWPP_SERVER === 'sandbox');
+        if ($sandboxConfigured === false) {
+            error_log('PayPal IPN rejected: test_ipn=1 received while PayPal is in live mode. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+            http_response_code(403);
+            exit();
+        }
+    }
+
+    $extraDebug =(defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS === 'All');
 
     if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && str_contains(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log'))
         || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && str_contains(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log'))
