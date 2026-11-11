@@ -1,7 +1,10 @@
 # GitHub Copilot Instructions — Zen Cart
 
 Read `CONVENTIONS.md` for the full coding standards reference.
-Read `AGENTS.md` for architecture, bootstrapping, and codebase orientation.
+Read `AGENTS.md` for architecture, bootstrapping, and codebase orientation; its index lists the
+topic guides under `.ai/`. Path-specific instructions in `.github/instructions/` and skills in
+`.agents/skills/` are generated stubs pointing at those `.ai/` files: edit the source and run
+`composer docs-sync`.
 The following is a summary of the most important points for code review.
 
 ---
@@ -23,6 +26,9 @@ See the "Accepted legacy exceptions" section below.
 - User-supplied output not wrapped in `zen_output_string_protected()`.
 - Direct `$_GET`/`$_POST`/`$_REQUEST` access in new code where sanitized helpers exist.
 - New class files missing `declare(strict_types=1)`.
+  Placement is deliberately flexible: on its own line immediately after `<?php`, or after a
+  blank line following it. Do not flag either form, and do not flag existing files that place
+  it below the file docblock.
 - New classes, interfaces, or traits not using StudlyCaps naming.
 - Direct edits to `includes/application_top.php`, `admin/includes/application_top.php`,
   `includes/defined_paths.php`, or `admin/includes/defined_paths.php`.

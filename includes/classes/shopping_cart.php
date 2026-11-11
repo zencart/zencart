@@ -1968,7 +1968,12 @@ class shoppingCart extends base
                 //
                 foreach ($_POST['id'] as $key => $value) {
                     if (zen_get_attributes_valid($_POST['products_id'], $key, $value) === false) {
-                        if (str_starts_with($key, zen_config('TEXT_PREFIX', '')) === true && $value === '') {
+                        // -----
+                        // PHP itself converts "integer string" array keys (e.g. '2') to ints, so $key is an
+                        // int for every option except TEXT ones (txt_N). Cast it, since this file uses
+                        // strict_types and str_starts_with() requires a string.
+                        //
+                        if (str_starts_with((string)$key, zen_config('TEXT_PREFIX', '')) === true && $value === '') {
                             $selection_text = '';
                             $value_text = ' ' . ltrim(TEXT_INVALID_USER_INPUT, ' ');
                         } else {

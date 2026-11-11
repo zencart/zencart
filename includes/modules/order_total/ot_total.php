@@ -48,7 +48,7 @@ class ot_total {
       $this->title = MODULE_ORDER_TOTAL_TOTAL_TITLE;
       $this->description = MODULE_ORDER_TOTAL_TOTAL_DESCRIPTION;
       $this->sort_order = zen_config('MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER');
-      if (null === $this->sort_order) return false;
+      if (null === $this->sort_order) return;
 
       $this->output = array();
     }

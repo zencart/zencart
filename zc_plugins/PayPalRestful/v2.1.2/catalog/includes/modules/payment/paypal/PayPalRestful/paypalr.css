@@ -1,0 +1,49 @@
+#ppr-subtitle {
+    font-size: 85%;
+}
+.ppr-choice-label {
+    font-weight: bold;
+}
+.ppr-button-choice {
+    height: 3.5rem;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.ppr-button-choice label,
+.ppr-button-choice input {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.ppr-button-choice input[type="radio"] {
+    opacity: 0.011;
+    z-index: 100;
+}
+.ppr-button-choice input[type="radio"]+label {
+    padding-bottom: .5rem;
+    border: 2px solid #d3d3d3;
+}
+.ppr-button-choice input[type="radio"]:checked+label {
+    border: 2px solid #696969;
+}
+.ppr-button-choice label {
+    cursor: pointer;
+    height: 2.5rem;
+    font-weight: bold;
+    width: fit-content;
+    display: inline-block;
+    text-align: center;
+}
+#ppr-choice-paypal+br {
+    display: none;
+}
+@media (max-width: 800px) {
+    .ppr-button-choice {
+        flex-direction: column;
+    }
+}

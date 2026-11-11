@@ -116,7 +116,7 @@ class paypal extends base {
       $this->title = MODULE_PAYMENT_PAYPAL_TEXT_CATALOG_TITLE; // Payment Module title in Catalog
     }
 
-    if (null === $this->sort_order) return false;
+    if (null === $this->sort_order) return;
 
     $this->description = MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION;
     if ((int)zen_config('MODULE_PAYMENT_PAYPAL_ORDER_STATUS_ID') > 0) {
@@ -407,7 +407,7 @@ class paypal extends base {
    */
   function before_process() {
     global $order_total_modules;
-    list($this->transaction_amount, $this->transaction_currency) = $_SESSION['paypal_transaction_info'];
+    [$this->transaction_amount, $this->transaction_currency] = $_SESSION['paypal_transaction_info'];
     unset($_SESSION['paypal_transaction_info']);
     if (isset($_GET['referer']) && $_GET['referer'] == 'paypal') {
       $this->notify('NOTIFY_PAYMENT_PAYPAL_RETURN_TO_STORE', $_GET);
@@ -649,7 +649,7 @@ class paypal extends base {
     $this->pdtData = array();
     for ($i=1; $i<count($lines);$i++){
       if (!strstr($lines[$i], "=")) continue;
-      list($key,$val) = explode("=", $lines[$i]);
+      [$key,$val] = explode("=", $lines[$i]);
       $this->pdtData[urldecode($key)] = urldecode($val);
     }
 

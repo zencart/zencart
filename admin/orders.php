@@ -1158,10 +1158,24 @@ if ($show_orders_weights === true) {
                                     </tr>
                                     <?php
                                 }
+                                $latest_status = end($orders_history);
+                                if ((int)$latest_status['orders_status_id'] !== (int)$order->info['orders_status']) {
+                                    $mismatch_colspan = 5 + (is_array($extra_headings) ? count($extra_headings) : 0);
+                                    ?>
+                                    <tr>
+                                        <td colspan="<?= $mismatch_colspan ?>" class="alertVersionNew">
+                                            <?= sprintf(TEXT_STATUS_HISTORY_MISMATCH, zen_output_string_protected($orders_status_array[$order->info['orders_status']] ?? (string)$order->info['orders_status'])) ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                }
                             } else {
+                                $mismatch_colspan = 5 + (is_array($extra_headings) ? count($extra_headings) : 0);
                                 ?>
                                 <tr>
-                                    <td colspan="4"><?= TEXT_NO_ORDER_HISTORY ?></td>
+                                    <td colspan="<?= $mismatch_colspan ?>" class="alertVersionNew">
+                                        <?= sprintf(TEXT_NO_STATUS_HISTORY_FOR_ORDER, zen_output_string_protected($orders_status_array[$order->info['orders_status']] ?? (string)$order->info['orders_status'])) ?>
+                                    </td>
                                 </tr>
                                 <?php
                             }
@@ -1311,6 +1325,32 @@ if ($show_orders_weights === true) {
                         <table id="orders-table" class="table table-hover">
                             <thead>
                                 <tr class="dataTableHeadingRow">
+                                    <?php
+                                    // -----
+                                    // A watching observer can provide an associative array in the form:
+                                    //
+                                    // $leading_headings = array(
+                                    //         array(
+                                    //             'align' => $alignment,        // One of 'center', 'right', or 'left' (optional; other values are ignored)
+                                    //             'class' => $class,            // Optional extra CSS class(es). A cell that hosts form controls (checkbox, etc.) should include 'dataTableButtonCell' so the row-click handler skips it. Class is sanitized to [A-Za-z0-9_ -] but text is emitted raw (admin-side, intentional).
+                                    //             'text' => $value              // HTML for the <th>
+                                    //         ),
+                                    // );
+                                    //
+                                    // Observer note: Be sure to check that the $p2/$leading_headings value is specifically (bool)false before initializing, since
+                                    // multiple observers might be injecting content!
+                                    //
+                                    $leading_headings = false;
+                                    $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_LEADING_COLUMN_HEADING', [], $leading_headings);
+                                    if (is_array($leading_headings)) {
+                                        foreach ($leading_headings as $heading_info) {
+                                            $align = (isset($heading_info['align']) && in_array($heading_info['align'], ['left', 'right', 'center'], true))
+                                                ? ' text-' . $heading_info['align'] : '';
+                                            $class = isset($heading_info['class']) ? ' ' . preg_replace('/[^A-Za-z0-9_ -]/', '', $heading_info['class']) : '';
+                                            echo '<th class="dataTableHeadingContent' . $align . $class . '">' . $heading_info['text'] . '</th>';
+                                        }
+                                    }
+                                    ?>
                                     <th class="dataTableHeadingContent text-center"><?= TABLE_HEADING_ORDERS_ID ?></th>
                                     <th class="dataTableHeadingContent"><?= TABLE_HEADING_PAYMENT_METHOD ?></th>
                                     <th class="dataTableHeadingContent"><?= TABLE_HEADING_CUSTOMERS ?></th>
@@ -1499,6 +1539,34 @@ if ($show_orders_weights === true) {
                                                 $product_details = rtrim($product_details);
                                                 $product_details = preg_replace('~<hr>$~', '', $product_details); // remove last HR
                                                 $product_details = nl2br($product_details, false);
+                                        }
+                                        ?>
+                                        <?php
+                                        // -----
+                                        // A watching observer can provide an associative array in the form:
+                                        //
+                                        // $leading_data = array(
+                                        //         array(
+                                        //             'align' => $alignment,        // One of 'center', 'right', or 'left' (optional; other values are ignored)
+                                        //             'class' => $class,            // Optional extra CSS class(es). A cell that hosts form controls (checkbox, etc.) should include 'dataTableButtonCell' so the row-click handler skips it. Class is sanitized to [A-Za-z0-9_ -] but text is emitted raw (admin-side, intentional).
+                                        //             'text' => $value              // HTML for the <td>
+                                        //         ),
+                                        // );
+                                        //
+                                        // Observer note: Be sure to check that the $p3/$leading_data value is specifically (bool)false before initializing, since
+                                        // multiple observers might be injecting content!
+                                        //
+                                        // The notifier passes ($oInfo ?? []), $orders->fields so the observer knows which order the row is for.
+                                        //
+                                        $leading_data = false;
+                                        $zco_notifier->notify('NOTIFY_ADMIN_ORDERS_LIST_LEADING_COLUMN_DATA', ($oInfo ?? []), $orders->fields, $leading_data);
+                                        if (is_array($leading_data)) {
+                                            foreach ($leading_data as $data_info) {
+                                                $align = (isset($data_info['align']) && in_array($data_info['align'], ['left', 'right', 'center'], true))
+                                                    ? ' text-' . $data_info['align'] : '';
+                                                $class = isset($data_info['class']) ? ' ' . preg_replace('/[^A-Za-z0-9_ -]/', '', $data_info['class']) : '';
+                                                echo '<td class="dataTableContent' . $align . $class . '">' . $data_info['text'] . '</td>';
+                                            }
                                         }
                                         ?>
                                 <td class="dataTableContent text-center"><?= $show_difference . $orders->fields['orders_id'] ?></td>

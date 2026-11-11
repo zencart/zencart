@@ -158,15 +158,8 @@ $autoLoadConfig[90][] = [
  * Breakpoint 100.
  *
  * require('includes/init_includes/init_sanitize.php');
- * $template = new template_func();
  *
  */
-//- template_func class loaded via psr4Autoload.php
-$autoLoadConfig[100][] = [
-    'autoType' => 'classInstantiate',
-    'className' => 'template_func',
-    'objectName' => 'template',
-];
 $autoLoadConfig[100][] = [
     'autoType' => 'init_script',
     'loadFile' => 'init_sanitize.php',

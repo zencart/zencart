@@ -78,6 +78,9 @@ if (isset($_GET['pID']) && empty($_POST)) {
 $additional_images_query = $db->Execute("SELECT id, additional_image FROM " . TABLE_PRODUCTS_ADDITIONAL_IMAGES . " WHERE products_id = " . (int)($_GET['pID'] ?? 0) . " ORDER BY sort_order");
 $additional_images = [];
 foreach ($additional_images_query as $additional_image) {
+    if (isset($pInfo->products_image) && $pInfo->products_image === $additional_image['additional_image']) {
+        continue;
+    }
     $additional_images[] = [
         'id' => $additional_image['id'],
         'additional_image' => $additional_image['additional_image']

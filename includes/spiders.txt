@@ -5,7 +5,6 @@ crawl
 fetch
 grab
 libwww
-link
 robo
 search
 seek
@@ -30,6 +29,7 @@ analyz
 ananzi
 answerbus
 anthill
+anthropic
 appie
 arach
 arale
@@ -69,12 +69,15 @@ ccubee
 cf-uc
 changedetection
 charlotte
+chatgpt
 check_http
 cherrypicker
 churl
 cienciaficcion.net
 cireu
+claude
 coccoc
+cohere-ai
 comagent
 combine
 computingsite robi
@@ -145,6 +148,7 @@ ichiro
 iconsurf
 iltrovatore-setaccio
 imagelock
+img2dataset
 incywincy
 indexer
 informant
@@ -162,6 +166,7 @@ jobo
 jumpstation
 katipo
 kilroy
+kimi
 kit-fireball
 knowledge
 kretrieve
@@ -169,6 +174,8 @@ kumkie
 lachesis
 larbin
 liebaofast
+linkcheck
+linkpeek
 lockon
 ltx71
 lwp
@@ -181,10 +188,12 @@ mediapartners
 mega
 mercator
 merzscope
+meta-external
 metacarta
 metauri
 mff
 minirank
+mistralai
 miva
 mixnodecache
 moget
@@ -215,10 +224,10 @@ nymesis
 nzexplorer
 occam
 ocelli
+omgili
 omni
 onetszukaj
 openfind
-oppo
 orca
 osis-project
 pack rat
@@ -230,6 +239,7 @@ parasite
 patric
 pegasus
 peregrinator
+perplexity
 phantom
 phpdig
 pico
@@ -356,6 +366,7 @@ webstolperer
 webvac
 webwatch
 webzinger
+webzio
 wesee
 wget
 whizbang

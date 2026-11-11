@@ -64,11 +64,10 @@ class PageLoader
         return false;
     }
 
-    // -----
-    // This method locates **all** files matching a given pattern from the 'base'
-    // module-page directory and any module-page directories found in zc_plugins.
-    //
     /**
+     * This method locates **all** files matching a given pattern from the 'base'
+     * module-page directory and any module-page directories found in zc_plugins.
+     *
      * @since ZC v2.2.0
      */
     public function listModulePagesFiles(string $nameStartsWith, string $fileExtension = '.php', string $context = 'catalog'): array
@@ -87,11 +86,11 @@ class PageLoader
     /**
      * @since ZC v1.5.7
      */
-    public function getTemplatePart(string $pageDirectory, string $templatePart, string $fileExtension = '.php'): array
+    public function getTemplatePart(string $pageDirectory, string $templatePart, string $fileExtension = '.php', bool $includeDefaultDirs = true): array
     {
         if (self::isTemplatePath($pageDirectory)) {
             $directoryArray = [];
-            foreach ($this->getTemplateSearchDirectoriesFromPath($pageDirectory) as $directory) {
+            foreach ($this->getTemplateSearchDirectoriesFromPath($pageDirectory, $includeDefaultDirs) as $directory) {
                 $directoryArray = self::getTemplatePartFromDirectory(
                     $directoryArray,
                     $directory,
@@ -167,15 +166,44 @@ class PageLoader
      *
      * @since ZC v1.5.8
      */
-    public function getTemplateDirectory(string $fileName, string $currentTemplateDir, string $currentPage, string $templateSubDir): string
+    public function getTemplateDirectory(string $fileName, string $currentTemplateDir, string $currentPage, string $templateSubDir, bool $includeDefaultDirs = true): string
     {
         $fileName = str_replace("/", '', $fileName);
-        foreach ($this->getTemplateSearchDirectories(self::getCurrentTemplateKey($currentTemplateDir), $currentPage, $templateSubDir) as $directory) {
+        foreach ($this->getTemplateSearchDirectories(self::getCurrentTemplateKey($currentTemplateDir), $currentPage, $templateSubDir, $includeDefaultDirs) as $directory) {
             if ($this->fileSystem->fileExistsInDirectory($directory, $fileName)) {
                 return rtrim($directory, '/');
             }
         }
-        return DIR_WS_TEMPLATES . 'template_default/' . trim($templateSubDir, '/');
+        if ($includeDefaultDirs === true) {
+            return DIR_WS_TEMPLATES . 'template_default/' . trim($templateSubDir, '/');
+        }
+        return '';
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getTemplateFilesWithDir(string $templateKey, string $templatePart, string $currentPage, string $templateSubDir): array
+    {
+        $templatePart = '@' . $templatePart . '$@';     //- Add regex delimiters
+        $allFilesArray = [];
+        foreach ($this->getTemplateSearchDirectories($templateKey, $currentPage, $templateSubDir, includeDefaultDirs: false, parentFirst: true) as $directory) {
+            if ($dir = @dir($directory)) {
+                $filesArray = [];
+                while ($file = $dir->read()) {
+                    if (!is_dir($directory . $file)) {
+                        if (preg_match($templatePart, $file)) {
+                            $filesArray[] = $directory . $file;
+                        }
+                    }
+                }
+                $dir->close();
+
+                sort($filesArray);
+                $allFilesArray = array_merge($allFilesArray, $filesArray);
+            }
+        }
+        return $allFilesArray;
     }
 
     /**
@@ -202,14 +230,14 @@ class PageLoader
      */
     public function getBodyCode(): string
     {
-        // -----
-        // Determine where, if anywhere, the current-page's main_template_vars.php
-        // file resides.
-        //
-        // listModulePagesFiles returns all locations and the first-found file is used. That'll
-        // be the file in /includes/modules/pages/{current_page} or (searching all active
-        // plugins alphanumerically) the first-found in any zc_plugins.
-        //
+        /**
+         * Determine where, if anywhere, the current-page's main_template_vars.php
+         * file resides.
+         *
+         * listModulePagesFiles returns all locations and the first-found file is used. That'll
+         * be the file in /includes/modules/pages/{current_page} or (searching all active
+         * plugins alphanumerically) the first-found in any zc_plugins.
+         */
         $template_vars_locations = $this->listModulePagesFiles('main_template_vars');
         if (count($template_vars_locations) !== 0) {
             return $template_vars_locations[0];
@@ -223,27 +251,34 @@ class PageLoader
      *
      * File locations' returned in this array/precedence order:
      *
-     * 1. $templateKey's directory / $currentPage, e.g. includes/templates/responsive_classic/popup_image/
-     * 2. zc_plugins default / $currentPage (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/popup_image/
-     * 3. template_default / $currentPage, e.g. includes/templates/template_default/popup_image/
-     * 4. $templateKey's directory / $templateSubDir, e.g. includes/templates/responsive_classic/common/
-     * 5. zc_plugins default / $templateSubDir (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/common/
-     * 6. template_default / $templateSubDir, e.g. includes/templates/template_default/common/
+     * 1. For each template in the chain: <template> / $currentPage, e.g. includes/templates/responsive_classic/popup_image/
+     * 2.   then any zc_plugins overlay targeting <template> / $currentPage, e.g. zc_plugins/k/v2/catalog/includes/templates/responsive_classic/popup_image/
+     * 3(*). zc_plugins default / $currentPage (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/popup_image/
+     * 4(*). template_default / $currentPage, e.g. includes/templates/template_default/popup_image/
+     * 5. For each template in the chain: <template> / $templateSubDir, e.g. includes/templates/responsive_classic/common/
+     * 6.   then any zc_plugins overlay targeting <template> / $templateSubDir
+     * 7(*). zc_plugins default / $templateSubDir (first-found, alphanumerically sorted), e.g. zc_plugins/k/v2/catalog/includes/templates/default/common/
+     * 8(*). template_default / $templateSubDir, e.g. includes/templates/template_default/common/
+     *
+     * (*) Not included if $includeDefaultDirs is (bool)false.
      *
      * @since ZC v3.0.0
      */
-    private function getTemplateSearchDirectories(string $templateKey, string $currentPage, string $templateSubDir): array
+    private function getTemplateSearchDirectories(string $templateKey, string $currentPage, string $templateSubDir, bool $includeDefaultDirs = true, bool $parentFirst = false): array
     {
-        // -----
-        // If there was a previous request for the same information, return the
-        // cached array.
-        //
-        if (isset($this->templateSearchDirectories[$templateKey][$currentPage][$templateSubDir])) {
-            return $this->templateSearchDirectories[$templateKey][$currentPage][$templateSubDir];
+        /**
+         * If there was a previous request for the same information, return the
+         * cached array.
+        */
+        if (isset($this->templateSearchDirectories[$templateKey][$currentPage][$templateSubDir][(int)$includeDefaultDirs][(int)$parentFirst])) {
+            return $this->templateSearchDirectories[$templateKey][$currentPage][$templateSubDir][(int)$includeDefaultDirs][(int)$parentFirst];
         }
 
         $directories = [];
         $inheritanceChain = $this->getNonDefaultInheritanceChain($templateKey);
+        if ($parentFirst === true) {
+            $inheritanceChain = array_reverse($inheritanceChain);
+        }
 
         foreach ($inheritanceChain as $chainTemplateKey) {
             $directories = array_merge(
@@ -252,10 +287,12 @@ class PageLoader
                 $this->getOverlayDirectoriesForTarget($chainTemplateKey, $currentPage)
             );
         }
-        $directories = array_merge(
-            $directories,
-            $this->getDefaultTemplateSubDirectories($currentPage)
-        );
+        if ($includeDefaultDirs === true) {
+            $directories = array_merge(
+                $directories,
+                $this->getDefaultTemplateSubDirectories($currentPage)
+            );
+        }
 
         foreach ($inheritanceChain as $chainTemplateKey) {
             $directories = array_merge(
@@ -264,13 +301,16 @@ class PageLoader
                 $this->getOverlayDirectoriesForTarget($chainTemplateKey, $templateSubDir)
             );
         }
-        $directories = array_merge(
-            $directories,
-            $this->getDefaultTemplateSubDirectories($templateSubDir)
-        );
+
+        if ($includeDefaultDirs === true) {
+            $directories = array_merge(
+                $directories,
+                $this->getDefaultTemplateSubDirectories($templateSubDir)
+            );
+        }
 
         $directories = array_values(array_unique(array_filter($directories)));
-        $this->templateSearchDirectories[$templateKey][$currentPage][$templateSubDir] = $directories;
+        $this->templateSearchDirectories[$templateKey][$currentPage][$templateSubDir][(int)$includeDefaultDirs][(int)$parentFirst] = $directories;
 
         return $directories;
     }
@@ -278,7 +318,7 @@ class PageLoader
     /**
      * @since ZC v3.0.0
      */
-    private function getTemplateSearchDirectoriesFromPath(string $pageDirectory): array
+    private function getTemplateSearchDirectoriesFromPath(string $pageDirectory, bool $includeDefaultDirs = true): array
     {
         $normalized = self::normalizeDirectory($pageDirectory);
         if (!preg_match('~includes/templates/([^/]+)/(.+)$~', $normalized, $matches)) {
@@ -287,7 +327,7 @@ class PageLoader
 
         $templateKey = $matches[1];
         $templateSubDir = trim($matches[2], '/');
-        return $this->getTemplateSearchDirectories($templateKey, $this->mainPage, $templateSubDir);
+        return $this->getTemplateSearchDirectories($templateKey, $this->mainPage, $templateSubDir, $includeDefaultDirs);
     }
 
     /**

@@ -21,66 +21,35 @@ Formatting basics are already enforced by `.editorconfig` (4 spaces, LF line end
 final newline, no trailing whitespace) — configure your editor to respect it.
 Beyond `.editorconfig`, follow PSR-12 for brace placement, spacing, and structure.
 
-There is currently no automated PHPCS enforcement. Conventions are maintained by code review and AI tooling guidance.
+There is no CI-enforced style check. A `.php-cs-fixer.dist.php` config is available for local use
+(`vendor/bin/php-cs-fixer fix --dry-run --diff <path>` after `composer install`); conventions are
+otherwise maintained by code review and AI tooling guidance.
 
 ### One PSR-12 rule that is stricter here: no colon/endkeyword syntax
 
-PSR-12 does not prohibit the alternative colon syntax for control structures. This project does.
-
-**Always use curly-brace syntax:**
-```php
-// Correct
-if ($condition) {
-    // ...
-}
-
-foreach ($items as $item) {
-    // ...
-}
-```
-
-**Never use colon/endkeyword syntax — not even in templates:**
-```php
-// Wrong — do not use
-if ($condition):
-    // ...
-endif;
-
-foreach ($items as $item):
-    // ...
-endforeach;
-```
+PSR-12 permits the alternative colon syntax for control structures. This project does not: always
+use curly braces, including in templates. No `if (): … endif;`, `foreach (): … endforeach;`,
+`while (): … endwhile;`, or `switch (): … endswitch;`. The `no_alternative_syntax` rule in
+`.php-cs-fixer.dist.php` catches it locally.
 
 ---
 
 ## Comment style for new code
 
 - Single-line comments: `//` is fine.
-- Multi-line comments: use `/** */` docblock style, not a run of `//` lines — even when the
-  comment isn't above a class/method/property declaration (e.g. explaining a block of logic
-  mid-method). PHPStorm renders `/**` as a doc-comment regardless of what follows, and some
-  tooling (minifiers, AI code-stripping passes) targets `//` line comments more aggressively,
-  so doc-style blocks are more reliably preserved across multiple lines.
+- Multi-line comments: use `/** */` docblock style, not a run of `//` lines — even mid-method,
+  where the comment isn't above a class/method/property declaration. PHPStorm renders `/**` as a
+  doc-comment regardless of what follows, and some tooling (minifiers, AI code-stripping passes)
+  targets `//` line comments more aggressively, so doc blocks survive more reliably.
 
 ```php
-// Correct — single line
-$total = $price * $qty; // apply quantity
-
 /**
- * Correct — multi-line, documents the code immediately below.
- */
-class Foo
-{
-}
-
-/**
- * Correct — also fine mid-method, documenting the next statement.
+ * Correct — a docblock reads as one comment, mid-method or above a declaration.
  */
 $result = doSomethingNonObvious();
 
-// Wrong — multi-line using //
-// Explain the non-obvious reason here.
-// across multiple lines like this.
+// Wrong — a run of // lines for one multi-line thought.
+// Tooling is more likely to strip these.
 ```
 
 ---
@@ -92,38 +61,45 @@ $result = doSomethingNonObvious();
 | Classes, interfaces, traits | StudlyCaps | `PluginManager`, `ScriptedInstaller` |
 | Methods | camelCase | `getProductName()` |
 | Properties | camelCase | `$orderTotal` |
-| Constants | UPPER_SNAKE_CASE | `TABLE_ORDERS`, `FILENAME_INDEX` |
+| Constants | UPPER_SNAKE_CASE | `TABLE_ORDERS`, `FILENAME_DEFAULT` |
 | Procedural functions | snake_case | `zen_get_products_name()` |
 
 ### `declare(strict_types=1)`
 
-Add `declare(strict_types=1)` to all **new** class files, placed after the opening `<?php` tag
-and the file's docblock comment, before the namespace declaration.
-Do not add it retroactively to existing files unless they are being substantially rewritten.
-Do add it to new class files that have been copied or patterned from an existing file that lacks it.
+Add it to all **new** class files, on its own line immediately after the opening `<?php` tag —
+*above* the file docblock, not below it — and before the namespace declaration:
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace Zencart\Example;
+```
+
+A blank line between the opening tag and the declare is equally correct. Neither form is a review
+finding, and no tooling here rewrites one into the other, so do not normalize existing files either
+way. A few older files place the declare *below* the file docblock: accepted where it already
+exists, but do not do it in new files.
+
+Do not add it retroactively to existing files unless they are being substantially rewritten and the
+change is tested. Do add it to new class files that have been copied or patterned from an existing
+file that lacks it.
 
 ---
 
 ## Accepted legacy exceptions (do not "fix" these)
 
-The following patterns exist in stable legacy code and predate PSR adoption.
-They are known, accepted deviations. Do not rename, restructure, or reformat
-these files unless a deliberate refactor has been scoped and agreed upon by core developers.
+Stable legacy code that predates PSR adoption contains known, accepted deviations. Do not rename,
+restructure, or reformat it unless a deliberate refactor has been scoped and agreed upon by core
+developers.
 
-| File / Pattern | Deviation | Notes |
-|---|---|---|
-| `includes/classes/order.php` | lowercase class name `order` | Core class; renaming is a major BC break |
-| `includes/classes/category_tree.php` | lowercase + snake `category_tree` | Same |
-| `includes/classes/class.notifier.php` | lowercase `notifier` | Same |
-| `includes/classes/template_func.php` | lowercase + snake `template_func` | Same |
-| `includes/classes/products.php` | lowercase `products` | This class is deprecated; should not be used anyway. |
-| `includes/classes/breadcrumb.php` | lowercase `breadcrumb` | Same |
-| `includes/classes/language.php` | lowercase `language` | Same |
-| `includes/classes/currencies.php` | lowercase `currencies` | Same |
-| `includes/classes/http_client.php` | no method visibility, no strict_types | Known tech debt; stable; do not modify; mostly deprecated anyway |
-| `includes/classes/split_page_results.php` | lowercase + splitCase hybrid | Legacy; stable |
-| Various legacy observers in `includes/classes/observers/` | lowercase class names | Legacy pattern for observer auto-loading |
-| `includes/modules/`, `includes/init_includes/`, `includes/extra_configures/` | closing `?>` tag present in ~71 files | Procedural include files; correct only when already editing the file |
+- Lowercase class names and filename/class-case mismatches throughout `includes/classes/`
+  (`order`, `currencies`, `splitPageResults`, and others). Per-file detail is in
+  `.ai/rules/legacy-exceptions.md`, which loads automatically when working under that directory.
+- A closing `?>` tag still present in some PHP-only procedural includes under `includes/`,
+  `admin/includes/extra_*/`, `includes/templates/template_default/`, and three root-level redirect
+  stubs. Removing one is correct only when already editing the file; mixed HTML/PHP pages and
+  templates that end in `?>` are not violations.
 
 ---
 
@@ -171,47 +147,20 @@ Do not flag this pattern as an unnecessary echo or malformed HTML.
 
 ## Template settings: choosing `zen_config()` vs `$tplSetting->`
 
-See `AGENTS.md` → "Configuration: `zen_config()` vs `$tplSetting` (TemplateSettings)" for how the
-two mechanisms work and where `$tplSetting` is (and isn't) available. This section covers which
-keys are appropriate to convert from `zen_config()` to `$tplSetting->`.
-
-`$tplSetting->KEY` is appropriate only for **display/layout/template-presentation** settings —
-things a template should reasonably be able to override (box widths, separators, show/hide a
-sidebox section, image-size defaults, and similar).
-
-Keep using `zen_config()` for:
-- Core/site-wide settings not specific to template presentation: `STORE_NAME`, `STORE_OWNER_*`,
-  `CONTACT_US*`, `DEFAULT_LANGUAGE`, `DEFAULT_CURRENCY`.
-- Security/session-sensitive and registration-field settings: `SESSION_*`, `ENTRY_*_LENGTH`,
-  `ACCOUNT_*` fields governing required registration fields.
-- Business-logic/checkout-flow settings: `STOCK_CHECK`, `STOCK_ALLOW_CHECKOUT`,
-  `DISABLED_PRODUCTS*`, `CUSTOMERS_APPROVAL*`, `CUSTOMERS_REFERRAL_STATUS`,
-  `CUSTOMERS_PRODUCTS_NOTIFICATION_STATUS`, `CUSTOMERS_ACTIVATION_REQUIRED`.
-- Any `MODULE_*` setting (payment/shipping/order-total module configuration).
-- Any key currently called with a meaningful default-value second argument
-  (`zen_config('KEY', $default)`) — `$tplSetting->KEY` has no equivalent default-parameter
-  support, so converting would silently drop that fallback behavior.
-- Settings actually backed by a different repository/table than `configuration`
-  (e.g. `SHOW_*_ATTRIBUTES`, sourced from `product_type_layout`) — these require
-  `zen_config()`'s repository-aware lookup.
-- `*_FILENAME` constants and other non-display identifiers.
-
-When in doubt, check the setting's `configuration_group_id`/title/description in
-`zc_install/sql/install/mysql_zencart.sql` to judge whether it reads as a template/display
-concern or a core/business one.
+Which configuration keys may be read through `$tplSetting->` instead of `zen_config()`, and
+where `$tplSetting` is available, is specified in `.ai/rules/templates.md` (loaded automatically
+when working under `includes/templates/` or `includes/modules/`). Short version: only
+display/layout/template-presentation settings; never business-logic, security, `MODULE_*`,
+or keys called with a default value.
 
 ---
 
 ## Files that should never be directly edited
 
-| File | Reason |
-|---|---|
-| `includes/application_top.php` | Bootstrap core; use `extra_configures` and `init_includes` hooks instead |
-| `admin/includes/application_top.php` | Same |
-| `includes/defined_paths.php` | Use `extra_configures` to define new `DIR_FS_*` / `DIR_WS_*` constants |
-| `admin/includes/defined_paths.php` | Same |
-
-More are listed in AGENTS.md
+`includes/application_top.php`, `admin/includes/application_top.php`, `includes/defined_paths.php`,
+`admin/includes/defined_paths.php`. Use `extra_configures` for new `DIR_FS_*` / `DIR_WS_*`
+constants and `init_includes` for init hooks. AGENTS.md states the same list, and
+`.ai/rules/admin.md` adds `admin/includes/application_bootstrap.php`.
 
 ---
 
@@ -224,7 +173,6 @@ for the full directory layout, PSR-4 namespace mapping, and installer patterns.
 
 ## References
 
-- [PSR-12 Extended Coding Style](https://www.php-fig.org/psr/psr-12/)
-- [Zen Cart Developer Docs](https://docs.zen-cart.com/dev/)
-- `AGENTS.md` — architecture, bootstrapping, test commands, workflow
-- `.editorconfig` — formatting rules enforced at editor level
+- [PSR-12](https://www.php-fig.org/psr/psr-12/) — the standard new code follows.
+- `.editorconfig` — formatting basics enforced at editor level.
+- `AGENTS.md` — architecture, bootstrapping, test commands, and the external developer-doc links.

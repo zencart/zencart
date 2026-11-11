@@ -1,7 +1,8 @@
 <?php
-if (!empty(zen_config('SHOW_ACCEPTED_CREDIT_CARDS'))) {
-    return;
+if (zen_config('SHOW_ACCEPTED_CREDIT_CARDS', '0') === '0') {
+    return [];
 }
+
 global $template, $current_page_base;
 $define = [
     'TEXT_ACCEPTED_CREDIT_CARDS' => '<strong>We accept:</strong> ',

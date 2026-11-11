@@ -5,13 +5,14 @@ declare(strict_types=1);
  *
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2026 Mar 05 Modified in v2.2.1 $
+ * @version $Id: DrByte 2026 Sep 16 Modified in v2.3.0 $
  */
 
 namespace Zencart\PluginManager;
 
 use Zencart\DbRepositories\PluginControlRepository;
 use Zencart\DbRepositories\PluginControlVersionRepository;
+use Zencart\PluginSupport\PluginManifest;
 use Zencart\PluginSupport\PluginStatus;
 
 /**
@@ -106,13 +107,17 @@ class PluginManager
         // new array for reverse-lookup after getting results back
         $pluginsById = [];
 
-        $ids_csv = '';
+        $ids = [];
         foreach ($plugins as $plugin) {
-            $pluginsById[$plugin['zc_contrib_id']] = $plugin;
-            $ids_csv .= (int)trim($plugin['zc_contrib_id']) . ',';
+            $id = (int)$plugin['zc_contrib_id'];
+            if ($id === 0) {
+                continue; // no plugin-library id, so there is nothing to look up online
+            }
+            $pluginsById[$id] = $plugin;
+            $ids[] = $id;
         }
 
-        $results = $this->getLatestPluginVersionsOnline($ids_csv);
+        $results = $this->getLatestPluginVersionsOnline(implode(',', $ids));
 
         // if no results or invalid format, abort
         // @TODO - is this the right return type? or should we return the unaltered $plugins array?
@@ -218,16 +223,23 @@ class PluginManager
      */
     protected function getPluginVersionDirectories(\DirectoryIterator $parent): array
     {
+        $pluginManifest = new PluginManifest();
         $versionList = [];
         $dir = new \DirectoryIterator($parent->getPathName());
         foreach ($dir as $fileinfo) {
             if ($fileinfo->isDot() || !$fileinfo->isDir()) {
                 continue;
             }
-            if (!file_exists($fileinfo->getPathname() . '/manifest.php')) {
-                continue; //@todo consider throwing exception/trigger_error here
+
+            /**
+             * The plugin's key and version are the names of the two directories
+             * being iterated: $parent is the zc_plugins/<key> entry and $fileinfo
+             * is its <version> sub-directory.
+             */
+            $manifest = $pluginManifest->get($parent->getFilename(), $fileinfo->getFilename());
+            if ($manifest === null) {
+                continue;
             }
-            $manifest = require $fileinfo->getPathname() . '/manifest.php';
             $versionList[$fileinfo->getFilename()] = $manifest;
             if ($_SESSION['languages_code'] !== 'en') {
                 $this->loadPluginLanguageConstants($fileinfo->getPathname());

@@ -152,6 +152,12 @@ class paypalwpp extends base {
   protected array $country_state;
 
   /**
+   * Flag indicating if module is retired
+   * @var boolean
+   */
+  public $retired = false;
+
+  /**
    * class constructor
    */
   function __construct() {
@@ -160,6 +166,7 @@ class paypalwpp extends base {
     $this->codeTitle = MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_TITLE_EC;
     $this->codeVersion = '1.5.8';
     $this->enabled = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'True' || (IS_ADMIN_FLAG === true && zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'Retired'));
+    $this->retired = (zen_config('MODULE_PAYMENT_PAYPALWPP_STATUS') === 'Retired');
     // Set the title & description text based on the mode we're in ... EC vs US/UK vs admin
     if (IS_ADMIN_FLAG === true) {
       $this->description = sprintf(MODULE_PAYMENT_PAYPALWPP_TEXT_ADMIN_DESCRIPTION, ' (rev' . $this->codeVersion . ')');
@@ -183,7 +190,7 @@ class paypalwpp extends base {
 
       $this->sort_order = zen_config('MODULE_PAYMENT_PAYPALWPP_SORT_ORDER');
 
-      if (null === $this->sort_order) return false;
+      if (null === $this->sort_order) return;
 
       if ($this->enabled) {
         if ( (zen_config('MODULE_PAYMENT_PAYPALWPP_MODULE_MODE') === 'PayPal' && (empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APISIGNATURE')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APIUSERNAME')) || empty(zen_config('MODULE_PAYMENT_PAYPALWPP_APIPASSWORD'))))
@@ -2914,7 +2921,7 @@ if (false) { // disabled until clarification is received about coupons in PayPal
     // now run the insert
 
     // this isn't the best way to get fname/lname but it will get the majority of cases
-    list($fname, $lname) = explode(' ', $address_question_arr['name']);
+    [$fname, $lname] = explode(' ', $address_question_arr['name']);
 
     $sql_data_array= array(array('fieldName'=>'entry_firstname', 'value'=>$fname, 'type'=>'string'),
                            array('fieldName'=>'entry_lastname', 'value'=>$lname, 'type'=>'string'),

@@ -29,7 +29,7 @@ zen_define_default('DIR_WS_TEMPLATE_IMAGES', $templateRecord['template_web_path'
 zen_define_default('DIR_WS_TEMPLATE_ICONS', DIR_WS_TEMPLATE_IMAGES . 'icons/');
 
 require DIR_FS_CATALOG . DIR_WS_CLASSES . 'template_func.php';
-$template = new template_func();
+$template = new template_func($template_dir);
 
 /**
  * send the content charset "now" so that all content is impacted by it - this is important for non-english sites

@@ -18,6 +18,18 @@ return (new Config())
         'operator_linebreak' => [
             'only_booleans' => true,
         ],
+        /**
+         * Leave strict_types placement unenforced. CONVENTIONS.md accepts both `<?php` followed
+         * directly by the declare and `<?php` followed by a blank line then the declare, so there
+         * is nothing here to normalize, and most of the tree already uses one of the two.
+         *
+         * Do not enable either rule below without agreement; both would churn files:
+         *   - `declare_strict_types` inserts at the open tag and rewrites "<?php\n" to "<?php ",
+         *     so with `blank_line_after_opening_tag` false it collapses the declare onto the
+         *     opening line.
+         *   - `blank_line_after_opening_tag` set to true forces a blank line above the declare in
+         *     every file that deliberately omits one.
+         */
         'blank_line_after_opening_tag' => false,
 
         //'blank_line_after_opening_tag' => true,

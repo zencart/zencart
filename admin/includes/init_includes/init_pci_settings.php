@@ -27,8 +27,8 @@
  */
 
 // Lockout threshold: number of (admin) failed-login attempts allowed before lockout is triggered
-// PCI3 had at lockout threshold of 6; PCI4 allows 10
-zen_define_default('ADMIN_LOGIN_LOCKOUT_LIMIT', 10);
+// PCI3 had at lockout threshold of 6; PCI4 allows 10 ... but Zen Cart uses 6!
+zen_define_default('ADMIN_LOGIN_LOCKOUT_LIMIT', 6);
 
 // Lockout duration: 30 minutes (30 * 60 seconds)
 zen_define_default('ADMIN_LOGIN_LOCKOUT_TIMER', (30 * 60));
@@ -39,4 +39,3 @@ zen_define_default('ADMIN_PASSWORD_MIN_LENGTH', 8);
 
 // Password Rotation Cycle: 90 days
 zen_define_default('ADMIN_PASSWORD_EXPIRES_INTERVAL', strtotime('- 90 day'));
-

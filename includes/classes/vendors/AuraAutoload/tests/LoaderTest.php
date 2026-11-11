@@ -17,7 +17,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->loader->register();
 
         $functions = spl_autoload_functions();
-        list($actual_object, $actual_method) = array_pop($functions);
+        [$actual_object, $actual_method] = array_pop($functions);
 
         $this->assertSame($this->loader, $actual_object);
         $this->assertSame('loadClass', $actual_method);

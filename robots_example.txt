@@ -1,41 +1,428 @@
-User-agent: *
+# ---------------------------------------------------------------------------
+# Example robots.txt for Zen Cart
+#
+# This is an EXAMPLE file. To use it, copy or rename it to "robots.txt" and
+# place it in the document root of your site (eg. /public_html or /httpdocs),
+# even if Zen Cart itself is installed in a subfolder. robots.txt is only read
+# from the root of a domain. Adjust the paths below if your store lives in a
+# subfolder (eg. "/shop/index.php?..." instead of "/index.php?...").
+#
+# You do NOT have to strip the comments. Any line beginning with # is ignored
+# by crawlers, and the comments are the most useful part of this file when you
+# come back to tune it in six months.
+#
+# Zen Cart does not require any of these rules in order to function. They are
+# here to protect your server from wasted work and to state your intent about
+# AI usage of your content.
+#
+# HOW THIS FILE IS ORGANIZED
+#   Section 1  AI-training opt-out tokens      - Disallow is the only signal that works
+#   Section 2  Traditional search engines      - full speed, duplicate URLs trimmed
+#   Section 3  AI search / answer engines      - allowed but throttled; these cite you
+#   Section 4  User-triggered AI fetches       - allowed; a real person is waiting
+#   Section 5  AI-training / dataset crawlers  - BLOCKED (see Section 5 to allow)
+#   Section 6  Everything else
+#
+# THE ORDER OF THE SECTIONS MATTERS - KEEP SPECIFIC NAMES ABOVE GENERAL ONES
+#   A crawler obeys exactly one group: the one naming it most specifically.
+#   "Applebot-Extended" must therefore appear ABOVE "Applebot", and any new
+#   "<Name>-User" or "<Name>-Extended" token above the plain "<Name>". The
+#   standard requires longest-match, but not every crawler implements it that
+#   well, and some take the first group whose name looks like a match. Ordering
+#   specific before general gives the right answer under either behavior. If
+#   you add user-agents, add them to the group you want and mind this order.
+#
+# THE GROUPED LAYOUT IS VALID - BUT KEEP THE User-agent LINES TOUCHING
+#   Listing several User-agent lines above one shared set of rules is standard
+#   (RFC 9309 section 5.1 uses exactly this form). It beats repeating the rules
+#   under every crawler name. The one way to break it: a group ENDS at the first
+#   rule line, so if you insert a Disallow in the middle of a list of
+#   User-agent lines, every user-agent below it silently becomes its own group
+#   with no rules at all - which means ALLOW EVERYTHING. When adding a crawler,
+#   put it with the other User-agent lines, above the first Disallow.
+#
+#   Also: user-agent names are matched case-insensitively, so "GPTBot" and
+#   "gptbot" are the same token. Listing both casings just adds a duplicate.
+#
+# IF YOU RENAME THIS FILE AND CHANGE NOTHING ELSE
+#   That is a supported way to use it. The defaults are chosen to be safe for a
+#   typical store, and here is plainly what you get:
+#
+#   YES - Google, Bing, Apple, DuckDuckGo and Yandex crawl you at full speed.
+#         Your search rankings are unaffected. This file does not hide you.
+#   YES - ChatGPT, Claude, Perplexity and similar can still find, quote and
+#         LINK to your store, so you keep that referral traffic.
+#   NO  - Your content is refused for AI model TRAINING. This is a separate
+#         thing from the line above, and refusing it does not reduce your
+#         visibility in search or in AI answers.
+#   NO  - No crawler is sent to your cart, checkout, login or account pages, or
+#         made to re-crawl the same products through every sort order and
+#         filter combination. That is wasted server load, and it is switched off.
+#
+#   TWO THINGS TO CHECK BY HAND, even if you change nothing else:
+#     1. If your store is NOT at the domain root - if its address looks like
+#        example.com/shop/ rather than example.com/ - then the rules naming
+#        "/index.php" do not match your store and silently do nothing. Add your
+#        subfolder to those lines ("/shop/index.php?..."). The file still
+#        belongs at the domain root either way.
+#     2. Add a Sitemap line if you have one. See the end of this file. It is
+#        the single most useful thing you can add, and it cannot be filled in
+#        for you because it contains your own domain name.
+#
+#   AND ONE DECISION WORTH MAKING DELIBERATELY: if your product descriptions,
+#   photos and specifications are genuinely your own work rather than supplied
+#   by a manufacturer, read Section 5. You may want to allow AI training rather
+#   than refuse it, so that your store becomes a known authority in its niche.
+#
+# BEFORE YOU TUNE THIS - TWO LIMITS WORTH KNOWING
+#
+# 1. robots.txt is a request, not a fence. Well-behaved crawlers honor it.
+#    Badly-behaved ones ignore it, and some AI vendors explicitly state that
+#    their user-triggered agents are not bound by it. If a crawler is actually
+#    hurting your server, you need rate limiting or blocking at the web server,
+#    CDN or firewall level. This file states intent; it does not enforce it.
+#
+# 2. "Crawl-delay" is the only throttle robots.txt offers, and it is not part
+#    of the robots.txt standard. Google ignores it outright (use Search Console
+#    to limit Googlebot). Bing honors it. Several AI crawlers document support
+#    for it, including GPTBot, ClaudeBot, CCBot and PerplexityBot. The value is
+#    seconds to wait between requests, so "Crawl-delay: 30" is roughly 2,880
+#    pages per day. Raise it to slow a crawler down; lower it if you have a
+#    large catalog you actually want fully indexed.
+#
+# WHY SOME URLS ARE BLOCKED FOR EVERYONE
+#   Zen Cart builds listing URLs from combinable parameters (sort order,
+#   pagination, manufacturer and alpha filters). Crawled blindly these multiply
+#   into a very large number of URLs that all show the same products. Blocking
+#   the sort/duplicate parameters saves server load and avoids spreading your
+#   ranking signals across near-identical pages.
+#
+#   Note: "action=" URLs are cart and account operations (add_product, buy_now,
+#   remove_product, notify, ...). A crawler following those does real work in
+#   your database for no benefit, so they are blocked for every user-agent.
+#
+#   WATCH OUT when adding parameter rules of your own: "Disallow: /*xyz=" is a
+#   substring match, not a parameter match. Because every Zen Cart URL carries
+#   "main_page=", a rule of "Disallow: /*page=" matches your ENTIRE SITE, not
+#   just the paginated listings. That is why the pagination rule below is
+#   written "Disallow: /*&page=" - anchored to the "&" that always precedes it.
+#   Check any new rule against a plain product URL before you rely on it.
+#
+#   The pagination rule is deliberately written twice, once anchored at "&" and
+#   once at "/index.php?". Both mean the same thing, but some crawlers' robots
+#   parsers mishandle a bare "&" in a pattern and would otherwise skip the rule
+#   entirely. Harmless duplication; do not "tidy" it away.
+#
+# A NOTE ON Disallow VERSUS noindex
+#   Zen Cart already emits <meta name="robots" content="noindex,nofollow"> on
+#   account, checkout and other private pages. See ROBOTS_PAGES_TO_SKIP in
+#   includes/extra_configures/robots_pages_to_skip.php. That is the right tool
+#   for keeping a page OUT OF SEARCH RESULTS. Disallow here is the right tool
+#   for keeping crawlers from SPENDING YOUR SERVER'S TIME. A page that is
+#   Disallow'd cannot be fetched, so its noindex tag is never seen, which is
+#   why this file blocks the expensive and stateful pages rather than every
+#   private one.
+#
+# Do not list private folders here. Naming a folder in robots.txt publishes
+# its existence to anyone who reads the file.
+#
+# Reference: https://www.rfc-editor.org/rfc/rfc9309.html (robots.txt standard)
+#            https://docs.zen-cart.com/dev/
+# ---------------------------------------------------------------------------
+
+
+# ===========================================================================
+# SECTION 1 - AI-training opt-out tokens (not crawlers)
+# ---------------------------------------------------------------------------
+# Google-Extended and Applebot-Extended do not fetch anything. They exist only
+# as robots.txt tokens that say whether content already crawled by Googlebot
+# or Applebot may be used to train that vendor's AI models. Crawl-delay is
+# meaningless for them; "Disallow: /" is the only directive they understand.
+#
+# Both vendors document that this does not affect your inclusion or ranking in
+# their search products, so this is a free opt-out of training with no SEO
+# cost. That is why it is set to Disallow by default here. Remove this section
+# if you want your catalog used as AI training data.
+# ===========================================================================
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Disallow: /
+
+
+# ===========================================================================
+# SECTION 2 - Traditional search engines
+# ---------------------------------------------------------------------------
+# These send you customers. Do not throttle them. We only trim the duplicate
+# and stateful URLs. Googlebot ignores Crawl-delay anyway; to slow Googlebot
+# use Google Search Console instead.
+# ===========================================================================
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: DuckDuckBot
+User-agent: YandexBot
+Content-Signal: search=yes, ai-train=no
 Disallow: /cgi-bin/
+Disallow: /*zenid=
+Disallow: /*action=
+Disallow: /*sort=
+Disallow: /*disp_order=
+Disallow: /*filter_id=
+Disallow: /*alpha_filter_id=
+Disallow: /*typefilter=
+Disallow: /*keyword=
+Disallow: /index.php?main_page=advanced_search_result
+Disallow: /index.php?main_page=search_result
+Disallow: /index.php?main_page=shopping_cart
+Disallow: /index.php?main_page=checkout
+Disallow: /index.php?main_page=login
 
-#
-# NOTE: This is only an example file.
-#
-# If you don't already have a robots.txt file, you may RENAME this one to robots.txt
-#
-# **** IF YOU USE THIS SAMPLE FILE **** ... THEN YOU SHOULD remove all comments from this file simply by deleting any lines starting with a #
 
+# ===========================================================================
+# SECTION 3 - AI search and answer engines
+# ---------------------------------------------------------------------------
+# These crawl in order to cite and link your store inside an AI answer, which
+# is a referral channel much like ordinary search. Throttled rather than
+# blocked, on the basis that being findable is worth more to a store than the
+# bandwidth saved. If you would rather not appear in AI answers at all, change
+# the Crawl-delay line in this group to "Disallow: /".
 #
+# Note that pagination (page=) is left crawlable here so deep catalog pages
+# can still be discovered and cited.
+# ===========================================================================
+User-agent: OAI-SearchBot
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: DuckAssistBot
+User-agent: Amazonbot
+User-agent: Bravebot
+User-agent: YouBot
+User-agent: kagi-fetcher
+User-agent: MistralAI-Index
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Crawl-delay: 10
+Disallow: /cgi-bin/
+Disallow: /*zenid=
+Disallow: /*action=
+Disallow: /*sort=
+Disallow: /*disp_order=
+Disallow: /*filter_id=
+Disallow: /*alpha_filter_id=
+Disallow: /*typefilter=
+Disallow: /*keyword=
+Disallow: /index.php?main_page=advanced_search_result
+Disallow: /index.php?main_page=search_result
+Disallow: /index.php?main_page=shopping_cart
+Disallow: /index.php?main_page=checkout
+Disallow: /index.php?main_page=login
+
+
+# ===========================================================================
+# SECTION 4 - User-triggered AI fetches
+# ---------------------------------------------------------------------------
+# These fire when a person asks an assistant about a page: one or a few
+# requests, with a human waiting on the answer, and often the highest purchase
+# intent traffic you will get. They are deliberately NOT throttled, because a
+# Crawl-delay here only makes a prospective customer wait. Several vendors
+# state these agents are not bound by robots.txt in any case.
 #
-# ***** Zen Cart doesn't require any specific exclusions for normal operation of Zen Cart activities. *****
-# ***** You can fine-tune or customize things according to your own needs related to search-engine results, but that is entirely outside the scope of normal Zen Cart operation. *****
+# What IS blocked is the stateful surface: an agent should never be clicking
+# add-to-cart, checkout or account URLs on a visitor's behalf.
 #
+# If one of these ever does arrive in volume, that is a rate-limiting job for
+# your web server or CDN, not for this file.
+# ===========================================================================
+User-agent: ChatGPT-User
+User-agent: Claude-User
+User-agent: Perplexity-User
+User-agent: MistralAI-User
+User-agent: Kimi-User
+User-agent: Meta-ExternalFetcher
+User-agent: Google-NotebookLM
+User-agent: Gemini-Deep-Research
+User-agent: Diffbot-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+Disallow: /cgi-bin/
+Disallow: /*action=
+Disallow: /index.php?main_page=shopping_cart
+Disallow: /index.php?main_page=checkout
+Disallow: /index.php?main_page=login
+Disallow: /index.php?main_page=account
+
+
+# ===========================================================================
+# SECTION 5 - AI-training and dataset crawlers
+# ---------------------------------------------------------------------------
+# These harvest content to train AI models or to build datasets resold to
+# others. Unlike Sections 3 and 4 they do not link or cite you, so a store gets
+# no referral traffic in return for the bandwidth. The default here is to
+# refuse them.
 #
-# If you wish to prevent indexing of your /images folder, add a line that says:
-#   Disallow: /images
-# (but remove the # from the beginning of the line! )
+# Blocking these costs you very little, which is why it is the default:
+# each vendor uses a SEPARATE name for training and for search, so refusing the
+# training crawler does NOT remove you from that vendor's AI answers. Blocking
+# GPTBot keeps you fully eligible for citation in ChatGPT, which is controlled
+# by OAI-SearchBot in Section 3. The same split applies to ClaudeBot versus
+# Claude-SearchBot. You keep the traffic and decline the training.
 #
-# And if you wish your popup pages to not be indexed, you can add this also:
-#   Disallow: /index.php?main_page=popup_image*
-# (again, remove the # )
+# Note also that appearing in AI SHOPPING results is not controlled from this
+# file at all. Those surfaces are driven by structured merchant product feeds,
+# not by crawled pages, so blocking the crawlers below does not keep your
+# products out of them. If AI shopping placement is your goal, you need a
+# product feed; robots.txt will not get you there either way.
 #
-# Do not list any private folders here ... otherwise their existence is no longer private.
+# WHEN TO ALLOW THESE INSTEAD
+#   Change this group if your store is genuinely an original source rather than
+#   a reseller of other people's words. Signs that applies to you:
+#     - Your product descriptions, photography, specifications, fitment or
+#       compatibility data are written and owned by you, not supplied by a
+#       manufacturer and shared with every other store selling the same goods.
+#     - Your site is the authoritative reference in its niche - the place
+#       people and models should be quoting for facts about these products.
+#     - You want that expertise widely known, and judge brand recognition to be
+#       worth more to you than keeping the content out of training sets.
+#   In that case being absent from a model is a real loss, and it is not a
+#   recoverable one: unblocking a search crawler gets you re-crawled in days,
+#   but a model already trained without you stays that way for that generation.
 #
-# Your robots.txt file should go in your /public_html or /httpdocs folder,
-# (even if your Zen Cart installation might be in a subfolder). Adjust any folder paths accordingly.
+#   Conversely, if you sell commodity goods using manufacturer-supplied
+#   descriptions, there is nothing here worth protecting AND nothing to gain by
+#   allowing it, because the same text is already on hundreds of other sites.
+#   Leave the default alone.
 #
-# For additional reference on settings for robots.txt files, refer to:
-#  http://www.robotstxt.org/wc/exclusion.html
-#  http://en.wikipedia.org/wiki/Robots.txt
-##
+#   TO ALLOW THEM, THROTTLED: replace the "Disallow: /" line below with exactly
+#   these lines (Crawl-delay 30 is about 2,880 requests per day, and the rest
+#   stops a crawler walking the whole catalog):
 #
+#     Crawl-delay: 30
+#     Disallow: /cgi-bin/
+#     Disallow: /*zenid=
+#     Disallow: /*action=
+#     Disallow: /*sort=
+#     Disallow: /*disp_order=
+#     Disallow: /*filter_id=
+#     Disallow: /*alpha_filter_id=
+#     Disallow: /*typefilter=
+#     Disallow: /*keyword=
+#     Disallow: /*&page=
+#     Disallow: /index.php?*&page=
+#     Disallow: /index.php?main_page=advanced_search_result
+#     Disallow: /index.php?main_page=search_result
+#     Disallow: /index.php?main_page=shopping_cart
+#     Disallow: /index.php?main_page=checkout
+#     Disallow: /index.php?main_page=login
 #
-# * Example robots.txt file
-# * @access private
- * @copyright Copyright 2003-2022 Zen Cart Development Team
-# * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
-# * @version $Id: DrByte 2020 Jul 10 Modified in v1.5.8-alpha $
+# Keep this list up to date; new crawlers appear constantly. A community-
+# maintained list of AI user-agents is at https://github.com/ai-robots-txt/ai.robots.txt
+# ===========================================================================
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: anthropic-ai
+User-agent: Claude-Web
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: TikTokSpider
+User-agent: meta-externalagent
+User-agent: FacebookBot
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: Diffbot
+User-agent: omgili
+User-agent: omgilibot
+User-agent: ImagesiftBot
+User-agent: Timpibot
+User-agent: Webzio-Extended
+User-agent: AI2Bot
+User-agent: Ai2Bot-Dolma
+User-agent: MistralAI-Training
+User-agent: DeepSeekBot
+User-agent: QwenBot
+User-agent: PanguBot
+User-agent: ERNIEBot
+User-agent: DoubaoBot
+User-agent: PetalBot
+User-agent: SemrushBot-OCOB
+User-agent: SemrushBot-SWA
+User-agent: Brightbot
+User-agent: VelenPublicWebCrawler
+User-agent: img2dataset
+User-agent: Scrapy
+User-agent: iaskspider
+Disallow: /
+
+
+# ===========================================================================
+# SECTION 6 - Everything else
+# ---------------------------------------------------------------------------
+# Applies to any crawler not named above, including ones that do not exist yet.
+# A modest Crawl-delay keeps an unknown crawler from behaving like a load test.
+# Crawlers named in the sections above ignore this group entirely: a crawler
+# obeys exactly one group, the one that names it.
+# ===========================================================================
+User-agent: *
+Content-Signal: search=yes, ai-train=no
+Crawl-delay: 10
+Disallow: /cgi-bin/
+Disallow: /*zenid=
+Disallow: /*action=
+Disallow: /*sort=
+Disallow: /*disp_order=
+Disallow: /*filter_id=
+Disallow: /*alpha_filter_id=
+Disallow: /*typefilter=
+Disallow: /*keyword=
+Disallow: /index.php?main_page=advanced_search_result
+Disallow: /index.php?main_page=search_result
+Disallow: /index.php?main_page=shopping_cart
+Disallow: /index.php?main_page=checkout
+Disallow: /index.php?main_page=login
+
+
+# ===========================================================================
+# ABOUT THE Content-Signal LINES ABOVE
+# ---------------------------------------------------------------------------
+# Content Signals is a convention (introduced by Cloudflare in September 2025)
+# for saying what a crawler may DO with a page after fetching it, as opposed to
+# whether it may fetch it at all. Three signals are defined:
+#   search    - build a search index, show links and short excerpts
+#   ai-input  - feed the content into a model to generate an answer
+#               (retrieval-augmented generation, grounding, AI search answers)
+#   ai-train  - train or fine-tune a model
+# "yes" grants, "no" refuses, and an omitted signal takes no position.
 #
+# These lines are ACTIVE in the groups above rather than offered as a comment,
+# because a crawler obeys exactly ONE group - so a signal placed only in the
+# "User-agent: *" group would never be seen by Googlebot, GPTBot or any other
+# named crawler. The settings above say: indexing welcome, real-time AI answers
+# welcome where that crawler also cites you, model training refused.
+#
+# Crawlers that do not understand the line ignore it harmlessly, so there is no
+# risk in leaving it. Adoption is not universal and Google has not committed to
+# honoring it, so treat it as a statement of intent - which may still carry
+# weight - rather than as a control. To take no position on AI training,
+# delete the Content-Signal lines.
+#
+# More detail: https://contentsignals.org/
+# ===========================================================================
+
+
+# ===========================================================================
+# OPTIONAL - Sitemap
+# ---------------------------------------------------------------------------
+# Strongly recommended if you throttle crawlers as above, and doubly so if you
+# block pagination for any of them: a sitemap gives crawlers a cheap, direct
+# list of your product URLs instead of making them walk the catalog. Zen Cart
+# has no built-in XML sitemap generator; install a sitemap plugin, then
+# uncomment and correct the line below.
+#
+#Sitemap: https://www.example.com/sitemap.xml
+# ===========================================================================
+
+
+# ---------------------------------------------------------------------------
+# Example robots.txt file
+# @copyright Copyright 2003-2026 Zen Cart Development Team
+# @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
+# @version $Id: Modified in v2.3.0 $
+# ---------------------------------------------------------------------------

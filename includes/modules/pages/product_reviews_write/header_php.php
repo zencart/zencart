@@ -16,7 +16,7 @@ $zco_notifier->notify('NOTIFY_HEADER_START_PRODUCT_REVIEWS_WRITE');
 
 $antiSpamFieldName = isset($_SESSION['antispam_fieldname']) ? $_SESSION['antispam_fieldname'] : 'should_be_empty';
 
-if (!zen_is_logged_in()) {
+if (!zen_is_logged_in() || zen_in_guest_checkout()) {
   $_SESSION['navigation']->set_snapshot();
   zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
 }

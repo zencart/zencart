@@ -1,0 +1,30 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "includes/classes"
+        ],
+        // Allow-list: everything under includes/classes is excluded except the entries named here.
+        "excludes": [
+            "#^(?!ResourceLoaders/|Settings\\.php$|TemplateDto\\.php$|TemplateSelect\\.php$|TemplateSettings\\.php$|class\\.zcPassword\\.php$|SessionHandler\\.php$|Category\\.php$|category_tree\\.php$)#"
+        ]
+    },
+    // Mutants in TemplateResolver are covered by most tests, so their nominal run time exceeds the 10s default.
+    "timeout": 120,
+    "bootstrap": "not_for_release/testFramework/Support/infection-bootstrap.php",
+    "phpUnit": {
+        "configDir": "."
+    },
+    "testFrameworkOptions": "--testsuite=Infection --process-isolation",
+    "logs": {
+        "text": "tmp/infection/infection.log",
+        "html": "tmp/infection/infection.html",
+        "summary": "tmp/infection/summary.log"
+    },
+    "tmpDir": "tmp/infection/cache",
+    "mutators": {
+        "@default": true
+    },
+    "minMsi": 90,
+    "minCoveredMsi": 90
+}

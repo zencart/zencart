@@ -1,0 +1,41 @@
+name: Doc Drift Check
+
+# Re-reads the agent/developer docs (AGENTS.md, CONVENTIONS.md, README.md, ...) against the
+# code on every push, so a change that deletes or renames something those docs describe
+# fails here instead of silently going stale. See not_for_release/dev_tools/doc-drift-check.php.
+
+on: [push, pull_request]
+
+jobs:
+  docs-check:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    name: Docs match code
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # full history: the checker names the commit that deleted a referenced file
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: none
+
+      - name: Check generated copies of .ai/ are in sync
+        run: php not_for_release/dev_tools/sync-agent-docs.php --check
+
+      - name: Check doc claims against the code
+        run: php not_for_release/dev_tools/doc-drift-check.php --github --quiet
+
+      - name: List doc lines that mention files touched by this PR
+        if: github.event_name == 'pull_request'
+        run: |
+          {
+            echo '### Doc lines that mention files changed in this PR (re-read these)'
+            echo '```'
+            php not_for_release/dev_tools/doc-drift-check.php --changed="${{ github.event.pull_request.base.sha }}...HEAD" | grep -E '\[INFO/changed\]|doc file\(s\) checked' || echo 'none'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

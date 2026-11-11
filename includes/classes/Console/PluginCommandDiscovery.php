@@ -10,6 +10,7 @@ namespace Zencart\Console;
 
 use DirectoryIterator;
 use Throwable;
+use Zencart\PluginSupport\PluginManifest;
 
 class PluginCommandDiscovery
 {
@@ -41,6 +42,12 @@ class PluginCommandDiscovery
             return [];
         }
 
+        /**
+         * A manifest.php is what marks a directory as a plugin version; its contents
+         * aren't needed here, only its presence.
+         */
+        $pluginManifest = new PluginManifest($this->pluginRootPath);
+
         foreach (new DirectoryIterator($this->pluginRootPath) as $pluginDirectory) {
             if ($pluginDirectory->isDot() || !$pluginDirectory->isDir()) {
                 continue;
@@ -53,7 +60,7 @@ class PluginCommandDiscovery
 
                 $versionPath = $versionDirectory->getPathname();
                 $commandFile = $versionPath . '/Console/commands.php';
-                if (!file_exists($versionPath . '/manifest.php')) {
+                if ($pluginManifest->exists($pluginDirectory->getFilename(), $versionDirectory->getFilename()) === null) {
                     continue;
                 }
 

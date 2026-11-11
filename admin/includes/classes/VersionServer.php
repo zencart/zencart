@@ -4,7 +4,7 @@ declare(strict_types=1);
 /**
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: DrByte 2025 Dec 01 Modified in v2.2.1 $
+ * @version $Id: DrByte 2026 Sep 16 Modified in v2.3.0 $
  * @since ZC v1.5.5f
  */
 
@@ -68,7 +68,7 @@ class VersionServer
 
     /**
      * @param int|string|null $ids An integer or a comma-separated string of integers denoting the plugin ID from the ZC plugin library
-     * @return bool|false|string json string
+     * @return bool|false|string json string, or false when no valid plugin id was supplied
      * @since ZC v1.5.5f
      */
     public function getPluginVersion(mixed $ids): bool|string
@@ -77,13 +77,11 @@ class VersionServer
             return false;
         }
 
-        $ids = (string)$ids;
-        $keylist = implode(',', array_map(static fn($value) => (int)trim($value), explode(',', $ids)));
-
-        $type = '[' . (int)$ids . ']';
-        if (str_contains($ids, ',')) {
-            $type = '[Batch]';
+        ['ids' => $idList, 'type' => $type] = static::normalizePluginIds((string)$ids);
+        if ($idList === []) {
+            return false;
         }
+        $keylist = implode(',', $idList);
 
         $currentInfo = $this->getZcVersioninfo();
         $ch = curl_init();
@@ -107,6 +105,38 @@ class VersionServer
             return $this->formatCurlError($errno, $error);
         }
         return $response;
+    }
+
+    /**
+     * Turn the plugin-id argument accepted by getPluginVersion() into the list of ids to query
+     * and the request "type" that is reported in the User-Agent.
+     *
+     * Blank segments (a leading, trailing or doubled comma) and segments that do not cast to a
+     * positive integer are dropped, so a stray comma can never turn into a request for id 0.
+     * The type is decided by how many ids survive, not by whether the raw string contained a
+     * comma: '[Batch]' for more than one id, '[N]' for exactly one, '[0]' for none.
+     *
+     * @param string $ids An integer or a comma-separated list of integers
+     * @return array{ids: int[], type: string}
+     * @since ZC v2.3.0
+     */
+    protected static function normalizePluginIds(string $ids): array
+    {
+        $idList = [];
+        foreach (explode(',', $ids) as $segment) {
+            $id = (int)trim($segment);
+            if ($id > 0) {
+                $idList[] = $id;
+            }
+        }
+
+        $type = match (count($idList)) {
+            0 => '[0]',
+            1 => '[' . $idList[0] . ']',
+            default => '[Batch]',
+        };
+
+        return ['ids' => $idList, 'type' => $type];
     }
 
     /**

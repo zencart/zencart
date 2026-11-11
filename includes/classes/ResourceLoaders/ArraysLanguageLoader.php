@@ -139,9 +139,9 @@ class ArraysLanguageLoader extends BaseLanguageLoader
             $extraPath = '/' . $extraPath;
         }
 
-        $defineListMain = $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath);
+        $defineListMain = $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath);
         if ($language !== $this->fallback) {
-            $defineListMain = array_merge($defineListMain, $this->loadDefinesFromArrayFile($rootPath, $this->fallback, $fileName, $extraPath));
+            $defineListMain = array_merge($defineListMain, $this->loadDefinesFromArrayFile($rootPath, $language, $fileName, $extraPath));
         }
 
         $defineListTemplate = [];

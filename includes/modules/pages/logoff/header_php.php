@@ -31,4 +31,3 @@ if (zen_is_logged_in() || !empty($_SESSION['customer_guest_id'])) {
 
 // This should be last line of the script:
 $zco_notifier->notify('NOTIFY_HEADER_END_LOGOFF');
-?>

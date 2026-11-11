@@ -120,8 +120,14 @@ load_test_files() {
 accumulate_phpunit_counts() {
     local output_file="$1"
     local summary_line=""
+    local escape=$'\033'
 
-    summary_line="$(grep -E 'OK \([0-9]+ tests?, [0-9]+ assertions?\)|Tests: [0-9]+, Assertions: [0-9]+' "$output_file" | tail -n 1 || true)"
+    # phpunit.xml sets colors="true", and PHPUnit wraps each count of its summary
+    # in its own escape sequence, so a run ending in warnings, deprecations,
+    # failures or skips prints "Tests: 22<esc>, Assertions: 44<esc>..." with the
+    # two counts no longer adjacent. Strip the SGR sequences before matching, or
+    # such a file is reported PASS while contributing nothing to the totals.
+    summary_line="$(sed -E "s/${escape}\[[0-9;]*m//g" "$output_file" | grep -E 'OK \([0-9]+ tests?, [0-9]+ assertions?\)|Tests: [0-9]+, Assertions: [0-9]+' | tail -n 1 || true)"
 
     if [[ "$summary_line" =~ OK\ \(([0-9]+)\ tests?,\ ([0-9]+)\ assertions? ]]; then
         TOTAL_TESTS=$((TOTAL_TESTS + BASH_REMATCH[1]))

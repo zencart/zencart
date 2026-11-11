@@ -180,6 +180,67 @@ PHP
         );
     }
 
+    public function testGetTemplateFilesWithDirReturnsParentDirectoriesFirstWithFilesSortedAlphabetically(): void
+    {
+        /**
+         * The same four filenames are written to both the base and the child theme, in
+         * reverse-alphabetical order, so a mis-sorted directory read shows up in the
+         * assertion below rather than passing by coincidence. Unlike get_template_part,
+         * this method is expected to return both copies, parent-first, so the active
+         * template's version is the last one a page loads.
+         */
+        $fixtureNames = ['zz_order_d.css', 'zz_order_c.css', 'zz_order_b.css', 'zz_order_a.css'];
+        $baseCssDir = 'zc_plugins/' . self::BASE_THEME_PLUGIN . '/v1.0.0/catalog/includes/templates/' . self::BASE_TEMPLATE_KEY . '/css/';
+        $childCssDir = 'zc_plugins/' . self::CHILD_THEME_PLUGIN . '/v1.0.0/catalog/includes/templates/' . self::CHILD_TEMPLATE_KEY . '/css/';
+        $this->writeFixtureFiles(DIR_FS_CATALOG . $baseCssDir, $fixtureNames);
+        $this->writeFixtureFiles(DIR_FS_CATALOG . $childCssDir, $fixtureNames);
+
+        $pageLoader = PageLoader::getInstance();
+        $pageLoader->init($this->getInstalledPlugins(), 'index', new FileSystem(), $this->makeTemplateResolver());
+
+        $files = $pageLoader->getTemplateFilesWithDir(self::CHILD_TEMPLATE_KEY, '^zz_order_.*\\.css', 'index', 'css');
+
+        $this->assertSame(
+            [
+                $baseCssDir . 'zz_order_a.css',
+                $baseCssDir . 'zz_order_b.css',
+                $baseCssDir . 'zz_order_c.css',
+                $baseCssDir . 'zz_order_d.css',
+                $childCssDir . 'zz_order_a.css',
+                $childCssDir . 'zz_order_b.css',
+                $childCssDir . 'zz_order_c.css',
+                $childCssDir . 'zz_order_d.css',
+            ],
+            $files
+        );
+    }
+
+    public function testGetTemplateFilesWithDirExcludesDefaultTemplateDirectories(): void
+    {
+        /**
+         * setUp() puts zz_test_overlay.css in the overlay plugin's default/css directory;
+         * this adds a default/$currentPage sibling. Neither may appear, because
+         * getTemplateFilesWithDir searches the inheritance chain only.
+         */
+        $this->writeFixtureFiles(
+            $this->overlayPluginPath . 'catalog/includes/templates/default/index/',
+            ['zz_test_default_page.css']
+        );
+
+        $pageLoader = PageLoader::getInstance();
+        $pageLoader->init($this->getInstalledPlugins(), 'index', new FileSystem(), $this->makeTemplateResolver());
+
+        $files = $pageLoader->getTemplateFilesWithDir(self::CHILD_TEMPLATE_KEY, '^zz_test_.*\\.css', 'index', 'css');
+
+        $this->assertSame(
+            [
+                'zc_plugins/' . self::BASE_THEME_PLUGIN . '/v1.0.0/catalog/includes/templates/' . self::BASE_TEMPLATE_KEY . '/css/zz_test_base.css',
+                'zc_plugins/' . self::CHILD_THEME_PLUGIN . '/v1.0.0/catalog/includes/templates/' . self::CHILD_TEMPLATE_KEY . '/css/zz_test_child.css',
+            ],
+            $files
+        );
+    }
+
     private function getInstalledPlugins(): array
     {
         return [
@@ -197,6 +258,15 @@ PHP
             DIR_FS_CATALOG . 'zc_plugins',
             $this->getInstalledPlugins()
         );
+    }
+
+    private function writeFixtureFiles(string $directory, array $fileNames): void
+    {
+        $this->ensureDirectoryExists($directory);
+
+        foreach ($fileNames as $fileName) {
+            file_put_contents($directory . $fileName, '/* ' . $fileName . ' */');
+        }
     }
 
     private function ensureDirectoryExists(string $directory): void
