@@ -284,7 +284,7 @@ class FileSystem
                 if ($returnRelativeDir === true) {
                     $subdirectory = str_replace($real_root_directory, '', $subdirectory);
                 }
-                $subdirectories[] = rtrim($subdirectory, '/\/');
+                $subdirectories[] = rtrim($subdirectory, '/\\');
             }
         }
 

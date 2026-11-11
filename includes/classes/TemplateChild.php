@@ -12,7 +12,6 @@ namespace Zencart\Templates;
 use Zencart\FileSystem\FileSystem;
 use Zencart\PluginManager\PluginManager;
 use Zencart\PluginSupport\PluginStatus;
-use Zencart\Templates\TemplateSelect;
 
 if (!defined('IS_ADMIN_FLAG') || IS_ADMIN_FLAG !== true) {
     die('Illegal Access');
@@ -114,7 +113,7 @@ class TemplateChild
      */
     protected function isTemplateKeyUnique(string $template_key): bool
     {
-        return !in_array($template_key, array_keys($this->allPlugins));
+        return !array_key_exists($template_key, $this->allPlugins);
     }
 
     /**
@@ -130,7 +129,7 @@ class TemplateChild
      */
     protected function isTemplateDirectoryUnique(string $template_directory): bool
     {
-        return !in_array($template_directory, array_keys($this->templateInfo));
+        return !array_key_exists($template_directory, $this->templateInfo);
     }
 
     /**
@@ -179,7 +178,7 @@ class TemplateChild
     /**
      * @since ZC v3.0.0
      */
-    public function validateTemplateName(string $template_name): int
+    public function validateTemplateName(): int
     {
         $rc = $this->checkForEmpty($this->templateName);
         if ($rc !== self::ERROR_NONE) {
@@ -325,16 +324,19 @@ class TemplateChild
      */
     protected function createChildTemplateDirectories(string $parent_template_root, string $child_template_root): bool
     {
-        if (!is_dir($child_template_root) && !mkdir($child_template_root, 0777, recursive: true)) {
+        if (!is_dir($child_template_root) && !mkdir($child_template_root, 0755, recursive: true)) {
             return false;
         }
 
+        $parent_template_subdir = '/' . $this->parentTemplateDirectory . '/';
+        $child_template_subdir = '/' . $this->templateDirectory . '/';
         $parent_subdirs = $this->fs->getSubdirectoriesRecursive($parent_template_root, returnRelativeDir: true);
         foreach ($parent_subdirs as $next_subdir) {
-            if (!str_contains($next_subdir, $this->parentTemplateDirectory)) {
+            $next_subdir .= '/';    //- Note that returned subdirectories don't end with the directory separator!
+            if (!str_contains($next_subdir, $parent_template_subdir)) {
                 continue;
             }
-            if (!$this->fs->createDirectoryRecursive($child_template_root, str_replace($this->parentTemplateDirectory, $this->templateDirectory, $next_subdir))) {
+            if (!$this->fs->createDirectoryRecursive($child_template_root, str_replace($parent_template_subdir, $child_template_subdir, $next_subdir))) {
                 return false;
             }
         }
@@ -343,6 +345,13 @@ class TemplateChild
     }
 
     /**
+     * Creates a child-template's template_info.php using the parent's as the basis.
+     *
+     * Note that the parent's file's definition of the $template_name and
+     * $template_description variables must have the variable name
+     * followed by at least one space (e.g. $template_name = 'My template name');
+     * the field is not included in the child template's version otherwise.
+     *
      * @since ZC v3.0.0
      */
     protected function createChildTemplateInfo(string $child_template_root, string &$template_screenshot): bool
@@ -365,7 +374,7 @@ class TemplateChild
             if (str_contains($next_record, '$template_name ')) {
                 $next_record = "\$template_name = '" . $this->sanitizeSingleQuotes($this->templateName) . "';\n";
             } elseif (str_contains($next_record, '$template_description ')) {
-                $parent_description = $parent_template_info_vars['template_description'];
+                $parent_description = $parent_template_info_vars['template_description'] ?? '';
                 $child_description = ' ' . sprintf(TEXT_INFO_CHILD_CREATED, $parent_template_name, $this->parentTemplateDirectory, date(PHP_DATE_TIME_FORMAT));
                 $next_record = "\$template_description = '" . $this->sanitizeSingleQuotes($parent_description . $child_description) . "';\n";
             }
@@ -441,7 +450,7 @@ class TemplateChild
      */
     private function sanitizeSingleQuotes(string $string): string
     {
-        return str_replace("'", "\'", $string);
+        return str_replace(['\\', "'"], ['\\\\', "\\'"], $string);
     }
 
     /**
@@ -462,7 +471,7 @@ class TemplateChild
 
     public function removeChildTemplatePlugin(string $template_key): void
     {
-        if ($template_key !== $this->templateKey) {
+        if ($this->templateKey === '' || $template_key !== $this->templateKey) {
             return;
         }
         $this->fs->deleteDirectory(DIR_FS_CATALOG . 'zc_plugins/' . $this->templateKey);

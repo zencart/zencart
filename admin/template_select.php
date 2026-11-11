@@ -173,7 +173,7 @@ switch ($action) {
          * Each of the form-fields set by template_select_create_child.php must be
          * supplied and not empty.
          */
-        $rc = $template_child->validateTemplateName($template_name);
+        $rc = $template_child->validateTemplateName();
         if ($rc !== TemplateChild::ERROR_NONE) {
             $error = true;
             $has_error['template_name'] = 'has-error';
@@ -185,7 +185,7 @@ switch ($action) {
             }
         }
 
-        $rc = $template_child->validateTemplateKey($template_key);
+        $rc = $template_child->validateTemplateKey();
         if ($rc !== TemplateChild::ERROR_NONE) {
             $error = true;
             $has_error['template_key'] = 'has-error';
@@ -209,7 +209,7 @@ switch ($action) {
             }
         }
 
-        $rc = $template_child->validatePluginName($plugin_name);
+        $rc = $template_child->validatePluginName();
         if ($rc !== TemplateChild::ERROR_NONE) {
             $error = true;
             $has_error['plugin_name'] = 'has-error';
@@ -227,7 +227,7 @@ switch ($action) {
             }
         }
 
-        $rc = $template_child->validateTemplateDirectory($template_directory);
+        $rc = $template_child->validateTemplateDirectory();
         if ($rc !== TemplateChild::ERROR_NONE) {
             $error = true;
             $has_error['template_directory'] = 'has-error';

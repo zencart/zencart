@@ -17,7 +17,7 @@
 ?>
 <div class="container-fluid">
     <h1 class="text-center"><?= HEADING_TITLE . HEADING_SUBTITLE_PREVIEW_CHILD ?></h1>
-    <div class="row"><?= sprintf(TEXT_INFO_PREVIEW_CHILD, $parent_template_directory) ?></div>
+    <div class="row text-center"><?= TEXT_INFO_PREVIEW_CHILD ?></div>
     <table class="table table-hover">
         <thead>
             <tr class="dataTableHeadingRow">
