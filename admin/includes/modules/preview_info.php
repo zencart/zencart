@@ -210,12 +210,14 @@ if ($is_read_only) {
     
     /* Re-Post all POST'ed variables */
     foreach ($_POST as $key => $value) {
-        if (!is_array($_POST[$key]) && $key !== 'search') {
-            echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, true));
-        } else {
-            foreach ($_POST[$key] as $k => $val) {
-                $keyname = $key . '[' . htmlspecialchars(stripslashes($k), ENT_COMPAT, CHARSET, true) . ']';
-                echo zen_draw_hidden_field($keyname, htmlspecialchars(stripslashes($val), ENT_COMPAT, CHARSET, true));
+        if ($key !== 'search') {
+            if (!is_array($_POST[$key])) {
+                echo zen_draw_hidden_field($key, htmlspecialchars(stripslashes($value), ENT_COMPAT, CHARSET, true));
+            } else {
+                foreach ($_POST[$key] as $k => $val) {
+                    $keyname = $key . '[' . htmlspecialchars(stripslashes($k), ENT_COMPAT, CHARSET, true) . ']';
+                    echo zen_draw_hidden_field($keyname, htmlspecialchars(stripslashes($val), ENT_COMPAT, CHARSET, true));
+                }
             }
         }
     }
