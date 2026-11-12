@@ -395,7 +395,7 @@ class order extends base
                 WHERE osh.orders_id = :ordersID
                 AND os.language_id = :languageID
                 $customer_notified_clause
-                ORDER BY osh.date_added";
+                ORDER BY osh.date_added, osh.orders_status_history_id";
 
         $sql = $db->bindVars($sql, ':ordersID', $order_id, 'integer');
         $sql = $db->bindVars($sql, ':languageID', $language_id, 'integer');
