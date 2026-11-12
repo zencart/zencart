@@ -25,6 +25,11 @@ class AdminOrderStatusHistoryMismatchTest extends zcInProcessFeatureTestCaseAdmi
      */
     private const MISMATCH_TEXT = 'Mismatch with current order status';
 
+    /**
+     * The stable, language-independent part of TEXT_NO_STATUS_HISTORY_FOR_ORDER.
+     */
+    private const NO_HISTORY_TEXT = 'No status-history record exists for this order';
+
     public function setUp(): void
     {
         parent::setUp();
@@ -135,6 +140,57 @@ class AdminOrderStatusHistoryMismatchTest extends zcInProcessFeatureTestCaseAdmi
         // The warning names the order's status (zen_getOrdersStatuses() renders these as "Name [id]").
         $page->assertSee(
             $divergentStatus['orders_status_name'] . ' [' . $divergentStatus['orders_status_id'] . ']'
+        );
+    }
+
+    /**
+     * An order carrying a status but no orders_status_history rows at all is a
+     * worse desync than a stale newest record, since every order gets a history
+     * record when it is created. The no-history branch must say so, and must use
+     * its own wording rather than the stale-record branch's.
+     */
+    public function testNoHistoryWarningShownWhenOrderHasNoStatusHistoryAtAll(): void
+    {
+        $order = $this->completeSimpleStorefrontCheckout('florida-basic1');
+
+        $this->completeInitialAdminSetup();
+
+        $orderStatus = (int) TestDb::selectValue(
+            'SELECT orders_status FROM orders WHERE orders_id = :order_id LIMIT 1',
+            [':order_id' => $order['order_id']]
+        );
+        $statusName = TestDb::selectValue(
+            'SELECT orders_status_name
+               FROM orders_status
+              WHERE orders_status_id = :status
+                AND language_id = 1
+              LIMIT 1',
+            [':status' => $orderStatus]
+        );
+
+        // Strip the history entirely, leaving orders.orders_status in place.
+        $deleted = TestDb::pdo()->prepare('DELETE FROM orders_status_history WHERE orders_id = :order_id');
+        $deleted->execute([':order_id' => $order['order_id']]);
+        $this->assertGreaterThan(0, $deleted->rowCount(), 'Expected the order to have had history rows to delete.');
+
+        $this->assertNull(
+            TestDb::selectOne(
+                'SELECT orders_status_history_id FROM orders_status_history WHERE orders_id = :order_id LIMIT 1',
+                [':order_id' => $order['order_id']]
+            ),
+            'Precondition failed: the order still has status-history rows.'
+        );
+
+        $page = $this->getAdmin('/admin/index.php?cmd=orders&oID=' . $order['order_id'] . '&action=edit')
+            ->assertOk()
+            ->assertSee(self::NO_HISTORY_TEXT)
+            ->assertSee($statusName . ' [' . $orderStatus . ']');
+
+        // The two conditions have separate messages; this branch must not emit the other one.
+        $this->assertStringNotContainsString(
+            self::MISMATCH_TEXT,
+            $page->content,
+            'The no-history branch must use its own wording, not the stale-record mismatch text.'
         );
     }
 }
