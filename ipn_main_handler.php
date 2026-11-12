@@ -151,7 +151,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
         }
     }
 
-    $extraDebug =(defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS === 'All');
+    $extraDebug = (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS === 'All');
 
     if ((defined('MODULE_PAYMENT_PAYPALWPP_DEBUGGING') && str_contains(MODULE_PAYMENT_PAYPALWPP_DEBUGGING, 'Log'))
         || (defined('MODULE_PAYMENT_PAYPAL_IPN_DEBUG') && str_contains(MODULE_PAYMENT_PAYPAL_IPN_DEBUG, 'Log'))
