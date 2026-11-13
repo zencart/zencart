@@ -4,7 +4,7 @@
  * @copyright Copyright 2003-2026 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
- * @version $Id: torvista 2026 Mar 04 Modified in v2.2.1 $
+ * @version $Id: ZenExpert 2026 Sept 23 Modified in v2.3.0 $
  */
 require 'includes/application_top.php';
 
@@ -33,8 +33,13 @@ if (!empty($action)) {
 
             $title = zen_db_prepare_input($_POST['title']);
             $code = strtoupper(zen_db_prepare_input($_POST['code']));
-            $symbol_left = zen_db_prepare_input($_POST['symbol_left']);
-            $symbol_right = zen_db_prepare_input($_POST['symbol_right']);
+            // \p{Sc} = Any Unicode Currency Symbol ($, €, £, ¥, etc.)
+            // \p{L}  = Any Unicode Letter (for codes like "kn", "CHF")
+            // \.     = Literal periods (for codes like "kr.")
+            // \s     = Whitespace (preserves your intentional leading/trailing spaces)
+            // The 'u' modifier ensures safe multibyte UTF-8 parsing
+            $symbol_left = preg_replace('/[^\p{Sc}\p{L}\.\s]/u', '', (string)$_POST['symbol_left']);
+            $symbol_right = preg_replace('/[^\p{Sc}\p{L}\.\s]/u', '', (string)$_POST['symbol_right']);
             $decimal_point = zen_db_prepare_input($_POST['decimal_point']);
             $thousands_point = zen_db_prepare_input($_POST['thousands_point']);
             $decimal_places = zen_db_prepare_input((int)$_POST['decimal_places']);
@@ -46,23 +51,41 @@ if (!empty($action)) {
                 $decimal_places = 0;
             }
 
-            $sql_data_array = [
-                'title' => $title,
-                'code' => $code,
-                'symbol_left' => $symbol_left,
-                'symbol_right' => $symbol_right,
-                'decimal_point' => $decimal_point,
-                'thousands_point' => $thousands_point,
-                'decimal_places' => $decimal_places,
-                'value' => $value,
-            ];
-
             if ($action === 'insert') {
-                zen_db_perform(TABLE_CURRENCIES, $sql_data_array);
-                $currency_id = zen_db_insert_id();
+                $sql = "INSERT INTO " . TABLE_CURRENCIES . "
+                (title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value)
+                VALUES (:title, :code, :symLeft, :symRight, :decPoint, :thouPoint, :decPlaces, :val)";
             } elseif ($action === 'save') {
-                zen_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
+                $sql = "UPDATE " . TABLE_CURRENCIES . "
+                SET title = :title,
+                    code = :code,
+                    symbol_left = :symLeft,
+                    symbol_right = :symRight,
+                    decimal_point = :decPoint,
+                    thousands_point = :thouPoint,
+                    decimal_places = :decPlaces,
+                    value = :val
+                WHERE currencies_id = " . (int)$currency_id;
             }
+
+            if (isset($sql)) {
+                // bindVars escapes the strings safely without applying trim()
+                $sql = $db->bindVars($sql, ':title', $title, 'string');
+                $sql = $db->bindVars($sql, ':code', $code, 'string');
+                $sql = $db->bindVars($sql, ':symLeft', $symbol_left, 'string');
+                $sql = $db->bindVars($sql, ':symRight', $symbol_right, 'string');
+                $sql = $db->bindVars($sql, ':decPoint', $decimal_point, 'string');
+                $sql = $db->bindVars($sql, ':thouPoint', $thousands_point, 'string');
+                $sql = $db->bindVars($sql, ':decPlaces', $decimal_places, 'integer');
+                $sql = $db->bindVars($sql, ':val', $value, 'float');
+
+                $db->Execute($sql);
+
+                if ($action === 'insert') {
+                    $currency_id = zen_db_insert_id();
+                }
+            }
+
             zen_record_admin_activity('Currency code ' . $code . ' added/updated.', 'info');
 
             if (isset($_POST['default']) && ($_POST['default'] === 'on')) {
@@ -161,6 +184,9 @@ require DIR_WS_INCLUDES . 'header.php'; ?>
                 foreach ($currencies_all as $currency) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && $_GET['cID'] == $currency['currencies_id'])) && !isset($cInfo) && (!str_starts_with($action, 'new'))) {
                         $cInfo = new objectInfo($currency);
+                        // Restore raw untrimmed symbols stripped by objectInfo
+                        $cInfo->symbol_left = $currency['symbol_left'];
+                        $cInfo->symbol_right = $currency['symbol_right'];
                     }
 
                     if (isset($cInfo) && is_object($cInfo) && ((int)$currency['currencies_id'] === (int)$cInfo->currencies_id)) {
