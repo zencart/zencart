@@ -167,7 +167,7 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
 
     // Reject sandbox IPNs unless a PayPal module is actually configured for sandbox.
     if (isset($_POST['test_ipn']) && (int)$_POST['test_ipn'] === 1 && ipn_sandbox_is_configured() === false) {
-        error_log('PayPal IPN rejected: test_ipn=1 received while PayPal is in live mode. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        error_log('PayPal IPN rejected: test_ipn=1 received while PayPal is not in sandbox mode. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
         http_response_code(403);
         exit();
     }
