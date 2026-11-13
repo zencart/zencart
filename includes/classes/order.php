@@ -542,7 +542,13 @@ class order extends base
         }
 
         if (!empty($customer->getData('customers_firstname'))) {
-            $this->customer = self::getAddress($customerAddresses, self::getAddressKey($customerAddresses, $customer->getData('customers_default_address_id')));
+            $customerKey = empty($customerAddresses) ? null : self::getAddressKey($customerAddresses, (int)$customer->getData('customers_default_address_id'));
+            $this->customer = self::getAddress($customerAddresses, $customerKey);
+            if ($customerKey === null) {
+                // No address-book entry (see #7983): the name still comes from the customer record.
+                $this->customer['firstname'] = $customer->getData('customers_firstname');
+                $this->customer['lastname'] = $customer->getData('customers_lastname');
+            }
             $this->customer['telephone'] = $customer->getData('customers_telephone');
             $this->customer['email_address'] = $customer->getData('customers_email_address');
         }
@@ -1547,8 +1553,11 @@ class order extends base
     /**
      * @since ZC v2.2.0
      */
-    private static function getAddress(array $customerAddresses, int $arrayKey): array
+    private static function getAddress(array $customerAddresses, ?int $arrayKey): array
     {
+        if ($arrayKey === null || !isset($customerAddresses[$arrayKey]['address'])) {
+            return self::getEmptyAddress();
+        }
         $address = $customerAddresses[$arrayKey]['address'];
         return [
             'firstname' => $address['firstname'],
@@ -1569,6 +1578,36 @@ class order extends base
             ],
             'country_id' => $address['country_id'],
             'format_id' => $customerAddresses[$arrayKey]['format_id'],
+        ];
+    }
+
+    /**
+     * An address array in the same shape as getAddress() returns, for a customer who has no
+     * matching address-book entry.
+     *
+     * @since ZC v2.3.0
+     */
+    private static function getEmptyAddress(): array
+    {
+        return [
+            'firstname' => '',
+            'lastname' => '',
+            'company' => '',
+            'street_address' => '',
+            'suburb' => '',
+            'city' => '',
+            'postcode' => '',
+            'state' => '',
+            'state_code' => '',
+            'zone_id' => 0,
+            'country' => [
+                'id' => 0,
+                'title' => '',
+                'iso_code_2' => '',
+                'iso_code_3' => '',
+            ],
+            'country_id' => 0,
+            'format_id' => 0,
         ];
     }
 }
