@@ -163,6 +163,15 @@
         zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
     break;
 
+    case ('clear_sidebox_caches'):
+        zen_clear_category_map_cache();
+        zen_clear_manufacturers_box_cache();
+        $messageStack->add_session(SUCCESS_CLEAR_SIDEBOX_CACHES, 'success');
+        zen_record_admin_activity('Store Manager executed [clear sidebox caches]', 'info');
+        $action = '';
+        zen_redirect(zen_href_link(FILENAME_STORE_MANAGER));
+    break;
+
     case ('update_orders_id'):
       global $db;
       $new_orders_id = zen_db_prepare_input((int)$_POST['new_orders_id']);
@@ -346,6 +355,21 @@ if ($processing_message != '') {
         </table></td>
       </tr>
 <!-- eof: database table-optimize -->
+
+<!-- bof: clear sidebox caches -->
+      <tr>
+        <td colspan="2"><table>
+          <tr>
+            <td class="main"><?= TEXT_INFO_CLEAR_SIDEBOX_CACHES ?></td>
+            <td class="main">
+                <?= zen_draw_form('clear_sidebox_caches', FILENAME_STORE_MANAGER, 'action=clear_sidebox_caches', 'post') ?>
+                <input class="btn btn-default btn-sm" type="submit" value="<?= IMAGE_RESET ?>">
+                <?= '</form>' ?>
+            </td>
+          </tr>
+        </table></td>
+      </tr>
+<!-- eof: clear sidebox caches -->
 
 <!-- bof: clean_debug_files -->
       <tr>
