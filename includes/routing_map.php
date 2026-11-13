@@ -91,3 +91,43 @@ function zen_request_has_disallowed_catalog_param(array $get): bool
 
     return false;
 }
+
+/**
+ * Body for the 406 response application_top.php sends when it refuses a 'Buy Now'
+ * request that did not come from one of the store's own pages.
+ *
+ * That check relies on the Referer header, which a browser may withhold (privacy
+ * settings and extensions do), so a real shopper can be refused along with the
+ * crawlers. With no body the shopper is left on a blank page. This gives them a link
+ * to the product, where they can add it to the cart the normal way. The request is
+ * still refused and nothing is added to a cart.
+ *
+ * Self-contained like the rest of this file: no language files or constants are
+ * loaded yet, so the wording is fixed and the link is relative to the storefront's
+ * index.php.
+ *
+ * @param array $get Typically $_GET.
+ * @return string an HTML document, or '' when the request names no usable product.
+ * @since ZC v2.3.0
+ */
+function zen_buy_now_refusal_html(array $get): string
+{
+    $productsId = $get['products_id'] ?? '';
+    if (!is_scalar($productsId)) {
+        return '';
+    }
+
+    // An id may carry an attribute hash ("27:abc..."); only the product's number is used.
+    $productId = (int)$productsId;
+    if ($productId < 1) {
+        return '';
+    }
+
+    return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
+        . '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        . '<meta name="robots" content="noindex, nofollow"><title>Item not added</title></head><body>'
+        . '<p>This item could not be added to your cart from that link.</p>'
+        . '<p><a href="index.php?main_page=product_info&amp;products_id=' . $productId . '" rel="nofollow">'
+        . 'View the product</a> to add it to your cart.</p>'
+        . '</body></html>';
+}
