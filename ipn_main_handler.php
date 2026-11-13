@@ -140,15 +140,36 @@ if (isset($_GET['type']) && $_GET['type'] === 'ec') {
 
     require 'includes/application_top.php';
 
-    // Reject sandbox IPNs unless a PayPal module is actually configured for sandbox.
-    if (isset($_POST['test_ipn']) && (int)$_POST['test_ipn'] === 1) {
-        $sandboxConfigured = (defined('MODULE_PAYMENT_PAYPAL_HANDLER') && MODULE_PAYMENT_PAYPAL_HANDLER === 'sandbox')
-            || (defined('MODULE_PAYMENT_PAYPALWPP_SERVER') && MODULE_PAYMENT_PAYPALWPP_SERVER === 'sandbox');
-        if ($sandboxConfigured === false) {
-            error_log('PayPal IPN rejected: test_ipn=1 received while PayPal is in live mode. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-            http_response_code(403);
-            exit();
+    /**
+     * Is an enabled PayPal payment module configured to talk to PayPal's sandbox?
+     * The answer comes from store configuration alone, not an incoming notification.
+     * A module's configuration keys must be checked rather than a bare lookup of the server setting.
+     */
+    if (!function_exists('ipn_sandbox_is_configured')) {
+        function ipn_sandbox_is_configured(): bool
+        {
+            $paypal_modules = [
+                'MODULE_PAYMENT_PAYPAL_STATUS' => 'MODULE_PAYMENT_PAYPAL_HANDLER',
+                'MODULE_PAYMENT_PAYPALWPP_STATUS' => 'MODULE_PAYMENT_PAYPALWPP_SERVER',
+                'MODULE_PAYMENT_PAYPALDP_STATUS' => 'MODULE_PAYMENT_PAYPALDP_SERVER',
+            ];
+            foreach ($paypal_modules as $status_key => $server_key) {
+                if (!defined($status_key) || constant($status_key) !== 'True') {
+                    continue;
+                }
+                if (defined($server_key) && strtolower(trim((string)constant($server_key))) === 'sandbox') {
+                    return true;
+                }
+            }
+            return false;
         }
+    }
+
+    // Reject sandbox IPNs unless a PayPal module is actually configured for sandbox.
+    if (isset($_POST['test_ipn']) && (int)$_POST['test_ipn'] === 1 && ipn_sandbox_is_configured() === false) {
+        error_log('PayPal IPN rejected: test_ipn=1 received while PayPal is not in sandbox mode. IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        http_response_code(403);
+        exit();
     }
 
     $extraDebug = (defined('IPN_EXTRA_DEBUG_DETAILS') && IPN_EXTRA_DEBUG_DETAILS === 'All');
