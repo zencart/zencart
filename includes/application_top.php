@@ -355,6 +355,16 @@ if (isset($_GET['action']) && $_GET['action'] === 'buy_now') {
 
     if ($isCrawlerUserAgent || !$hasInternalReferer) {
         header('HTTP/1.1 406 Not Acceptable');
+        // A browser may withhold the Referer header, so a real shopper can land here too.
+        // Crawlers still get an empty response; anyone else gets a link to the product.
+        require_once __DIR__ . '/routing_map.php';
+        $buyNowRefusalHtml = $isCrawlerUserAgent ? '' : zen_buy_now_refusal_html($_GET);
+        if ($buyNowRefusalHtml !== '') {
+            header('Content-Type: text/html; charset=utf-8');
+            header('X-Robots-Tag: noindex, nofollow');
+            header('Cache-Control: no-store');
+            echo $buyNowRefusalHtml;
+        }
         exit(0);
     }
     unset($isCrawlerUserAgent, $hasInternalReferer);
