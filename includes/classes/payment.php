@@ -73,6 +73,14 @@ class payment
 
         $include_modules = [];
 
+        /**
+         * 'freecharger' is NEVER accepted as the selected payment module. If the order
+         * qualifies as a no-charge one, it's determined programmatically, not via customer input!
+         */
+        if ($module === 'freecharger') {
+            $module = '';
+        }
+
         if (!empty($module) && in_array($module . '.php', $this->modules, true) && isset($modules_found[$module . '.php'])) {
             $this->selected_module = $module;
 
@@ -89,7 +97,7 @@ class payment
                     // double check that the module really exists before adding to the array
                     if (isset($modules_found[$value])) {
                         $class = pathinfo($value, \PATHINFO_FILENAME);
-                        // Don't show Free Payment Module
+                        // Don't show Free Payment Module as a selection
                         if ($class !== 'freecharger') {
                             $include_modules[] = ['class' => $class, 'file' => $value];
                         }
@@ -141,7 +149,12 @@ class payment
         // $_POST['payment'] value which will be empty (no radio button selection possible)
         if (zen_count_payment_modules() === 1 && (!isset($_SESSION['payment']) || !is_object($_SESSION['payment']))) {
             if (empty($credit_covers)) {
-                $_SESSION['payment'] = $include_modules[0]['class'];
+                $single_payment_module = $include_modules[0]['class'];
+                if ($single_payment_module === 'freecharger') {
+                    unset($_SESSION['payment']);
+                } else {
+                    $_SESSION['payment'] = $single_payment_module;
+                }
             }
         }
 

@@ -55,7 +55,7 @@ require DIR_WS_CLASSES . 'payment.php';
 $payment_modules = new payment($_SESSION['payment']);
 
 require DIR_WS_CLASSES . 'order.php';
-$order = new order;
+$order = new order();
 
 // -----
 // If no billing-address is present, this is a spoofed order.  Redirect
@@ -75,7 +75,7 @@ if (count($order->products) === 0) {
 }
 
 require DIR_WS_CLASSES . 'order_total.php';
-$order_total_modules = new order_total;
+$order_total_modules = new order_total();
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
 if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
@@ -89,7 +89,10 @@ if (isset($_SESSION['cart']->cartID) && $_SESSION['cartID']) {
 }
 
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PRE_CONFIRMATION_CHECK');
-if (empty($_SESSION['payment']) || strpos($GLOBALS[$_SESSION['payment']]->code, 'paypal') !== 0) {
+$selected_payment_code = (isset($_SESSION['payment']) && is_string($_SESSION['payment'])
+    && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']]))
+    ? $GLOBALS[$_SESSION['payment']]->code : '';
+if ($selected_payment_code === '' || strpos($selected_payment_code, 'paypal') !== 0) {
     $order_totals = $order_total_modules->pre_confirmation_check();
 }
 
@@ -107,7 +110,40 @@ $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_BEFORE_ORDER_TOTALS_PROCESS');
 $order_totals = $order_total_modules->process();
 $zco_notifier->notify('NOTIFY_CHECKOUT_PROCESS_AFTER_ORDER_TOTALS_PROCESS');
 
-if (!isset($_SESSION['payment']) && $credit_covers === false) {
+/**
+ * Validate the selected payment module for the order. The order is considered
+ * 'paid' so long as a valid (i.e. installed and enabled) payment module is
+ * currently selected with an instance present.
+ *
+ * Note that the payment-module is 'validly' set to an empty string ('') when
+ * a credit-class order-total (e.g. ot_gv and ot_coupon) has 'covered' the cost
+ * of the order. 'freecharger' is a special payment method that is NEVER set
+ * as session's payment type; it's used only as a subcheck to see whether a 0-valued
+ * order is allowed by the site.
+ */
+$selected = $payment_modules->selected_module ?? '';
+$paid = is_string($_SESSION['payment'] ?? null)
+    && $selected !== ''
+    && $selected !== 'freecharger'
+    && $selected === $_SESSION['payment']
+    && in_array($selected . '.php', $payment_modules->modules, true)
+    && is_object($GLOBALS[$selected] ?? null)
+    && !empty($GLOBALS[$selected]->enabled);
+
+if ($credit_covers !== true && $order->info['total'] > 0.009 && !$paid) {
+    unset($_SESSION['payment']);
+    $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+}
+
+if (isset($ot_coupon) && method_exists($ot_coupon, 'shouldAbortCheckoutProcess') && $ot_coupon->shouldAbortCheckoutProcess()) {
+    if (method_exists($ot_coupon, 'clearCheckoutProcessAbort')) {
+        $ot_coupon->clearCheckoutProcessAbort();
+    }
+    zen_redirect(zen_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+}
+
+if (empty($_SESSION['payment']) && $credit_covers === false) {
     zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
 

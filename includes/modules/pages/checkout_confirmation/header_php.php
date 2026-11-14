@@ -17,10 +17,10 @@ if ($_SESSION['cart']->count_contents() <= 0) {
 }
 
 // if the customer is not logged on, redirect them to the login page
-  if (!zen_is_logged_in()) {
+if (!zen_is_logged_in()) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
+}
 
 $customer = new Customer($_SESSION['customer_id']);
 // validate customer
@@ -44,7 +44,9 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
-if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
+if (isset($_POST['payment']) && $_POST['payment'] !== 'freecharger') {
+    $_SESSION['payment'] = $_POST['payment'];
+}
 
 $_SESSION['comments'] = !empty($_POST['comments']) ? $_POST['comments'] : '';
 
@@ -59,20 +61,20 @@ if (zen_config('DISPLAY_CONDITIONS_ON_CHECKOUT') === 'true') {
 }
 //echo $messageStack->size('checkout_payment');
 
-require(DIR_WS_CLASSES . 'order.php');
-$order = new order;
+require DIR_WS_CLASSES . 'order.php';
+$order = new order();
 // load the selected shipping module
-require(DIR_WS_CLASSES . 'shipping.php');
+require DIR_WS_CLASSES . 'shipping.php';
 $shipping_modules = new shipping($_SESSION['shipping']);
 
 
-require(DIR_WS_CLASSES . 'order_total.php');
-$order_total_modules = new order_total;
+require DIR_WS_CLASSES . 'order_total.php';
+$order_total_modules = new order_total();
 $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 
 // load the selected payment module
-require(DIR_WS_CLASSES . 'payment.php');
+require DIR_WS_CLASSES . 'payment.php';
 
 if (!isset($credit_covers)) {
     $credit_covers = false;
@@ -81,7 +83,6 @@ if (!isset($credit_covers)) {
 //echo 'credit covers'.$credit_covers;
 
 if ($credit_covers === true) {
-    unset($_SESSION['payment']);
     $_SESSION['payment'] = '';
     $payment_title = PAYMENT_METHOD_GV;
 } else {
@@ -167,7 +168,7 @@ if ($credit_covers === false && isset(${$_SESSION['payment']}->flagDisablePaymen
 }
 
 
-require(DIR_WS_MODULES . zen_get_module_directory('require_languages.php'));
+require DIR_WS_MODULES . zen_get_module_directory('require_languages.php');
 $breadcrumb->add(NAVBAR_TITLE_1, zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2);
 
