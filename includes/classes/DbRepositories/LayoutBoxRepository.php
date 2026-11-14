@@ -10,13 +10,13 @@ namespace Zencart\DbRepositories;
 
 use queryFactory;
 
-/**
- * @since ZC v2.2.0
- */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
 }
 
+/**
+ * @since ZC v2.2.0
+ */
 class LayoutBoxRepository
 {
     public function __construct(private queryFactory $db) {}
@@ -227,5 +227,36 @@ class LayoutBoxRepository
         }
 
         return $sqlDataArray;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function copyTemplateToTemplate(string $from_template, string $to_template): void
+    {
+        $from_boxes = $this->getByTemplate(trim($from_template, '/\\'));
+        $to_template = trim($to_template, '/\\');
+        $to_boxes = $this->getByTemplate($to_template);
+        foreach ($from_boxes as $copy_from) {
+            $layout_box_name = $copy_from['layout_box_name'];
+            $copy_type = 'insert';
+            foreach ($to_boxes as $copy_to) {
+                if ($copy_to['layout_box_name'] === $layout_box_name) {
+                    $copy_type = 'update';
+                    break;
+                }
+            }
+
+            if ($copy_type === 'update') {
+                $update_fields = [
+                    'plugin_details' => $copy_from['plugin_details'],
+                ];
+                $this->updateByTemplateAndBoxName($to_template, $layout_box_name, $update_fields);
+            } else {
+                unset($copy_from['layout_id']);
+                $copy_from['layout_template'] = $to_template;
+                $this->insert($copy_from);
+            }
+        }
     }
 }
