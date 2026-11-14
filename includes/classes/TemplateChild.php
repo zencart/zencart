@@ -416,7 +416,7 @@ class TemplateChild
     protected function arrayToPhp(string $contents, array $array_element, int $indent_level, bool &$error): string
     {
         foreach ($array_element as $key => $value) {
-            $contents .= str_repeat(' ', $indent_level) . "'$key' => ";
+            $contents .= str_repeat(' ', $indent_level) . "'" . $this->sanitizeSingleQuotes($key) . "' => ";
             switch (gettype($value)) {
                 case 'string':
                     $contents .= "'" . $this->sanitizeSingleQuotes($value) . "',\n";
