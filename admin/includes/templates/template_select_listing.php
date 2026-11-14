@@ -41,6 +41,7 @@ foreach ($templates as $template) {
            'base_template' => 'missing',
            'template_key' => 'missing',
            'is_plugin_template' => false,
+           'has_template_settings' => false,
            'missing' => true,
         ];
     }

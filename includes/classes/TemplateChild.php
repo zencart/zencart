@@ -393,6 +393,7 @@ class TemplateChild
         $child_manifest['pluginVersion'] = 'v1.0.0';
         $parent_plugin_name = $child_manifest['pluginName'];
         $child_manifest['pluginName'] = $this->pluginName;
+        $child_manifest['pluginDescription'] ??= '';
         $child_manifest['pluginDescription'] .= ' ' . sprintf(TEXT_INFO_CHILD_CREATED, $parent_plugin_name, $this->parentTemplateDirectory, date(PHP_DATE_TIME_FORMAT));
         $child_manifest['template']['key'] = $this->templateDirectory;
         $child_manifest['template']['baseTemplate'] = $this->parentTemplateDirectory;
