@@ -98,7 +98,7 @@ class payment
                     if (isset($modules_found[$value])) {
                         $class = pathinfo($value, \PATHINFO_FILENAME);
                         // Only show Free Payment Module as a selection if credit covers
-                        if (($class !== 'freecharger' && $credit_covers === false) || ($class === 'freecharger' && $credit_covers === true)) {
+                        if (($class !== 'freecharger' && empty($credit_covers)) || ($class === 'freecharger' && !empty($credit_covers))) {
                             $include_modules[] = ['class' => $class, 'file' => $value];
                         }
                     }
