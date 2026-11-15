@@ -126,7 +126,6 @@ $paid = is_string($_SESSION['payment'] ?? null)
     && $selected !== ''
     && $selected !== 'freecharger'
     && $selected === $_SESSION['payment']
-    && in_array($selected . '.php', $payment_modules->modules, true)
     && is_object($GLOBALS[$selected] ?? null)
     && !empty($GLOBALS[$selected]->enabled);
 
@@ -134,13 +133,6 @@ if ($credit_covers !== true && $order->info['total'] > 0.009 && !$paid) {
     unset($_SESSION['payment']);
     $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-}
-
-if (isset($ot_coupon) && method_exists($ot_coupon, 'shouldAbortCheckoutProcess') && $ot_coupon->shouldAbortCheckoutProcess()) {
-    if (method_exists($ot_coupon, 'clearCheckoutProcessAbort')) {
-        $ot_coupon->clearCheckoutProcessAbort();
-    }
-    zen_redirect(zen_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
 }
 
 if (empty($_SESSION['payment']) && $credit_covers === false) {
