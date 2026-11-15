@@ -88,8 +88,8 @@ class payment
         } else {
             // Free Payment Only shows
             $freecharger_enabled = (zen_config('MODULE_PAYMENT_FREECHARGER_STATUS') === 'True' && isset($modules_found['freecharger.php']));
-            if ($freecharger_enabled && empty($_SESSION['cart']->show_total()) && empty($_SESSION['shipping']['cost'])) {
-                $this->selected_module = $module;
+            if ($freecharger_enabled === true && empty($_SESSION['cart']->show_total()) && empty($_SESSION['shipping']['cost'])) {
+                $this->selected_module = '';
                 $include_modules[] = ['class' => 'freecharger', 'file' => 'freecharger.php'];
             } else {
                 // All Other Payment Modules show
@@ -97,8 +97,8 @@ class payment
                     // double check that the module really exists before adding to the array
                     if (isset($modules_found[$value])) {
                         $class = pathinfo($value, \PATHINFO_FILENAME);
-                        // Don't show Free Payment Module as a selection
-                        if ($class !== 'freecharger') {
+                        // Only show Free Payment Module as a selection if credit covers
+                        if (($class !== 'freecharger' && $credit_covers === false) || ($class === 'freecharger' && $credit_covers === true)) {
                             $include_modules[] = ['class' => $class, 'file' => $value];
                         }
                     }

@@ -44,7 +44,7 @@ if (isset($_SESSION['shipping']['id']) && $_SESSION['shipping']['id'] == 'free_f
   zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 }
 
-if (isset($_POST['payment']) && $_POST['payment'] !== 'freecharger') {
+if (isset($_POST['payment']) && is_string($_POST['payment']) && $_POST['payment'] !== 'freecharger') {
     $_SESSION['payment'] = $_POST['payment'];
 }
 
