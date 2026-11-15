@@ -27,15 +27,15 @@ class zcAjaxPayment extends base
     public function doesCollectsCardDataOnsite(): array
     {
         if (!isset($_SESSION['cart']) || $_SESSION['cart']->count_contents() <= 0) {
-            return ([
+            return [
                 'data' => false
-            ]);
+            ];
         }
 
         require_once DIR_WS_CLASSES . 'payment.php';
         $retVal = false;
         $payment = new payment($_POST['paymentValue']);
-        if (isset($payment->selected_module)) {
+        if (!empty($payment->selected_module)) {
             if ($payment->paymentClass->collectsCardDataOnsite === true) {
                 $retVal = true;
             }
@@ -51,8 +51,12 @@ class zcAjaxPayment extends base
      */
     public function prepareConfirmation(): array
     {
-        global $messageStack, $template, $breadcrumb, $template_dir_select, $template_dir, $language_page_directory, $currencies, $order, $zco_notifier, $db, $current_page_base, $order_total_modules, $credit_covers, $tplSetting;
-        $_GET['main_page'] = $current_page_base = $current_page = FILENAME_CHECKOUT_CONFIRMATION;
+        global $messageStack, $template, $breadcrumb, $template_dir_select, $template_dir, $language_page_directory,
+               $currencies, $order, $zco_notifier, $db, $current_page_base, $order_total_modules, $credit_covers, $tplSetting;
+
+        $_GET['main_page'] = FILENAME_CHECKOUT_CONFIRMATION;
+        $current_page_base = FILENAME_CHECKOUT_CONFIRMATION;
+        $current_page = FILENAME_CHECKOUT_CONFIRMATION;
         if ($_SESSION['cart']->count_contents() <= 0) {
             zen_redirect(zen_href_link(FILENAME_TIME_OUT));
         }
@@ -90,23 +94,22 @@ class zcAjaxPayment extends base
             zen_redirect(zen_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
         }
 
-        if (isset($_POST['payment'])) {
+        if (isset($_POST['payment']) && is_string($_POST['payment']) && $_POST['payment'] !== 'freecharger') {
             $_SESSION['payment'] = $_POST['payment'];
         }
 
-        $_SESSION['comments'] = $_POST['comments'];
+        $_SESSION['comments'] = !empty($_POST['comments']) ? $_POST['comments'] : '';
+
+        //'checkout_payment_discounts'
+        //zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+
 
         if (zen_config('DISPLAY_CONDITIONS_ON_CHECKOUT') === 'true') {
-            $_SESSION['conditions'] = $_POST['conditions'] ?? null;
+          if (!isset($_POST['conditions']) || ($_POST['conditions'] != '1')) {
+            $messageStack->add_session('checkout_payment', ERROR_CONDITIONS_NOT_ACCEPTED, 'error');
+          }
         }
-        // load the selected payment module
-        require DIR_WS_CLASSES . 'payment.php';
-        $payment_modules = new payment($_POST['payment']);
-        $payment_modules->update_status();
-        if (($_POST['payment'] === '' || !is_object($payment_modules->paymentClass)) && $credit_covers === false) {
-            $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
-        }
-        $GLOBALS[$_POST['payment']] = $payment_modules->paymentClass;
+        //echo $messageStack->size('checkout_payment');
 
         require DIR_WS_CLASSES . 'order.php';
         $order = new order();
@@ -114,21 +117,37 @@ class zcAjaxPayment extends base
         require DIR_WS_CLASSES . 'shipping.php';
         $shipping_modules = new shipping($_SESSION['shipping']);
 
+
         require DIR_WS_CLASSES . 'order_total.php';
         $order_total_modules = new order_total();
         $order_total_modules->collect_posts();
         $order_total_modules->pre_confirmation_check();
 
+        // load the selected payment module
+        require DIR_WS_CLASSES . 'payment.php';
+
         if (!isset($credit_covers)) {
             $credit_covers = false;
         }
-        if ($credit_covers) {
-            unset($_SESSION['payment']);
-            $_SESSION['payment'] = '';
-        }
 
-        if (is_array($payment_modules->modules)) {
-            $payment_modules->pre_confirmation_check();
+        //echo 'credit covers'.$credit_covers;
+
+        if ($credit_covers === true) {
+            $_SESSION['payment'] = '';
+            $payment_title = PAYMENT_METHOD_GV;
+        } else {
+            if (!empty($_SESSION['payment'])) {
+                $payment_modules = new payment($_SESSION['payment']);
+                $payment_modules->update_status();
+                if (is_array($payment_modules->modules)) {
+                    $payment_modules->pre_confirmation_check();
+                }
+            }
+            if (!empty($_SESSION['payment']) && is_object(${$_SESSION['payment']})) {
+                $payment_title = ${$_SESSION['payment']}->title;
+            } else {
+                $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
+            }
         }
 
         if ($messageStack->size('checkout_payment') > 0) {
@@ -168,15 +187,14 @@ class zcAjaxPayment extends base
 
             // only use discount coupon if set by coupon
             if ($customers_referral->fields['customers_referral'] === '' && (int)zen_config('CUSTOMERS_REFERRAL_STATUS') === 1) {
-                $sql = "UPDATE " . TABLE_CUSTOMERS . "
-            SET customers_referral = :customersReferral
-            WHERE customers_id = :customersID";
+                $sql =
+                    "UPDATE " . TABLE_CUSTOMERS . "
+                        SET customers_referral = :customersReferral
+                      WHERE customers_id = :customersID";
 
                 $sql = $db->bindVars($sql, ':customersID', $_SESSION['customer_id'], 'integer');
                 $sql = $db->bindVars($sql, ':customersReferral', $discount_coupon->fields['coupon_code'], 'string');
                 $db->Execute($sql);
-            } else {
-                // do not update referral was added before
             }
         }
 
@@ -196,7 +214,7 @@ class zcAjaxPayment extends base
         }
         // deal with billing address edit button
         $flagDisablePaymentAddressChange = false;
-        if (isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
+        if ($credit_covers === false && isset(${$_SESSION['payment']}->flagDisablePaymentAddressChange)) {
             $flagDisablePaymentAddressChange = ${$_SESSION['payment']}->flagDisablePaymentAddressChange;
         }
 
