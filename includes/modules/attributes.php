@@ -128,7 +128,9 @@ foreach ($products_options_names as $next_option_name) {
     //
     $option_form_name = 'id[' . $products_options_id . ']';
     $option_is_text_or_file = ($products_options_type === zen_config('PRODUCTS_OPTIONS_TYPE_FILE') || $products_options_type === zen_config('PRODUCTS_OPTIONS_TYPE_TEXT'));
-    $products_tax_rate ??= zen_get_tax_rate($product_data['products_tax_class_id']);
+    $product_data = $product_data ?? [];
+    $product_tax_class_id = $product_data['products_tax_class_id'] ?? (isset($product_info) && is_object($product_info) ? (int)$product_info->get('products_tax_class_id') : 0);
+    $products_tax_rate ??= zen_get_tax_rate($product_tax_class_id);
 
     $zco_notifier->notify('NOTIFY_ATTRIBUTES_MODULE_START_OPTION', $next_option_name);
 
@@ -212,8 +214,7 @@ foreach ($products_options_names as $next_option_name) {
                 $show_attributes_qty_prices_icon = true;
             }
 
-            if ($next_option['options_values_price'] != 0 && $next_option['product_attribute_is_free'] !== '1' && $product_data['product_is_free'] !== '1') {
-                // show sale maker discount if a percentage
+            if ($next_option['options_values_price'] != 0 && $next_option['product_attribute_is_free'] !== '1' && ($product_data['product_is_free'] ?? '') !== '1') {                // show sale maker discount if a percentage
                 $products_options_display_price =
                     ATTRIBUTES_PRICE_DELIMITER_PREFIX . $next_option['price_prefix'] .
                     $currencies->display_price($new_attributes_price, $products_tax_rate) .
@@ -223,7 +224,7 @@ foreach ($products_options_names as $next_option_name) {
 
             } else {
                 // if product_is_free and product_attribute_is_free
-                if ($next_option['product_attribute_is_free'] === '1' && $product_data['product_is_free'] === '1') {
+                if ($next_option['product_attribute_is_free'] === '1' && ($product_data['product_is_free'] ?? '') === '1') {
                     $products_options_display_price =
                         TEXT_ATTRIBUTES_PRICE_WAS . $next_option['price_prefix'] .
                         $currencies->display_price($new_attributes_price, $products_tax_rate) .
