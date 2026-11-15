@@ -112,7 +112,7 @@ class zcAjaxPayment extends base
         $order = new order();
         // load the selected shipping module
         require DIR_WS_CLASSES . 'shipping.php';
-        $shipping_modules = new shipping($_SESSION['shipping']);
+        $shipping_modules = new shipping($_SESSION['shipping'] ?? null);
 
         require DIR_WS_CLASSES . 'order_total.php';
         $order_total_modules = new order_total();
