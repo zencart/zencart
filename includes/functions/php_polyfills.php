@@ -81,7 +81,11 @@ if (!function_exists('array_first')) {
 if (!function_exists('array_last')) {
     function array_last(array $array)
     {
-        return $array ? current(array_slice($array, -1)) : null;
+        if (!$array) {
+            return null;
+        }
+
+        return \PHP_VERSION_ID >= 70300 ? $array[array_key_last($array)] : current(\array_slice($array, -1));
     }
 }
 
