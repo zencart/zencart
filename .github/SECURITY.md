@@ -6,6 +6,8 @@ These releases of Zen Cart are actively supported for bugs and security issues.
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 2.2.x   | :white_check_mark: (yes) |
+| 2.1.x   | :white_check_mark: (yes) |
 | 2.0.x   | :white_check_mark: (yes) |
 | 1.5.8x  | :white_check_mark: (yes) |
 | <=1.5.7x  | :x: (no) |
