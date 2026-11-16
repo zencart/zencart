@@ -392,8 +392,7 @@ if (!empty($action)) {
                     if ($current_category_id === (int)$new_categories_sort_array[$i]) { // is the product still linked to the displayed category?
                         $verify_current_category_id = true;
                     }
-
-                    $db->Execute("INSERT INTO " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) VALUES (" . $products_filter . ", " . (int)$new_categories_sort_array[$i] . ")");
+                    zen_link_product_to_category($products_filter, (int)$new_categories_sort_array[$i]);
                 }
             }
             // recalculate price based on new master_categories_id
