@@ -183,6 +183,7 @@ $group = [
     'coupon_calc_base',
     'coupon_order_limit',
     'coupon_is_valid_for_sales',
+    'zone_page',
 ];
 $sanitizer->addSimpleSanitization('CONVERT_INT', $group);
 
@@ -211,7 +212,7 @@ $group = [
     'group_name', 'geo_zone_name', 'geo_zone_description',
     'tax_class_description', 'tax_class_title', 'tax_description', 'entry_company', 'customers_firstname',
     'customers_lastname', 'entry_street_address', 'entry_suburb', 'entry_city', 'entry_state', 'customers_referral',
-    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'zone_page', 'search',
+    'symbol_left', 'symbol_right', 'products_model', 'alt_url', 'email_to_name', 'search',
     'referrer_domain', 'comments',
 ];
 $sanitizer->addSimpleSanitization('WORDS_AND_SYMBOLS_REGEX', $group);
