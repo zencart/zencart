@@ -12,9 +12,26 @@
     $row = 0;
     $box_categories_array = array();
 
-// don't build a tree when no categories
-    $check_categories = $db->Execute("select c.categories_id from " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCT_TYPES . " pt, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc where pt.type_master_type = 3 and ptc.product_type_id = pt.type_id and c.categories_id = ptc.category_id and c.categories_status=1 limit 1");
-    if ($check_categories->RecordCount() > 0) {
+/**
+ * Only this existence guard is cached. The tree itself varies by language and
+ * cPath, and its cost is already dealt with by the category maps that
+ * zen_category_tree() now reads.
+ */
+    $sidebox_cache_ttl = (int)(defined('SIDEBOX_CACHE_SECONDS') ? SIDEBOX_CACHE_SECONDS : 3600);
+    $sidebox_cache = new \Zencart\Cache\FileCache();
+
+    $document_categories_guard = $sidebox_cache->read('documentcategoriesguard', $sidebox_cache_ttl);
+
+    if ($document_categories_guard === null) {
+      $check_categories = $db->Execute("select c.categories_id from " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCT_TYPES . " pt, " . TABLE_PRODUCT_TYPES_TO_CATEGORY . " ptc where pt.type_master_type = 3 and ptc.product_type_id = pt.type_id and c.categories_id = ptc.category_id and c.categories_status=1 limit 1");
+      $document_categories_guard = ['any' => ($check_categories->RecordCount() > 0)];
+
+      if ($sidebox_cache_ttl > 0) {
+        $sidebox_cache->write('documentcategoriesguard', $document_categories_guard);
+      }
+    }
+
+    if (!empty($document_categories_guard['any'])) {
       $box_categories_array = $main_category_tree->zen_category_tree(3);
       require($template->get_template_dir('tpl_document_categories.php',DIR_WS_TEMPLATE, $current_page_base,'sideboxes'). '/tpl_document_categories.php');
 

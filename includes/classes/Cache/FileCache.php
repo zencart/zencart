@@ -225,4 +225,36 @@ class FileCache
     {
         @unlink($this->path($key));
     }
+
+    /**
+     * Delete every entry whose key begins with $keyPrefix, and return how many
+     * files were removed.
+     *
+     * For caches that are split by something enumerable, such as one entry per
+     * language, where the caller would otherwise have to know the full set of
+     * suffixes in order to invalidate them.
+     *
+     * Matching is on the readable label in the file name, not on the hash, so a
+     * cache directory genuinely shared by two installs would have both installs'
+     * entries for that prefix removed. That costs a rebuild, not correctness,
+     * and DIR_FS_SQL_CACHE is per-install by default.
+     *
+     * @since ZC v2.3.0
+     */
+    public function clearPrefix(string $keyPrefix): int
+    {
+        $label = preg_replace('/[^a-z0-9_]/', '', strtolower($keyPrefix));
+        if ($label === '') {
+            return 0;
+        }
+
+        $removed = 0;
+        foreach (glob($this->directory . '/zc_' . $label . '*.json') ?: [] as $file) {
+            if (@unlink($file)) {
+                $removed++;
+            }
+        }
+
+        return $removed;
+    }
 }
