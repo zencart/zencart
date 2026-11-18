@@ -8,85 +8,87 @@
  * @version $Id: torvista 2022 Feb 18 Modified in v1.5.8-alpha $
  */
 if (!defined('IS_ADMIN_FLAG')) {
-  die('Illegal Access');
+    die('Illegal Access');
 }
+
 /**
- * Check if customer's session contains a valid customer_id. If not, then it could be that the administrator has deleted the customer (managing spam etc) so we'll log them out.
+ * Check if customer's session contains a valid customer_id. If not, then it could be that
+ * an administrator has deleted the customer (managing spam etc) so we'll log them out.
  */
 if (zen_is_logged_in()) {
-  $sql = "select customers_id from " . TABLE_CUSTOMERS . " where customers_id = " . (int)$_SESSION['customer_id'];
-  $result = $db->Execute($sql);
-  if ($result->RecordCount() == 0) {
-    $_SESSION['cart']->reset(true);
-    zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_TIME_OUT));
-  }
-
-  if (!zen_is_customer_password_session_valid()) {
-    global $messageStack, $customer;
-
-    $_SESSION['cart']->reset(false);
-    if (!isset($customer) || !is_a($customer, Customer::class)) {
-      $customer = new Customer($_SESSION['customer_id']);
+    $customer = new Customer($_SESSION['customer_id']);
+    if ($customer->getData('customers_id') === null) {
+        $_SESSION['cart']->reset(true);
+        zen_session_destroy();
+        zen_redirect(zen_href_link(FILENAME_TIME_OUT));
     }
-    $customer->forceLogout();
-    unset(
-      $_SESSION['customer_password_hash'],
-      $_SESSION['customers_email_address'],
-      $_SESSION['customer_first_name'],
-      $_SESSION['customer_last_name'],
-      $_SESSION['customer_default_address_id'],
-      $_SESSION['customer_country_id'],
-      $_SESSION['customer_zone_id'],
-      $_SESSION['customers_authorization']
-    );
-    $messageStack->add_session('header', ERROR_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE, 'warning');
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
+
+    if (!zen_is_customer_password_session_valid()) {
+        global $messageStack, $customer;
+
+        $_SESSION['cart']->reset(false);
+        $customer->forceLogout();
+        unset(
+            $_SESSION['customer_password_hash'],
+            $_SESSION['customers_email_address'],
+            $_SESSION['customer_first_name'],
+            $_SESSION['customer_last_name'],
+            $_SESSION['customer_default_address_id'],
+            $_SESSION['customer_country_id'],
+            $_SESSION['customer_zone_id'],
+            $_SESSION['customers_authorization']
+        );
+        $messageStack->add_session('header', ERROR_SESSION_INVALID_DUE_TO_PASSWORD_CHANGE, 'warning');
+        zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+    }
 }
 
 $down_for_maint_flag = false;
+
 /**
  * do not let people get to down for maintenance page if not turned on unless is admin in IP list
  */
-if (zen_config('DOWN_FOR_MAINTENANCE')=='false' and $_GET['main_page'] == zen_config('DOWN_FOR_MAINTENANCE_FILENAME') && !zen_is_whitelisted_admin_ip()){
-  zen_redirect(zen_href_link(FILENAME_DEFAULT));
+if (zen_config('DOWN_FOR_MAINTENANCE') === 'false' && $_GET['main_page'] === zen_config('DOWN_FOR_MAINTENANCE_FILENAME') && !zen_is_whitelisted_admin_ip()) {
+    zen_redirect(zen_href_link(FILENAME_DEFAULT));
 }
+
 /**
  * see if DFM mode type is defined (strict means all pages blocked, relaxed means logoff/privacy/etc pages are usable)
  */
-if (!defined('DOWN_FOR_MAINTENANCE_TYPE')) define('DOWN_FOR_MAINTENANCE_TYPE', 'relaxed');
+zen_define_default('DOWN_FOR_MAINTENANCE_TYPE', 'relaxed');
+
 /**
  * check to see if site is DFM, and set a flag for use later
  */
-if (zen_config('DOWN_FOR_MAINTENANCE') == 'true') {
-  if (!zen_is_whitelisted_admin_ip()){
-    if ($_GET['main_page'] != zen_config('DOWN_FOR_MAINTENANCE_FILENAME')) $down_for_maint_flag = true;
-  }
+if (zen_config('DOWN_FOR_MAINTENANCE') === 'true' && !zen_is_whitelisted_admin_ip()) {
+    if ($_GET['main_page'] !== zen_config('DOWN_FOR_MAINTENANCE_FILENAME')) {
+        $down_for_maint_flag = true;
+    }
 }
+
 /**
- * recheck customer status for authorization
+ * recheck customer status for authorization. Note that $customer class
+ * was instantiated above and, at this point, the customers_id is known to
+ * be valid.
  */
 if (zen_is_logged_in()) {
-  $check_customer_query = "select customers_id, customers_authorization
-                             from " . TABLE_CUSTOMERS . "
-                             where customers_id = " . (int)$_SESSION['customer_id'];
-  $check_customer = $db->Execute($check_customer_query);
-  $_SESSION['customers_authorization'] = $check_customer->fields['customers_authorization'];
+    if ($customer->isBanned()) {
+        // this account is banned
+        $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
+        zen_session_destroy();
+        zen_redirect(zen_href_link(FILENAME_LOGIN));
+    }
 
-  if ($_SESSION['customers_authorization'] == '4') {
-    // this account is banned
-    $zco_notifier->notify('NOTIFY_LOGIN_BANNED');
-    zen_session_destroy();
-    zen_redirect(zen_href_link(FILENAME_LOGIN));
-  }
-  if ($_SESSION['customers_authorization'] != 0 && in_array($_GET['main_page'], array(FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION))) {
-    // this account is not valid for checkout
-    global $messageStack;
-    $messageStack->add_session('header', TEXT_AUTHORIZATION_PENDING_CHECKOUT, 'caution');
-    zen_redirect(zen_href_link(FILENAME_DEFAULT));
-  }
+    //- Backward compatibility, session value's a string.
+    $_SESSION['customers_authorization'] = (string)$customer->getData('customers_authorization');
+    if ((int)$_SESSION['customers_authorization'] !== 0 && in_array($_GET['main_page'], [FILENAME_CHECKOUT_SHIPPING, FILENAME_CHECKOUT_PAYMENT, FILENAME_CHECKOUT_CONFIRMATION])) {
+        // this account is not valid for checkout
+        global $messageStack;
+        $messageStack->add_session('header', TEXT_AUTHORIZATION_PENDING_CHECKOUT, 'caution');
+        zen_redirect(zen_href_link(FILENAME_DEFAULT));
+    }
 }
+
 /**
  * customer login status
  * 0 = normal shopping
@@ -99,123 +101,130 @@ if (zen_is_logged_in()) {
  * 2 = customer authorization pending can browse but no prices
  */
 switch (true) {
-  /**
-   * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
-   */
-  case (preg_match('|_handler\.php$|', $_SERVER['SCRIPT_NAME'])):
-  case (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME'])):
-  break;
+    /**
+     * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
+     */
+    case str_ends_with($_SERVER['SCRIPT_NAME'], '_handler.php'):
+    case str_ends_with($_SERVER['SCRIPT_NAME'], 'ajax.php'):
+        break;
 
-  case ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'strict'):
-    // if DFM is in strict mode, then block access to all pages:
-    zen_redirect(zen_href_link(zen_config('DOWN_FOR_MAINTENANCE_FILENAME', '')));
-  break;
+    case ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE === 'strict'):
+        // if DFM is in strict mode, then block access to all pages:
+        zen_redirect(zen_href_link(zen_config('DOWN_FOR_MAINTENANCE_FILENAME', '')));
+        break;
 
-  case ((zen_config('DOWN_FOR_MAINTENANCE') == 'true') && !in_array($_GET['main_page'], array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING))):
-    // on special pages, if DFM mode is "relaxed", allow access to these pages
-    if ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE == 'relaxed') {
-      zen_redirect(zen_href_link(zen_config('DOWN_FOR_MAINTENANCE_FILENAME', '')));
-    }
-  break;
+    case ((zen_config('DOWN_FOR_MAINTENANCE') === 'true') && !in_array($_GET['main_page'], [FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING])):
+        // on special pages, if DFM mode is "relaxed", allow access to these pages
+        if ($down_for_maint_flag && DOWN_FOR_MAINTENANCE_TYPE === 'relaxed') {
+            zen_redirect(zen_href_link(zen_config('DOWN_FOR_MAINTENANCE_FILENAME', '')));
+        }
+        break;
 
-  case (in_array($_GET['main_page'], array(FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING, FILENAME_UNSUBSCRIBE))):
-    // on special pages, allow customers to access regardless of store mode or cust auth mode
-  break;
+    case (in_array($_GET['main_page'], [FILENAME_LOGOFF, FILENAME_PRIVACY, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_CONDITIONS, FILENAME_SHIPPING, FILENAME_UNSUBSCRIBE])):
+        // on special pages, allow customers to access regardless of store mode or cust auth mode
+        break;
 
-/**
- * check store status before authorizations
- */
-  case (zen_config('STORE_STATUS') != 0):
-    break;
-/**
- * if not down for maintenance check login status
- */
-  case (zen_config('CUSTOMERS_APPROVAL') == '1' && !zen_is_logged_in()):
-  /**
-   * customer must be logged in to browse
-   */
-  if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_CREATE_ACCOUNT))) {
-    if (!isset($_GET['set_session_login'])) {
-      $_GET['set_session_login'] = 'true';
-      $_SESSION['navigation']->set_snapshot();
-    }
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
-  break;
-  case (zen_config('CUSTOMERS_APPROVAL') == '2' && !zen_is_logged_in()):
-  /**
-   * customer may browse but no prices
-   */
-  break;
-  default:
-  /**
-   * proceed normally
-   */
-  break;
+    /**
+     * check store status before authorizations
+     */
+    case (zen_config('STORE_STATUS') !== '0'):
+        break;
+
+    /**
+     * if not down for maintenance check login status
+     */
+    case (zen_config('CUSTOMERS_APPROVAL') === '1' && !zen_is_logged_in()):
+        /**
+         * customer must be logged in to browse
+         */
+        if (!in_array($_GET['main_page'], [FILENAME_LOGIN, FILENAME_CREATE_ACCOUNT])) {
+            if (!isset($_GET['set_session_login'])) {
+                $_GET['set_session_login'] = 'true';
+                $_SESSION['navigation']->set_snapshot();
+            }
+            zen_redirect(zen_href_link(FILENAME_LOGIN));
+        }
+        break;
+
+    case (zen_config('CUSTOMERS_APPROVAL') === '2' && !zen_is_logged_in()):
+        /**
+         * customer may browse but no prices
+         */
+        break;
+
+    default:
+        /**
+         * proceed normally
+         */
+        break;
 }
 
 switch (true) {
-  /**
-   * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
-   */
-  case (preg_match('|_handler\.php$|', $_SERVER['SCRIPT_NAME'])):
-  case (preg_match('|ajax\.php$|', $_SERVER['SCRIPT_NAME'])):
-  break;
+    /**
+     * bypass redirects for these scripts, to processing regardless of store mode or cust auth mode
+     */
+    case str_ends_with($_SERVER['SCRIPT_NAME'], '_handler.php'):
+    case str_ends_with($_SERVER['SCRIPT_NAME'], 'ajax.php'):
+        break;
 
-/**
- * check store status before authorizations
- */
-  case (zen_config('STORE_STATUS') != 0):
-    break;
+    /**
+     * check store status before authorizations
+     */
+    case (zen_config('STORE_STATUS') !== '0'):
+        break;
 
-  case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '1' && !zen_is_logged_in()):
-  /**
-   * customer must be logged in to browse
-   */
-  if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CREATE_ACCOUNT, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_PRIVACY, zen_config('DOWN_FOR_MAINTENANCE_FILENAME')))) {
-    if (!isset($_GET['set_session_login'])) {
-      $_GET['set_session_login'] = 'true';
-      $_SESSION['navigation']->set_snapshot();
-    }
-    zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
-  break;
-  case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '2' && !zen_is_logged_in()):
-  /**
-   * customer may browse but no prices unless Authorized
-   */
-  /*
-  if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_CREATE_ACCOUNT))) {
-   if (!isset($_GET['set_session_login'])) {
-    $_GET['set_session_login'] = 'true';
-    $_SESSION['navigation']->set_snapshot();
-   }
-  zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
-  */
-  break;
-  case (isset($_SESSION['customers_authorization']) && ((zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '1' && $_SESSION['customers_authorization'] != '0') || (int)$_SESSION['customers_authorization'] == 1)):
-  /**
-   * customer is pending approval
-   * customer must be logged in to browse
-   * customer is logged in and changed to must be authorized to browse
-   */
-  if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY))) {
-    if ($_GET['main_page'] != zen_config('CUSTOMERS_AUTHORIZATION_FILENAME')) {
-      zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''))));
-    }
-  }
-  break;
-  case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') == '2' and $_SESSION['customers_authorization'] != '0'):
-  /**
-   * customer may browse but no prices
-   */
-  break;
-  default:
-  /**
-   * proceed normally
-   */
-  break;
+    case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && !zen_is_logged_in()):
+        /**
+         * customer must be logged in to browse
+         */
+        if (!in_array($_GET['main_page'], [FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CREATE_ACCOUNT, FILENAME_PASSWORD_FORGOTTEN, FILENAME_CONTACT_US, FILENAME_PRIVACY, zen_config('DOWN_FOR_MAINTENANCE_FILENAME')])) {
+            if (!isset($_GET['set_session_login'])) {
+                $_GET['set_session_login'] = 'true';
+                $_SESSION['navigation']->set_snapshot();
+            }
+            zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+        }
+        break;
+
+    case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '2' && !zen_is_logged_in()):
+        /**
+         * customer may browse but no prices unless Authorized
+         */
+        /*
+        if (!in_array($_GET['main_page'], array(FILENAME_LOGIN, FILENAME_CREATE_ACCOUNT))) {
+            if (!isset($_GET['set_session_login'])) {
+                $_GET['set_session_login'] = 'true';
+                $_SESSION['navigation']->set_snapshot();
+            }
+            zen_redirect(zen_href_link(FILENAME_LOGIN, '', 'SSL'));
+        }
+        */
+        break;
+
+    case (isset($_SESSION['customers_authorization']) && ((zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '1' && (int)$_SESSION['customers_authorization'] !== 0) || (int)$_SESSION['customers_authorization'] === 1)):
+        /**
+         * customer is pending approval
+         * customer must be logged in to browse
+         * customer is logged in and changed to must be authorized to browse
+         */
+        if (!in_array($_GET['main_page'], [FILENAME_LOGIN, FILENAME_LOGOFF, FILENAME_CONTACT_US, FILENAME_PRIVACY])) {
+            if ($_GET['main_page'] !== zen_config('CUSTOMERS_AUTHORIZATION_FILENAME')) {
+                zen_redirect(zen_href_link(preg_replace('/[^a-z_]/', '', zen_config('CUSTOMERS_AUTHORIZATION_FILENAME', ''))));
+            }
+        }
+        break;
+
+    case (zen_config('CUSTOMERS_APPROVAL_AUTHORIZATION') === '2' && (int)$_SESSION['customers_authorization'] !== 0):
+        /**
+         * customer may browse but no prices
+         */
+        break;
+
+    default:
+        /**
+         * proceed normally
+         */
+        break;
 }
 
 // -----
