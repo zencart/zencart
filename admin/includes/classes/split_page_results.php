@@ -176,8 +176,14 @@ class splitPageResults
 
             $sql = substr($sql_query, 0, $pos_to) . $where_sql;
             $this->sql_before = $sql;
+            /**
+             * The page "number" is a letter group taken from request input,
+             * and for a group length wider than one character it is a whole column value:
+             * Country names such as "Cote d'Ivoire" legitimately contain a quote.
+             * Escape it rather than relying on the caller to have filtered the parameter.
+             */
             if (isset($current_page_number)) {
-                $sql .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $letterGroupLength . ") = '" . $current_page_number . "' ";
+                $sql .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $letterGroupLength . ") = '" . zen_db_input($current_page_number) . "' ";
             } else {
                 $sql .= $this->letterGroupColumn . " IS NULL ";
             }
@@ -227,7 +233,7 @@ class splitPageResults
             $letter = $check_page->fields['letter'];
             $sql_query = (string)$this->sql_before;
             if (!empty($letter)) {
-                $sql_query .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $this->letterGroupLength . ") = '" . $letter . "' ";
+                $sql_query .= "SUBSTRING(" . $this->letterGroupColumn . ", 1, " . $this->letterGroupLength . ") = '" . zen_db_input($letter) . "' ";
             } else {
                 $sql_query .= $this->letterGroupColumn . " IS NULL ";
             }
@@ -288,8 +294,13 @@ class splitPageResults
                 $display_links .= zen_draw_form('pages', basename($PHP_SELF, '.php'), '', 'get');
             }
 
+            /**
+             * The page value is a letter group, which for a group length wider than one character
+             * is a whole column value: country names can contain spaces, accented characters and
+             * an apostrophe. Url-encode it so the generated link survives those intact.
+             */
             if (!empty($this->previousPage)) {
-                $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . $this->previousPage) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
+                $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . urlencode((string)$this->previousPage)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
             } else {
                 $display_links .= '<span style="visibility:hidden;">' . PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;</span>';
             }
@@ -300,12 +311,12 @@ class splitPageResults
                 // $display_links .= sprintf(TEXT_RESULT_PAGE, $dropdown, $this->num_pages);
             } else {
                 foreach ($this->pages_array as $page_id) {
-                    $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . $page_id['id']) . '" class="splitPageLink' . ($page_id['id'] === $current_page_number ? ' splitPageLinkCurrent' : '') . '">' . $page_id['id'] . '</a>&nbsp;&nbsp;';
+                    $display_links .= '<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . urlencode((string)$page_id['id'])) . '" class="splitPageLink' . ($page_id['id'] === $current_page_number ? ' splitPageLinkCurrent' : '') . '">' . zen_output_string_protected((string)$page_id['id']) . '</a>&nbsp;&nbsp;';
                 }
             }
 
             if (!empty($this->nextPage)) {
-                $display_links .= '&nbsp;&nbsp;<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . $this->nextPage) . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
+                $display_links .= '&nbsp;&nbsp;<a href="' . zen_href_link(basename($PHP_SELF), $parameters . $page_name . '=' . urlencode((string)$this->nextPage)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
             } else {
                 $display_links .= '<span style="visibility:hidden;">' . '&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT . '</span>';
             }
