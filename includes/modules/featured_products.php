@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * featured_products module - prepares content for display
  *
@@ -7,6 +9,13 @@
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart.com/license/2_0.txt GNU Public License V2.0
  * @version $Id: DrByte 2024 May 24 Modified in v2.1.0-alpha1 $
+ */
+/**
+ * @var string $cPath
+ * @var queryFactory $db
+ * @var $manufacturers_id
+ * @var Settings $tplSetting
+ * @var notifier $zco_notifier
  */
 if (!defined('IS_ADMIN_FLAG')) {
     die('Illegal Access');
@@ -80,7 +89,7 @@ if ($num_products_count > 0) {
             'text' => (($data['products_image'] === '' && $tplSetting->PRODUCTS_IMAGE_NO_IMAGE_STATUS == 0) ? ''
                     : '<a href="'
                         . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . $productsInCategory[$data['products_id']] . '&products_id=' . $data['products_id']) . '">'
-                        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH'), zen_config('IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT'))
+                        . zen_image(DIR_WS_IMAGES . $data['products_image'], $data['products_name'], $tplSetting->IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH, $tplSetting->IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT)
                     . '</a><br>')
                 . '<a href="' . zen_href_link(zen_get_info_page($data['products_id']), 'cPath=' . $productsInCategory[$data['products_id']] . '&products_id=' . $data['products_id']) . '">' . $data['products_name']
                 . '</a><br>' . $products_price,
@@ -104,4 +113,3 @@ if ($num_products_count > 0) {
         $zc_show_featured = true;
     }
 }
-
