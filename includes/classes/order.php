@@ -1308,27 +1308,51 @@ class order extends base
             $this->notify('NOTIFY_ORDER_PROCESSING_ONE_TIME_CHARGES_BEGIN', $i);
 
             // build output for email notification
-            $this->products_ordered .= $this->products[$i]['qty'] . ' x ' . $this->products[$i]['name'] . ($this->products[$i]['model'] != '' ? ' (' . $this->products[$i]['model'] . ') ' : '') . ' = ' .
-                $currencies->display_price($this->products[$i]['final_price'], $this->products[$i]['tax'], $this->products[$i]['qty']) .
-                ($this->products[$i]['onetime_charges'] != 0 ? "\n" . TEXT_ONETIME_CHARGES_EMAIL . $currencies->display_price($this->products[$i]['onetime_charges'], $this->products[$i]['tax'], 1) : '') .
-                $this->products_ordered_attributes . "\n";
-            $this->products_ordered_html .=
-                '<tr>' . "\n" .
-                '<td class="product-details" align="right" valign="top" width="30">' . $this->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
-                '<td class="product-details" valign="top">' . nl2br($this->products[$i]['name']) . ($this->products[$i]['model'] != '' ? ' (' . nl2br($this->products[$i]['model']) . ') ' : '') .
-                (!empty($this->products_ordered_attributes) ? "\n" . '<nobr>' . '<small><em>' . nl2br($this->products_ordered_attributes) . '</em></small>' . '</nobr>' : '') .
-                '</td>' . "\n" .
-                '<td class="product-details-num" valign="top" align="right">' .
-                $currencies->display_price($this->products[$i]['final_price'], $this->products[$i]['tax'], $this->products[$i]['qty']) . '</td>' . "\n" . '</tr>' . "\n" .
-                ($this->products[$i]['onetime_charges'] != 0 ?
-                    '<tr>' . "\n" . '<td class="product-details" colspan="2">' . nl2br(TEXT_ONETIME_CHARGES_EMAIL) . '</td>' . "\n" .
-                    '<td valign="top" align="right">' . $currencies->display_price($this->products[$i]['onetime_charges'], $this->products[$i]['tax'], 1) . '</td>' . "\n" . '</tr>' . "\n" : '');
+            $productEmail = $this->buildProductOrderedEmailStrings($this->products[$i], $this->products_ordered_attributes, $currencies);
+            $this->products_ordered .= $productEmail['text'];
+            $this->products_ordered_html .= $productEmail['html'];
         }
 
         $order_total_modules->apply_credit();//ICW ADDED FOR CREDIT CLASS SYSTEM
         $this->notify('NOTIFY_ORDER_AFTER_ORDER_CREATE_ADD_PRODUCTS');
     }
 
+    /**
+     * Build the plain-text and HTML "products ordered" lines for a single ordered
+     * product, as used in the order-confirmation emails.
+     *
+     * This is pure string assembly with no database, session, or class-state side
+     * effects, so the same output can be produced outside of create_add_products() -
+     * for example to preview a stored order's confirmation email without re-running
+     * the order-creation inserts, stock decrements, and bestsellers updates.
+     *
+     * @param array $product A single entry from $this->products (expects qty, name, model, final_price, tax, onetime_charges).
+     * @param string $attributes The pre-built products-ordered attributes string for this product (see $this->products_ordered_attributes).
+     * @param currencies $currencies The currencies class instance used to format prices.
+     * @return array An array with 'text' and 'html' keys holding the two email line formats.
+     * @since ZC v3.0.0
+     */
+    public function buildProductOrderedEmailStrings(array $product, string $attributes, $currencies): array
+    {
+        $text = $product['qty'] . ' x ' . $product['name'] . ($product['model'] != '' ? ' (' . $product['model'] . ') ' : '') . ' = ' .
+            $currencies->display_price($product['final_price'], $product['tax'], $product['qty']) .
+            ($product['onetime_charges'] != 0 ? "\n" . TEXT_ONETIME_CHARGES_EMAIL . $currencies->display_price($product['onetime_charges'], $product['tax'], 1) : '') .
+            $attributes . "\n";
+
+        $html =
+            '<tr>' . "\n" .
+            '<td class="product-details" align="right" valign="top" width="30">' . $product['qty'] . '&nbsp;x</td>' . "\n" .
+            '<td class="product-details" valign="top">' . nl2br($product['name']) . ($product['model'] != '' ? ' (' . nl2br($product['model']) . ') ' : '') .
+            (!empty($attributes) ? "\n" . '<nobr>' . '<small><em>' . nl2br($attributes) . '</em></small>' . '</nobr>' : '') .
+            '</td>' . "\n" .
+            '<td class="product-details-num" valign="top" align="right">' .
+            $currencies->display_price($product['final_price'], $product['tax'], $product['qty']) . '</td>' . "\n" . '</tr>' . "\n" .
+            ($product['onetime_charges'] != 0 ?
+                '<tr>' . "\n" . '<td class="product-details" colspan="2">' . nl2br(TEXT_ONETIME_CHARGES_EMAIL) . '</td>' . "\n" .
+                '<td valign="top" align="right">' . $currencies->display_price($product['onetime_charges'], $product['tax'], 1) . '</td>' . "\n" . '</tr>' . "\n" : '');
+
+        return ['text' => $text, 'html' => $html];
+    }
 
     /**
      * @param int|null $zf_insert_id OrderNumber for display - unused/deprecated since 1.5.7.
