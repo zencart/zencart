@@ -807,7 +807,16 @@ class shoppingCart extends base
                         }
                         if ($attribute_price->fields['attributes_discounted'] === '1') {
                             // calculate proper discount for attributes
-                            $new_attributes_price = zen_get_discount_calc($prid, $attributes_id, $options_values_price, $qty);
+                            $products_base_price = zen_get_products_price_is_priced_by_attributes($prid) ? $products_raw_price : 0;
+                            if ($products_base_price != 0) {
+                                // -----
+                                // The product's undiscounted base price is in $productTotal, so discount the base price less
+                                // the option as a whole, as the '+' path below does for the base price plus the option.
+                                //
+                                $new_attributes_price = $products_base_price - zen_get_discount_calc($prid, $attributes_id, $products_base_price - zen_str_to_numeric($options_values_price), $qty);
+                            } else {
+                                $new_attributes_price = zen_get_discount_calc($prid, $attributes_id, $options_values_price, $qty);
+                            }
                             $productTotal -= $new_attributes_price;
                         } else {
                             $productTotal -= $options_values_price;
@@ -1072,7 +1081,16 @@ class shoppingCart extends base
                     if ($attribute_price['attributes_discounted'] === '1') {
                         $discount_type_id = '';
                         $sale_maker_discount = '';
-                        $new_attributes_price = zen_get_discount_calc($prid, $attribute_price['products_attributes_id'], $options_values_price, $qty);
+                        $products_raw_attribute_base_price = (zen_get_products_price_is_priced_by_attributes($prid)) ? zen_get_product_retail_or_wholesale_price($prid) : 0.0;
+                        if ($products_raw_attribute_base_price != 0) {
+                            // -----
+                            // The product's undiscounted base price is charged separately, so discount the base price less
+                            // the option as a whole, as the '+' path below does for the base price plus the option.
+                            //
+                            $new_attributes_price = $products_raw_attribute_base_price - zen_get_discount_calc($prid, $attribute_price['products_attributes_id'], $products_raw_attribute_base_price - zen_str_to_numeric($options_values_price), $qty);
+                        } else {
+                            $new_attributes_price = zen_get_discount_calc($prid, $attribute_price['products_attributes_id'], $options_values_price, $qty);
+                        }
                         $attributes_price -= $new_attributes_price;
                     } else {
                         $attributes_price -= $options_values_price;
