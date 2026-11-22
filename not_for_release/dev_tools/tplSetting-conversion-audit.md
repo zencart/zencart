@@ -1,6 +1,6 @@
 # `$tplSetting->` keys
 
-131 unique keys. Grouped and sorted by `configuration_group_id` (Admin Configuration menu), sub-sorted by key. 
+133 unique keys. Grouped and sorted by `configuration_group_id` (Admin Configuration menu), sub-sorted by key. 
 
 
 ## Minimum Values (2)
@@ -52,6 +52,8 @@
 | `SMALL_IMAGE_WIDTH` | Small Image Width | `100` | The pixel width of small images |
 | `SUBCATEGORY_IMAGE_TOP_HEIGHT` | Top Subcategory Image Height | `85` | The pixel height of Top subcategory images<br>Top subcategory is when the Category contains subcategories |
 | `SUBCATEGORY_IMAGE_TOP_WIDTH` | Top Subcategory Image Width | `150` | The pixel width of Top subcategory images<br>Top subcategory is when the Category contains subcategories |
+| `IMAGE_FEATURED_PRODUCTS_LISTING_HEIGHT` | Featured Products - Image Height| `80` | The pixel height of Featured Products images |
+| `IMAGE_FEATURED_PRODUCTS_LISTING_WIDTH` | Featured Products - Image Width| `100` | The pixel width of Featured Products images |
 
 ## Customer Details (5)
 
