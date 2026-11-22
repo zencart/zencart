@@ -42,8 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && empty($_GET['action'])) {
 }
 
 register_shutdown_function(static function () {
-    if (function_exists('zen_clear_category_map_cache')) {
-        zen_clear_category_map_cache();
-        zen_clear_manufacturers_box_cache();
+    if (function_exists('zen_clear_sidebox_caches')) {
+        zen_clear_sidebox_caches();
     }
 });
