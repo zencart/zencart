@@ -1,6 +1,6 @@
 # `$tplSetting->` keys
 
-131 unique keys. Grouped and sorted by `configuration_group_id` (Admin Configuration menu), sub-sorted by key. 
+133 unique keys. Grouped and sorted by `configuration_group_id` (Admin Configuration menu), sub-sorted by key. 
 
 
 ## Minimum Values (2)
