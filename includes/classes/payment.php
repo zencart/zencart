@@ -187,7 +187,7 @@ class payment
      */
     protected function isPaymentModuleMethodPresent(string $method): bool
     {
-        if (empty($this->selected_module) || !is_array($this->modules) || !is_object($GLOBALS[$this->selected_module])) {
+        if (empty($this->selected_module) || !is_array($this->modules) || !is_object($GLOBALS[$this->selected_module] ?? null)) {
             return false;
         }
         if (!method_exists($GLOBALS[$this->selected_module], $method)) {
@@ -333,7 +333,7 @@ class payment
         if (empty($this->selected_module) || !is_array($this->modules)) {
             return;
         }
-        if (!is_object($GLOBALS[$this->selected_module]) || $GLOBALS[$this->selected_module]->enabled != true) {
+        if (!is_object($GLOBALS[$this->selected_module] ?? null) || $GLOBALS[$this->selected_module]->enabled != true) {
             return;
         }
 

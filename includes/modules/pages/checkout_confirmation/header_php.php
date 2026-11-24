@@ -93,7 +93,7 @@ if ($credit_covers === true) {
             $payment_modules->pre_confirmation_check();
         }
     }
-    if (!empty($_SESSION['payment']) && is_object(${$_SESSION['payment']})) {
+    if (!empty($_SESSION['payment']) && is_object((${$_SESSION['payment']} ?? null))) {
         $payment_title = ${$_SESSION['payment']}->title;
     } else {
         $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
