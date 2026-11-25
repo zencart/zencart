@@ -765,7 +765,13 @@ function zen_validate_pwd_reset_request(string $admin_name, string $adm_old_pwd,
                 }
             }
         } else {
-            $errors[] = ENTRY_PASSWORD_CHANGE_ERROR . ' ' . sprintf(ERROR_PASSWORD_RULES, ((int)ADMIN_PASSWORD_MIN_LENGTH < 7 ? 7 : (int)ADMIN_PASSWORD_MIN_LENGTH));
+            // -----
+            // There is no reset-token on file, so the Old Password simply did not match.
+            // Report that, rather than the new-password rules: the new password has not
+            // been looked at yet, so blaming it sends the admin off changing the wrong
+            // field, often repeatedly.
+            //
+            $errors[] = ERROR_WRONG_LOGIN;
         }
     } else { // password matched, so proceed with reset
         $moreErrors = zen_reset_password($result['admin_id'], $adm_new_pwd, $adm_conf_pwd);
