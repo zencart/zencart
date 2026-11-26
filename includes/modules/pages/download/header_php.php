@@ -37,6 +37,7 @@ $sql = "SELECT date_format(o.date_purchased, '%Y-%m-%d')
           AS date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename, o.*
           FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd
           WHERE o.orders_id = :ordersID
+          " . zen_downloads_order_status_clause('o') . "
           " . $lookup_clause . "
           AND o.orders_id = op.orders_id
           AND op.orders_products_id = opd.orders_products_id
