@@ -125,11 +125,10 @@ $selected = $payment_modules->selected_module ?? '';
 $paid = is_string($_SESSION['payment'] ?? null)
     && $selected !== ''
     && $selected !== 'freecharger'
-    && $selected === $_SESSION['payment']
     && is_object($GLOBALS[$selected] ?? null)
     && !empty($GLOBALS[$selected]->enabled);
 
-if ($credit_covers !== true && $order->info['total'] > 0.009 && !$paid) {
+if ($order->info['total'] > 0.009 && !$paid) {
     unset($_SESSION['payment']);
     $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED, 'error');
     zen_redirect(zen_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
