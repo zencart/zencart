@@ -259,6 +259,28 @@ function zen_download_filename_within_basedir($filename, ?string $base_dir = nul
     return str_starts_with($candidate_realpath . DIRECTORY_SEPARATOR, $base_realpath);
 }
 
+/**
+ * Build the SQL condition restricting downloads to orders whose status lies within the
+ * configured Downloads Controller range (DOWNLOADS_CONTROLLER_ORDERS_STATUS to
+ * DOWNLOADS_CONTROLLER_ORDERS_STATUS_END, inclusive).
+ *
+ * Used by both the download-links list and the download delivery page, so that the
+ * two always apply the same rule.
+ *
+ * @param string $orders_table_alias Alias of the orders table in the calling query.
+ * @return string Condition beginning with " AND ", ready to append to a WHERE clause.
+ * @since ZC v2.3.0
+ */
+function zen_downloads_order_status_clause(string $orders_table_alias = 'o'): string
+{
+    if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $orders_table_alias)) {
+        $orders_table_alias = 'o';
+    }
+
+    return ' AND ' . $orders_table_alias . '.orders_status >= ' . (int)zen_config('DOWNLOADS_CONTROLLER_ORDERS_STATUS', 2)
+        . ' AND ' . $orders_table_alias . '.orders_status <= ' . (int)zen_config('DOWNLOADS_CONTROLLER_ORDERS_STATUS_END', 4) . ' ';
+}
+
 
 /**
  * Get field type from database
