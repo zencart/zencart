@@ -28,7 +28,7 @@ if (!function_exists('zen_date_raw')) {
         }
 
         $date = preg_replace('/\D+/', '', $date) ?? '';
-        $date_format = str_replace(['/', '-'], '', DATE_FORMAT);
+        $date_format = preg_replace('/[^dmY]/', '', DATE_FORMAT);
 
         if ($date_format === 'dmY') {
             if ($reverse) {
