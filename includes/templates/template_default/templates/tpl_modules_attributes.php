@@ -21,7 +21,7 @@ declare(strict_types=1);
     <?php
     }
 
-    for ($i = 0, $j = sizeof($options_name); $i < $j; $i++) {
+    for ($i = 0, $j = count($options_name); $i < $j; $i++) {
         ?>
         <div class="attribBlock">
             <?php
