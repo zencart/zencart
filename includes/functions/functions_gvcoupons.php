@@ -18,31 +18,13 @@
  */
 function zen_gv_account_update(int $customer_id, int $gv_id)
 {
-    global $db;
-    $sql = "SELECT amount
-            FROM " . TABLE_COUPON_GV_CUSTOMER . "
-            WHERE customer_id = " . (int)$customer_id;
+    global $customer;
 
-    $customer_gv = $db->Execute($sql);
+    Customer::addCouponToGvBalance($customer_id, $gv_id);
 
-    $sql = "SELECT coupon_amount
-            FROM " . TABLE_COUPONS . "
-            WHERE coupon_id = " . (int)$gv_id;
-
-    $coupon_gv = $db->Execute($sql);
-
-    if ($coupon_gv->EOF) return;
-
-    if ($customer_gv->RecordCount() > 0) {
-        $new_gv_amount = $customer_gv->fields['amount'] + $coupon_gv->fields['coupon_amount'];
-        $sql = "UPDATE " . TABLE_COUPON_GV_CUSTOMER . "
-              SET amount = '" . $db->prepare_input($new_gv_amount) . "' WHERE customer_id = " . (int)$customer_id;
-        $db->Execute($sql);
-
-    } else {
-        $sql = "INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount)
-                VALUES (" . (int)$customer_id . ", '" . $db->prepare_input($coupon_gv->fields['coupon_amount']) . "')";
-        $db->Execute($sql);
+    // keep a request-wide Customer instance's cached balance in step with the database
+    if (isset($customer) && $customer instanceof Customer && $customer_id === (int)$customer->getData('customers_id')) {
+        $customer->refreshGvBalance();
     }
 }
 
