@@ -96,7 +96,7 @@ Security
 --------
 We take security very seriously.
 
-If you have discovered a critical security bug in Zen Cart, please email security [at] zen-cart [.] com with the details of the problem and how to trigger it.  Issues will be responded to in a timely manner.
+To report a vulnerability, see our [Security Policy](https://github.com/zencart/zencart/security/policy).  Our security policy also lists the currently supported versions of Zen Cart.
 
 Subscribe to [Critical News Updates And Release Announcements](https://www.zen-cart.com/forums/9) to stay up to date. 
 
