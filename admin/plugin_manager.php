@@ -69,7 +69,17 @@ $tableDefinition = [
                         (string)$tableRow['unique_key'],
                         (string)$tableRow['version']
                     )) {
-                        return zen_icon('status-upgrade', TEXT_UPGRADE_AVAILABLE);
+                        // Link the icon to this plugin's row, landing on its "Upgrade Available" button
+                        // (the template moves focus there). Without the link, a click on the icon only
+                        // selects the row, and the button may be out of view in the side panel.
+                        return '<a href="'
+                            . zen_href_link(
+                                FILENAME_PLUGIN_MANAGER,
+                                'page=' . (int)($_GET['page'] ?? 1) . '&colKey=' . urlencode((string)$tableRow['unique_key'])
+                            )
+                            . '#pluginUpgradeAvailable" onclick="event.stopPropagation();" aria-label="' . TEXT_UPGRADE_AVAILABLE . '">'
+                            . zen_icon('status-upgrade', TEXT_UPGRADE_AVAILABLE)
+                            . '</a>';
                     }
 
                     return match ($tableRow[$colName]) {

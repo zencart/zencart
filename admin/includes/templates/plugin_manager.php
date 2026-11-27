@@ -107,3 +107,14 @@ use Zencart\PluginSupport\PluginStatus;
         </div>
     </div>
 </div>
+<script>
+    // Arriving from a row's "Upgrade Available" icon: put keyboard focus on that plugin's Upgrade Available button.
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.location.hash === '#pluginUpgradeAvailable') {
+            const upgradeButton = document.getElementById('pluginUpgradeAvailable');
+            if (upgradeButton) {
+                upgradeButton.focus();
+            }
+        }
+    });
+</script>

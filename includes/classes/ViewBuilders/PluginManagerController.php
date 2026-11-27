@@ -119,7 +119,7 @@ class PluginManagerController extends BaseController
                 '<a href="' . zen_href_link(
                     FILENAME_PLUGIN_MANAGER,
                     $this->pageLink() . '&' . $this->colKeyLink() . '&action=upgrade'
-                ) . '" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
+                ) . '" id="pluginUpgradeAvailable" class="btn btn-primary" role="button">' . TEXT_UPGRADE_AVAILABLE . '</a>'
             );
         }
 
