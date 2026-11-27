@@ -611,6 +611,10 @@ class TemplateSelect
      */
     public function getUnregisteredTemplateLanguages(): array
     {
+        if (IS_ADMIN_FLAG !== true) {
+            return [];
+        }
+
         $languages = [];
         $sql =
             "SELECT lng.name as language_name, lng.languages_id as language_id

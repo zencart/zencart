@@ -340,6 +340,7 @@ class TemplateResolver
             'template_path' => $templatePath,
             'template_catalog_path' => $templateCatalogPath,
             'template_web_path' => self::buildPluginWebPath($templateCatalogPath),
+            'template_info_path' => $templateInfoFile,
             'template_settings_path' => $settingsFile,
             'base_template' => self::normalizeBaseTemplate($template['baseTemplate'] ?? null, $templateKey),
             'is_plugin_template' => true,
@@ -347,7 +348,7 @@ class TemplateResolver
             'plugin_key' => $pluginKey,
             'plugin_version' => $pluginVersion,
             'manifest' => $manifest,
-            'has_template_settings' => file_exists($settingsFile),
+            'has_template_settings' => is_file($settingsFile),
         ]);
     }
 
@@ -356,7 +357,7 @@ class TemplateResolver
      */
     private static function loadTemplateInfo(string $templateInfoFile): ?array
     {
-        if (!file_exists($templateInfoFile)) {
+        if (!is_file($templateInfoFile)) {
             return null;
         }
 
@@ -369,6 +370,7 @@ class TemplateResolver
         $base_template = null;
         $uses_single_column_layout_settings = false;
         $uses_mobile_sidebox_settings = true;
+        $template_settings_file = dirname($templateInfoFile) . '/template_settings.php';
 
         require $templateInfoFile;
 
@@ -381,7 +383,9 @@ class TemplateResolver
             'base_template' => $template_base ?: ($base_template ?: null),
             'uses_single_column_layout_settings' => !empty($uses_single_column_layout_settings),
             'uses_mobile_sidebox_settings' => !isset($uses_mobile_sidebox_settings) || !empty($uses_mobile_sidebox_settings),
-            'has_template_settings' => file_exists(dirname($templateInfoFile) . '/template_settings.php'),
+            'has_template_settings' => is_file($template_settings_file),
+            'template_info_path' => $templateInfoFile,
+            'template_settings_path' => $template_settings_file,
         ];
     }
 

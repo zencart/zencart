@@ -67,11 +67,18 @@ class PluginManifest
         $template_key = $manifest['template']['key'] ?? null;
         if (!is_string($template_key) || $template_key === '') {
             $template_key = null;
+            $parent_template = null;
+        } else {
+            $parent_template = $manifest['template']['baseTemplate'] ?? null;
+            if (!is_string($parent_template) || $parent_template === '' || $parent_template === 'template_default') {
+                $parent_template = null;
+            }
         }
 
         self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version] = [
             'contents' => $manifest,
             'template_key' => $template_key,
+            'parent_template' => $parent_template,
             'removes_unencapsulated_version' => !empty($manifest['removesUnencapsulatedVersion']),
         ];
 
@@ -99,6 +106,17 @@ class PluginManifest
             return false;
         }
         return self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]['template_key'] !== null;
+    }
+
+    /**
+     * @since ZC v3.0.0
+     */
+    public function getParentTemplateDir(string $plugin_key, string $version): ?string
+    {
+        if ($this->isSelectableTemplate($plugin_key, $version) === false) {
+            return null;
+        }
+        return self::$manifestInfo[$this->pluginsRoot][$plugin_key][$version]['parent_template'];
     }
 
     /**
