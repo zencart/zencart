@@ -32,7 +32,7 @@
 ?>
 
 <h3 id="checkoutConfirmDefaultPayment"><?php echo HEADING_PAYMENT_METHOD; ?></h3>
-<h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title; ?></h4>
+<h4 id="checkoutConfirmDefaultPaymentTitle"><?php echo $GLOBALS[$class]->title ?? PAYMENT_METHOD_GV; ?></h4>
 
 <?php
   if (is_array($payment_modules->modules)) {
