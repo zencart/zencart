@@ -1750,7 +1750,7 @@ if ($action === 'edit' || $action === 'update') {
                     'text' =>
                         '<br>' .
                         TEXT_DATE_ACCOUNT_CREATED . ' ' .
-                        zen_date_short($cInfo->date_account_created)
+                        zen_datetime_short($cInfo->date_account_created)
                 ];
                 if (!empty($cInfo->registration_ip)) {
                     $whois_url = 'https://whois.domaintools.com/' . $cInfo->registration_ip;
