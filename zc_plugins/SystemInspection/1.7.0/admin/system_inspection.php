@@ -56,17 +56,27 @@ require 'includes/application_top.php';
                     </tr>
                     <?php
                 } else {
-                    $unknown_pages = 0;
+                    // Group pages by menu key (menus keep their admin order),
+                    // sort page names A-Z within each menu key.
+                    $pages_by_menu = [];
                     foreach ($pages as $page) {
-                        $key = $page['language_key'];
-                        if (in_array($key, BUILT_IN_BOXES, true)) {
+                        if (in_array($page['language_key'], BUILT_IN_BOXES, true)) {
                             continue;
                         }
+                        $page['page_name'] = defined($page['language_key']) ? constant($page['language_key']) : '(' . htmlspecialchars($page['language_key']) . ')';
+                        $pages_by_menu[$page['menu_key']][] = $page;
+                    }
+                    $unknown_pages = 0;
+                    foreach ($pages_by_menu as $menu_pages) {
+                        usort($menu_pages, static function ($a, $b) {
+                            return strnatcasecmp(strip_tags($a['page_name']), strip_tags($b['page_name']));
+                        });
+                        foreach ($menu_pages as $page) {
                         $unknown_pages++;
                         ?>
                         <tr>
                             <td class="dataTableContent">
-                                <?= (defined($page['language_key'])) ? constant($page['language_key']) : "(" . htmlspecialchars($page['language_key']) . ")" ?>
+                                <?= $page['page_name'] ?>
                             </td>
                             <td class="dataTableContent">
                                 <?= htmlspecialchars($page['menu_key']) ?>
@@ -81,6 +91,7 @@ require 'includes/application_top.php';
                             </td>
                         </tr>
                         <?php
+                        }
                     }
                     if ($unknown_pages === 0) {
                         ?>
